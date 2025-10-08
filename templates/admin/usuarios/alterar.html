@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block titulo %}Alterar Usuário - Sistema Web{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <a href="/admin/usuarios" class="btn btn-outline-secondary me-3">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <h2 class="mb-0">Alterar Usuário</h2>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="POST" action="/admin/usuarios/alterar/{{ usuario.id }}">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="nome" class="form-label">Nome Completo <span class="text-danger">*</span></label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="nome"
+                                   name="nome"
+                                   value="{{ usuario.nome }}"
+                                   required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email"
+                                   class="form-control"
+                                   id="email"
+                                   name="email"
+                                   value="{{ usuario.email }}"
+                                   required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="perfil" class="form-label">Perfil <span class="text-danger">*</span></label>
+                            <select class="form-select" id="perfil" name="perfil" required>
+                                <option value="usuario" {{ 'selected' if usuario.perfil == 'usuario' else '' }}>Usuário</option>
+                                <option value="admin" {{ 'selected' if usuario.perfil == 'admin' else '' }}>Administrador</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i>
+                                Deixe os campos de senha em branco para manter a senha atual.
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="senha" class="form-label">Nova Senha</label>
+                            <input type="password"
+                                   class="form-control"
+                                   id="senha"
+                                   name="senha">
+                            <div class="form-text">Mínimo 6 caracteres</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="confirma_senha" class="form-label">Confirmar Nova Senha</label>
+                            <input type="password"
+                                   class="form-control"
+                                   id="confirma_senha"
+                                   name="confirma_senha">
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       id="ativo"
+                                       name="ativo"
+                                       value="1"
+                                       {{ 'checked' if usuario.ativo else '' }}>
+                                <label class="form-check-label" for="ativo">
+                                    Usuário ativo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Salvar Alterações
+                        </button>
+                        <a href="/admin/usuarios" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Validação de senha
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const senha = document.getElementById('senha').value;
+        const confirmaSenha = document.getElementById('confirma_senha').value;
+
+        // Se senha foi preenchida
+        if (senha || confirmaSenha) {
+            if (senha !== confirmaSenha) {
+                e.preventDefault();
+                alert('As senhas não coincidem!');
+                return false;
+            }
+
+            if (senha.length < 6) {
+                e.preventDefault();
+                alert('A senha deve ter no mínimo 6 caracteres!');
+                return false;
+            }
+        }
+    });
+</script>
+{% endblock %}

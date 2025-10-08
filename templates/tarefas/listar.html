@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Lista de Tarefas - Sistema Web{% endblock %}
+
+{% block nav_items %}
+<li class="nav-item">
+    <a class="nav-link" href="/">Início</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link active" href="/tarefas">Tarefas</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-list-task"></i> Minhas Tarefas</h2>
+            <a href="/tarefas/cadastrar" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Nova Tarefa
+            </a>
+        </div>
+
+        {% if tarefas %}
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    {% for tarefa in tarefas %}
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1 {% if tarefa.concluida %}text-decoration-line-through text-muted{% endif %}">
+                                {% if tarefa.concluida %}
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                                {% else %}
+                                <i class="bi bi-circle text-secondary"></i>
+                                {% endif %}
+                                {{ tarefa.titulo }}
+                            </h5>
+                            {% if tarefa.descricao %}
+                            <p class="mb-1 {% if tarefa.concluida %}text-decoration-line-through text-muted{% endif %}">
+                                {{ tarefa.descricao }}
+                            </p>
+                            {% endif %}
+                            <small class="text-muted">
+                                <i class="bi bi-calendar3"></i> Criada em: {{ tarefa.data_criacao.strftime('%d/%m/%Y %H:%M') }}
+                                {% if tarefa.concluida and tarefa.data_conclusao %}
+                                | <i class="bi bi-check2-circle"></i> Concluída em: {{ tarefa.data_conclusao.strftime('%d/%m/%Y %H:%M') }}
+                                {% endif %}
+                            </small>
+                        </div>
+                        <div class="btn-group ms-3" role="group">
+                            {% if not tarefa.concluida %}
+                            <form method="POST" action="/tarefas/{{ tarefa.id }}/concluir" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-primary" title="Marcar como concluída">
+                                    <i class="bi bi-check-lg"></i> Concluir
+                                </button>
+                            </form>
+                            {% endif %}
+                            <a href="/tarefas/{{ tarefa.id }}/excluir" class="btn btn-sm btn-danger" title="Excluir tarefa">
+                                <i class="bi bi-trash"></i> Excluir
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <small class="text-muted">
+                Total: {{ tarefas|length }} tarefa(s)
+                {% set concluidas = tarefas|selectattr('concluida', 'equalto', true)|list %}
+                {% if concluidas %}
+                | Concluídas: {{ concluidas|length }}
+                {% endif %}
+            </small>
+        </div>
+        {% else %}
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading"><i class="bi bi-info-circle"></i> Nenhuma tarefa cadastrada</h4>
+            <p>Você ainda não possui tarefas cadastradas. Clique no botão "Nova Tarefa" para começar!</p>
+            <hr>
+            <a href="/tarefas/cadastrar" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Cadastrar Primeira Tarefa
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
