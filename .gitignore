@@ -53,10 +53,6 @@ logs/
 htmlcov/
 .tox/
 
-# Static files uploads
-static/uploads/
-static/fotos/
-
 # Environment variables
 .env.local
 .env.production
