@@ -61,3 +61,12 @@ htmlcov/
 *.tmp
 temp/
 tmp/
+
+# IA Files
+CLAUDE.md
+AGENT.md
+codebase.md
+.claude/
+.mcp/
+.aidigestignore
+
