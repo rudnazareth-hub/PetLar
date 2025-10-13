@@ -15,13 +15,19 @@ from util.security import criar_hash_senha
 router = APIRouter(prefix="/admin/usuarios")
 templates = criar_templates("templates/admin/usuarios")
 
+@router.get("/")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def index(request: Request, usuario_logado: dict = None):
+    """Redireciona para lista de usuários"""
+    return RedirectResponse("/admin/usuarios/lista", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+
 @router.get("/lista")
 @requer_autenticacao([Perfil.ADMIN.value])
 async def lista(request: Request, usuario_logado: dict = None):
     """Lista todos os usuários do sistema"""
     usuarios = usuario_repo.obter_todos()
     return templates.TemplateResponse(
-        "lista.html",
+        "admin/usuarios/lista.html",
         {"request": request, "usuarios": usuarios}
     )
 
@@ -31,7 +37,7 @@ async def get_cadastro(request: Request, usuario_logado: dict = None):
     """Exibe formulário de cadastro de usuário"""
     perfis = Perfil.valores()
     return templates.TemplateResponse(
-        "cadastro.html",
+        "admin/usuarios/cadastro.html",
         {"request": request, "perfis": perfis}
     )
 
@@ -61,7 +67,7 @@ async def post_cadastro(
             informar_erro(request, "E-mail já cadastrado no sistema")
             perfis = Perfil.valores()
             return templates.TemplateResponse(
-                "cadastro.html",
+                "admin/usuarios/cadastro.html",
                 {
                     "request": request,
                     "perfis": perfis,
@@ -112,7 +118,7 @@ async def get_alterar(request: Request, id: int, usuario_logado: dict = None):
 
     perfis = Perfil.valores()
     return templates.TemplateResponse(
-        "alterar.html",
+        "admin/usuarios/alterar.html",
         {"request": request, "usuario": usuario, "perfis": perfis}
     )
 
@@ -148,7 +154,7 @@ async def post_alterar(
             informar_erro(request, "E-mail já cadastrado em outro usuário")
             perfis = Perfil.valores()
             return templates.TemplateResponse(
-                "alterar.html",
+                "admin/usuarios/alterar.html",
                 {
                     "request": request,
                     "usuario": usuario_atual,
@@ -203,7 +209,7 @@ async def get_excluir(request: Request, id: int, usuario_logado: dict = None):
         return RedirectResponse("/admin/usuarios/lista", status_code=status.HTTP_303_SEE_OTHER)
 
     return templates.TemplateResponse(
-        "excluir.html",
+        "admin/usuarios/excluir.html",
         {"request": request, "usuario": usuario}
     )
 

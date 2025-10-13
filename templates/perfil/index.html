@@ -1,4 +1,4 @@
-{% extends "../base.html" %}
+{% extends "base.html" %}
 
 {% block titulo %}Meu Perfil{% endblock %}
 
@@ -34,7 +34,7 @@
                     </p>
                     {% if usuario.data_cadastro %}
                     <p class="text-muted small">
-                        <i class="bi bi-calendar-check"></i> Membro desde {{ usuario.data_cadastro[:10] }}
+                        <i class="bi bi-calendar-check"></i> Membro desde {{ usuario.data_cadastro|data_br }}
                     </p>
                     {% endif %}
                 </div>
@@ -81,7 +81,7 @@
                         {% if usuario.data_cadastro %}
                         <div class="col-md-6 mb-3">
                             <strong>Data de Cadastro:</strong>
-                            <p class="mb-0 text-muted">{{ usuario.data_cadastro[:10] }}</p>
+                            <p class="mb-0 text-muted">{{ usuario.data_cadastro|data_br }}</p>
                         </div>
                         {% endif %}
                     </div>

@@ -17,7 +17,7 @@ router = APIRouter(prefix="/perfil")
 templates = criar_templates("templates/perfil")
 
 # Configurações de upload
-UPLOAD_DIR = Path("static/uploads/fotos")
+UPLOAD_DIR = Path("static/img/usuarios")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
@@ -34,7 +34,7 @@ async def get_perfil(request: Request, usuario_logado: dict = None):
         return RedirectResponse("/logout", status_code=status.HTTP_303_SEE_OTHER)
 
     return templates.TemplateResponse(
-        "index.html",
+        "perfil/index.html",
         {"request": request, "usuario": usuario}
     )
 
@@ -50,7 +50,7 @@ async def get_editar(request: Request, usuario_logado: dict = None):
         return RedirectResponse("/logout", status_code=status.HTTP_303_SEE_OTHER)
 
     return templates.TemplateResponse(
-        "editar.html",
+        "perfil/editar.html",
         {"request": request, "usuario": usuario}
     )
 
@@ -115,7 +115,7 @@ async def post_editar(
 async def get_senha(request: Request, usuario_logado: dict = None):
     """Formulário para alterar senha"""
     return templates.TemplateResponse(
-        "senha.html",
+        "perfil/senha.html",
         {"request": request}
     )
 
@@ -211,7 +211,7 @@ async def post_foto(
             f.write(contents)
 
         # Caminho relativo para salvar no banco
-        foto_url = f"/static/uploads/fotos/{unique_filename}"
+        foto_url = f"/static/img/usuarios/{unique_filename}"
 
         # Obter usuário e foto antiga
         usuario = usuario_repo.obter_por_id(usuario_logado["id"])
@@ -223,7 +223,7 @@ async def post_foto(
             request.session["usuario_logado"]["foto"] = foto_url
 
             # Remover foto antiga se existir
-            if foto_antiga and foto_antiga.startswith("/static/uploads/fotos/"):
+            if foto_antiga and (foto_antiga.startswith("/static/img/usuarios/") or foto_antiga.startswith("/static/uploads/fotos/")):
                 try:
                     antiga_path = Path(foto_antiga.replace("/static/", "static/"))
                     if antiga_path.exists():

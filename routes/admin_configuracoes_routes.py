@@ -18,7 +18,7 @@ async def get_configuracoes(request: Request, usuario_logado: dict = None):
     """Exibe lista de configurações do sistema"""
     configuracoes = configuracao_repo.obter_todos()
     return templates.TemplateResponse(
-        "listar.html",
+        "admin/configuracoes/listar.html",
         {"request": request, "configuracoes": configuracoes}
     )
 

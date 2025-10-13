@@ -52,12 +52,10 @@ except Exception as e:
     raise
 
 # Inicializar dados seed
-logger.info("Inicializando dados seed...")
 try:
     inicializar_dados()
-    logger.info("Dados seed inicializados com sucesso")
 except Exception as e:
-    logger.error(f"Erro ao inicializar dados seed: {e}")
+    logger.error(f"Erro ao inicializar dados seed: {e}", exc_info=True)
 
 # Incluir routers
 # IMPORTANTE: public_router deve ser incluído por último para que a rota "/" funcione corretamente

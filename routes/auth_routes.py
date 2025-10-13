@@ -54,7 +54,7 @@ async def get_login(request: Request):
     if request.session.get("usuario_logado"):
         return RedirectResponse("/", status_code=status.HTTP_303_SEE_OTHER)
 
-    return templates.TemplateResponse("login.html", {"request": request})
+    return templates.TemplateResponse("auth/login.html", {"request": request})
 
 @router.post("/login")
 async def post_login(
@@ -100,7 +100,7 @@ async def post_login(
         erros = [erro['msg'] for erro in e.errors()]
         informar_erro(request, " | ".join(erros))
         return templates.TemplateResponse(
-            "login.html",
+            "auth/login.html",
             {"request": request, "email": email}
         )
 
@@ -120,7 +120,7 @@ async def get_cadastro(request: Request):
     if request.session.get("usuario_logado"):
         return RedirectResponse("/", status_code=status.HTTP_303_SEE_OTHER)
 
-    return templates.TemplateResponse("cadastro.html", {"request": request})
+    return templates.TemplateResponse("auth/cadastro.html", {"request": request})
 
 @router.post("/cadastro")
 async def post_cadastro(
@@ -144,7 +144,7 @@ async def post_cadastro(
         if dto.senha != dto.confirmar_senha:
             informar_erro(request, "As senhas não coincidem")
             return templates.TemplateResponse(
-                "cadastro.html",
+                "auth/cadastro.html",
                 {"request": request, "nome": nome, "email": email}
             )
 
@@ -153,7 +153,7 @@ async def post_cadastro(
         if not senha_valida:
             informar_erro(request, mensagem)
             return templates.TemplateResponse(
-                "cadastro.html",
+                "auth/cadastro.html",
                 {"request": request, "nome": nome, "email": email}
             )
 
@@ -161,7 +161,7 @@ async def post_cadastro(
         if usuario_repo.obter_por_email(dto.email):
             informar_erro(request, "Este e-mail já está cadastrado")
             return templates.TemplateResponse(
-                "cadastro.html",
+                "auth/cadastro.html",
                 {"request": request, "nome": nome, "email": email}
             )
 
@@ -188,7 +188,7 @@ async def post_cadastro(
         else:
             informar_erro(request, "Erro ao realizar cadastro. Tente novamente.")
             return templates.TemplateResponse(
-                "cadastro.html",
+                "auth/cadastro.html",
                 {"request": request, "nome": nome, "email": email}
             )
 
@@ -203,7 +203,7 @@ async def post_cadastro(
 @router.get("/esqueci-senha")
 async def get_esqueci_senha(request: Request):
     """Exibe formulário de recuperação de senha"""
-    return templates.TemplateResponse("esqueci_senha.html", {"request": request})
+    return templates.TemplateResponse("auth/esqueci_senha.html", {"request": request})
 
 @router.post("/esqueci-senha")
 async def post_esqueci_senha(
@@ -249,7 +249,7 @@ async def post_esqueci_senha(
         erros = [erro['msg'] for erro in e.errors()]
         informar_erro(request, " | ".join(erros))
         return templates.TemplateResponse(
-            "esqueci_senha.html",
+            "auth/esqueci_senha.html",
             {"request": request, "email": email}
         )
 
@@ -274,7 +274,7 @@ async def get_redefinir_senha(request: Request, token: str):
         return RedirectResponse("/esqueci-senha", status_code=status.HTTP_303_SEE_OTHER)
 
     return templates.TemplateResponse(
-        "redefinir_senha.html",
+        "auth/redefinir_senha.html",
         {"request": request, "token": token}
     )
 

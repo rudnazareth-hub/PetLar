@@ -19,7 +19,7 @@ async def listar(request: Request, usuario_logado: dict = None):
     """Lista todas as tarefas do usuário logado"""
     tarefas = tarefa_repo.obter_todos_por_usuario(usuario_logado["id"])
     return templates.TemplateResponse(
-        "listar.html",
+        "tarefas/listar.html",
         {"request": request, "tarefas": tarefas}
     )
 
@@ -27,7 +27,7 @@ async def listar(request: Request, usuario_logado: dict = None):
 @requer_autenticacao()
 async def get_cadastrar(request: Request, usuario_logado: dict = None):
     """Exibe formulário de cadastro de tarefa"""
-    return templates.TemplateResponse("cadastrar.html", {"request": request})
+    return templates.TemplateResponse("tarefas/cadastrar.html", {"request": request})
 
 @router.post("/cadastrar")
 @requer_autenticacao()
@@ -61,7 +61,7 @@ async def post_cadastrar(
         erros = [erro['msg'] for erro in e.errors()]
         informar_erro(request, " | ".join(erros))
         return templates.TemplateResponse(
-            "cadastrar.html",
+            "tarefas/cadastrar.html",
             {"request": request, "dados": {"titulo": titulo, "descricao": descricao}}
         )
 
@@ -94,7 +94,7 @@ async def get_excluir(request: Request, id: int, usuario_logado: dict = None):
         return RedirectResponse("/tarefas", status_code=status.HTTP_303_SEE_OTHER)
 
     return templates.TemplateResponse(
-        "excluir.html",
+        "tarefas/excluir.html",
         {"request": request, "tarefa": tarefa}
     )
 

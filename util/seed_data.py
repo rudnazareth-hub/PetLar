@@ -10,32 +10,67 @@ def carregar_usuarios_seed():
     arquivo = Path("data/usuarios_seed.json")
 
     if not arquivo.exists():
-        logger.warning("Arquivo de seed não encontrado")
+        logger.warning(f"Arquivo de seed não encontrado: {arquivo.absolute()}")
         return
 
-    with open(arquivo, 'r', encoding='utf-8') as f:
-        dados = json.load(f)
+    try:
+        with open(arquivo, 'r', encoding='utf-8') as f:
+            dados = json.load(f)
+    except Exception as e:
+        logger.error(f"Erro ao ler arquivo de seed: {e}")
+        return
+
+    usuarios_criados = 0
+    usuarios_existentes = 0
+    usuarios_com_erro = 0
 
     for user_data in dados.get("usuarios", []):
-        # Verificar se já existe
-        if usuario_repo.obter_por_email(user_data["email"]):
-            logger.info(f"Usuário {user_data['email']} já existe")
-            continue
+        try:
+            email = user_data.get("email")
+            if not email:
+                logger.warning("Usuário sem email no arquivo seed, ignorando")
+                continue
 
-        # Criar usuário
-        usuario = Usuario(
-            id=0,
-            nome=user_data["nome"],
-            email=user_data["email"],
-            senha=criar_hash_senha(user_data["senha"]),
-            perfil=user_data["perfil"]
-        )
+            # Verificar se já existe
+            if usuario_repo.obter_por_email(email):
+                logger.info(f"Usuário {email} já existe no banco")
+                usuarios_existentes += 1
+                continue
 
-        usuario_repo.inserir(usuario)
-        logger.info(f"Usuário {user_data['email']} criado")
+            # Criar usuário
+            usuario = Usuario(
+                id=0,
+                nome=user_data["nome"],
+                email=email,
+                senha=criar_hash_senha(user_data["senha"]),
+                perfil=user_data.get("perfil", "cliente")
+            )
+
+            usuario_id = usuario_repo.inserir(usuario)
+            if usuario_id:
+                logger.info(f"✓ Usuário {email} criado com sucesso (ID: {usuario_id})")
+                usuarios_criados += 1
+            else:
+                logger.error(f"✗ Falha ao inserir usuário {email} no banco")
+                usuarios_com_erro += 1
+
+        except Exception as e:
+            logger.error(f"✗ Erro ao processar usuário {user_data.get('email', 'desconhecido')}: {e}")
+            usuarios_com_erro += 1
+
+    # Resumo
+    logger.info(f"Resumo do seed de usuários: {usuarios_criados} criados, {usuarios_existentes} já existiam, {usuarios_com_erro} com erro")
 
 def inicializar_dados():
     """Inicializa todos os dados seed"""
+    logger.info("=" * 50)
     logger.info("Iniciando carga de dados seed...")
-    carregar_usuarios_seed()
-    logger.info("Dados seed carregados com sucesso!")
+    logger.info("=" * 50)
+
+    try:
+        carregar_usuarios_seed()
+        logger.info("=" * 50)
+        logger.info("Dados seed carregados!")
+        logger.info("=" * 50)
+    except Exception as e:
+        logger.error(f"Erro crítico ao inicializar dados seed: {e}", exc_info=True)

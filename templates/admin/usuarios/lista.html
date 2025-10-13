@@ -23,7 +23,6 @@
                                 <th>Nome</th>
                                 <th>Email</th>
                                 <th>Perfil</th>
-                                <th>Status</th>
                                 <th>Data Cadastro</th>
                                 <th class="text-center">Ações</th>
                             </tr>
@@ -35,16 +34,11 @@
                                 <td>{{ usuario.nome }}</td>
                                 <td>{{ usuario.email }}</td>
                                 <td>
-                                    <span class="badge bg-{{ 'danger' if usuario.perfil == 'admin' else 'secondary' }}">
+                                    <span class="badge bg-{{ 'danger' if usuario.perfil == 'admin' else 'info' }}">
                                         {{ usuario.perfil|upper }}
                                     </span>
                                 </td>
-                                <td>
-                                    <span class="badge bg-{{ 'success' if usuario.ativo else 'secondary' }}">
-                                        {{ 'Ativo' if usuario.ativo else 'Inativo' }}
-                                    </span>
-                                </td>
-                                <td>{{ usuario.data_cadastro.strftime('%d/%m/%Y') if usuario.data_cadastro else '-' }}</td>
+                                <td>{{ usuario.data_cadastro|data_br if usuario.data_cadastro else '-' }}</td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
                                         <a href="/admin/usuarios/alterar/{{ usuario.id }}"

@@ -7,7 +7,7 @@ from util.logger_config import logger
 
 def criar_sessao(request: Request, usuario: dict):
     """Cria sessão de usuário"""
-    request.session["usuario"] = usuario
+    request.session["usuario_logado"] = usuario
 
 def destruir_sessao(request: Request):
     """Destroi sessão de usuário"""
@@ -15,11 +15,11 @@ def destruir_sessao(request: Request):
 
 def obter_usuario_logado(request: Request) -> Optional[dict]:
     """Obtém usuário logado da sessão"""
-    return request.session.get("usuario")
+    return request.session.get("usuario_logado")
 
 def esta_logado(request: Request) -> bool:
     """Verifica se usuário está logado"""
-    return "usuario" in request.session
+    return "usuario_logado" in request.session
 
 def requer_autenticacao(perfis_permitidos: List[str] = None):
     """
