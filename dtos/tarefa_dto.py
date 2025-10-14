@@ -1,4 +1,9 @@
 from pydantic import BaseModel, field_validator
+from dtos.validators import (
+    validar_texto_minimo_palavras,
+    validar_comprimento,
+    validar_id_positivo,
+)
 
 
 class CriarTarefaDTO(BaseModel):
@@ -7,28 +12,14 @@ class CriarTarefaDTO(BaseModel):
     titulo: str
     descricao: str = ""
 
-    @field_validator("titulo")
-    @classmethod
-    def validar_titulo(cls, v):
-        """Valida título da tarefa"""
-        if not v or not v.strip():
-            raise ValueError("Título é obrigatório")
-
-        if len(v.split()) < 2:
-            raise ValueError("Título deve ter no mínimo 2 palavras")
-
-        if len(v.strip()) > 128:
-            raise ValueError("Título deve ter no máximo 128 caracteres")
-
-        return v.strip()
-
-    @field_validator("descricao")
-    @classmethod
-    def validar_descricao(cls, v):
-        """Valida descrição da tarefa"""
-        if v and len(v.strip()) > 500:
-            raise ValueError("Descrição deve ter no máximo 500 caracteres")
-        return v.strip() if v else ""
+    _validar_titulo = field_validator("titulo")(
+        validar_texto_minimo_palavras(
+            min_palavras=2, tamanho_maximo=128, nome_campo="Título"
+        )
+    )
+    _validar_descricao = field_validator("descricao")(
+        validar_comprimento(tamanho_maximo=500)
+    )
 
 
 class AlterarTarefaDTO(BaseModel):
@@ -39,33 +30,12 @@ class AlterarTarefaDTO(BaseModel):
     descricao: str = ""
     concluida: bool = False
 
-    @field_validator("id")
-    @classmethod
-    def validar_id(cls, v):
-        """Valida ID da tarefa"""
-        if not isinstance(v, int) or v <= 0:
-            raise ValueError("ID deve ser um número positivo")
-        return v
-
-    @field_validator("titulo")
-    @classmethod
-    def validar_titulo(cls, v):
-        """Valida título da tarefa"""
-        if not v or not v.strip():
-            raise ValueError("Título é obrigatório")
-
-        if len(v.split()) < 2:
-            raise ValueError("Título deve ter no mínimo 2 palavras")
-
-        if len(v.strip()) > 128:
-            raise ValueError("Título deve ter no máximo 128 caracteres")
-
-        return v.strip()
-
-    @field_validator("descricao")
-    @classmethod
-    def validar_descricao(cls, v):
-        """Valida descrição da tarefa"""
-        if v and len(v) > 500:
-            raise ValueError("Descrição deve ter no máximo 500 caracteres")
-        return v.strip() if v else ""
+    _validar_id = field_validator("id")(validar_id_positivo("ID"))
+    _validar_titulo = field_validator("titulo")(
+        validar_texto_minimo_palavras(
+            min_palavras=2, tamanho_maximo=128, nome_campo="Título"
+        )
+    )
+    _validar_descricao = field_validator("descricao")(
+        validar_comprimento(tamanho_maximo=500)
+    )

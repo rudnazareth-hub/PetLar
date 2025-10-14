@@ -276,8 +276,8 @@ from pydantic import BaseModel, Field, field_validator
 
 class CriarProdutoDTO(BaseModel):
     """DTO para criação de produto"""
-    nome: str = Field(..., min_length=3, max_length=100)
-    descricao: str = Field(default="", max_length=500)
+    nome: str = Field(..., tamanho_minimo=3, tamanho_maximo=100)
+    descricao: str = Field(default="", tamanho_maximo=500)
     preco: float = Field(..., gt=0)
     estoque: int = Field(default=0, ge=0)
 
@@ -311,8 +311,8 @@ class CriarProdutoDTO(BaseModel):
 class AlterarProdutoDTO(BaseModel):
     """DTO para alteração de produto"""
     id: int = Field(..., gt=0)
-    nome: str = Field(..., min_length=3, max_length=100)
-    descricao: str = Field(default="", max_length=500)
+    nome: str = Field(..., tamanho_minimo=3, tamanho_maximo=100)
+    descricao: str = Field(default="", tamanho_maximo=500)
     preco: float = Field(..., gt=0)
     estoque: int = Field(default=0, ge=0)
     ativo: bool = True

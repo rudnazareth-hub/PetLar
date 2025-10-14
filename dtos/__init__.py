@@ -1,4 +1,4 @@
-"""DTOs - Data Transfer Objects para validação de dados"""
+"""DTOs - Data Transfer Objects para validaÃ§Ã£o de dados"""
 
 from .login_dto import LoginDTO, CadastroDTO, RecuperacaoSenhaDTO, RedefinirSenhaDTO
 from .usuario_dto import CriarUsuarioDTO, AlterarUsuarioDTO

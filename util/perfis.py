@@ -14,8 +14,11 @@ class Perfil(str, Enum):
         - ERRADO: perfil = "admin"
         - ERRADO: perfil = "cliente"
     """
+
+    # PERFIS DO SEU SISTEMA #####################################
     ADMIN = "admin"
     CLIENTE = "cliente"
+    # FIM DOS PERFIS ############################################
 
     def __str__(self) -> str:
         """Retorna o valor do perfil como string"""

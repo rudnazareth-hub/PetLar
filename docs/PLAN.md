@@ -1070,8 +1070,8 @@ def excluir(id: int) -> bool:
 from pydantic import BaseModel, Field, field_validator
 
 class CriarTarefaDTO(BaseModel):
-    titulo: str = Field(..., min_length=3, max_length=100)
-    descricao: str = Field(default="", max_length=500)
+    titulo: str = Field(..., tamanho_minimo=3, tamanho_maximo=100)
+    descricao: str = Field(default="", tamanho_maximo=500)
 
     @field_validator('titulo')
     @classmethod
@@ -1082,8 +1082,8 @@ class CriarTarefaDTO(BaseModel):
 
 class AlterarTarefaDTO(BaseModel):
     id: int = Field(..., gt=0)
-    titulo: str = Field(..., min_length=3, max_length=100)
-    descricao: str = Field(default="", max_length=500)
+    titulo: str = Field(..., tamanho_minimo=3, tamanho_maximo=100)
+    descricao: str = Field(default="", tamanho_maximo=500)
     concluida: bool = False
 
     @field_validator('titulo')
