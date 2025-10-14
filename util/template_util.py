@@ -1,6 +1,7 @@
 from jinja2 import Environment, FileSystemLoader
 from fastapi.templating import Jinja2Templates
 from util.flash_messages import obter_mensagens
+from util.config import APP_NAME, VERSION
 from datetime import datetime
 
 def formatar_data_br(data_str):
@@ -74,6 +75,10 @@ def criar_templates(pasta: str):
 
     # Adicionar função global para obter mensagens
     env.globals['obter_mensagens'] = obter_mensagens
+
+    # Adicionar variáveis globais de configuração
+    env.globals['APP_NAME'] = APP_NAME
+    env.globals['VERSION'] = VERSION
 
     # Adicionar filtros customizados
     env.filters['data_br'] = formatar_data_br

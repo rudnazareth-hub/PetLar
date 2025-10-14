@@ -2,8 +2,10 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
-import os
 from pathlib import Path
+
+# Configurações
+from util.config import APP_NAME, SECRET_KEY, HOST, PORT, RELOAD, VERSION
 
 # Logger
 from util.logger_config import logger
@@ -23,10 +25,9 @@ from routes.public_routes import router as public_router
 from util.seed_data import inicializar_dados
 
 # Criar aplicação FastAPI
-app = FastAPI(title="DefaultWebApp - Boilerplate", version="1.0.0")
+app = FastAPI(title=APP_NAME, version=VERSION)
 
 # Configurar SessionMiddleware
-SECRET_KEY = os.getenv("SECRET_KEY", "sua-chave-secreta-super-segura-mude-isso-em-producao")
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 # Montar arquivos estáticos
@@ -85,25 +86,20 @@ async def health_check():
 
 if __name__ == "__main__":
     logger.info("=" * 60)
-    logger.info("Iniciando DefaultWebApp - Boilerplate FastAPI")
+    logger.info(f"Iniciando {APP_NAME} v{VERSION}")
     logger.info("=" * 60)
 
-    # Configurações do servidor
-    host = os.getenv("HOST", "0.0.0.0")
-    port = int(os.getenv("PORT", "8000"))
-    reload = os.getenv("RELOAD", "True").lower() == "true"
-
-    logger.info(f"Servidor rodando em http://{host}:{port}")
-    logger.info(f"Hot reload: {'Ativado' if reload else 'Desativado'}")
-    logger.info(f"Documentação API: http://{host}:{port}/docs")
+    logger.info(f"Servidor rodando em http://{HOST}:{PORT}")
+    logger.info(f"Hot reload: {'Ativado' if RELOAD else 'Desativado'}")
+    logger.info(f"Documentação API: http://{HOST}:{PORT}/docs")
     logger.info("=" * 60)
 
     try:
         uvicorn.run(
             "main:app",
-            host=host,
-            port=port,
-            reload=reload,
+            host=HOST,
+            port=PORT,
+            reload=RELOAD,
             log_level="info"
         )
     except KeyboardInterrupt:

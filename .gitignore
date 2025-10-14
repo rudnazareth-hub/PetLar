@@ -62,6 +62,8 @@ htmlcov/
 *.tmp
 temp/
 tmp/
+.mypy_cache/
+
 
 # IA Files
 CLAUDE.md

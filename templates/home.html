@@ -1,6 +1,6 @@
 {% extends "base_privada.html" %}
 
-{% block titulo %}Dashboard - Sistema Web{% endblock %}
+{% block titulo %}Dashboard - {{ APP_NAME }}{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -109,14 +109,4 @@
 {% endblock %}
 
 {% block scripts %}
-<style>
-    .hover-shadow {
-        transition: all 0.3s ease;
-    }
-
-    .hover-shadow:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-    }
-</style>
 {% endblock %}
