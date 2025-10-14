@@ -3,6 +3,7 @@ Middleware de Security Headers
 Adiciona cabeçalhos de segurança HTTP às respostas
 """
 
+from typing import Optional
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
@@ -90,7 +91,7 @@ class CORSSecurityMiddleware(BaseHTTPMiddleware):
     Use apenas se precisar de controle fino sobre CORS
     """
 
-    def __init__(self, app, allowed_origins: list = None):
+    def __init__(self, app, allowed_origins: Optional[list] = None):
         """
         Inicializa middleware CORS
 
@@ -117,7 +118,7 @@ class CORSSecurityMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
 
         # Verificar se a origem está na lista de permitidos
-        if origin in self.allowed_origins:
+        if origin and origin in self.allowed_origins:
             response.headers["Access-Control-Allow-Origin"] = origin
             response.headers["Access-Control-Allow-Credentials"] = "true"
             response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"

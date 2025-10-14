@@ -1,9 +1,9 @@
-from typing import Optional
+from typing import Dict, Any
 from repo import configuracao_repo
 
 class ConfigCache:
     """Cache de configurações do sistema para melhor performance"""
-    _cache = {}
+    _cache: Dict[str, Any] = {}
 
     @classmethod
     def obter(cls, chave: str, padrao: str = "") -> str:

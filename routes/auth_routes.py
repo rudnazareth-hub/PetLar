@@ -8,7 +8,7 @@ from model.usuario_model import Usuario
 from repo import usuario_repo
 from util.security import criar_hash_senha, verificar_senha, gerar_token_redefinicao, obter_data_expiracao_token
 from util.email_service import email_service
-from util.flash_messages import informar_sucesso, informar_erro, informar_aviso
+from util.flash_messages import informar_sucesso, informar_erro
 from util.template_util import criar_templates
 from util.logger_config import logger
 from util.perfis import Perfil
@@ -24,7 +24,7 @@ class SimpleRateLimiter:
     def __init__(self, max_tentativas: int = 5, janela_minutos: int = 5):
         self.max_tentativas = max_tentativas
         self.janela = timedelta(minutes=janela_minutos)
-        self.tentativas = defaultdict(list)
+        self.tentativas: defaultdict[str, list[datetime]] = defaultdict(list)
 
     def verificar(self, identificador: str) -> bool:
         """Retorna True se dentro do limite, False se excedido"""
@@ -64,7 +64,7 @@ async def post_login(
     """Processa login do usuário"""
     try:
         # Rate limiting por IP
-        ip = request.client.host
+        ip = request.client.host if request.client else "unknown"
         if not login_limiter.verificar(ip):
             informar_erro(request, "Muitas tentativas de login. Aguarde alguns minutos.")
             logger.warning(f"Rate limit excedido para IP: {ip}")

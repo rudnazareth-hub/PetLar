@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, Form, Request, status
 from fastapi.responses import RedirectResponse
 
@@ -14,7 +15,7 @@ templates = criar_templates("templates/admin/configuracoes")
 
 @router.get("/listar")
 @requer_autenticacao([Perfil.ADMIN.value])
-async def get_listar(request: Request, usuario_logado: dict = None):
+async def get_listar(request: Request, usuario_logado: Optional[dict] = None):
     """Exibe lista de configurações do sistema"""
     configuracoes = configuracao_repo.obter_todos()
     return templates.TemplateResponse(
@@ -28,13 +29,14 @@ async def post_atualizar(
     request: Request,
     chave: str = Form(...),
     valor: str = Form(...),
-    usuario_logado: dict = None
+    usuario_logado: Optional[dict] = None
 ):
     """
     Atualiza valor de uma configuração do sistema
 
     Após atualizar, limpa o cache para forçar recarregamento
     """
+    assert usuario_logado is not None
     # Verificar se configuração existe
     config_existente = configuracao_repo.obter_por_chave(chave)
 

@@ -49,7 +49,7 @@ def validar_string_obrigatoria(
     """
 
     def validator(cls: Any, v: Any) -> Any:  # noqa: N805
-        if not v or (truncar and not v.truncar()):
+        if not v or (truncar and not v.strip()):
             raise ValueError(f"{nome_campo} é obrigatório")
 
         valor = v.strip() if truncar else v

@@ -1,8 +1,9 @@
+from typing import Optional
 from fastapi import APIRouter, Form, Request, status
 from fastapi.responses import RedirectResponse
 from pydantic import ValidationError
 
-from dtos.tarefa_dto import CriarTarefaDTO, AlterarTarefaDTO
+from dtos.tarefa_dto import CriarTarefaDTO
 from model.tarefa_model import Tarefa
 from repo import tarefa_repo
 from util.auth_decorator import requer_autenticacao
@@ -15,8 +16,9 @@ templates = criar_templates("templates/tarefas")
 
 @router.get("/listar")
 @requer_autenticacao()
-async def listar(request: Request, usuario_logado: dict = None):
+async def listar(request: Request, usuario_logado: Optional[dict] = None):
     """Lista todas as tarefas do usuário logado"""
+    assert usuario_logado is not None
     tarefas = tarefa_repo.obter_todos_por_usuario(usuario_logado["id"])
     return templates.TemplateResponse(
         "tarefas/listar.html",
@@ -25,7 +27,7 @@ async def listar(request: Request, usuario_logado: dict = None):
 
 @router.get("/cadastrar")
 @requer_autenticacao()
-async def get_cadastrar(request: Request, usuario_logado: dict = None):
+async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None):
     """Exibe formulário de cadastro de tarefa"""
     return templates.TemplateResponse("tarefas/cadastrar.html", {"request": request})
 
@@ -35,9 +37,10 @@ async def post_cadastrar(
     request: Request,
     titulo: str = Form(...),
     descricao: str = Form(""),
-    usuario_logado: dict = None
+    usuario_logado: Optional[dict] = None
 ):
     """Cadastra uma nova tarefa"""
+    assert usuario_logado is not None
     try:
         # Validar com DTO
         dto = CriarTarefaDTO(titulo=titulo, descricao=descricao)
@@ -67,8 +70,9 @@ async def post_cadastrar(
 
 @router.post("/{id}/concluir")
 @requer_autenticacao()
-async def concluir(request: Request, id: int, usuario_logado: dict = None):
+async def concluir(request: Request, id: int, usuario_logado: Optional[dict] = None):
     """Marca tarefa como concluída"""
+    assert usuario_logado is not None
     tarefa = tarefa_repo.obter_por_id(id)
 
     # Verificar se tarefa existe e pertence ao usuário
@@ -84,8 +88,9 @@ async def concluir(request: Request, id: int, usuario_logado: dict = None):
 
 @router.post("/{id}/excluir")
 @requer_autenticacao()
-async def post_excluir(request: Request, id: int, usuario_logado: dict = None):
+async def post_excluir(request: Request, id: int, usuario_logado: Optional[dict] = None):
     """Exclui tarefa"""
+    assert usuario_logado is not None
     tarefa = tarefa_repo.obter_por_id(id)
 
     # Verificar se tarefa existe e pertence ao usuário

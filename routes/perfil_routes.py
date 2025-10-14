@@ -1,8 +1,8 @@
+from typing import Optional
 from fastapi import APIRouter, Form, Request, status, UploadFile, File
 from fastapi.responses import RedirectResponse
 from pydantic import ValidationError
 from pathlib import Path
-import shutil
 import uuid
 
 from dtos.perfil_dto import EditarPerfilDTO, AlterarSenhaDTO, AtualizarFotoDTO
@@ -25,8 +25,9 @@ ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
 
 @router.get("/visualizar")
 @requer_autenticacao()
-async def get_visualizar(request: Request, usuario_logado: dict = None):
+async def get_visualizar(request: Request, usuario_logado: Optional[dict] = None):
     """Visualizar perfil do usuário logado"""
+    assert usuario_logado is not None
     usuario = usuario_repo.obter_por_id(usuario_logado["id"])
 
     if not usuario:
@@ -41,8 +42,9 @@ async def get_visualizar(request: Request, usuario_logado: dict = None):
 
 @router.get("/editar")
 @requer_autenticacao()
-async def get_editar(request: Request, usuario_logado: dict = None):
+async def get_editar(request: Request, usuario_logado: Optional[dict] = None):
     """Formulário para editar dados do perfil"""
+    assert usuario_logado is not None
     usuario = usuario_repo.obter_por_id(usuario_logado["id"])
 
     if not usuario:
@@ -61,9 +63,10 @@ async def post_editar(
     request: Request,
     nome: str = Form(...),
     email: str = Form(...),
-    usuario_logado: dict = None
+    usuario_logado: Optional[dict] = None
 ):
     """Processar edição de dados do perfil"""
+    assert usuario_logado is not None
     try:
         # Validar com DTO
         dto = EditarPerfilDTO(nome=nome, email=email)
@@ -110,7 +113,7 @@ async def post_editar(
 
 @router.get("/alterar-senha")
 @requer_autenticacao()
-async def get_alterar_senha(request: Request, usuario_logado: dict = None):
+async def get_alterar_senha(request: Request, usuario_logado: Optional[dict] = None):
     """Formulário para alterar senha"""
     return templates.TemplateResponse(
         "perfil/alterar-senha.html",
@@ -125,9 +128,10 @@ async def post_alterar_senha(
     senha_atual: str = Form(...),
     senha_nova: str = Form(...),
     confirmar_senha: str = Form(...),
-    usuario_logado: dict = None
+    usuario_logado: Optional[dict] = None
 ):
     """Processar alteração de senha"""
+    assert usuario_logado is not None
     try:
         # Validar com DTO
         dto = AlterarSenhaDTO(
@@ -179,9 +183,10 @@ async def post_alterar_senha(
 async def post_atualizar_foto(
     request: Request,
     foto: UploadFile = File(...),
-    usuario_logado: dict = None
+    usuario_logado: Optional[dict] = None
 ):
     """Upload de foto de perfil"""
+    assert usuario_logado is not None
     try:
         # Ler conteúdo do arquivo
         contents = await foto.read()

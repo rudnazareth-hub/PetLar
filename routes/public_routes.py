@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Request
-from fastapi.responses import RedirectResponse
 from util.template_util import criar_templates
 from util.auth_decorator import obter_usuario_logado
 
