@@ -97,24 +97,18 @@
 
 {% block scripts %}
 <script>
-    // Validação de senha
+    // Inicializar validador de senha
+    const passwordValidator = new PasswordValidator({
+        passwordFieldId: 'senha',
+        confirmPasswordFieldId: 'confirma_senha',
+        minLength: 6
+    });
+
+    // Validação do formulário (senha opcional)
     document.querySelector('form').addEventListener('submit', function(e) {
-        const senha = document.getElementById('senha').value;
-        const confirmaSenha = document.getElementById('confirma_senha').value;
-
-        // Se senha foi preenchida
-        if (senha || confirmaSenha) {
-            if (senha !== confirmaSenha) {
-                e.preventDefault();
-                alert('As senhas não coincidem!');
-                return false;
-            }
-
-            if (senha.length < 6) {
-                e.preventDefault();
-                alert('A senha deve ter no mínimo 6 caracteres!');
-                return false;
-            }
+        if (!passwordValidator.validateFormOptional()) {
+            e.preventDefault();
+            return false;
         }
     });
 </script>

@@ -70,15 +70,18 @@
 
 {% block scripts %}
 <script>
-    // Validação de senhas iguais
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const senha = document.getElementById('senha').value;
-        const confirmarSenha = document.getElementById('confirmar_senha').value;
+    // Inicializar validador de senha
+    const passwordValidator = new PasswordValidator({
+        passwordFieldId: 'senha',
+        confirmPasswordFieldId: 'confirmar_senha',
+        minLength: 8
+    });
 
-        if (senha !== confirmarSenha) {
+    // Validação do formulário
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (!passwordValidator.validateForm()) {
             e.preventDefault();
-            alert('As senhas não coincidem!');
-            document.getElementById('confirmar_senha').focus();
+            return false;
         }
     });
 </script>

@@ -1,5 +1,3 @@
-import json
-from pathlib import Path
 from repo import usuario_repo
 from model.usuario_model import Usuario
 from util.security import criar_hash_senha
@@ -7,30 +5,29 @@ from util.logger_config import logger
 from util.perfis import Perfil
 
 def carregar_usuarios_seed():
-    """Carrega usuários do arquivo JSON seed"""
-    arquivo = Path("data/usuarios_seed.json")
+    """
+    Carrega usuários padrão gerando automaticamente 1 usuário para cada perfil do enum.
 
-    if not arquivo.exists():
-        logger.warning(f"Arquivo de seed não encontrado: {arquivo.absolute()}")
-        return
-
-    try:
-        with open(arquivo, 'r', encoding='utf-8') as f:
-            dados = json.load(f)
-    except Exception as e:
-        logger.error(f"Erro ao ler arquivo de seed: {e}")
-        return
-
+    Formato gerado:
+    - id: sequencial iniciando em 1
+    - nome: {Perfil} Padrão
+    - email: {perfil}@email.com
+    - senha: {Perfil}@123
+    - perfil: {Perfil}
+    """
     usuarios_criados = 0
     usuarios_existentes = 0
     usuarios_com_erro = 0
 
-    for user_data in dados.get("usuarios", []):
+    # Itera sobre todos os perfis definidos no enum
+    for idx, perfil_enum in enumerate(Perfil, start=1):
         try:
-            email = user_data.get("email")
-            if not email:
-                logger.warning("Usuário sem email no arquivo seed, ignorando")
-                continue
+            perfil_valor = perfil_enum.value
+
+            # Gera dados do usuário baseado no perfil
+            nome = f"{perfil_valor} Padrão"
+            email = f"{perfil_valor.lower()}@email.com"
+            senha_plain = f"{perfil_valor}@123"
 
             # Verificar se já existe
             if usuario_repo.obter_por_email(email):
@@ -38,24 +35,13 @@ def carregar_usuarios_seed():
                 usuarios_existentes += 1
                 continue
 
-            # Obter e validar perfil do JSON
-            perfil_json = user_data.get("perfil", Perfil.CLIENTE.value)
-
-            # Validar que o perfil é válido
-            if not Perfil.existe(perfil_json):
-                logger.warning(
-                    f"Perfil inválido '{perfil_json}' para usuário {email}. "
-                    f"Usando perfil padrão: {Perfil.CLIENTE.value}"
-                )
-                perfil_json = Perfil.CLIENTE.value
-
             # Criar usuário
             usuario = Usuario(
                 id=0,
-                nome=user_data["nome"],
+                nome=nome,
                 email=email,
-                senha=criar_hash_senha(user_data["senha"]),
-                perfil=perfil_json  # Usa Enum Perfil validado
+                senha=criar_hash_senha(senha_plain),
+                perfil=perfil_valor
             )
 
             usuario_id = usuario_repo.inserir(usuario)
@@ -67,7 +53,7 @@ def carregar_usuarios_seed():
                 usuarios_com_erro += 1
 
         except Exception as e:
-            logger.error(f"✗ Erro ao processar usuário {user_data.get('email', 'desconhecido')}: {e}")
+            logger.error(f"✗ Erro ao processar usuário do perfil {perfil_enum.name}: {e}")
             usuarios_com_erro += 1
 
     # Resumo

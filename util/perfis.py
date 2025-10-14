@@ -16,8 +16,8 @@ class Perfil(str, Enum):
     """
 
     # PERFIS DO SEU SISTEMA #####################################
-    ADMIN = "admin"
-    CLIENTE = "cliente"
+    ADMIN = "Administrador"
+    CLIENTE = "Cliente"
     # FIM DOS PERFIS ############################################
 
     def __str__(self) -> str:
