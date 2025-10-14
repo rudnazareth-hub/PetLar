@@ -8,6 +8,8 @@ def carregar_usuarios_seed():
     """
     Carrega usuários padrão gerando automaticamente 1 usuário para cada perfil do enum.
 
+    Só insere usuários se não houver nenhum usuário cadastrado no banco.
+
     Formato gerado:
     - id: sequencial iniciando em 1
     - nome: {Perfil} Padrão
@@ -15,12 +17,26 @@ def carregar_usuarios_seed():
     - senha: {Perfil}@123
     - perfil: {Perfil}
     """
+    # Verificar se já existem usuários cadastrados
+    try:
+        usuarios_existentes_total = usuario_repo.obter_quantidade()
+        if usuarios_existentes_total > 0:
+            logger.info(f"Já existem {usuarios_existentes_total} usuários cadastrados. Seed não será executado.")
+            return
+    except AttributeError:
+        # Se o método obter_quantidade não existir, verifica obtendo todos
+        todos_usuarios = usuario_repo.obter_todos()
+        if todos_usuarios and len(todos_usuarios) > 0:
+            logger.info(f"Já existem {len(todos_usuarios)} usuários cadastrados. Seed não será executado.")
+            return
+
     usuarios_criados = 0
-    usuarios_existentes = 0
     usuarios_com_erro = 0
 
+    logger.info("Nenhum usuário encontrado. Iniciando seed de usuários padrão...")
+
     # Itera sobre todos os perfis definidos no enum
-    for idx, perfil_enum in enumerate(Perfil, start=1):
+    for perfil_enum in Perfil:
         try:
             perfil_valor = perfil_enum.value
 
@@ -28,12 +44,6 @@ def carregar_usuarios_seed():
             nome = f"{perfil_valor} Padrão"
             email = f"{perfil_valor.lower()}@email.com"
             senha_plain = f"{perfil_valor}@123"
-
-            # Verificar se já existe
-            if usuario_repo.obter_por_email(email):
-                logger.info(f"Usuário {email} já existe no banco")
-                usuarios_existentes += 1
-                continue
 
             # Criar usuário
             usuario = Usuario(
@@ -57,7 +67,7 @@ def carregar_usuarios_seed():
             usuarios_com_erro += 1
 
     # Resumo
-    logger.info(f"Resumo do seed de usuários: {usuarios_criados} criados, {usuarios_existentes} já existiam, {usuarios_com_erro} com erro")
+    logger.info(f"Resumo do seed de usuários: {usuarios_criados} criados, {usuarios_com_erro} com erro")
 
 def inicializar_dados():
     """Inicializa todos os dados seed"""
