@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_privada.html" %}
 
 {% block titulo %}Alterar Usuário - Sistema Web{% endblock %}
 
@@ -36,8 +36,8 @@
                         <div class="col-md-6 mb-3">
                             <label for="perfil" class="form-label">Perfil <span class="text-danger">*</span></label>
                             <select class="form-select" id="perfil" name="perfil" required>
-                                <option value="usuario" {{ 'selected' if usuario.perfil == 'usuario' else '' }}>Usuário</option>
-                                <option value="admin" {{ 'selected' if usuario.perfil == 'admin' else '' }}>Administrador</option>
+                                <option value="Cliente" {{ 'selected' if usuario.perfil == 'Cliente' else '' }}>Cliente</option>
+                                <option value="Administrador" {{ 'selected' if usuario.perfil == 'Administrador' else '' }}>Administrador</option>
                             </select>
                         </div>
 

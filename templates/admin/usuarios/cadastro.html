@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_privada.html" %}
 
 {% block titulo %}Cadastrar Usuário - Sistema Web{% endblock %}
 
@@ -37,8 +37,8 @@
                             <label for="perfil" class="form-label">Perfil <span class="text-danger">*</span></label>
                             <select class="form-select" id="perfil" name="perfil" required>
                                 <option value="">Selecione...</option>
-                                <option value="usuario" {{ 'selected' if usuario and usuario.perfil == 'usuario' else '' }}>Usuário</option>
-                                <option value="admin" {{ 'selected' if usuario and usuario.perfil == 'admin' else '' }}>Administrador</option>
+                                <option value="Cliente" {{ 'selected' if usuario and usuario.perfil == 'Cliente' else '' }}>Cliente</option>
+                                <option value="Administrador" {{ 'selected' if usuario and usuario.perfil == 'Administrador' else '' }}>Administrador</option>
                             </select>
                         </div>
 

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_privada.html" %}
 
 {% block titulo %}Editar Perfil{% endblock %}
 
@@ -46,7 +46,7 @@
                                 <i class="bi bi-person-badge"></i> Perfil de Acesso
                             </label>
                             <input type="text" class="form-control"
-                                value="{{ 'Administrador' if usuario.perfil == 'admin' else 'Cliente' }}" disabled>
+                                value="{{ usuario.perfil }}" disabled>
                             <div class="form-text">
                                 O perfil de acesso não pode ser alterado por aqui
                             </div>

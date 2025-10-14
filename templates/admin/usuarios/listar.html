@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_privada.html" %}
 
 {% block titulo %}Gerenciar Usuários - Sistema Web{% endblock %}
 
@@ -34,8 +34,8 @@
                                 <td>{{ usuario.nome }}</td>
                                 <td>{{ usuario.email }}</td>
                                 <td>
-                                    <span class="badge bg-{{ 'danger' if usuario.perfil == 'admin' else 'info' }}">
-                                        {{ usuario.perfil|upper }}
+                                    <span class="badge bg-{{ 'danger' if usuario.perfil == 'Administrador' else 'info' }}">
+                                        {{ usuario.perfil }}
                                     </span>
                                 </td>
                                 <td>{{ usuario.data_cadastro|data_br if usuario.data_cadastro else '-' }}</td>
@@ -76,9 +76,9 @@
  * Função para excluir um usuário
  */
 function excluirUsuario(usuarioId, usuarioNome, usuarioEmail, usuarioPerfil) {
-    const perfilBadge = usuarioPerfil === 'admin'
-        ? '<span class="badge bg-danger">ADMIN</span>'
-        : '<span class="badge bg-info">USER</span>';
+    const perfilBadge = usuarioPerfil === 'Administrador'
+        ? '<span class="badge bg-danger">Administrador</span>'
+        : '<span class="badge bg-info">Cliente</span>';
 
     const detalhes = `
         <div class="card bg-light">

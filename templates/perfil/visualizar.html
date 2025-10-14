@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_privada.html" %}
 
 {% block titulo %}Meu Perfil{% endblock %}
 
@@ -28,9 +28,9 @@
                     </p>
                     <p class="mb-3">
                         <span
-                            class="badge bg-{% if usuario.perfil == 'admin' %}danger{% else %}info{% endif %} px-3 py-2">
+                            class="badge bg-{% if usuario.perfil == 'Administrador' %}danger{% else %}info{% endif %} px-3 py-2">
                             <i class="bi bi-person-badge"></i>
-                            {{ 'Administrador' if usuario.perfil == 'admin' else 'Cliente' }}
+                            {{ usuario.perfil }}
                         </span>
                     </p>
                     {% if usuario.data_cadastro %}
