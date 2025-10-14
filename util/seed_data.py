@@ -18,17 +18,10 @@ def carregar_usuarios_seed():
     - perfil: {Perfil}
     """
     # Verificar se já existem usuários cadastrados
-    try:
-        usuarios_existentes_total = usuario_repo.obter_quantidade()
-        if usuarios_existentes_total > 0:
-            logger.info(f"Já existem {usuarios_existentes_total} usuários cadastrados. Seed não será executado.")
-            return
-    except AttributeError:
-        # Se o método obter_quantidade não existir, verifica obtendo todos
-        todos_usuarios = usuario_repo.obter_todos()
-        if todos_usuarios and len(todos_usuarios) > 0:
-            logger.info(f"Já existem {len(todos_usuarios)} usuários cadastrados. Seed não será executado.")
-            return
+    quantidade_usuarios = usuario_repo.obter_quantidade()
+    if quantidade_usuarios > 0:
+        logger.info(f"Já existem {quantidade_usuarios} usuários cadastrados. Seed não será executado.")
+        return
 
     usuarios_criados = 0
     usuarios_com_erro = 0

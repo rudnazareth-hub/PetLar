@@ -38,6 +38,8 @@ OBTER_POR_ID = "SELECT * FROM usuario WHERE id = ?"
 
 OBTER_TODOS = "SELECT * FROM usuario ORDER BY nome"
 
+OBTER_QUANTIDADE = "SELECT COUNT(*) as quantidade FROM usuario"
+
 OBTER_POR_EMAIL = "SELECT * FROM usuario WHERE email = ?"
 
 ATUALIZAR_TOKEN = """

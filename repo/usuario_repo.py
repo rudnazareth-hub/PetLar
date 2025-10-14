@@ -81,6 +81,13 @@ def obter_todos() -> list[Usuario]:
             for row in rows
         ]
 
+def obter_quantidade() -> int:
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(OBTER_QUANTIDADE)
+        row = cursor.fetchone()
+        return row["quantidade"] if row else 0
+
 def obter_por_email(email: str) -> Optional[Usuario]:
     with get_connection() as conn:
         cursor = conn.cursor()
