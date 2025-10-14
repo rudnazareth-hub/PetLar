@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,12 +14,14 @@
 
     {% block head %}{% endblock %}
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">
-                <img src="/static/img/logo.png" alt="Logo" height="30" class="d-inline-block align-text-top me-2" onerror="this.style.display='none'">
+        <div class="container">
+            <a class="navbar-brand d-flex align-middle" href="/">
+                <img src="/static/img/logo.svg" alt="Logo" height="30"
+                    class="d-inline-block align-text-top me-2 text-white" onerror="this.style.display='none'">
                 Sistema Web
             </a>
 
@@ -37,28 +40,32 @@
 
                 <ul class="navbar-nav">
                     {% if request.session.get('usuario_logado') %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-person-circle"></i> {{ request.session.get('usuario_logado')['nome'] }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="/perfil">Meu Perfil</a></li>
-                                {% if request.session.get('usuario_logado')['perfil'] == 'admin' %}
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/admin/usuarios">Gerenciar Usuários</a></li>
-                                <li><a class="dropdown-item" href="/admin/configuracoes">Configurações</a></li>
-                                {% endif %}
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/logout">Sair</a></li>
-                            </ul>
-                        </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> {{ request.session.get('usuario_logado')['nome'] }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/perfil/visualizar">Meu Perfil</a></li>
+                            {% if request.session.get('usuario_logado')['perfil'] == 'admin' %}
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/admin/usuarios/listar">Gerenciar Usuários</a></li>
+                            <li><a class="dropdown-item" href="/admin/configuracoes/listar">Configurações</a></li>
+                            {% endif %}
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/logout">Sair</a></li>
+                        </ul>
+                    </li>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/cadastro">Cadastrar</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cadastrar">Cadastrar</a>
+                    </li>
                     {% endif %}
                 </ul>
             </div>
@@ -72,6 +79,9 @@
     <main class="container mt-4">
         {% block content %}{% endblock %}
     </main>
+
+    <!-- Modal de Confirmação (componente genérico) -->
+    {% include 'components/modal_confirmacao.html' %}
 
     <!-- Footer -->
     <footer class="bg-light text-center text-muted py-3 mt-5">
@@ -96,4 +106,5 @@
 
     {% block scripts %}{% endblock %}
 </body>
+
 </html>

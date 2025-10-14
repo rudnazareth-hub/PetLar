@@ -6,15 +6,12 @@
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="d-flex align-items-center mb-4">
-            <a href="/admin/usuarios" class="btn btn-outline-secondary me-3">
-                <i class="bi bi-arrow-left"></i>
-            </a>
             <h2 class="mb-0">Alterar Usuário</h2>
         </div>
 
         <div class="card shadow-sm">
             <div class="card-body">
-                <form method="POST" action="/admin/usuarios/alterar/{{ usuario.id }}">
+                <form method="POST" action="/admin/usuarios/editar/{{ usuario.id }}">
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <label for="nome" class="form-label">Nome Completo <span class="text-danger">*</span></label>
@@ -87,7 +84,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-check-circle"></i> Salvar Alterações
                         </button>
-                        <a href="/admin/usuarios" class="btn btn-secondary">
+                        <a href="/admin/usuarios/listar" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Cancelar
                         </a>
                     </div>

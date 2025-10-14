@@ -1,14 +1,17 @@
 import os
-import requests
+import resend
 from typing import Optional
 from util.logger_config import logger
 
 class EmailService:
     def __init__(self):
-        self.api_key = os.getenv('MAILERSEND_API_KEY')
-        self.from_email = os.getenv('MAILERSEND_FROM_EMAIL', 'noreply@seudominio.com')
-        self.from_name = os.getenv('MAILERSEND_FROM_NAME', 'Sistema')
-        self.base_url = "https://api.mailersend.com/v1/email"
+        self.api_key = os.getenv('RESEND_API_KEY')
+        self.from_email = os.getenv('RESEND_FROM_EMAIL', 'noreply@seudominio.com')
+        self.from_name = os.getenv('RESEND_FROM_NAME', 'Sistema')
+
+        # Configura a API key do Resend
+        if self.api_key:
+            resend.api_key = self.api_key
 
     def enviar_email(
         self,
@@ -18,36 +21,21 @@ class EmailService:
         html: str,
         texto: Optional[str] = None
     ) -> bool:
-        """Envia e-mail via MailerSend"""
+        """Envia e-mail via Resend.com"""
         if not self.api_key:
-            logger.warning("MAILERSEND_API_KEY não configurada")
+            logger.warning("RESEND_API_KEY não configurada")
             return False
 
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
-
-        payload = {
-            "from": {
-                "email": self.from_email,
-                "name": self.from_name
-            },
-            "to": [
-                {
-                    "email": para_email,
-                    "name": para_nome
-                }
-            ],
+        params = {
+            "from": f"{self.from_name} <{self.from_email}>",
+            "to": [para_email],
             "subject": assunto,
-            "html": html,
-            "text": texto or assunto
+            "html": html
         }
 
         try:
-            response = requests.post(self.base_url, json=payload, headers=headers)
-            response.raise_for_status()
-            logger.info(f"E-mail enviado para {para_email}")
+            email = resend.Emails.send(params)
+            logger.info(f"E-mail enviado para {para_email} - ID: {email.get('id', 'N/A')}")
             return True
         except Exception as e:
             logger.error(f"Erro ao enviar e-mail: {e}")

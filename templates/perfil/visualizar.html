@@ -5,20 +5,20 @@
 {% block content %}
 <div class="container py-4">
     <div class="row">
-        <div class="col-lg-8 mx-auto">
+        <div class="col-md-8 mx-auto">
             <!-- Cabeçalho do Perfil -->
             <div class="card shadow-sm mb-4">
                 <div class="card-body text-center py-5">
                     <div class="mb-4">
                         {% if usuario.foto %}
-                            <img src="{{ usuario.foto }}" alt="Foto de Perfil"
-                                 class="rounded-circle border border-3 border-primary"
-                                 width="150" height="150" style="object-fit: cover;">
+                        <img src="{{ usuario.foto }}" alt="Foto de Perfil"
+                            class="rounded-circle border border-3 border-primary" width="150" height="150"
+                            style="object-fit: cover;">
                         {% else %}
-                            <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
-                                 style="width: 150px; height: 150px; font-size: 3rem;">
-                                {{ usuario.nome[0].upper() }}
-                            </div>
+                        <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
+                            style="width: 150px; height: 150px; font-size: 3rem;">
+                            {{ usuario.nome[0].upper() }}
+                        </div>
                         {% endif %}
                     </div>
 
@@ -27,7 +27,8 @@
                         <i class="bi bi-envelope"></i> {{ usuario.email }}
                     </p>
                     <p class="mb-3">
-                        <span class="badge bg-{% if usuario.perfil == 'admin' %}danger{% else %}info{% endif %} px-3 py-2">
+                        <span
+                            class="badge bg-{% if usuario.perfil == 'admin' %}danger{% else %}info{% endif %} px-3 py-2">
                             <i class="bi bi-person-badge"></i>
                             {{ 'Administrador' if usuario.perfil == 'admin' else 'Cliente' }}
                         </span>
@@ -39,7 +40,6 @@
                     {% endif %}
                 </div>
             </div>
-
             <!-- Ações do Perfil -->
             <div class="row g-3 mb-4">
                 <div class="col-md-4">
@@ -48,7 +48,7 @@
                     </a>
                 </div>
                 <div class="col-md-4">
-                    <a href="/perfil/senha" class="btn btn-warning w-100">
+                    <a href="/perfil/alterar-senha" class="btn btn-warning w-100">
                         <i class="bi bi-key-fill"></i> Alterar Senha
                     </a>
                 </div>
@@ -56,35 +56,6 @@
                     <button type="button" class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#modalFoto">
                         <i class="bi bi-camera-fill"></i> Alterar Foto
                     </button>
-                </div>
-            </div>
-
-            <!-- Informações Adicionais -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informações da Conta</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <strong>Nome Completo:</strong>
-                            <p class="mb-0 text-muted">{{ usuario.nome }}</p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <strong>E-mail:</strong>
-                            <p class="mb-0 text-muted">{{ usuario.email }}</p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <strong>Perfil de Acesso:</strong>
-                            <p class="mb-0 text-muted">{{ 'Administrador' if usuario.perfil == 'admin' else 'Cliente' }}</p>
-                        </div>
-                        {% if usuario.data_cadastro %}
-                        <div class="col-md-6 mb-3">
-                            <strong>Data de Cadastro:</strong>
-                            <p class="mb-0 text-muted">{{ usuario.data_cadastro|data_br }}</p>
-                        </div>
-                        {% endif %}
-                    </div>
                 </div>
             </div>
         </div>
@@ -99,20 +70,20 @@
                 <h5 class="modal-title"><i class="bi bi-camera-fill"></i> Alterar Foto de Perfil</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form action="/perfil/foto" method="post" enctype="multipart/form-data" id="formFoto">
+            <form action="/perfil/atualizar-foto" method="post" enctype="multipart/form-data" id="formFoto">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="foto" class="form-label">Selecione uma foto:</label>
                         <input type="file" class="form-control" id="foto" name="foto"
-                               accept=".jpg,.jpeg,.png,.gif,.webp" required>
+                            accept=".jpg,.jpeg,.png,.gif,.webp" required>
                         <div class="form-text">
                             Formatos aceitos: JPG, PNG, GIF, WEBP. Tamanho máximo: 5MB
                         </div>
                     </div>
-
                     <!-- Preview da imagem -->
                     <div id="preview-container" class="text-center d-none">
-                        <img id="preview-image" src="" alt="Preview" class="img-fluid rounded" style="max-height: 300px;">
+                        <img id="preview-image" src="" alt="Preview" class="img-fluid rounded"
+                            style="max-height: 300px;">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -129,17 +100,17 @@
 
 {% block scripts %}
 <script>
-// Preview da imagem antes do upload
-document.getElementById('foto').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('preview-image').src = e.target.result;
-            document.getElementById('preview-container').classList.remove('d-none');
-        };
-        reader.readAsDataURL(file);
-    }
-});
+    // Preview da imagem antes do upload
+    document.getElementById('foto').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('preview-image').src = e.target.result;
+                document.getElementById('preview-container').classList.remove('d-none');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 </script>
 {% endblock %}

@@ -1,21 +1,15 @@
 {
   "usuarios": [
     {
-      "nome": "Administrador",
-      "email": "admin@sistema.com",
+      "nome": "Administrador Padrão",
+      "email": "admin@email.com",
       "senha": "Admin@123",
       "perfil": "admin"
     },
     {
-      "nome": "João Silva",
-      "email": "joao@email.com",
-      "senha": "Joao@123",
-      "perfil": "cliente"
-    },
-    {
-      "nome": "Maria Santos",
-      "email": "maria@email.com",
-      "senha": "Maria@123",
+      "nome": "Cliente Padrão",
+      "email": "cliente@email.com",
+      "senha": "Cliente@123",
       "perfil": "cliente"
     }
   ]

@@ -8,7 +8,7 @@
 - ✅ **Templates Jinja2** + Bootstrap 5.3.8 para interface responsiva
 - ✅ **Autenticação completa** com sistema de perfis (roles)
 - ✅ **Sistema de Logger** profissional com rotação de arquivos
-- ✅ **Envio de e-mails** integrado (MailerSend)
+- ✅ **Envio de e-mails** integrado (Resend.com)
 - ✅ **Flash messages e Toasts** para feedback ao usuário
 - ✅ **Validação com Pydantic DTOs** para segurança de dados
 - ✅ **SQLite sem ORM** - SQL puro para máximo controle
@@ -193,7 +193,7 @@ pytest
 - **Rate Limiting** - Proteção contra ataques
 
 ### Comunicação
-- **MailerSend** - Envio de e-mails transacionais
+- **Resend** - Envio de e-mails transacionais
 - **Requests** - Cliente HTTP
 
 ### Desenvolvimento
@@ -250,10 +250,10 @@ DATABASE_PATH=database.db
 # Logging
 LOG_LEVEL=INFO
 
-# E-mail (MailerSend)
-MAILERSEND_API_KEY=seu_api_key_aqui
-MAILERSEND_FROM_EMAIL=noreply@seudominio.com
-MAILERSEND_FROM_NAME=Sistema
+# E-mail (Resend.com)
+RESEND_API_KEY=seu_api_key_aqui
+RESEND_FROM_EMAIL=noreply@seudominio.com
+RESEND_FROM_NAME=Sistema
 
 # Aplicação
 BASE_URL=http://localhost:8000

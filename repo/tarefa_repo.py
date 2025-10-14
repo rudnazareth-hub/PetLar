@@ -1,7 +1,18 @@
+from datetime import datetime
 from typing import Optional
 from model.tarefa_model import Tarefa
 from sql.tarefa_sql import *
 from util.db_util import get_connection
+
+def _converter_data(data_str: Optional[str]) -> Optional[datetime]:
+    """Converte string de data do banco em objeto datetime"""
+    if not data_str:
+        return None
+    try:
+        # SQLite retorna datas no formato 'YYYY-MM-DD HH:MM:SS'
+        return datetime.strptime(data_str, '%Y-%m-%d %H:%M:%S')
+    except ValueError:
+        return None
 
 def criar_tabela() -> bool:
     with get_connection() as conn:
@@ -31,8 +42,8 @@ def obter_todos_por_usuario(usuario_id: int) -> list[Tarefa]:
                 descricao=row["descricao"],
                 concluida=bool(row["concluida"]),
                 usuario_id=row["usuario_id"],
-                data_criacao=row["data_criacao"],
-                data_conclusao=row["data_conclusao"]
+                data_criacao=_converter_data(row["data_criacao"]),
+                data_conclusao=_converter_data(row["data_conclusao"])
             )
             for row in rows
         ]
@@ -49,8 +60,8 @@ def obter_por_id(id: int) -> Optional[Tarefa]:
                 descricao=row["descricao"],
                 concluida=bool(row["concluida"]),
                 usuario_id=row["usuario_id"],
-                data_criacao=row["data_criacao"],
-                data_conclusao=row["data_conclusao"]
+                data_criacao=_converter_data(row["data_criacao"]),
+                data_conclusao=_converter_data(row["data_conclusao"])
             )
         return None
 

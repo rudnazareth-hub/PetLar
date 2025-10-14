@@ -82,13 +82,13 @@ class TestCadastro:
 
     def test_get_cadastro_retorna_formulario(self, client):
         """Deve retornar página de cadastro"""
-        response = client.get("/cadastro")
+        response = client.get("/cadastrar")
         assert response.status_code == status.HTTP_200_OK
         assert "cadastro" in response.text.lower()
 
     def test_cadastro_com_dados_validos(self, client):
         """Deve cadastrar usuário com dados válidos"""
-        response = client.post("/cadastro", data={
+        response = client.post("/cadastrar", data={
             "nome": "Novo Usuario",
             "email": "novo@example.com",
             "senha": "Senha@123",
@@ -109,7 +109,7 @@ class TestCadastro:
         )
 
         # Tentar cadastrar com mesmo e-mail
-        response = client.post("/cadastro", data={
+        response = client.post("/cadastrar", data={
             "nome": "Outro Nome",
             "email": usuario_teste["email"],  # E-mail duplicado
             "senha": "OutraSenha@123",
@@ -121,7 +121,7 @@ class TestCadastro:
 
     def test_cadastro_com_senhas_diferentes(self, client):
         """Deve rejeitar quando senhas não coincidem"""
-        response = client.post("/cadastro", data={
+        response = client.post("/cadastrar", data={
             "nome": "Usuario Teste",
             "email": "teste@example.com",
             "senha": "Senha@123",
@@ -133,7 +133,7 @@ class TestCadastro:
 
     def test_cadastro_com_senha_fraca(self, client):
         """Deve rejeitar senha que não atende requisitos de força"""
-        response = client.post("/cadastro", data={
+        response = client.post("/cadastrar", data={
             "nome": "Usuario Teste",
             "email": "teste@example.com",
             "senha": "123456",  # Senha fraca
@@ -178,7 +178,7 @@ class TestLogout:
         cliente_autenticado.get("/logout")
 
         # Tentar acessar área protegida
-        response = cliente_autenticado.get("/tarefas", follow_redirects=False)
+        response = cliente_autenticado.get("/tarefas/listar", follow_redirects=False)
 
         # Deve redirecionar para login
         assert response.status_code == status.HTTP_303_SEE_OTHER
@@ -261,23 +261,23 @@ class TestAutorizacao:
 
     def test_acesso_sem_autenticacao_redireciona_para_login(self, client):
         """Tentativa de acessar área protegida sem login deve redirecionar"""
-        response = client.get("/tarefas", follow_redirects=False)
+        response = client.get("/tarefas/listar", follow_redirects=False)
         assert response.status_code == status.HTTP_303_SEE_OTHER
 
     def test_usuario_autenticado_acessa_area_protegida(self, cliente_autenticado):
         """Usuário autenticado deve acessar áreas protegidas"""
-        response = cliente_autenticado.get("/tarefas")
+        response = cliente_autenticado.get("/tarefas/listar")
         assert response.status_code == status.HTTP_200_OK
 
     def test_cliente_nao_acessa_area_admin(self, cliente_autenticado):
         """Cliente não deve acessar áreas administrativas"""
-        response = cliente_autenticado.get("/admin/usuarios", follow_redirects=False)
+        response = cliente_autenticado.get("/admin/usuarios/listar", follow_redirects=False)
         # Deve redirecionar ou negar acesso
         assert response.status_code in [status.HTTP_303_SEE_OTHER, status.HTTP_403_FORBIDDEN]
 
     def test_admin_acessa_area_admin(self, admin_autenticado):
         """Admin deve acessar áreas administrativas"""
-        response = admin_autenticado.get("/admin/usuarios")
+        response = admin_autenticado.get("/admin/usuarios/listar")
         assert response.status_code == status.HTTP_200_OK
 
 

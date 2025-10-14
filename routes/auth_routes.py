@@ -113,8 +113,8 @@ async def logout(request: Request):
     informar_sucesso(request, "Logout realizado com sucesso!")
     return RedirectResponse("/login", status_code=status.HTTP_303_SEE_OTHER)
 
-@router.get("/cadastro")
-async def get_cadastro(request: Request):
+@router.get("/cadastrar")
+async def get_cadastrar(request: Request):
     """Exibe formulário de cadastro"""
     # Se já estiver logado, redireciona
     if request.session.get("usuario_logado"):
@@ -122,8 +122,8 @@ async def get_cadastro(request: Request):
 
     return templates.TemplateResponse("auth/cadastro.html", {"request": request})
 
-@router.post("/cadastro")
-async def post_cadastro(
+@router.post("/cadastrar")
+async def post_cadastrar(
     request: Request,
     nome: str = Form(...),
     email: str = Form(...),

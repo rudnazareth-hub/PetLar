@@ -11,17 +11,17 @@ class TestListarTarefas:
 
     def test_listar_tarefas_requer_autenticacao(self, client):
         """Deve exigir autenticação para listar tarefas"""
-        response = client.get("/tarefas", follow_redirects=False)
+        response = client.get("/tarefas/listar", follow_redirects=False)
         assert response.status_code == status.HTTP_303_SEE_OTHER
 
     def test_listar_tarefas_usuario_autenticado(self, cliente_autenticado):
         """Usuário autenticado deve conseguir listar suas tarefas"""
-        response = cliente_autenticado.get("/tarefas")
+        response = cliente_autenticado.get("/tarefas/listar")
         assert response.status_code == status.HTTP_200_OK
 
     def test_listar_tarefas_vazia_inicialmente(self, cliente_autenticado):
         """Lista de tarefas deve estar vazia inicialmente"""
-        response = cliente_autenticado.get("/tarefas")
+        response = cliente_autenticado.get("/tarefas/listar")
         assert response.status_code == status.HTTP_200_OK
         # HTML não deve conter tarefas (ou indicar lista vazia)
         assert "tarefa" in response.text.lower()
@@ -50,7 +50,7 @@ class TestCriarTarefa:
 
         # Deve redirecionar para listagem
         assert response.status_code == status.HTTP_303_SEE_OTHER
-        assert response.headers["location"] == "/tarefas"
+        assert response.headers["location"] == "/tarefas/listar"
 
     def test_criar_tarefa_sem_autenticacao(self, client, tarefa_teste):
         """Não deve permitir criar tarefa sem autenticação"""
@@ -110,7 +110,7 @@ class TestCriarTarefa:
         })
 
         # Listar tarefas
-        response = cliente_autenticado.get("/tarefas")
+        response = cliente_autenticado.get("/tarefas/listar")
         assert response.status_code == status.HTTP_200_OK
         assert tarefa_teste["titulo"] in response.text
 
@@ -175,24 +175,6 @@ class TestConcluirTarefa:
 
 class TestExcluirTarefa:
     """Testes de exclusão de tarefas"""
-
-    def test_get_confirmacao_exclusao(self, cliente_autenticado, criar_tarefa, tarefa_teste):
-        """Deve exibir página de confirmação de exclusão"""
-        from repo import tarefa_repo
-
-        # Criar tarefa
-        criar_tarefa(tarefa_teste["titulo"], tarefa_teste["descricao"])
-
-        # Buscar ID da tarefa
-        tarefas = tarefa_repo.obter_todos_por_usuario(1)
-        tarefa_id = tarefas[0].id
-
-        # Acessar página de confirmação
-        response = cliente_autenticado.get(f"/tarefas/{tarefa_id}/excluir")
-
-        assert response.status_code == status.HTTP_200_OK
-        assert "excluir" in response.text.lower()
-        assert tarefa_teste["titulo"] in response.text
 
     def test_excluir_tarefa_propria(self, cliente_autenticado, criar_tarefa, tarefa_teste):
         """Deve permitir excluir tarefa própria"""
@@ -374,7 +356,7 @@ class TestValidacoesTarefa:
             })
 
         # Listar e verificar que todas estão lá
-        response = cliente_autenticado.get("/tarefas")
+        response = cliente_autenticado.get("/tarefas/listar")
         for titulo in tarefas:
             assert titulo in response.text
 

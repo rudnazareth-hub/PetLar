@@ -18,8 +18,11 @@ python-multipart==0.0.12
 # Sessões
 itsdangerous==2.2.0
 
-# HTTP Client (para envio de emails)
+# HTTP Client
 requests==2.32.3
+
+# Email Service (Resend.com)
+resend==2.16.0
 
 # Variáveis de ambiente
 python-dotenv==1.0.1

@@ -20,7 +20,7 @@ def setup_test_database():
     os.environ['DATABASE_PATH'] = test_db_path
 
     # Desabilitar envio de e-mails durante testes
-    os.environ['MAILERSEND_API_KEY'] = ''
+    os.environ['RESEND_API_KEY'] = ''
 
     # Configurar nível de log para testes
     os.environ['LOG_LEVEL'] = 'ERROR'

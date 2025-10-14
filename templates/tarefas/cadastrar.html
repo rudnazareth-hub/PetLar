@@ -1,126 +1,51 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block titulo %}Cadastrar Tarefa - Sistema Web{% endblock %}
 
-{% block nav_items %}
-<li class="nav-item">
-    <a class="nav-link" href="/">Início</a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="/tarefas">Tarefas</a>
-</li>
-<li class="nav-item">
-    <a class="nav-link active" href="/tarefas/cadastrar">Nova Tarefa</a>
-</li>
-{% endblock %}
-
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <h2 class="mb-0">Cadastrar Nova Tarefa</h2>
+        </div>
+
         <div class="card shadow-sm">
-            <div class="card-header bg-success text-white">
-                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Cadastrar Nova Tarefa</h4>
-            </div>
             <div class="card-body">
                 <form method="POST" action="/tarefas/cadastrar">
-                    <div class="mb-3">
-                        <label for="titulo" class="form-label">
-                            Título <span class="text-danger">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="titulo"
-                            name="titulo"
-                            placeholder="Digite o título da tarefa"
-                            required
-                            maxlength="200"
-                            autofocus
-                        >
-                        <div class="form-text">
-                            Informe um título curto e descritivo para a tarefa
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="titulo" class="form-label">Título <span class="text-danger">*</span></label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="titulo"
+                                   name="titulo"
+                                   value="{{ dados.titulo if dados else '' }}"
+                                   required
+                                   maxlength="200">
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label for="descricao" class="form-label">Descrição</label>
+                            <textarea class="form-control"
+                                      id="descricao"
+                                      name="descricao"
+                                      rows="4"
+                                      maxlength="1000">{{ dados.descricao if dados else '' }}</textarea>
+                            <div class="form-text">Adicione mais detalhes sobre a tarefa (opcional)</div>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="descricao" class="form-label">Descrição</label>
-                        <textarea
-                            class="form-control"
-                            id="descricao"
-                            name="descricao"
-                            rows="4"
-                            placeholder="Digite uma descrição detalhada (opcional)"
-                            maxlength="1000"
-                        ></textarea>
-                        <div class="form-text">
-                            Adicione mais detalhes sobre a tarefa (opcional)
-                        </div>
-                    </div>
-
-                    <div class="mb-3 form-check">
-                        <input
-                            type="checkbox"
-                            class="form-check-input"
-                            id="concluida"
-                            name="concluida"
-                        >
-                        <label class="form-check-label" for="concluida">
-                            Marcar como concluída
-                        </label>
-                    </div>
-
-                    <hr>
-
-                    <div class="d-flex justify-content-between">
-                        <a href="/tarefas" class="btn btn-secondary">
-                            <i class="bi bi-arrow-left"></i> Cancelar
-                        </a>
-                        <button type="submit" class="btn btn-success">
-                            <i class="bi bi-check-lg"></i> Cadastrar Tarefa
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Cadastrar
                         </button>
+                        <a href="/tarefas/listar" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
                     </div>
                 </form>
             </div>
         </div>
-
-        <div class="mt-3">
-            <div class="alert alert-light border" role="alert">
-                <h6 class="alert-heading"><i class="bi bi-lightbulb"></i> Dica:</h6>
-                <small class="text-muted">
-                    Organize suas tarefas de forma clara e objetiva. Você pode marcar como concluída a qualquer momento!
-                </small>
-            </div>
-        </div>
     </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-    // Contador de caracteres para o título
-    const tituloInput = document.getElementById('titulo');
-    const descricaoInput = document.getElementById('descricao');
-
-    if (tituloInput) {
-        tituloInput.addEventListener('input', function() {
-            const maxLength = this.getAttribute('maxlength');
-            const currentLength = this.value.length;
-
-            if (!this.nextElementSibling || !this.nextElementSibling.classList.contains('char-counter')) {
-                const counter = document.createElement('div');
-                counter.className = 'form-text char-counter mt-1';
-                this.parentNode.insertBefore(counter, this.nextElementSibling);
-            }
-
-            const counter = this.parentNode.querySelector('.char-counter');
-            counter.textContent = `${currentLength}/${maxLength} caracteres`;
-
-            if (currentLength >= maxLength * 0.9) {
-                counter.classList.add('text-warning');
-            } else {
-                counter.classList.remove('text-warning');
-            }
-        });
-    }
-</script>
 {% endblock %}

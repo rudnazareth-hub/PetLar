@@ -13,7 +13,7 @@ from util.logger_config import logger
 router = APIRouter(prefix="/tarefas")
 templates = criar_templates("templates/tarefas")
 
-@router.get("/")
+@router.get("/listar")
 @requer_autenticacao()
 async def listar(request: Request, usuario_logado: dict = None):
     """Lista todas as tarefas do usuário logado"""
@@ -55,7 +55,7 @@ async def post_cadastrar(
         logger.info(f"Tarefa '{dto.titulo}' criada por usuário {usuario_logado['id']}")
 
         informar_sucesso(request, "Tarefa criada com sucesso!")
-        return RedirectResponse("/tarefas", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse("/tarefas/listar", status_code=status.HTTP_303_SEE_OTHER)
 
     except ValidationError as e:
         erros = [erro['msg'] for erro in e.errors()]
@@ -75,28 +75,12 @@ async def concluir(request: Request, id: int, usuario_logado: dict = None):
     if not tarefa or tarefa.usuario_id != usuario_logado["id"]:
         informar_erro(request, "Tarefa não encontrada")
         logger.warning(f"Usuário {usuario_logado['id']} tentou concluir tarefa {id} sem permissão")
-        return RedirectResponse("/tarefas", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse("/tarefas/listar", status_code=status.HTTP_303_SEE_OTHER)
 
     tarefa_repo.marcar_concluida(id)
     logger.info(f"Tarefa {id} concluída por usuário {usuario_logado['id']}")
     informar_sucesso(request, "Tarefa concluída!")
-    return RedirectResponse("/tarefas", status_code=status.HTTP_303_SEE_OTHER)
-
-@router.get("/{id}/excluir")
-@requer_autenticacao()
-async def get_excluir(request: Request, id: int, usuario_logado: dict = None):
-    """Exibe confirmação de exclusão de tarefa"""
-    tarefa = tarefa_repo.obter_por_id(id)
-
-    # Verificar se tarefa existe e pertence ao usuário
-    if not tarefa or tarefa.usuario_id != usuario_logado["id"]:
-        informar_erro(request, "Tarefa não encontrada")
-        return RedirectResponse("/tarefas", status_code=status.HTTP_303_SEE_OTHER)
-
-    return templates.TemplateResponse(
-        "tarefas/excluir.html",
-        {"request": request, "tarefa": tarefa}
-    )
+    return RedirectResponse("/tarefas/listar", status_code=status.HTTP_303_SEE_OTHER)
 
 @router.post("/{id}/excluir")
 @requer_autenticacao()
@@ -113,4 +97,4 @@ async def post_excluir(request: Request, id: int, usuario_logado: dict = None):
         informar_erro(request, "Tarefa não encontrada")
         logger.warning(f"Usuário {usuario_logado['id']} tentou excluir tarefa {id} sem permissão")
 
-    return RedirectResponse("/tarefas", status_code=status.HTTP_303_SEE_OTHER)
+    return RedirectResponse("/tarefas/listar", status_code=status.HTTP_303_SEE_OTHER)

@@ -16,8 +16,8 @@
 
 {% block content %}
 <!-- Hero Section -->
-<div class="bg-primary text-white py-5 mb-5">
-    <div class="container">
+<div class="container mb-5">
+    <div class="bg-primary text-white rounded-4 shadow-lg p-5 py-md-6">
         <div class="row align-items-center">
             <div class="col-lg-6">
                 <h1 class="display-4 fw-bold mb-4">
@@ -27,7 +27,7 @@
                     Uma plataforma completa e moderna para gerenciar suas atividades de forma simples e eficiente.
                 </p>
                 <div class="d-flex gap-3">
-                    <a href="/cadastro" class="btn btn-light btn-lg">
+                    <a href="/cadastrar" class="btn btn-light btn-lg">
                         <i class="bi bi-person-plus"></i> Criar Conta
                     </a>
                     <a href="/login" class="btn btn-outline-light btn-lg">
@@ -143,8 +143,8 @@
 </div>
 
 <!-- Sobre Section -->
-<div class="bg-light py-5 mb-5" id="sobre">
-    <div class="container">
+<div class="container mb-5" id="sobre">
+    <div class="bg-light rounded-4 shadow-sm p-5 py-md-6">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0">
                 <h2 class="fw-bold mb-4">Sobre o Sistema</h2>
@@ -191,7 +191,7 @@
                 Crie sua conta gratuitamente e comece a usar agora mesmo!
             </p>
             <div class="d-flex justify-content-center gap-3">
-                <a href="/cadastro" class="btn btn-light btn-lg">
+                <a href="/cadastrar" class="btn btn-light btn-lg">
                     <i class="bi bi-person-plus"></i> Criar Conta Grátis
                 </a>
                 <a href="/login" class="btn btn-outline-light btn-lg">
@@ -275,16 +275,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<style>
-.card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-}
-</style>
 {% endblock %}

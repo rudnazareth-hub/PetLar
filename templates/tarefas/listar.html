@@ -7,7 +7,7 @@
     <a class="nav-link" href="/">Início</a>
 </li>
 <li class="nav-item">
-    <a class="nav-link active" href="/tarefas">Tarefas</a>
+    <a class="nav-link active" href="/tarefas/listar">Tarefas</a>
 </li>
 {% endblock %}
 
@@ -56,9 +56,12 @@
                                 </button>
                             </form>
                             {% endif %}
-                            <a href="/tarefas/{{ tarefa.id }}/excluir" class="btn btn-sm btn-danger" title="Excluir tarefa">
+                            <button type="button"
+                                    class="btn btn-sm btn-danger"
+                                    title="Excluir tarefa"
+                                    onclick="excluirTarefa({{ tarefa.id }}, '{{ tarefa.titulo|replace("'", "\\'") }}')">
                                 <i class="bi bi-trash"></i> Excluir
-                            </a>
+                            </button>
                         </div>
                     </div>
                     {% endfor %}
@@ -87,4 +90,30 @@
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+/**
+ * Função para excluir uma tarefa
+ */
+function excluirTarefa(tarefaId, tarefaTitulo) {
+    const detalhes = `
+        <div class="card bg-light">
+            <div class="card-body">
+                <h6 class="card-title mb-2">
+                    <i class="bi bi-list-task"></i> Tarefa:
+                </h6>
+                <p class="mb-0"><strong>${tarefaTitulo}</strong></p>
+            </div>
+        </div>
+    `;
+
+    abrirModalConfirmacao({
+        url: `/tarefas/${tarefaId}/excluir`,
+        mensagem: 'Tem certeza que deseja excluir esta tarefa?',
+        detalhes: detalhes
+    });
+}
+</script>
 {% endblock %}

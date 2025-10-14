@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional
 
 @dataclass
@@ -8,5 +9,5 @@ class Tarefa:
     descricao: str
     concluida: bool
     usuario_id: int
-    data_criacao: Optional[str] = None
-    data_conclusao: Optional[str] = None
+    data_criacao: Optional[datetime] = None
+    data_conclusao: Optional[datetime] = None

@@ -23,9 +23,9 @@ MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
 
 
-@router.get("/")
+@router.get("/visualizar")
 @requer_autenticacao()
-async def get_perfil(request: Request, usuario_logado: dict = None):
+async def get_visualizar(request: Request, usuario_logado: dict = None):
     """Visualizar perfil do usuário logado"""
     usuario = usuario_repo.obter_por_id(usuario_logado["id"])
 
@@ -34,7 +34,7 @@ async def get_perfil(request: Request, usuario_logado: dict = None):
         return RedirectResponse("/logout", status_code=status.HTTP_303_SEE_OTHER)
 
     return templates.TemplateResponse(
-        "perfil/index.html",
+        "perfil/visualizar.html",
         {"request": request, "usuario": usuario}
     )
 
@@ -102,7 +102,7 @@ async def post_editar(
         else:
             informar_erro(request, "Erro ao atualizar perfil. Tente novamente.")
 
-        return RedirectResponse("/perfil", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
 
     except Exception as e:
         logger.error(f"Erro ao atualizar perfil: {e}")
@@ -110,19 +110,19 @@ async def post_editar(
         return RedirectResponse("/perfil/editar", status_code=status.HTTP_303_SEE_OTHER)
 
 
-@router.get("/senha")
+@router.get("/alterar-senha")
 @requer_autenticacao()
-async def get_senha(request: Request, usuario_logado: dict = None):
+async def get_alterar_senha(request: Request, usuario_logado: dict = None):
     """Formulário para alterar senha"""
     return templates.TemplateResponse(
-        "perfil/senha.html",
+        "perfil/alterar-senha.html",
         {"request": request}
     )
 
 
-@router.post("/senha")
+@router.post("/alterar-senha")
 @requer_autenticacao()
-async def post_senha(
+async def post_alterar_senha(
     request: Request,
     senha_atual: str = Form(...),
     senha_nova: str = Form(...),
@@ -142,23 +142,23 @@ async def post_senha(
         if not verificar_senha(senha_atual, usuario.senha):
             informar_erro(request, "Senha atual incorreta")
             logger.warning(f"Tentativa de alteração de senha com senha atual incorreta - Usuário ID: {usuario.id}")
-            return RedirectResponse("/perfil/senha", status_code=status.HTTP_303_SEE_OTHER)
+            return RedirectResponse("/perfil/alterar-senha", status_code=status.HTTP_303_SEE_OTHER)
 
         # Validar se novas senhas coincidem
         if senha_nova != confirmar_senha:
             informar_erro(request, "As senhas novas não coincidem")
-            return RedirectResponse("/perfil/senha", status_code=status.HTTP_303_SEE_OTHER)
+            return RedirectResponse("/perfil/alterar-senha", status_code=status.HTTP_303_SEE_OTHER)
 
         # Validar força da senha
         senha_valida, mensagem = validar_forca_senha(senha_nova)
         if not senha_valida:
             informar_erro(request, mensagem)
-            return RedirectResponse("/perfil/senha", status_code=status.HTTP_303_SEE_OTHER)
+            return RedirectResponse("/perfil/alterar-senha", status_code=status.HTTP_303_SEE_OTHER)
 
         # Verificar se a nova senha é diferente da atual
         if verificar_senha(senha_nova, usuario.senha):
             informar_erro(request, "A nova senha deve ser diferente da senha atual")
-            return RedirectResponse("/perfil/senha", status_code=status.HTTP_303_SEE_OTHER)
+            return RedirectResponse("/perfil/alterar-senha", status_code=status.HTTP_303_SEE_OTHER)
 
         # Atualizar senha
         senha_hash = criar_hash_senha(senha_nova)
@@ -168,17 +168,17 @@ async def post_senha(
         else:
             informar_erro(request, "Erro ao alterar senha. Tente novamente.")
 
-        return RedirectResponse("/perfil", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
 
     except Exception as e:
         logger.error(f"Erro ao alterar senha: {e}")
         informar_erro(request, "Erro ao processar alteração de senha")
-        return RedirectResponse("/perfil/senha", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse("/perfil/alterar-senha", status_code=status.HTTP_303_SEE_OTHER)
 
 
-@router.post("/foto")
+@router.post("/atualizar-foto")
 @requer_autenticacao()
-async def post_foto(
+async def post_atualizar_foto(
     request: Request,
     foto: UploadFile = File(...),
     usuario_logado: dict = None
@@ -188,19 +188,19 @@ async def post_foto(
         # Validar arquivo
         if not foto.filename:
             informar_erro(request, "Nenhum arquivo selecionado")
-            return RedirectResponse("/perfil", status_code=status.HTTP_303_SEE_OTHER)
+            return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
 
         # Verificar extensão
         file_ext = Path(foto.filename).suffix.lower()
         if file_ext not in ALLOWED_EXTENSIONS:
             informar_erro(request, f"Formato não permitido. Use: {', '.join(ALLOWED_EXTENSIONS)}")
-            return RedirectResponse("/perfil", status_code=status.HTTP_303_SEE_OTHER)
+            return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
 
         # Verificar tamanho (ler conteúdo)
         contents = await foto.read()
         if len(contents) > MAX_FILE_SIZE:
             informar_erro(request, f"Arquivo muito grande. Tamanho máximo: {MAX_FILE_SIZE // (1024*1024)}MB")
-            return RedirectResponse("/perfil", status_code=status.HTTP_303_SEE_OTHER)
+            return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
 
         # Gerar nome único para o arquivo
         unique_filename = f"{uuid.uuid4()}{file_ext}"
@@ -239,9 +239,9 @@ async def post_foto(
                 file_path.unlink()
             informar_erro(request, "Erro ao atualizar foto. Tente novamente.")
 
-        return RedirectResponse("/perfil", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
 
     except Exception as e:
         logger.error(f"Erro ao fazer upload de foto: {e}")
         informar_erro(request, "Erro ao processar upload da foto")
-        return RedirectResponse("/perfil", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)

@@ -11,7 +11,7 @@
                     <i class="bi bi-person-plus"></i> Criar Conta
                 </h3>
 
-                <form method="POST" action="/cadastro">
+                <form method="POST" action="/cadastrar">
                     <div class="mb-3">
                         <label for="nome" class="form-label">Nome Completo</label>
                         <input
@@ -44,31 +44,63 @@
 
                     <div class="mb-3">
                         <label for="senha" class="form-label">Senha</label>
-                        <input
-                            type="password"
-                            class="form-control"
-                            id="senha"
-                            name="senha"
-                            placeholder="Digite uma senha forte"
-                            minlength="8"
-                            required
-                        >
-                        <div class="form-text">
-                            Mínimo 8 caracteres com letra maiúscula, minúscula e número
+                        <div class="input-group">
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="senha"
+                                name="senha"
+                                placeholder="Digite uma senha forte"
+                                minlength="8"
+                                required
+                            >
+                            <button class="btn btn-outline-secondary" type="button"
+                                onclick="togglePassword('senha')">
+                                <i class="bi bi-eye" id="icon_senha"></i>
+                            </button>
+                        </div>
+                        <!-- Indicador de força da senha -->
+                        <div class="mt-2">
+                            <small class="text-muted">Força da senha:</small>
+                            <div class="progress" style="height: 5px;">
+                                <div class="progress-bar" id="senha-strength" role="progressbar" style="width: 0%">
+                                </div>
+                            </div>
+                            <small id="senha-strength-text" class="text-muted"></small>
+                        </div>
+                    </div>
+
+                    <!-- Requisitos da Senha -->
+                    <div class="mb-3">
+                        <div class="alert alert-info">
+                            <strong><i class="bi bi-info-circle"></i> Requisitos da senha:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li id="req-length">Mínimo de 8 caracteres</li>
+                                <li id="req-uppercase">Pelo menos 1 letra maiúscula</li>
+                                <li id="req-lowercase">Pelo menos 1 letra minúscula</li>
+                                <li id="req-number">Pelo menos 1 número</li>
+                            </ul>
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="confirmar_senha" class="form-label">Confirmar Senha</label>
-                        <input
-                            type="password"
-                            class="form-control"
-                            id="confirmar_senha"
-                            name="confirmar_senha"
-                            placeholder="Digite a senha novamente"
-                            minlength="8"
-                            required
-                        >
+                        <div class="input-group">
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="confirmar_senha"
+                                name="confirmar_senha"
+                                placeholder="Digite a senha novamente"
+                                minlength="8"
+                                required
+                            >
+                            <button class="btn btn-outline-secondary" type="button"
+                                onclick="togglePassword('confirmar_senha')">
+                                <i class="bi bi-eye" id="icon_confirmar_senha"></i>
+                            </button>
+                        </div>
+                        <div id="senha-match" class="form-text"></div>
                     </div>
 
                     <div class="d-grid">
@@ -94,15 +126,120 @@
 
 {% block scripts %}
 <script>
-    // Validação de senhas iguais
-    document.querySelector('form').addEventListener('submit', function(e) {
+    // Toggle visibilidade da senha
+    function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        const icon = document.getElementById('icon_' + fieldId);
+
+        if (field.type === 'password') {
+            field.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        } else {
+            field.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    }
+
+    // Verificar força da senha
+    const senhaInput = document.getElementById('senha');
+    const strengthBar = document.getElementById('senha-strength');
+    const strengthText = document.getElementById('senha-strength-text');
+
+    senhaInput.addEventListener('input', function () {
+        const senha = this.value;
+        let strength = 0;
+        let color = 'danger';
+        let text = 'Muito fraca';
+
+        // Verificar requisitos
+        const hasLength = senha.length >= 8;
+        const hasUpper = /[A-Z]/.test(senha);
+        const hasLower = /[a-z]/.test(senha);
+        const hasNumber = /\d/.test(senha);
+        const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
+
+        // Atualizar indicadores visuais dos requisitos
+        updateRequirement('req-length', hasLength);
+        updateRequirement('req-uppercase', hasUpper);
+        updateRequirement('req-lowercase', hasLower);
+        updateRequirement('req-number', hasNumber);
+
+        // Calcular força
+        if (hasLength) strength += 20;
+        if (hasUpper) strength += 20;
+        if (hasLower) strength += 20;
+        if (hasNumber) strength += 20;
+        if (hasSpecial) strength += 20;
+
+        // Definir texto e cor
+        if (strength >= 80) {
+            color = 'success';
+            text = 'Forte';
+        } else if (strength >= 60) {
+            color = 'info';
+            text = 'Média';
+        } else if (strength >= 40) {
+            color = 'warning';
+            text = 'Fraca';
+        }
+
+        // Atualizar barra de progresso
+        strengthBar.style.width = strength + '%';
+        strengthBar.className = 'progress-bar bg-' + color;
+        strengthText.textContent = text;
+        strengthText.className = 'text-' + color;
+    });
+
+    function updateRequirement(id, met) {
+        const element = document.getElementById(id);
+        if (met) {
+            element.classList.add('text-success');
+            element.innerHTML = '<i class="bi bi-check-circle-fill"></i> ' + element.textContent.replace(/✓ /g, '').replace(/<i.*?<\/i>/g, '');
+        } else {
+            element.classList.remove('text-success');
+            element.innerHTML = element.textContent.replace(/✓ /g, '').replace(/<i.*?<\/i>/g, '');
+        }
+    }
+
+    // Verificar se senhas coincidem
+    const confirmarSenhaInput = document.getElementById('confirmar_senha');
+    const senhaMatch = document.getElementById('senha-match');
+
+    confirmarSenhaInput.addEventListener('input', function () {
+        if (this.value === senhaInput.value && this.value.length > 0) {
+            senhaMatch.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> As senhas coincidem</span>';
+        } else if (this.value.length > 0) {
+            senhaMatch.innerHTML = '<span class="text-danger"><i class="bi bi-x-circle"></i> As senhas não coincidem</span>';
+        } else {
+            senhaMatch.innerHTML = '';
+        }
+    });
+
+    // Validação do formulário
+    document.querySelector('form').addEventListener('submit', function (e) {
         const senha = document.getElementById('senha').value;
         const confirmarSenha = document.getElementById('confirmar_senha').value;
+
+        if (senha.length < 8) {
+            e.preventDefault();
+            alert('A senha deve ter no mínimo 8 caracteres');
+            return false;
+        }
 
         if (senha !== confirmarSenha) {
             e.preventDefault();
             alert('As senhas não coincidem!');
             document.getElementById('confirmar_senha').focus();
+            return false;
+        }
+
+        // Verificar requisitos mínimos
+        if (!/[A-Z]/.test(senha) || !/[a-z]/.test(senha) || !/\d/.test(senha)) {
+            e.preventDefault();
+            alert('A senha deve conter pelo menos:\n- 1 letra maiúscula\n- 1 letra minúscula\n- 1 número');
+            return false;
         }
     });
 </script>

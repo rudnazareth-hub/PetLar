@@ -7,7 +7,7 @@
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Gerenciar Usuários</h2>
-            <a href="/admin/usuarios/cadastro" class="btn btn-primary">
+            <a href="/admin/usuarios/cadastrar" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> Novo Usuário
             </a>
         </div>
@@ -41,16 +41,17 @@
                                 <td>{{ usuario.data_cadastro|data_br if usuario.data_cadastro else '-' }}</td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
-                                        <a href="/admin/usuarios/alterar/{{ usuario.id }}"
+                                        <a href="/admin/usuarios/editar/{{ usuario.id }}"
                                            class="btn btn-outline-primary"
                                            title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="/admin/usuarios/excluir/{{ usuario.id }}"
-                                           class="btn btn-outline-danger"
-                                           title="Excluir">
+                                        <button type="button"
+                                                class="btn btn-outline-danger"
+                                                title="Excluir"
+                                                onclick="excluirUsuario({{ usuario.id }}, '{{ usuario.nome|replace("'", "\\'") }}', '{{ usuario.email }}', '{{ usuario.perfil }}')">
                                             <i class="bi bi-trash"></i>
-                                        </a>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -67,4 +68,44 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+/**
+ * Função para excluir um usuário
+ */
+function excluirUsuario(usuarioId, usuarioNome, usuarioEmail, usuarioPerfil) {
+    const perfilBadge = usuarioPerfil === 'admin'
+        ? '<span class="badge bg-danger">ADMIN</span>'
+        : '<span class="badge bg-info">USER</span>';
+
+    const detalhes = `
+        <div class="card bg-light">
+            <div class="card-body">
+                <table class="table table-sm table-borderless mb-0">
+                    <tr>
+                        <th width="30%">Nome:</th>
+                        <td>${usuarioNome}</td>
+                    </tr>
+                    <tr>
+                        <th>Email:</th>
+                        <td>${usuarioEmail}</td>
+                    </tr>
+                    <tr>
+                        <th>Perfil:</th>
+                        <td>${perfilBadge}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    `;
+
+    abrirModalConfirmacao({
+        url: `/admin/usuarios/excluir/${usuarioId}`,
+        mensagem: 'Tem certeza que deseja excluir este usuário?',
+        detalhes: detalhes
+    });
+}
+</script>
 {% endblock %}
