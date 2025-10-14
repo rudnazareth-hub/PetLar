@@ -26,7 +26,26 @@ class LoginDTO(BaseModel):
         """Valida que senha não está vazia"""
         if not v or not v.strip():
             raise ValueError('Senha é obrigatória')
-        return v
+
+        if len(v.strip()) < 8:
+            raise ValueError('Senha deve ter no mínimo 8 caracteres')
+
+        if len(v.strip()) > 128:
+            raise ValueError('Senha deve ter no máximo 128 caracteres')
+
+        if not re.search(r"[A-Z]", v):
+            raise ValueError("Senha deve conter pelo menos uma letra maiúscula")
+
+        if not re.search(r"[a-z]", v):
+            raise ValueError("Senha deve conter pelo menos uma letra minúscula")
+
+        if not re.search(r"\d", v):
+            raise ValueError("Senha deve conter pelo menos um número")
+
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", v):
+            raise ValueError("Senha deve conter pelo menos um caractere especial")
+
+        return v.strip()
 
 class CadastroDTO(BaseModel):
     """DTO para validação de dados de cadastro"""
@@ -91,7 +110,10 @@ class CadastroDTO(BaseModel):
         if not re.search(r"\d", v):
             raise ValueError("Senha deve conter pelo menos um número")
 
-        return v
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", v):
+            raise ValueError("Senha deve conter pelo menos um caractere especial")
+
+        return v.strip()
 
     @field_validator('confirmar_senha')
     @classmethod
@@ -163,11 +185,11 @@ class RedefinirSenhaDTO(BaseModel):
         if not v or not v.strip():
             raise ValueError('Senha é obrigatória')
 
-        if len(v) < 8:
+        if len(v.strip()) < 8:
             raise ValueError('Senha deve ter no mínimo 8 caracteres')
 
-        if len(v) > 100:
-            raise ValueError('Senha deve ter no máximo 100 caracteres')
+        if len(v.strip()) > 128:
+            raise ValueError('Senha deve ter no máximo 128 caracteres')
 
         if not re.search(r"[A-Z]", v):
             raise ValueError("Senha deve conter pelo menos uma letra maiúscula")
@@ -177,8 +199,11 @@ class RedefinirSenhaDTO(BaseModel):
 
         if not re.search(r"\d", v):
             raise ValueError("Senha deve conter pelo menos um número")
+        
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", v):
+            raise ValueError("Senha deve conter pelo menos um caractere especial")
 
-        return v
+        return v.strip()
 
     @field_validator('confirmar_senha')
     @classmethod
@@ -187,13 +212,13 @@ class RedefinirSenhaDTO(BaseModel):
         if not v or not v.strip():
             raise ValueError('Confirmação de senha é obrigatória')
 
-        if len(v) < 8:
+        if len(v.strip()) < 8:
             raise ValueError('Confirmação de senha deve ter no mínimo 8 caracteres')
 
-        if len(v) > 100:
-            raise ValueError('Confirmação de senha deve ter no máximo 100 caracteres')
+        if len(v.strip()) > 128:
+            raise ValueError('Confirmação de senha deve ter no máximo 128 caracteres')
 
-        return v
+        return v.strip()
 
     @model_validator(mode='after')
     def validar_senhas_coincidem(self):

@@ -14,11 +14,11 @@ class EditarPerfilDTO(BaseModel):
         if not v or not v.strip():
             raise ValueError('Nome é obrigatório')
 
-        if len(v.strip()) < 3:
-            raise ValueError('Nome deve ter no mínimo 3 caracteres')
+        if len(v.split()) < 2:
+            raise ValueError('Nome deve ter no mínimo 2 palavras')
 
-        if len(v.strip()) > 100:
-            raise ValueError('Nome deve ter no máximo 100 caracteres')
+        if len(v.strip()) > 128:
+            raise ValueError('Nome deve ter no máximo 128 caracteres')
 
         return v.strip()
 
@@ -32,8 +32,8 @@ class EditarPerfilDTO(BaseModel):
         if len(v.strip()) < 5:
             raise ValueError('E-mail deve ter no mínimo 5 caracteres')
 
-        if len(v.strip()) > 100:
-            raise ValueError('E-mail deve ter no máximo 100 caracteres')
+        if len(v.strip()) > 128:
+            raise ValueError('E-mail deve ter no máximo 128 caracteres')
 
         email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if not re.match(email_regex, v.strip()):
@@ -63,11 +63,11 @@ class AlterarSenhaDTO(BaseModel):
         if not v or not v.strip():
             raise ValueError('Nova senha é obrigatória')
 
-        if len(v) < 8:
+        if len(v.strip()) < 8:
             raise ValueError('Nova senha deve ter no mínimo 8 caracteres')
 
-        if len(v) > 100:
-            raise ValueError('Nova senha deve ter no máximo 100 caracteres')
+        if len(v.strip()) > 128:
+            raise ValueError('Nova senha deve ter no máximo 128 caracteres')
 
         if not re.search(r"[A-Z]", v):
             raise ValueError("Nova senha deve conter pelo menos uma letra maiúscula")
@@ -78,7 +78,10 @@ class AlterarSenhaDTO(BaseModel):
         if not re.search(r"\d", v):
             raise ValueError("Nova senha deve conter pelo menos um número")
 
-        return v
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", v):
+            raise ValueError("Nova senha deve conter pelo menos um caractere especial")
+
+        return v.strip()
 
     @field_validator('confirmar_senha')
     @classmethod
@@ -87,13 +90,13 @@ class AlterarSenhaDTO(BaseModel):
         if not v or not v.strip():
             raise ValueError('Confirmação de senha é obrigatória')
 
-        if len(v) < 8:
+        if len(v.strip()) < 8:
             raise ValueError('Confirmação de senha deve ter no mínimo 8 caracteres')
 
-        if len(v) > 100:
-            raise ValueError('Confirmação de senha deve ter no máximo 100 caracteres')
+        if len(v.strip()) > 128:
+            raise ValueError('Confirmação de senha deve ter no máximo 128 caracteres')
 
-        return v
+        return v.strip()
 
     @model_validator(mode='after')
     def validar_senhas_coincidem(self):
