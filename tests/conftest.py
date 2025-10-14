@@ -6,6 +6,7 @@ from fastapi.testclient import TestClient
 import os
 import tempfile
 from pathlib import Path
+from util.perfis import Perfil
 
 # Configurar banco de dados de teste ANTES de importar a aplicação
 @pytest.fixture(scope="session", autouse=True)
@@ -55,7 +56,7 @@ def usuario_teste():
         "nome": "Usuario Teste",
         "email": "teste@example.com",
         "senha": "Senha@123",
-        "perfil": "cliente"
+        "perfil": Perfil.CLIENTE.value  # Usa Enum Perfil
     }
 
 
@@ -66,7 +67,7 @@ def admin_teste():
         "nome": "Admin Teste",
         "email": "admin@example.com",
         "senha": "Admin@123",
-        "perfil": "admin"
+        "perfil": Perfil.ADMIN.value  # Usa Enum Perfil
     }
 
 
@@ -142,7 +143,7 @@ def admin_autenticado(client, criar_usuario, fazer_login, admin_teste):
         nome=admin_teste["nome"],
         email=admin_teste["email"],
         senha=criar_hash_senha(admin_teste["senha"]),
-        perfil="admin"
+        perfil=Perfil.ADMIN.value  # Usa Enum Perfil
     )
     usuario_repo.inserir(admin)
 

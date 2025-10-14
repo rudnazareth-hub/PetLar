@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, field_validator, model_validator
 import re
 
 class LoginDTO(BaseModel):
@@ -30,10 +30,10 @@ class LoginDTO(BaseModel):
 
 class CadastroDTO(BaseModel):
     """DTO para validação de dados de cadastro"""
-    nome: str = Field(..., min_length=3, max_length=100)
-    email: str = Field(..., min_length=5, max_length=100)
-    senha: str = Field(..., min_length=8, max_length=100)
-    confirmar_senha: str = Field(..., min_length=8, max_length=100)
+    nome: str
+    email: str
+    senha: str
+    confirmar_senha: str
 
     @field_validator('nome')
     @classmethod
@@ -45,6 +45,9 @@ class CadastroDTO(BaseModel):
         if len(v.strip()) < 3:
             raise ValueError('Nome deve ter no mínimo 3 caracteres')
 
+        if len(v.strip()) > 100:
+            raise ValueError('Nome deve ter no máximo 100 caracteres')
+
         return v.strip()
 
     @field_validator('email')
@@ -53,6 +56,12 @@ class CadastroDTO(BaseModel):
         """Valida formato do e-mail"""
         if not v or not v.strip():
             raise ValueError('E-mail é obrigatório')
+
+        if len(v.strip()) < 5:
+            raise ValueError('E-mail deve ter no mínimo 5 caracteres')
+
+        if len(v.strip()) > 100:
+            raise ValueError('E-mail deve ter no máximo 100 caracteres')
 
         email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if not re.match(email_regex, v.strip()):
@@ -63,12 +72,24 @@ class CadastroDTO(BaseModel):
     @field_validator('senha')
     @classmethod
     def validar_senha(cls, v):
-        """Valida senha"""
+        """Valida força da senha"""
         if not v or not v.strip():
             raise ValueError('Senha é obrigatória')
 
         if len(v) < 8:
             raise ValueError('Senha deve ter no mínimo 8 caracteres')
+
+        if len(v) > 100:
+            raise ValueError('Senha deve ter no máximo 100 caracteres')
+
+        if not re.search(r"[A-Z]", v):
+            raise ValueError("Senha deve conter pelo menos uma letra maiúscula")
+
+        if not re.search(r"[a-z]", v):
+            raise ValueError("Senha deve conter pelo menos uma letra minúscula")
+
+        if not re.search(r"\d", v):
+            raise ValueError("Senha deve conter pelo menos um número")
 
         return v
 
@@ -78,11 +99,25 @@ class CadastroDTO(BaseModel):
         """Valida confirmação de senha"""
         if not v or not v.strip():
             raise ValueError('Confirmação de senha é obrigatória')
+
+        if len(v) < 8:
+            raise ValueError('Confirmação de senha deve ter no mínimo 8 caracteres')
+
+        if len(v) > 100:
+            raise ValueError('Confirmação de senha deve ter no máximo 100 caracteres')
+
         return v
+
+    @model_validator(mode='after')
+    def validar_senhas_coincidem(self):
+        """Valida se senha e confirmação são iguais"""
+        if self.senha != self.confirmar_senha:
+            raise ValueError('As senhas não coincidem')
+        return self
 
 class RecuperacaoSenhaDTO(BaseModel):
     """DTO para validação de recuperação de senha"""
-    email: str = Field(..., min_length=5, max_length=100)
+    email: str
 
     @field_validator('email')
     @classmethod
@@ -90,6 +125,12 @@ class RecuperacaoSenhaDTO(BaseModel):
         """Valida formato do e-mail"""
         if not v or not v.strip():
             raise ValueError('E-mail é obrigatório')
+
+        if len(v.strip()) < 5:
+            raise ValueError('E-mail deve ter no mínimo 5 caracteres')
+
+        if len(v.strip()) > 100:
+            raise ValueError('E-mail deve ter no máximo 100 caracteres')
 
         email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if not re.match(email_regex, v.strip()):
@@ -99,9 +140,9 @@ class RecuperacaoSenhaDTO(BaseModel):
 
 class RedefinirSenhaDTO(BaseModel):
     """DTO para validação de redefinição de senha"""
-    token: str = Field(..., min_length=1)
-    senha: str = Field(..., min_length=8, max_length=100)
-    confirmar_senha: str = Field(..., min_length=8, max_length=100)
+    token: str
+    senha: str
+    confirmar_senha: str
 
     @field_validator('token')
     @classmethod
@@ -109,17 +150,33 @@ class RedefinirSenhaDTO(BaseModel):
         """Valida token"""
         if not v or not v.strip():
             raise ValueError('Token é obrigatório')
+
+        if len(v.strip()) < 1:
+            raise ValueError('Token inválido')
+
         return v.strip()
 
     @field_validator('senha')
     @classmethod
     def validar_senha(cls, v):
-        """Valida senha"""
+        """Valida força da senha"""
         if not v or not v.strip():
             raise ValueError('Senha é obrigatória')
 
         if len(v) < 8:
             raise ValueError('Senha deve ter no mínimo 8 caracteres')
+
+        if len(v) > 100:
+            raise ValueError('Senha deve ter no máximo 100 caracteres')
+
+        if not re.search(r"[A-Z]", v):
+            raise ValueError("Senha deve conter pelo menos uma letra maiúscula")
+
+        if not re.search(r"[a-z]", v):
+            raise ValueError("Senha deve conter pelo menos uma letra minúscula")
+
+        if not re.search(r"\d", v):
+            raise ValueError("Senha deve conter pelo menos um número")
 
         return v
 
@@ -129,4 +186,18 @@ class RedefinirSenhaDTO(BaseModel):
         """Valida confirmação de senha"""
         if not v or not v.strip():
             raise ValueError('Confirmação de senha é obrigatória')
+
+        if len(v) < 8:
+            raise ValueError('Confirmação de senha deve ter no mínimo 8 caracteres')
+
+        if len(v) > 100:
+            raise ValueError('Confirmação de senha deve ter no máximo 100 caracteres')
+
         return v
+
+    @model_validator(mode='after')
+    def validar_senhas_coincidem(self):
+        """Valida se senha e confirmação são iguais"""
+        if self.senha != self.confirmar_senha:
+            raise ValueError('As senhas não coincidem')
+        return self

@@ -7,7 +7,6 @@ from dtos.login_dto import LoginDTO, CadastroDTO, RecuperacaoSenhaDTO, Redefinir
 from model.usuario_model import Usuario
 from repo import usuario_repo
 from util.security import criar_hash_senha, verificar_senha, gerar_token_redefinicao, obter_data_expiracao_token
-from util.senha_util import validar_forca_senha
 from util.email_service import email_service
 from util.flash_messages import informar_sucesso, informar_erro, informar_aviso
 from util.template_util import criar_templates
@@ -139,23 +138,6 @@ async def post_cadastrar(
             senha=senha,
             confirmar_senha=confirmar_senha
         )
-
-        # Verificar se senhas coincidem
-        if dto.senha != dto.confirmar_senha:
-            informar_erro(request, "As senhas não coincidem")
-            return templates.TemplateResponse(
-                "auth/cadastro.html",
-                {"request": request, "nome": nome, "email": email}
-            )
-
-        # Validar força da senha
-        senha_valida, mensagem = validar_forca_senha(dto.senha)
-        if not senha_valida:
-            informar_erro(request, mensagem)
-            return templates.TemplateResponse(
-                "auth/cadastro.html",
-                {"request": request, "nome": nome, "email": email}
-            )
 
         # Verificar se e-mail já existe
         if usuario_repo.obter_por_email(dto.email):
@@ -293,23 +275,6 @@ async def post_redefinir_senha(
             senha=senha,
             confirmar_senha=confirmar_senha
         )
-
-        # Verificar se senhas coincidem
-        if dto.senha != dto.confirmar_senha:
-            informar_erro(request, "As senhas não coincidem")
-            return RedirectResponse(
-                f"/redefinir-senha?token={token}",
-                status_code=status.HTTP_303_SEE_OTHER
-            )
-
-        # Validar força da senha
-        senha_valida, mensagem = validar_forca_senha(dto.senha)
-        if not senha_valida:
-            informar_erro(request, mensagem)
-            return RedirectResponse(
-                f"/redefinir-senha?token={token}",
-                status_code=status.HTTP_303_SEE_OTHER
-            )
 
         # Validar token e expiração
         usuario = usuario_repo.obter_por_token(dto.token)

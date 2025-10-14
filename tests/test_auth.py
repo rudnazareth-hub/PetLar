@@ -4,6 +4,7 @@ Testa login, cadastro, logout e recuperação de senha
 """
 import pytest
 from fastapi import status
+from util.perfis import Perfil
 
 
 class TestLogin:
@@ -145,7 +146,7 @@ class TestCadastro:
         assert any(palavra in response.text.lower() for palavra in ["mínimo", "maiúscula", "senha"])
 
     def test_cadastro_cria_usuario_com_perfil_cliente(self, client):
-        """Cadastro público deve criar usuário com perfil 'cliente'"""
+        """Cadastro público deve criar usuário com perfil CLIENTE (Enum Perfil)"""
         from repo import usuario_repo
 
         client.post("/cadastro", data={
@@ -158,7 +159,7 @@ class TestCadastro:
         # Verificar no banco que o usuário foi criado com perfil correto
         usuario = usuario_repo.obter_por_email("teste@example.com")
         assert usuario is not None
-        assert usuario.perfil == "cliente"
+        assert usuario.perfil == Perfil.CLIENTE.value  # Usa Enum Perfil
 
 
 class TestLogout:

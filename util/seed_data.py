@@ -4,6 +4,7 @@ from repo import usuario_repo
 from model.usuario_model import Usuario
 from util.security import criar_hash_senha
 from util.logger_config import logger
+from util.perfis import Perfil
 
 def carregar_usuarios_seed():
     """Carrega usuários do arquivo JSON seed"""
@@ -37,13 +38,24 @@ def carregar_usuarios_seed():
                 usuarios_existentes += 1
                 continue
 
+            # Obter e validar perfil do JSON
+            perfil_json = user_data.get("perfil", Perfil.CLIENTE.value)
+
+            # Validar que o perfil é válido
+            if not Perfil.existe(perfil_json):
+                logger.warning(
+                    f"Perfil inválido '{perfil_json}' para usuário {email}. "
+                    f"Usando perfil padrão: {Perfil.CLIENTE.value}"
+                )
+                perfil_json = Perfil.CLIENTE.value
+
             # Criar usuário
             usuario = Usuario(
                 id=0,
                 nome=user_data["nome"],
                 email=email,
                 senha=criar_hash_senha(user_data["senha"]),
-                perfil=user_data.get("perfil", "cliente")
+                perfil=perfil_json  # Usa Enum Perfil validado
             )
 
             usuario_id = usuario_repo.inserir(usuario)

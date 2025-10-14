@@ -5,12 +5,12 @@ from pathlib import Path
 import shutil
 import uuid
 
+from dtos.perfil_dto import EditarPerfilDTO, AlterarSenhaDTO, AtualizarFotoDTO
 from repo import usuario_repo
 from util.auth_decorator import requer_autenticacao
 from util.template_util import criar_templates
 from util.flash_messages import informar_sucesso, informar_erro
 from util.security import criar_hash_senha, verificar_senha
-from util.senha_util import validar_forca_senha
 from util.logger_config import logger
 
 router = APIRouter(prefix="/perfil")
@@ -65,17 +65,11 @@ async def post_editar(
 ):
     """Processar edição de dados do perfil"""
     try:
-        # Validações básicas
-        if not nome or len(nome.strip()) < 3:
-            informar_erro(request, "Nome deve ter no mínimo 3 caracteres")
-            return RedirectResponse("/perfil/editar", status_code=status.HTTP_303_SEE_OTHER)
-
-        if not email or '@' not in email:
-            informar_erro(request, "E-mail inválido")
-            return RedirectResponse("/perfil/editar", status_code=status.HTTP_303_SEE_OTHER)
+        # Validar com DTO
+        dto = EditarPerfilDTO(nome=nome, email=email)
 
         # Verificar se o e-mail já está em uso por outro usuário
-        usuario_existente = usuario_repo.obter_por_email(email)
+        usuario_existente = usuario_repo.obter_por_email(dto.email)
         if usuario_existente and usuario_existente.id != usuario_logado["id"]:
             informar_erro(request, "Este e-mail já está em uso por outro usuário")
             return RedirectResponse("/perfil/editar", status_code=status.HTTP_303_SEE_OTHER)
@@ -88,8 +82,8 @@ async def post_editar(
             return RedirectResponse("/logout", status_code=status.HTTP_303_SEE_OTHER)
 
         # Atualizar dados
-        usuario.nome = nome.strip()
-        usuario.email = email.strip().lower()
+        usuario.nome = dto.nome
+        usuario.email = dto.email
 
         # Salvar no banco
         if usuario_repo.alterar(usuario):
@@ -104,6 +98,10 @@ async def post_editar(
 
         return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
 
+    except ValidationError as e:
+        erros = [erro['msg'] for erro in e.errors()]
+        informar_erro(request, " | ".join(erros))
+        return RedirectResponse("/perfil/editar", status_code=status.HTTP_303_SEE_OTHER)
     except Exception as e:
         logger.error(f"Erro ao atualizar perfil: {e}")
         informar_erro(request, "Erro ao processar atualização")
@@ -131,6 +129,13 @@ async def post_alterar_senha(
 ):
     """Processar alteração de senha"""
     try:
+        # Validar com DTO
+        dto = AlterarSenhaDTO(
+            senha_atual=senha_atual,
+            senha_nova=senha_nova,
+            confirmar_senha=confirmar_senha
+        )
+
         # Obter usuário
         usuario = usuario_repo.obter_por_id(usuario_logado["id"])
 
@@ -139,29 +144,18 @@ async def post_alterar_senha(
             return RedirectResponse("/logout", status_code=status.HTTP_303_SEE_OTHER)
 
         # Validar senha atual
-        if not verificar_senha(senha_atual, usuario.senha):
+        if not verificar_senha(dto.senha_atual, usuario.senha):
             informar_erro(request, "Senha atual incorreta")
             logger.warning(f"Tentativa de alteração de senha com senha atual incorreta - Usuário ID: {usuario.id}")
             return RedirectResponse("/perfil/alterar-senha", status_code=status.HTTP_303_SEE_OTHER)
 
-        # Validar se novas senhas coincidem
-        if senha_nova != confirmar_senha:
-            informar_erro(request, "As senhas novas não coincidem")
-            return RedirectResponse("/perfil/alterar-senha", status_code=status.HTTP_303_SEE_OTHER)
-
-        # Validar força da senha
-        senha_valida, mensagem = validar_forca_senha(senha_nova)
-        if not senha_valida:
-            informar_erro(request, mensagem)
-            return RedirectResponse("/perfil/alterar-senha", status_code=status.HTTP_303_SEE_OTHER)
-
         # Verificar se a nova senha é diferente da atual
-        if verificar_senha(senha_nova, usuario.senha):
+        if verificar_senha(dto.senha_nova, usuario.senha):
             informar_erro(request, "A nova senha deve ser diferente da senha atual")
             return RedirectResponse("/perfil/alterar-senha", status_code=status.HTTP_303_SEE_OTHER)
 
         # Atualizar senha
-        senha_hash = criar_hash_senha(senha_nova)
+        senha_hash = criar_hash_senha(dto.senha_nova)
         if usuario_repo.atualizar_senha(usuario.id, senha_hash):
             logger.info(f"Senha alterada com sucesso - Usuário ID: {usuario.id}")
             informar_sucesso(request, "Senha alterada com sucesso!")
@@ -170,6 +164,10 @@ async def post_alterar_senha(
 
         return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
 
+    except ValidationError as e:
+        erros = [erro['msg'] for erro in e.errors()]
+        informar_erro(request, " | ".join(erros))
+        return RedirectResponse("/perfil/alterar-senha", status_code=status.HTTP_303_SEE_OTHER)
     except Exception as e:
         logger.error(f"Erro ao alterar senha: {e}")
         informar_erro(request, "Erro ao processar alteração de senha")
@@ -185,22 +183,17 @@ async def post_atualizar_foto(
 ):
     """Upload de foto de perfil"""
     try:
-        # Validar arquivo
-        if not foto.filename:
-            informar_erro(request, "Nenhum arquivo selecionado")
-            return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
-
-        # Verificar extensão
-        file_ext = Path(foto.filename).suffix.lower()
-        if file_ext not in ALLOWED_EXTENSIONS:
-            informar_erro(request, f"Formato não permitido. Use: {', '.join(ALLOWED_EXTENSIONS)}")
-            return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
-
-        # Verificar tamanho (ler conteúdo)
+        # Ler conteúdo do arquivo
         contents = await foto.read()
-        if len(contents) > MAX_FILE_SIZE:
-            informar_erro(request, f"Arquivo muito grande. Tamanho máximo: {MAX_FILE_SIZE // (1024*1024)}MB")
-            return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
+
+        # Validar com DTO
+        dto = AtualizarFotoDTO(
+            filename=foto.filename or "",
+            size=len(contents)
+        )
+
+        # Obter extensão do arquivo
+        file_ext = Path(dto.filename).suffix.lower()
 
         # Gerar nome único para o arquivo
         unique_filename = f"{uuid.uuid4()}{file_ext}"
@@ -241,6 +234,10 @@ async def post_atualizar_foto(
 
         return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
 
+    except ValidationError as e:
+        erros = [erro['msg'] for erro in e.errors()]
+        informar_erro(request, " | ".join(erros))
+        return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
     except Exception as e:
         logger.error(f"Erro ao fazer upload de foto: {e}")
         informar_erro(request, "Erro ao processar upload da foto")

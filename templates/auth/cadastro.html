@@ -3,121 +3,91 @@
 {% block titulo %}Cadastro - Sistema Web{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow">
-            <div class="card-body p-4">
-                <h3 class="card-title text-center mb-4">
-                    <i class="bi bi-person-plus"></i> Criar Conta
-                </h3>
+<div class="d-flex flex-column flex-fill justify-content-center">
+    <div class="row align-items-center justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="card-title text-center mb-4">
+                        <i class="bi bi-person-plus"></i> Criar Conta
+                    </h3>
 
-                <form method="POST" action="/cadastrar">
-                    <div class="mb-3">
-                        <label for="nome" class="form-label">Nome Completo</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="nome"
-                            name="nome"
-                            value="{{ nome or '' }}"
-                            placeholder="Digite seu nome completo"
-                            minlength="3"
-                            maxlength="100"
-                            required
-                            autofocus
-                        >
-                        <div class="form-text">Mínimo 3 caracteres</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label">E-mail</label>
-                        <input
-                            type="email"
-                            class="form-control"
-                            id="email"
-                            name="email"
-                            value="{{ email or '' }}"
-                            placeholder="seu@email.com"
-                            required
-                        >
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="senha" class="form-label">Senha</label>
-                        <div class="input-group">
-                            <input
-                                type="password"
-                                class="form-control"
-                                id="senha"
-                                name="senha"
-                                placeholder="Digite uma senha forte"
-                                minlength="8"
-                                required
-                            >
-                            <button class="btn btn-outline-secondary" type="button"
-                                onclick="togglePassword('senha')">
-                                <i class="bi bi-eye" id="icon_senha"></i>
-                            </button>
+                    <form method="POST" action="/cadastrar">
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome Completo</label>
+                            <input type="text" class="form-control" id="nome" name="nome" value="{{ nome or '' }}"
+                                placeholder="Digite seu nome completo" minlength="3" maxlength="100" required autofocus>
+                            <div class="form-text">Mínimo 3 caracteres</div>
                         </div>
-                        <!-- Indicador de força da senha -->
-                        <div class="mt-2">
-                            <small class="text-muted">Força da senha:</small>
-                            <div class="progress" style="height: 5px;">
-                                <div class="progress-bar" id="senha-strength" role="progressbar" style="width: 0%">
-                                </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">E-mail</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ email or '' }}"
+                                placeholder="seu@email.com" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="senha" class="form-label">Senha</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="senha" name="senha"
+                                    placeholder="Digite uma senha forte" minlength="8" required>
+                                <button class="btn btn-outline-secondary" type="button"
+                                    onclick="togglePassword('senha')">
+                                    <i class="bi bi-eye" id="icon_senha"></i>
+                                </button>
                             </div>
-                            <small id="senha-strength-text" class="text-muted"></small>
+                            <!-- Indicador de força da senha -->
+                            <div class="mt-2">
+                                <small class="text-muted">Força da senha:</small>
+                                <div class="progress">
+                                    <div class="progress-bar" id="senha-strength" role="progressbar"></div>
+                                </div>
+                                <small id="senha-strength-text" class="text-muted"></small>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Requisitos da Senha -->
-                    <div class="mb-3">
-                        <div class="alert alert-info">
-                            <strong><i class="bi bi-info-circle"></i> Requisitos da senha:</strong>
-                            <ul class="mb-0 mt-2">
-                                <li id="req-length">Mínimo de 8 caracteres</li>
-                                <li id="req-uppercase">Pelo menos 1 letra maiúscula</li>
-                                <li id="req-lowercase">Pelo menos 1 letra minúscula</li>
-                                <li id="req-number">Pelo menos 1 número</li>
-                            </ul>
+                        <!-- Requisitos da Senha -->
+                        <div class="mb-3">
+                            <div class="alert alert-info">
+                                <strong><i class="bi bi-info-circle"></i> Requisitos da senha:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li id="req-length">Mínimo de 8 caracteres</li>
+                                    <li id="req-uppercase">Pelo menos 1 letra maiúscula</li>
+                                    <li id="req-lowercase">Pelo menos 1 letra minúscula</li>
+                                    <li id="req-number">Pelo menos 1 número</li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label for="confirmar_senha" class="form-label">Confirmar Senha</label>
-                        <div class="input-group">
-                            <input
-                                type="password"
-                                class="form-control"
-                                id="confirmar_senha"
-                                name="confirmar_senha"
-                                placeholder="Digite a senha novamente"
-                                minlength="8"
-                                required
-                            >
-                            <button class="btn btn-outline-secondary" type="button"
-                                onclick="togglePassword('confirmar_senha')">
-                                <i class="bi bi-eye" id="icon_confirmar_senha"></i>
+                        <div class="mb-3">
+                            <label for="confirmar_senha" class="form-label">Confirmar Senha</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha"
+                                    placeholder="Digite a senha novamente" minlength="8" required>
+                                <button class="btn btn-outline-secondary" type="button"
+                                    onclick="togglePassword('confirmar_senha')">
+                                    <i class="bi bi-eye" id="icon_confirmar_senha"></i>
+                                </button>
+                            </div>
+                            <div id="senha-match" class="form-text"></div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-person-plus"></i> Criar Conta
                             </button>
                         </div>
-                        <div id="senha-match" class="form-text"></div>
-                    </div>
+                    </form>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-person-plus"></i> Criar Conta
-                        </button>
-                    </div>
-                </form>
+                    <hr class="my-4">
 
-                <hr class="my-4">
-
-                <p class="text-center mb-0">
-                    Já tem uma conta?
-                    <a href="/login" class="text-decoration-none">
-                        Faça login aqui
-                    </a>
-                </p>
+                    <p class="text-center mb-0">
+                        Já tem uma conta?
+                        <a href="/login" class="text-decoration-none">
+                            Faça login aqui
+                        </a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>

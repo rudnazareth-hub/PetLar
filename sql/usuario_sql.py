@@ -1,3 +1,6 @@
+# IMPORTANTE: O valor padrão 'cliente' deve corresponder a Perfil.CLIENTE.value
+# Fonte única da verdade: util.perfis.Perfil
+# Valores válidos: 'admin' (Perfil.ADMIN.value), 'cliente' (Perfil.CLIENTE.value)
 CRIAR_TABELA = """
 CREATE TABLE IF NOT EXISTS usuario (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
