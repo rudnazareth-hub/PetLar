@@ -22,7 +22,7 @@ VALUES (?, ?, ?, ?)
 
 ALTERAR = """
 UPDATE usuario
-SET nome = ?, email = ?
+SET nome = ?, email = ?, perfil = ?
 WHERE id = ?
 """
 

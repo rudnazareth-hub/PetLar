@@ -36,8 +36,9 @@
                         <div class="col-md-6 mb-3">
                             <label for="perfil" class="form-label">Perfil <span class="text-danger">*</span></label>
                             <select class="form-select" id="perfil" name="perfil" required>
-                                <option value="Cliente" {{ 'selected' if usuario.perfil == 'Cliente' else '' }}>Cliente</option>
-                                <option value="Administrador" {{ 'selected' if usuario.perfil == 'Administrador' else '' }}>Administrador</option>
+                                {% for perfil in perfis %}
+                                <option value="{{ perfil }}" {{ 'selected' if usuario.perfil == perfil else '' }}>{{ perfil }}</option>
+                                {% endfor %}
                             </select>
                         </div>
 

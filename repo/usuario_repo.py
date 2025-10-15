@@ -26,6 +26,7 @@ def alterar(usuario: Usuario) -> bool:
         cursor.execute(ALTERAR, (
             usuario.nome,
             usuario.email,
+            usuario.perfil,
             usuario.id
         ))
         return cursor.rowcount > 0

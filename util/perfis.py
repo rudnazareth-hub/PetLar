@@ -11,13 +11,16 @@ class Perfil(str, Enum):
     Exemplos:
         - Correto: perfil = Perfil.ADMIN.value
         - Correto: perfil = Perfil.CLIENTE.value
+        - Correto: perfil = Perfil.VENDEDOR.value
         - ERRADO: perfil = "admin"
         - ERRADO: perfil = "cliente"
+        - ERRADO: perfil = "vendedor"
     """
 
     # PERFIS DO SEU SISTEMA #####################################
     ADMIN = "Administrador"
     CLIENTE = "Cliente"
+    VENDEDOR = "Vendedor"
     # FIM DOS PERFIS ############################################
 
     def __str__(self) -> str:
