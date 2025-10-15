@@ -1,0 +1,48 @@
+{% extends "base_publica.html" %}
+
+{% block titulo %}Página Não Encontrada - {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6 text-center">
+        <div class="error-template">
+            <h1 class="display-1 text-primary">404</h1>
+            <h2 class="mb-4">Página Não Encontrada</h2>
+            <div class="error-details mb-4">
+                <p class="text-muted">
+                    Desculpe, a página que você está procurando não existe ou foi movida.
+                </p>
+            </div>
+            <div class="error-actions">
+                <a href="/" class="btn btn-primary btn-lg me-2">
+                    <i class="bi bi-house-door"></i> Ir para Página Inicial
+                </a>
+                {% if request.session.get('usuario_logado') %}
+                <a href="/usuario" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+                {% else %}
+                <a href="/login" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i> Fazer Login
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .error-template {
+        padding: 60px 15px;
+    }
+    .error-template h1 {
+        font-size: 10rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    .error-template h2 {
+        font-size: 2rem;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}

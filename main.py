@@ -1,7 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.exceptions import RequestValidationError
 from starlette.middleware.sessions import SessionMiddleware
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from pathlib import Path
 
 # Configurações
@@ -9,6 +11,13 @@ from util.config import APP_NAME, SECRET_KEY, HOST, PORT, RELOAD, VERSION
 
 # Logger
 from util.logger_config import logger
+
+# Exception Handlers
+from util.exception_handlers import (
+    http_exception_handler,
+    validation_exception_handler,
+    generic_exception_handler
+)
 
 # Repositórios
 from repo import usuario_repo, configuracao_repo, tarefa_repo
@@ -30,6 +39,12 @@ app = FastAPI(title=APP_NAME, version=VERSION)
 
 # Configurar SessionMiddleware
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
+
+# Registrar Exception Handlers
+app.add_exception_handler(StarletteHTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(Exception, generic_exception_handler)
+logger.info("Exception handlers registrados")
 
 # Montar arquivos estáticos
 static_path = Path("static")

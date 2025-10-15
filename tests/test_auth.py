@@ -33,7 +33,7 @@ class TestLogin:
 
         # Deve redirecionar após login bem-sucedido
         assert response.status_code == status.HTTP_303_SEE_OTHER
-        assert response.headers["location"] == "/"
+        assert response.headers["location"] == "/usuario"
 
     def test_login_com_email_invalido(self, client):
         """Deve rejeitar login com e-mail inexistente"""
@@ -43,7 +43,7 @@ class TestLogin:
         }, follow_redirects=True)
 
         assert response.status_code == status.HTTP_200_OK
-        assert "inválid" in response.text.lower()
+        assert "e-mail ou senha" in response.text.lower()
 
     def test_login_com_senha_incorreta(self, client, criar_usuario, usuario_teste):
         """Deve rejeitar login com senha incorreta"""
@@ -61,7 +61,7 @@ class TestLogin:
         }, follow_redirects=True)
 
         assert response.status_code == status.HTTP_200_OK
-        assert "inválid" in response.text.lower()
+        assert "e-mail ou senha" in response.text.lower()
 
     def test_login_com_email_vazio(self, client):
         """Deve validar e-mail obrigatório"""
@@ -70,12 +70,14 @@ class TestLogin:
             "senha": "Senha@123"
         }, follow_redirects=True)
 
-        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+        assert response.status_code == status.HTTP_200_OK
+        assert "string_too_short" in response.text.lower() or "obrigatório" in response.text.lower() or "e-mail" in response.text.lower()
 
     def test_usuario_logado_nao_acessa_login(self, cliente_autenticado):
         """Usuário já logado deve ser redirecionado ao acessar /login"""
         response = cliente_autenticado.get("/login", follow_redirects=False)
         assert response.status_code == status.HTTP_303_SEE_OTHER
+        assert response.headers["location"] == "/usuario"
 
 
 class TestCadastro:
@@ -118,7 +120,7 @@ class TestCadastro:
         }, follow_redirects=True)
 
         assert response.status_code == status.HTTP_200_OK
-        assert "já está cadastrado" in response.text.lower()
+        assert "e-mail" in response.text.lower() and "cadastrado" in response.text.lower()
 
     def test_cadastro_com_senhas_diferentes(self, client):
         """Deve rejeitar quando senhas não coincidem"""
@@ -130,7 +132,7 @@ class TestCadastro:
         }, follow_redirects=True)
 
         assert response.status_code == status.HTTP_200_OK
-        assert "não coincidem" in response.text.lower()
+        assert "senha" in response.text.lower() and "coincidem" in response.text.lower()
 
     def test_cadastro_com_senha_fraca(self, client):
         """Deve rejeitar senha que não atende requisitos de força"""

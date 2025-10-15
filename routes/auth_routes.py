@@ -44,6 +44,10 @@ class SimpleRateLimiter:
         self.tentativas[identificador].append(agora)
         return True
 
+    def limpar(self):
+        """Limpa todas as tentativas registradas (útil para testes)"""
+        self.tentativas.clear()
+
 login_limiter = SimpleRateLimiter(max_tentativas=5, janela_minutos=5)
 
 @router.get("/login")
@@ -177,7 +181,7 @@ async def post_cadastrar(
         erros = [erro['msg'] for erro in e.errors()]
         informar_erro(request, " | ".join(erros))
         return templates.TemplateResponse(
-            "cadastro.html",
+            "auth/cadastro.html",
             {"request": request, "nome": nome, "email": email}
         )
 

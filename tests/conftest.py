@@ -35,6 +35,19 @@ def setup_test_database():
         pass
 
 
+@pytest.fixture(scope="function", autouse=True)
+def limpar_rate_limiter():
+    """Limpa o rate limiter antes de cada teste para evitar bloqueios"""
+    # Importar após configuração do banco de dados
+    from routes.auth_routes import login_limiter
+
+    # Limpar antes do teste
+    login_limiter.limpar()
+    yield
+    # Limpar depois do teste também
+    login_limiter.limpar()
+
+
 @pytest.fixture(scope="function")
 def client():
     """
@@ -79,7 +92,7 @@ def criar_usuario(client):
     """
     def _criar_usuario(nome: str, email: str, senha: str):
         """Cadastra um usuário via endpoint de cadastro"""
-        response = client.post("/cadastro", data={
+        response = client.post("/cadastrar", data={
             "nome": nome,
             "email": email,
             "senha": senha,

@@ -1,0 +1,49 @@
+{% extends "base_publica.html" %}
+
+{% block titulo %}Erro no Servidor - {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6 text-center">
+        <div class="error-template">
+            <h1 class="display-1 text-danger">{{ error_code or 500 }}</h1>
+            <h2 class="mb-4">Ops! Algo deu errado</h2>
+            <div class="error-details mb-4">
+                <p class="text-muted">
+                    {% if error_message %}
+                        {{ error_message }}
+                    {% else %}
+                        Ocorreu um erro interno no servidor. Nossa equipe já foi notificada e está trabalhando para resolver o problema.
+                    {% endif %}
+                </p>
+                <p class="text-muted">
+                    Por favor, tente novamente em alguns instantes.
+                </p>
+            </div>
+            <div class="error-actions">
+                <a href="javascript:history.back()" class="btn btn-secondary btn-lg me-2">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+                <a href="/" class="btn btn-primary btn-lg">
+                    <i class="bi bi-house-door"></i> Ir para Página Inicial
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .error-template {
+        padding: 60px 15px;
+    }
+    .error-template h1 {
+        font-size: 10rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    .error-template h2 {
+        font-size: 2rem;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
