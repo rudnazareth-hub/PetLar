@@ -5,6 +5,7 @@ from dtos.validators import (
     validar_nome_pessoa,
     validar_string_obrigatoria,
 )
+from util.perfis import Perfil
 
 
 class LoginDTO(BaseModel):
@@ -20,10 +21,20 @@ class LoginDTO(BaseModel):
 class CadastroDTO(BaseModel):
     """DTO para validação de dados de cadastro"""
 
+    perfil: str
     nome: str
     email: str
     senha: str
     confirmar_senha: str
+
+    @field_validator("perfil")
+    @classmethod
+    def validar_perfil(cls, v: str) -> str:
+        """Valida perfil - apenas Cliente ou Vendedor são permitidos no cadastro público"""
+        perfis_permitidos = [Perfil.CLIENTE.value, Perfil.VENDEDOR.value]
+        if v not in perfis_permitidos:
+            raise ValueError(f"Perfil inválido. Escolha entre: {', '.join(perfis_permitidos)}")
+        return v
 
     _validar_nome = field_validator("nome")(validar_nome_pessoa())
     _validar_email = field_validator("email")(validar_email())

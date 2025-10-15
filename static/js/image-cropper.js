@@ -14,6 +14,88 @@
 const cropperInstances = {};
 
 /**
+ * Carrega uma imagem de um arquivo File e inicializa o cropper
+ * Função pública que pode ser chamada externamente
+ *
+ * @param {string} modalId - ID do modal
+ * @param {File} file - Arquivo de imagem
+ * @param {number} aspectRatio - Proporção do crop (default: 1.0)
+ * @param {number} maxFileSizeMB - Tamanho máximo em MB (default: 5)
+ * @param {Function} onReady - Callback chamado quando o cropper estiver pronto (opcional)
+ */
+function loadImageFromFile(modalId, file, aspectRatio = 1.0, maxFileSizeMB = 5, onReady = null) {
+    const uploadSection = document.getElementById(`upload-section-${modalId}`);
+    const cropperContainer = document.getElementById(`cropper-container-${modalId}`);
+    const cropperImage = document.getElementById(`cropper-image-${modalId}`);
+    const previewImage = document.getElementById(`preview-${modalId}`);
+    const btnSubmit = document.getElementById(`btn-submit-${modalId}`);
+
+    if (!file) return;
+
+    // Validar tamanho
+    const maxBytes = maxFileSizeMB * 1024 * 1024;
+    if (file.size > maxBytes) {
+        alert(`Arquivo muito grande! Tamanho máximo: ${maxFileSizeMB}MB`);
+        return;
+    }
+
+    // Validar tipo
+    if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecione um arquivo de imagem válido.');
+        return;
+    }
+
+    // Ler arquivo
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        // Ocultar seção de upload e mostrar cropper
+        if (uploadSection) uploadSection.classList.add('d-none');
+        if (cropperContainer) cropperContainer.classList.remove('d-none');
+        if (btnSubmit) btnSubmit.disabled = false;
+
+        // Definir imagem no cropper
+        cropperImage.src = event.target.result;
+
+        // Destruir cropper anterior se existir
+        if (cropperInstances[modalId]) {
+            cropperInstances[modalId].destroy();
+        }
+
+        // Inicializar Cropper.js
+        cropperInstances[modalId] = new Cropper(cropperImage, {
+            aspectRatio: aspectRatio,
+            viewMode: 1,  // Permite crop box crescer até os limites do container
+            dragMode: 'move',
+            autoCropArea: 0.8,  // Área inicial de 80% para dar espaço para expansão
+            restore: false,
+            guides: true,
+            center: true,
+            highlight: false,
+            cropBoxMovable: true,
+            cropBoxResizable: true,
+            toggleDragModeOnDblclick: false,
+            minContainerWidth: 200,  // Container mínimo
+            minContainerHeight: 200,
+            ready: function() {
+                // Aguardar 100ms para garantir que o DOM foi atualizado
+                setTimeout(() => {
+                    adjustCropperContainerSize(modalId);
+                    // Chamar callback se fornecido
+                    if (onReady && typeof onReady === 'function') {
+                        onReady();
+                    }
+                }, 100);
+            },
+            crop: function(event) {
+                // Atualizar preview em tempo real
+                if (previewImage) updatePreview(modalId, previewImage);
+            }
+        });
+    };
+    reader.readAsDataURL(file);
+}
+
+/**
  * Inicializa o cropper para um modal específico
  */
 function initImageCropper(modalId, aspectRatio = 1.0, maxFileSizeMB = 5) {
@@ -27,77 +109,20 @@ function initImageCropper(modalId, aspectRatio = 1.0, maxFileSizeMB = 5) {
     const fotoBase64Input = document.getElementById(`foto-base64-${modalId}`);
     const form = document.getElementById(`form-${modalId}`);
 
-    if (!inputFile || !cropperContainer || !cropperImage) {
+    if (!cropperContainer || !cropperImage) {
         console.error(`Elementos do modal ${modalId} não encontrados`);
         return;
     }
 
-    // Evento: Seleção de arquivo
-    inputFile.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-
-        if (!file) return;
-
-        // Validar tamanho
-        const maxBytes = maxFileSizeMB * 1024 * 1024;
-        if (file.size > maxBytes) {
-            alert(`Arquivo muito grande! Tamanho máximo: ${maxFileSizeMB}MB`);
-            inputFile.value = '';
-            return;
-        }
-
-        // Validar tipo
-        if (!file.type.startsWith('image/')) {
-            alert('Por favor, selecione um arquivo de imagem válido.');
-            inputFile.value = '';
-            return;
-        }
-
-        // Ler arquivo
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            // Ocultar seção de upload e mostrar cropper
-            uploadSection.classList.add('d-none');
-            cropperContainer.classList.remove('d-none');
-            btnSubmit.disabled = false;
-
-            // Definir imagem no cropper
-            cropperImage.src = event.target.result;
-
-            // Destruir cropper anterior se existir
-            if (cropperInstances[modalId]) {
-                cropperInstances[modalId].destroy();
+    // Evento: Seleção de arquivo (apenas se input file existir)
+    if (inputFile) {
+        inputFile.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                loadImageFromFile(modalId, file, aspectRatio, maxFileSizeMB);
             }
-
-            // Inicializar Cropper.js
-            cropperInstances[modalId] = new Cropper(cropperImage, {
-                aspectRatio: aspectRatio,
-                viewMode: 1,  // Permite crop box crescer até os limites do container
-                dragMode: 'move',
-                autoCropArea: 0.8,  // Área inicial de 80% para dar espaço para expansão
-                restore: false,
-                guides: true,
-                center: true,
-                highlight: false,
-                cropBoxMovable: true,
-                cropBoxResizable: true,
-                toggleDragModeOnDblclick: false,
-                minContainerWidth: 200,  // Container mínimo
-                minContainerHeight: 200,
-                ready: function() {
-                    // Aguardar 100ms para garantir que o DOM foi atualizado
-                    setTimeout(() => {
-                        adjustCropperContainerSize(modalId);
-                    }, 100);
-                },
-                crop: function(event) {
-                    // Atualizar preview em tempo real
-                    updatePreview(modalId, previewImage);
-                }
-            });
-        };
-        reader.readAsDataURL(file);
-    });
+        });
+    }
 
     // Evento: Escolher outra imagem
     if (btnChange) {

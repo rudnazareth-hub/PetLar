@@ -127,6 +127,7 @@ async def get_cadastrar(request: Request):
 @router.post("/cadastrar")
 async def post_cadastrar(
     request: Request,
+    perfil: str = Form(...),
     nome: str = Form(...),
     email: str = Form(...),
     senha: str = Form(...),
@@ -136,6 +137,7 @@ async def post_cadastrar(
     try:
         # Validar dados com DTO
         dto = CadastroDTO(
+            perfil=perfil,
             nome=nome,
             email=email,
             senha=senha,
@@ -147,16 +149,16 @@ async def post_cadastrar(
             informar_erro(request, "Este e-mail já está cadastrado")
             return templates.TemplateResponse(
                 "auth/cadastro.html",
-                {"request": request, "nome": nome, "email": email}
+                {"request": request, "perfil": perfil, "nome": nome, "email": email}
             )
 
-        # Criar usuário com perfil CLIENTE
+        # Criar usuário com perfil escolhido
         usuario = Usuario(
             id=0,
             nome=dto.nome,
             email=dto.email,
             senha=criar_hash_senha(dto.senha),
-            perfil=Perfil.CLIENTE.value  # Sempre cliente no cadastro público
+            perfil=dto.perfil
         )
 
         # Inserir no banco
@@ -182,7 +184,7 @@ async def post_cadastrar(
         informar_erro(request, " | ".join(erros))
         return templates.TemplateResponse(
             "auth/cadastro.html",
-            {"request": request, "nome": nome, "email": email}
+            {"request": request, "perfil": perfil, "nome": nome, "email": email}
         )
 
 @router.get("/esqueci-senha")

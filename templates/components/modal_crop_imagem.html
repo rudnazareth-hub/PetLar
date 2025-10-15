@@ -8,6 +8,7 @@
     - aspect_ratio: Proporção do crop (ex: 1.0 para 1:1, 1.777 para 16:9) - default: 1.0
     - max_file_size_mb: Tamanho máximo do arquivo em MB (default: 5)
     - accepted_formats: Formatos aceitos (default: ".jpg,.jpeg,.png,.gif,.webp")
+    - show_upload_section: Se deve mostrar seção de upload dentro do modal (default: true)
 
     Exemplo de uso:
     - Defina as variáveis antes do include:
@@ -15,12 +16,14 @@
       set modal_title = "Alterar Foto de Perfil"
       set form_action = "/perfil/atualizar-foto"
       set aspect_ratio = 1.0
+      set show_upload_section = false  # Para usar input externo
     - Depois faça: include 'components/modal_crop_imagem.html'
 #}
 
 {% set aspect_ratio = aspect_ratio if aspect_ratio is defined else 1.0 %}
 {% set max_file_size_mb = max_file_size_mb if max_file_size_mb is defined else 5 %}
 {% set accepted_formats = accepted_formats if accepted_formats is defined else ".jpg,.jpeg,.png,.gif,.webp" %}
+{% set show_upload_section = show_upload_section if show_upload_section is defined else true %}
 
 <div class="modal fade" id="{{ modal_id }}" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
@@ -33,7 +36,8 @@
             </div>
             <form action="{{ form_action }}" method="post" id="form-{{ modal_id }}">
                 <div class="modal-body">
-                    <!-- Seleção de arquivo -->
+                    <!-- Seleção de arquivo (opcional, baseado no parâmetro show_upload_section) -->
+                    {% if show_upload_section %}
                     <div class="mb-3" id="upload-section-{{ modal_id }}">
                         <label for="input-{{ modal_id }}" class="form-label">Selecione uma imagem:</label>
                         <input type="file"
@@ -41,13 +45,11 @@
                                id="input-{{ modal_id }}"
                                accept="{{ accepted_formats }}"
                                required>
-                        <div class="form-text">
-                            Formatos: JPG, PNG, GIF, WEBP. Tamanho máximo: {{ max_file_size_mb }}MB
-                        </div>
                     </div>
+                    {% endif %}
 
-                    <!-- Container do Cropper (oculto inicialmente) -->
-                    <div id="cropper-container-{{ modal_id }}" class="d-none">
+                    <!-- Container do Cropper -->
+                    <div id="cropper-container-{{ modal_id }}" class="{% if show_upload_section %}d-none{% endif %}">
                         <!-- Área da imagem com altura calculada dinamicamente pelo JS -->
                         <div id="cropper-image-area-{{ modal_id }}" class="mb-3" style="overflow: hidden;">
                             <img id="cropper-image-{{ modal_id }}"
@@ -60,7 +62,6 @@
                         <div id="cropper-controls-area-{{ modal_id }}" class="d-flex align-items-start gap-3 pt-3 border-top">
                             <!-- Preview à esquerda -->
                             <div class="flex-shrink-0 text-center">
-                                <p class="mb-2 small text-muted"><strong>Prévia:</strong></p>
                                 <div class="border border-2 border-primary rounded"
                                      style="overflow: hidden; width: 120px; height: 120px;">
                                     <img id="preview-{{ modal_id }}"
@@ -70,26 +71,24 @@
                                 </div>
                             </div>
 
-                            <!-- Botões à direita -->
-                            <div class="flex-grow-1 d-flex flex-column gap-2 align-items-end">
+                            <!-- Botões à direita em uma única linha -->
+                            <div class="flex-grow-1 d-flex justify-content-end align-items-start gap-2">
                                 <button type="button"
                                         class="btn btn-secondary btn-sm"
                                         id="btn-change-{{ modal_id }}">
                                     <i class="bi bi-arrow-left"></i> Escolher Outra Imagem
                                 </button>
-                                <div class="d-flex gap-2">
-                                    <button type="button"
-                                            class="btn btn-secondary"
-                                            data-bs-dismiss="modal">
-                                        Cancelar
-                                    </button>
-                                    <button type="submit"
-                                            class="btn btn-primary"
-                                            id="btn-submit-{{ modal_id }}"
-                                            disabled>
-                                        <i class="bi bi-upload"></i> Enviar Foto
-                                    </button>
-                                </div>
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal">
+                                    Cancelar
+                                </button>
+                                <button type="submit"
+                                        class="btn btn-primary"
+                                        id="btn-submit-{{ modal_id }}"
+                                        disabled>
+                                    <i class="bi bi-upload"></i> Enviar Foto
+                                </button>
                             </div>
                         </div>
                     </div>

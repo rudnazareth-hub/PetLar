@@ -28,6 +28,48 @@
                     <i class="bi bi-house-door"></i> Ir para Página Inicial
                 </a>
             </div>
+
+            {% if error_details %}
+            <div class="error-technical-details mt-5">
+                <div class="alert alert-warning text-start" role="alert">
+                    <h5 class="alert-heading">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        Detalhes Técnicos (Modo Development)
+                    </h5>
+                    <hr>
+                    <p><strong>Tipo:</strong> {{ error_details.type }}</p>
+
+                    {% if error_details.message %}
+                    <p><strong>Mensagem:</strong> {{ error_details.message }}</p>
+                    {% endif %}
+
+                    {% if error_details.detail %}
+                    <p><strong>Detalhe:</strong> {{ error_details.detail }}</p>
+                    {% endif %}
+
+                    <p><strong>Endpoint:</strong> {{ error_details.method }} {{ error_details.path }}</p>
+
+                    {% if error_details.ip %}
+                    <p><strong>IP:</strong> {{ error_details.ip }}</p>
+                    {% endif %}
+
+                    {% if error_details.errors %}
+                    <p><strong>Erros de Validação:</strong></p>
+                    <pre class="bg-light p-3 rounded"><code>{{ error_details.errors | tojson(indent=2) }}</code></pre>
+                    {% endif %}
+
+                    {% if error_details.body %}
+                    <p><strong>Body:</strong></p>
+                    <pre class="bg-light p-3 rounded"><code>{{ error_details.body }}</code></pre>
+                    {% endif %}
+
+                    {% if error_details.traceback %}
+                    <p><strong>Traceback:</strong></p>
+                    <pre class="bg-light p-3 rounded" style="font-size: 0.85rem; max-height: 400px; overflow-y: auto;"><code>{{ error_details.traceback }}</code></pre>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

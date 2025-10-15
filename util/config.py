@@ -32,6 +32,10 @@ HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("PORT", "8000"))
 RELOAD = os.getenv("RELOAD", "True").lower() == "true"
 
+# === Modo de Execução ===
+RUNNING_MODE = os.getenv("RUNNING_MODE", "Production")
+IS_DEVELOPMENT = RUNNING_MODE.lower() == "development"
+
 # === Configurações de Fotos de Perfil ===
 FOTO_PERFIL_TAMANHO_MAX = int(os.getenv("FOTO_PERFIL_TAMANHO_MAX", "256"))
 

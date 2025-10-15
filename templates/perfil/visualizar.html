@@ -11,8 +11,10 @@
                 <div class="card-body text-center py-5">
                     <div class="mb-4">
                         <img src="{{ usuario.id|foto_usuario }}" alt="Foto de Perfil"
+                            id="profile-photo"
                             class="rounded-circle border border-3 border-primary" width="150" height="150"
-                            style="object-fit: cover;">
+                            style="object-fit: cover;"
+                            title="Clique para alterar a foto">
                     </div>
 
                     <h2 class="mb-2">{{ usuario.nome }}</h2>
@@ -46,7 +48,7 @@
                     </a>
                 </div>
                 <div class="col-md-4">
-                    <button type="button" class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#modalFotoPerfil">
+                    <button type="button" class="btn btn-info w-100" id="btn-change-photo">
                         <i class="bi bi-camera-fill"></i> Alterar Foto
                     </button>
                 </div>
@@ -55,12 +57,19 @@
     </div>
 </div>
 
+<!-- Input file oculto para seleção direta de arquivo -->
+<input type="file"
+       id="hidden-photo-input"
+       accept=".jpg,.jpeg,.png,.gif,.webp"
+       style="display: none;">
+
 <!-- Modal de Crop de Foto -->
 {% set modal_id = "modalFotoPerfil" %}
 {% set modal_title = "Alterar Foto de Perfil" %}
 {% set form_action = "/perfil/atualizar-foto" %}
 {% set aspect_ratio = 1.0 %}
 {% set max_file_size_mb = 5 %}
+{% set show_upload_section = false %}
 {% include 'components/modal_crop_imagem.html' %}
 {% endblock %}
 
@@ -71,4 +80,7 @@
 
 <!-- Image Cropper Component -->
 <script src="/static/js/image-cropper.js"></script>
+
+<!-- Perfil Photo Handler -->
+<script src="/static/js/perfil-photo-handler.js"></script>
 {% endblock %}
