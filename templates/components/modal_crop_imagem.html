@@ -1,4 +1,4 @@
-<!--
+{#
     Componente: Modal de Crop de Imagem Reutilizável
 
     Parâmetros esperados:
@@ -9,13 +9,14 @@
     - max_file_size_mb: Tamanho máximo do arquivo em MB (default: 5)
     - accepted_formats: Formatos aceitos (default: ".jpg,.jpeg,.png,.gif,.webp")
 
-    Uso:
-    {% set modal_id = "modalFotoPerfil" %}
-    {% set modal_title = "Alterar Foto de Perfil" %}
-    {% set form_action = "/perfil/atualizar-foto" %}
-    {% set aspect_ratio = 1.0 %}
-    {% include 'components/modal_crop_imagem.html' %}
--->
+    Exemplo de uso:
+    - Defina as variáveis antes do include:
+      set modal_id = "modalFotoPerfil"
+      set modal_title = "Alterar Foto de Perfil"
+      set form_action = "/perfil/atualizar-foto"
+      set aspect_ratio = 1.0
+    - Depois faça: include 'components/modal_crop_imagem.html'
+#}
 
 {% set aspect_ratio = aspect_ratio if aspect_ratio is defined else 1.0 %}
 {% set max_file_size_mb = max_file_size_mb if max_file_size_mb is defined else 5 %}
