@@ -72,9 +72,9 @@ function initImageCropper(modalId, aspectRatio = 1.0, maxFileSizeMB = 5) {
             // Inicializar Cropper.js
             cropperInstances[modalId] = new Cropper(cropperImage, {
                 aspectRatio: aspectRatio,
-                viewMode: 2,
+                viewMode: 1,  // Permite crop box crescer até os limites do container
                 dragMode: 'move',
-                autoCropArea: 1,
+                autoCropArea: 0.8,  // Área inicial de 80% para dar espaço para expansão
                 restore: false,
                 guides: true,
                 center: true,
@@ -82,6 +82,14 @@ function initImageCropper(modalId, aspectRatio = 1.0, maxFileSizeMB = 5) {
                 cropBoxMovable: true,
                 cropBoxResizable: true,
                 toggleDragModeOnDblclick: false,
+                minContainerWidth: 200,  // Container mínimo
+                minContainerHeight: 200,
+                ready: function() {
+                    // Aguardar 100ms para garantir que o DOM foi atualizado
+                    setTimeout(() => {
+                        adjustCropperContainerSize(modalId);
+                    }, 100);
+                },
                 crop: function(event) {
                     // Atualizar preview em tempo real
                     updatePreview(modalId, previewImage);
@@ -138,14 +146,71 @@ function initImageCropper(modalId, aspectRatio = 1.0, maxFileSizeMB = 5) {
 }
 
 /**
+ * Calcula a altura disponível para a área de imagem do cropper
+ * Mede os elementos reais do DOM para precisão
+ */
+function calculateCropperImageHeight(modalId) {
+    // Obter elementos
+    const modalElement = document.getElementById(modalId);
+    const modalHeader = modalElement?.querySelector('.modal-header');
+    const modalBody = modalElement?.querySelector('.modal-body');
+    const controlsArea = document.getElementById(`cropper-controls-area-${modalId}`);
+
+    if (!modalElement || !modalHeader || !modalBody || !controlsArea) {
+        console.warn(`Elementos do modal ${modalId} não encontrados para cálculo de altura`);
+        return 300; // Valor padrão de fallback
+    }
+
+    // Medir alturas reais
+    const viewportHeight = window.innerHeight;
+    const headerHeight = modalHeader.offsetHeight;
+    const controlsHeight = controlsArea.offsetHeight;
+
+    // Pegar padding do modal-body
+    const bodyStyles = window.getComputedStyle(modalBody);
+    const bodyPaddingTop = parseFloat(bodyStyles.paddingTop) || 0;
+    const bodyPaddingBottom = parseFloat(bodyStyles.paddingBottom) || 0;
+
+    // Margem de segurança para espaçamentos internos e scroll
+    const safetyMargin = 100;
+
+    // Calcular altura disponível
+    const availableHeight = viewportHeight - headerHeight - controlsHeight - bodyPaddingTop - bodyPaddingBottom - safetyMargin;
+
+    // Aplicar limites: mínimo 200px, máximo 600px
+    const finalHeight = Math.max(200, Math.min(600, availableHeight));
+
+    return finalHeight;
+}
+
+/**
+ * Ajusta o tamanho do container do cropper dinamicamente
+ */
+function adjustCropperContainerSize(modalId) {
+    const cropperImageArea = document.getElementById(`cropper-image-area-${modalId}`);
+    if (!cropperImageArea) return;
+
+    // Calcular altura usando medição real dos elementos
+    const calculatedHeight = calculateCropperImageHeight(modalId);
+
+    // Aplicar altura calculada
+    cropperImageArea.style.height = `${calculatedHeight}px`;
+
+    // Forçar o cropper a recalcular suas dimensões
+    if (cropperInstances[modalId]) {
+        cropperInstances[modalId].resize();
+    }
+}
+
+/**
  * Atualiza o preview da imagem cropada
  */
 function updatePreview(modalId, previewImage) {
     if (!cropperInstances[modalId]) return;
 
     const canvas = cropperInstances[modalId].getCroppedCanvas({
-        width: 150,
-        height: 150,
+        width: 120,
+        height: 120,
         imageSmoothingEnabled: true,
         imageSmoothingQuality: 'high'
     });
@@ -189,4 +254,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+
+    // Ajustar tamanho do cropper quando a janela for redimensionada (com debounce)
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            for (const modalId in cropperInstances) {
+                if (cropperInstances[modalId]) {
+                    adjustCropperContainerSize(modalId);
+                }
+            }
+        }, 150);
+    });
 });
