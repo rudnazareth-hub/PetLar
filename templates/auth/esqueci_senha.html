@@ -16,18 +16,18 @@
                 </p>
 
                 <form method="POST" action="/esqueci-senha">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">E-mail</label>
+                    <div class="form-floating mb-3">
                         <input
                             type="email"
                             class="form-control"
                             id="email"
                             name="email"
                             value="{{ email or '' }}"
-                            placeholder="seu@email.com"
+                            placeholder="E-mail"
                             required
                             autofocus
                         >
+                        <label for="email">E-mail</label>
                     </div>
 
                     <div class="d-grid gap-2">

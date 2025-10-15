@@ -14,32 +14,40 @@
                 <form method="POST" action="/admin/usuarios/editar/{{ usuario.id }}">
                     <div class="row">
                         <div class="col-md-12 mb-3">
-                            <label for="nome" class="form-label">Nome Completo <span class="text-danger">*</span></label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="nome"
-                                   name="nome"
-                                   value="{{ usuario.nome }}"
-                                   required>
+                            <div class="form-floating">
+                                <input type="text"
+                                       class="form-control"
+                                       id="nome"
+                                       name="nome"
+                                       value="{{ usuario.nome }}"
+                                       placeholder="Nome Completo"
+                                       required>
+                                <label for="nome">Nome Completo <span class="text-danger">*</span></label>
+                            </div>
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email"
-                                   class="form-control"
-                                   id="email"
-                                   name="email"
-                                   value="{{ usuario.email }}"
-                                   required>
+                            <div class="form-floating">
+                                <input type="email"
+                                       class="form-control"
+                                       id="email"
+                                       name="email"
+                                       value="{{ usuario.email }}"
+                                       placeholder="Email"
+                                       required>
+                                <label for="email">Email <span class="text-danger">*</span></label>
+                            </div>
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label for="perfil" class="form-label">Perfil <span class="text-danger">*</span></label>
-                            <select class="form-select" id="perfil" name="perfil" required>
-                                {% for perfil in perfis %}
-                                <option value="{{ perfil }}" {{ 'selected' if usuario.perfil == perfil else '' }}>{{ perfil }}</option>
-                                {% endfor %}
-                            </select>
+                            <div class="form-floating">
+                                <select class="form-select" id="perfil" name="perfil" required>
+                                    {% for perfil in perfis %}
+                                    <option value="{{ perfil }}" {{ 'selected' if usuario.perfil == perfil else '' }}>{{ perfil }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label for="perfil">Perfil <span class="text-danger">*</span></label>
+                            </div>
                         </div>
 
                         <div class="col-md-12 mb-3">
@@ -50,20 +58,26 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label for="senha" class="form-label">Nova Senha</label>
-                            <input type="password"
-                                   class="form-control"
-                                   id="senha"
-                                   name="senha">
+                            <div class="form-floating">
+                                <input type="password"
+                                       class="form-control"
+                                       id="senha"
+                                       name="senha"
+                                       placeholder="Nova Senha">
+                                <label for="senha">Nova Senha</label>
+                            </div>
                             <div class="form-text">Mínimo 6 caracteres</div>
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label for="confirma_senha" class="form-label">Confirmar Nova Senha</label>
-                            <input type="password"
-                                   class="form-control"
-                                   id="confirma_senha"
-                                   name="confirma_senha">
+                            <div class="form-floating">
+                                <input type="password"
+                                       class="form-control"
+                                       id="confirma_senha"
+                                       name="confirma_senha"
+                                       placeholder="Confirmar Nova Senha">
+                                <label for="confirma_senha">Confirmar Nova Senha</label>
+                            </div>
                         </div>
 
                         <div class="col-md-12 mb-3">

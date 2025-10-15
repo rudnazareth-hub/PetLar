@@ -14,23 +14,29 @@
                 <form method="POST" action="/tarefas/cadastrar">
                     <div class="row">
                         <div class="col-md-12 mb-3">
-                            <label for="titulo" class="form-label">Título <span class="text-danger">*</span></label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="titulo"
-                                   name="titulo"
-                                   value="{{ dados.titulo if dados else '' }}"
-                                   required
-                                   maxlength="200">
+                            <div class="form-floating">
+                                <input type="text"
+                                       class="form-control"
+                                       id="titulo"
+                                       name="titulo"
+                                       value="{{ dados.titulo if dados else '' }}"
+                                       placeholder="Título"
+                                       required
+                                       maxlength="200">
+                                <label for="titulo">Título <span class="text-danger">*</span></label>
+                            </div>
                         </div>
 
                         <div class="col-md-12 mb-3">
-                            <label for="descricao" class="form-label">Descrição</label>
-                            <textarea class="form-control"
-                                      id="descricao"
-                                      name="descricao"
-                                      rows="4"
-                                      maxlength="1000">{{ dados.descricao if dados else '' }}</textarea>
+                            <div class="form-floating">
+                                <textarea class="form-control"
+                                          id="descricao"
+                                          name="descricao"
+                                          style="height: 100px;"
+                                          placeholder="Descrição"
+                                          maxlength="1000">{{ dados.descricao if dados else '' }}</textarea>
+                                <label for="descricao">Descrição</label>
+                            </div>
                             <div class="form-text">Adicione mais detalhes sobre a tarefa (opcional)</div>
                         </div>
                     </div>

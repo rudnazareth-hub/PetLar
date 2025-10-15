@@ -5,7 +5,7 @@
 {% block content %}
 <div class="d-flex flex-column flex-fill justify-content-center">
     <div class="row align-items-center justify-content-center">
-        <div class="col-12 col-md-6 col-lg-5">
+        <div class="col-12 col-md-8 col-lg-7">
             <div class="card shadow">
                 <div class="card-body p-4">
                     <h3 class="card-title text-center mb-4">
@@ -14,37 +14,60 @@
 
                     <form method="POST" action="/cadastrar">
                         <div class="mb-3">
-                            <label for="nome" class="form-label">Nome Completo</label>
-                            <input type="text" class="form-control" id="nome" name="nome" value="{{ nome or '' }}"
-                                placeholder="Digite seu nome completo" minlength="3" maxlength="100" required autofocus>
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="nome" name="nome" value="{{ nome or '' }}"
+                                    placeholder="Nome Completo" minlength="3" maxlength="100" required autofocus>
+                                <label for="nome">Nome Completo</label>
+                            </div>
                             <div class="form-text">Mínimo 3 caracteres</div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">E-mail</label>
+                        <div class="form-floating mb-3">
                             <input type="email" class="form-control" id="email" name="email" value="{{ email or '' }}"
-                                placeholder="seu@email.com" required>
+                                placeholder="E-mail" required>
+                            <label for="email">E-mail</label>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="senha" class="form-label">Senha</label>
-                            <div class="input-group">
-                                <input type="password" class="form-control" id="senha" name="senha"
-                                    placeholder="Digite uma senha forte" minlength="8" required>
-                                <button class="btn btn-outline-secondary" type="button"
-                                    onclick="togglePassword('senha')">
-                                    <i class="bi bi-eye" id="icon_senha"></i>
-                                </button>
-                            </div>
-                            <!-- Indicador de força da senha -->
-                            <div class="mt-2">
-                                <small class="text-muted">Força da senha:</small>
-                                <div class="progress">
-                                    <div class="progress-bar" id="senha-strength" role="progressbar"></div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <div class="form-floating">
+                                        <input type="password" class="form-control" id="senha" name="senha"
+                                            placeholder="Senha" minlength="8" required>
+                                        <label for="senha">Senha</label>
+                                    </div>
+                                    <button class="btn btn-outline-secondary" type="button"
+                                        onclick="togglePassword('senha')">
+                                        <i class="bi bi-eye" id="icon_senha"></i>
+                                    </button>
                                 </div>
-                                <small id="senha-strength-text" class="text-muted"></small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <div class="form-floating">
+                                        <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha"
+                                            placeholder="Confirmar Senha" minlength="8" required>
+                                        <label for="confirmar_senha">Confirmar Senha</label>
+                                    </div>
+                                    <button class="btn btn-outline-secondary" type="button"
+                                        onclick="togglePassword('confirmar_senha')">
+                                        <i class="bi bi-eye" id="icon_confirmar_senha"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
+
+                        <!-- Indicador de força da senha -->
+                        <div class="mb-3">
+                            <small class="text-muted">Força da senha:</small>
+                            <div class="progress">
+                                <div class="progress-bar" id="senha-strength" role="progressbar"></div>
+                            </div>
+                            <small id="senha-strength-text" class="text-muted"></small>
+                        </div>
+
+                        <div id="senha-match" class="form-text mb-3"></div>
 
                         <!-- Requisitos da Senha -->
                         <div class="mb-3">
@@ -57,19 +80,6 @@
                                     <li id="req-number">Pelo menos 1 número</li>
                                 </ul>
                             </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="confirmar_senha" class="form-label">Confirmar Senha</label>
-                            <div class="input-group">
-                                <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha"
-                                    placeholder="Digite a senha novamente" minlength="8" required>
-                                <button class="btn btn-outline-secondary" type="button"
-                                    onclick="togglePassword('confirmar_senha')">
-                                    <i class="bi bi-eye" id="icon_confirmar_senha"></i>
-                                </button>
-                            </div>
-                            <div id="senha-match" class="form-text"></div>
                         </div>
 
                         <div class="d-grid">

@@ -20,12 +20,14 @@
                     <form action="/perfil/alterar-senha" method="post" id="formSenha">
                         <!-- Senha Atual -->
                         <div class="mb-3">
-                            <label for="senha_atual" class="form-label">
-                                <i class="bi bi-lock"></i> Senha Atual
-                            </label>
                             <div class="input-group">
-                                <input type="password" class="form-control" id="senha_atual" name="senha_atual" required
-                                    placeholder="Digite sua senha atual">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="senha_atual" name="senha_atual" required
+                                        placeholder="Senha Atual">
+                                    <label for="senha_atual">
+                                        <i class="bi bi-lock"></i> Senha Atual
+                                    </label>
+                                </div>
                                 <button class="btn btn-outline-secondary" type="button"
                                     onclick="togglePassword('senha_atual')">
                                     <i class="bi bi-eye" id="icon_senha_atual"></i>
@@ -37,12 +39,14 @@
 
                         <!-- Senha Nova -->
                         <div class="mb-3">
-                            <label for="senha_nova" class="form-label">
-                                <i class="bi bi-key"></i> Nova Senha
-                            </label>
                             <div class="input-group">
-                                <input type="password" class="form-control" id="senha_nova" name="senha_nova" required
-                                    minlength="8" placeholder="Digite a nova senha">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="senha_nova" name="senha_nova" required
+                                        minlength="8" placeholder="Nova Senha">
+                                    <label for="senha_nova">
+                                        <i class="bi bi-key"></i> Nova Senha
+                                    </label>
+                                </div>
                                 <button class="btn btn-outline-secondary" type="button"
                                     onclick="togglePassword('senha_nova')">
                                     <i class="bi bi-eye" id="icon_senha_nova"></i>
@@ -61,12 +65,14 @@
 
                         <!-- Confirmar Senha -->
                         <div class="mb-3">
-                            <label for="confirmar_senha" class="form-label">
-                                <i class="bi bi-check-circle"></i> Confirmar Nova Senha
-                            </label>
                             <div class="input-group">
-                                <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha"
-                                    required minlength="8" placeholder="Digite novamente a nova senha">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha"
+                                        required minlength="8" placeholder="Confirmar Nova Senha">
+                                    <label for="confirmar_senha">
+                                        <i class="bi bi-check-circle"></i> Confirmar Nova Senha
+                                    </label>
+                                </div>
                                 <button class="btn btn-outline-secondary" type="button"
                                     onclick="togglePassword('confirmar_senha')">
                                     <i class="bi bi-eye" id="icon_confirmar_senha"></i>

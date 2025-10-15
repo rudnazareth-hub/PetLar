@@ -38,29 +38,44 @@
                                           class="form-inline-config"
                                           data-config-id="{{ config.id }}">
                                         {% if config.tipo == 'boolean' %}
-                                        <select class="form-select form-select-sm"
-                                                name="valor"
-                                                style="max-width: 200px;">
-                                            <option value="true" {{ 'selected' if config.valor == 'true' else '' }}>Sim</option>
-                                            <option value="false" {{ 'selected' if config.valor == 'false' else '' }}>Não</option>
-                                        </select>
+                                        <div class="form-floating" style="max-width: 200px;">
+                                            <select class="form-select form-select-sm"
+                                                    id="valor_{{ config.id }}"
+                                                    name="valor">
+                                                <option value="true" {{ 'selected' if config.valor == 'true' else '' }}>Sim</option>
+                                                <option value="false" {{ 'selected' if config.valor == 'false' else '' }}>Não</option>
+                                            </select>
+                                            <label for="valor_{{ config.id }}">Valor</label>
+                                        </div>
                                         {% elif config.tipo == 'number' %}
-                                        <input type="number"
-                                               class="form-control form-control-sm"
-                                               name="valor"
-                                               value="{{ config.valor }}"
-                                               style="max-width: 200px;">
+                                        <div class="form-floating" style="max-width: 200px;">
+                                            <input type="number"
+                                                   class="form-control form-control-sm"
+                                                   id="valor_{{ config.id }}"
+                                                   name="valor"
+                                                   value="{{ config.valor }}"
+                                                   placeholder="Valor">
+                                            <label for="valor_{{ config.id }}">Valor</label>
+                                        </div>
                                         {% elif config.tipo == 'text' %}
-                                        <textarea class="form-control form-control-sm"
-                                                  name="valor"
-                                                  rows="2"
-                                                  style="max-width: 400px;">{{ config.valor }}</textarea>
+                                        <div class="form-floating" style="max-width: 400px;">
+                                            <textarea class="form-control form-control-sm"
+                                                      id="valor_{{ config.id }}"
+                                                      name="valor"
+                                                      style="height: 60px;"
+                                                      placeholder="Valor">{{ config.valor }}</textarea>
+                                            <label for="valor_{{ config.id }}">Valor</label>
+                                        </div>
                                         {% else %}
-                                        <input type="text"
-                                               class="form-control form-control-sm"
-                                               name="valor"
-                                               value="{{ config.valor }}"
-                                               style="max-width: 400px;">
+                                        <div class="form-floating" style="max-width: 400px;">
+                                            <input type="text"
+                                                   class="form-control form-control-sm"
+                                                   id="valor_{{ config.id }}"
+                                                   name="valor"
+                                                   value="{{ config.valor }}"
+                                                   placeholder="Valor">
+                                            <label for="valor_{{ config.id }}">Valor</label>
+                                        </div>
                                         {% endif %}
                                     </form>
                                 </td>

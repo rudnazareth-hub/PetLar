@@ -20,21 +20,25 @@
                     <form action="/perfil/editar" method="post">
                         <!-- Nome -->
                         <div class="mb-3">
-                            <label for="nome" class="form-label">
-                                <i class="bi bi-person"></i> Nome Completo
-                            </label>
-                            <input type="text" class="form-control" id="nome" name="nome" value="{{ usuario.nome }}"
-                                required minlength="3" maxlength="100" placeholder="Digite seu nome completo">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="nome" name="nome" value="{{ usuario.nome }}"
+                                    required minlength="3" maxlength="100" placeholder="Nome Completo">
+                                <label for="nome">
+                                    <i class="bi bi-person"></i> Nome Completo
+                                </label>
+                            </div>
                             <div class="form-text">Mínimo de 3 caracteres</div>
                         </div>
 
                         <!-- E-mail -->
                         <div class="mb-3">
-                            <label for="email" class="form-label">
-                                <i class="bi bi-envelope"></i> E-mail
-                            </label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}"
-                                required placeholder="seu@email.com">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}"
+                                    required placeholder="E-mail">
+                                <label for="email">
+                                    <i class="bi bi-envelope"></i> E-mail
+                                </label>
+                            </div>
                             <div class="form-text">
                                 Este e-mail será usado para login
                             </div>
@@ -42,11 +46,13 @@
 
                         <!-- Informação do Perfil (Read-only) -->
                         <div class="mb-3">
-                            <label class="form-label">
-                                <i class="bi bi-person-badge"></i> Perfil de Acesso
-                            </label>
-                            <input type="text" class="form-control"
-                                value="{{ usuario.perfil }}" disabled>
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="perfil"
+                                    value="{{ usuario.perfil }}" disabled placeholder="Perfil de Acesso">
+                                <label for="perfil">
+                                    <i class="bi bi-person-badge"></i> Perfil de Acesso
+                                </label>
+                            </div>
                             <div class="form-text">
                                 O perfil de acesso não pode ser alterado por aqui
                             </div>

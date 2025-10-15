@@ -19,33 +19,35 @@
                     <input type="hidden" name="token" value="{{ token }}">
 
                     <div class="mb-3">
-                        <label for="senha" class="form-label">Nova Senha</label>
-                        <input
-                            type="password"
-                            class="form-control"
-                            id="senha"
-                            name="senha"
-                            placeholder="Digite sua nova senha"
-                            minlength="8"
-                            required
-                            autofocus
-                        >
+                        <div class="form-floating">
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="senha"
+                                name="senha"
+                                placeholder="Nova Senha"
+                                minlength="8"
+                                required
+                                autofocus
+                            >
+                            <label for="senha">Nova Senha</label>
+                        </div>
                         <div class="form-text">
                             Mínimo 8 caracteres com letra maiúscula, minúscula e número
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="confirmar_senha" class="form-label">Confirmar Nova Senha</label>
+                    <div class="form-floating mb-3">
                         <input
                             type="password"
                             class="form-control"
                             id="confirmar_senha"
                             name="confirmar_senha"
-                            placeholder="Digite a senha novamente"
+                            placeholder="Confirmar Nova Senha"
                             minlength="8"
                             required
                         >
+                        <label for="confirmar_senha">Confirmar Nova Senha</label>
                     </div>
 
                     <div class="d-grid">
