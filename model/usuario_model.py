@@ -22,7 +22,7 @@ class Usuario:
     nome: str
     email: str
     senha: str
-    perfil: str = Perfil.CLIENTE.value  # Usa Enum Perfil como fonte única da verdade
+    perfil: str
     foto: Optional[str] = None
     token_redefinicao: Optional[str] = None
     data_token: Optional[str] = None
