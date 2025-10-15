@@ -17,8 +17,9 @@ from util.logger_config import logger
 
 
 # Configurações
-PASTA_FOTOS = Path("static/img/usuarios")
-FOTO_DEFAULT = PASTA_FOTOS / "default.jpg"
+PASTA_FOTO_DEFAULT = Path("static/img")
+FOTO_DEFAULT = PASTA_FOTO_DEFAULT / "user.jpg"
+PASTA_FOTOS = PASTA_FOTO_DEFAULT / "usuarios"
 FORMATO_FOTO = "JPEG"
 QUALIDADE_FOTO = 90
 
@@ -33,7 +34,7 @@ def obter_caminho_foto_usuario(id: int) -> str:
     Returns:
         String com caminho relativo (ex: /static/img/usuarios/000001.jpg)
     """
-    return f"/static/img/usuarios/{id:06d}.jpg"
+    return f"{PASTA_FOTOS}/{id:06d}.jpg"
 
 
 def obter_path_absoluto_foto(id: int) -> Path:
@@ -54,7 +55,7 @@ def criar_foto_padrao_usuario(id: int) -> bool:
     """
     Cria uma cópia da foto padrão para o usuário.
 
-    Copia o arquivo default.jpg para {id:06d}.jpg quando um novo usuário é criado.
+    Copia o arquivo user.jpg para {id:06d}.jpg quando um novo usuário é criado.
 
     Args:
         id: ID do usuário
@@ -108,15 +109,15 @@ def salvar_foto_cropada_usuario(id: int, conteudo_base64: str) -> bool:
         imagem = Image.open(io.BytesIO(image_data))
 
         # Converter para RGB se necessário (remove canal alpha)
-        if imagem.mode in ('RGBA', 'LA', 'P'):
+        if imagem.mode in ("RGBA", "LA", "P"):
             # Criar fundo branco
-            fundo: Image.Image = Image.new('RGB', imagem.size, (255, 255, 255))
-            if imagem.mode == 'P':
-                imagem = imagem.convert('RGBA')  # type: ignore
-            fundo.paste(imagem, mask=imagem.split()[-1] if 'A' in imagem.mode else None)
+            fundo: Image.Image = Image.new("RGB", imagem.size, (255, 255, 255))
+            if imagem.mode == "P":
+                imagem = imagem.convert("RGBA")  # type: ignore
+            fundo.paste(imagem, mask=imagem.split()[-1] if "A" in imagem.mode else None)
             imagem = fundo  # type: ignore
-        elif imagem.mode != 'RGB':
-            imagem = imagem.convert('RGB')  # type: ignore
+        elif imagem.mode != "RGB":
+            imagem = imagem.convert("RGB")  # type: ignore
 
         # Salvar como JPG
         destino = obter_path_absoluto_foto(id)
