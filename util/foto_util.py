@@ -14,6 +14,7 @@ from typing import Optional
 from PIL import Image
 
 from util.logger_config import logger
+from util.config import FOTO_PERFIL_TAMANHO_MAX
 
 
 # Configurações
@@ -118,6 +119,13 @@ def salvar_foto_cropada_usuario(id: int, conteudo_base64: str) -> bool:
             imagem = fundo  # type: ignore
         elif imagem.mode != "RGB":
             imagem = imagem.convert("RGB")  # type: ignore
+
+        # Redimensionar se necessário (mantendo aspect ratio)
+        tamanho_max = FOTO_PERFIL_TAMANHO_MAX
+        if imagem.width > tamanho_max or imagem.height > tamanho_max:
+            # thumbnail redimensiona mantendo aspect ratio
+            imagem.thumbnail((tamanho_max, tamanho_max), Image.Resampling.LANCZOS)
+            logger.info(f"Imagem redimensionada para {imagem.width}x{imagem.height}px (max: {tamanho_max}px)")
 
         # Salvar como JPG
         destino = obter_path_absoluto_foto(id)
