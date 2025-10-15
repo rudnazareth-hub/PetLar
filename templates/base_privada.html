@@ -45,8 +45,15 @@
                 <!-- Dropdown do Usuário -->
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> {{ request.session.get('usuario_logado')['nome'] }}
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                            <img src="/static/img/usuarios/{{ '%06d' % request.session.get('usuario_logado')['id'] }}.jpg"
+                                 alt="Foto do usuário"
+                                 class="rounded-circle me-2"
+                                 width="32"
+                                 height="32"
+                                 style="object-fit: cover;"
+                                 onerror="this.src='/static/img/user.jpg'">
+                            {{ request.session.get('usuario_logado')['nome'] }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="/perfil/visualizar">
