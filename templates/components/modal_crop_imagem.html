@@ -1,0 +1,103 @@
+<!--
+    Componente: Modal de Crop de Imagem Reutilizável
+
+    Parâmetros esperados:
+    - modal_id: ID único do modal (ex: "modalFotoPerfil")
+    - modal_title: Título do modal (ex: "Alterar Foto de Perfil")
+    - form_action: URL para onde o formulário será enviado (ex: "/perfil/atualizar-foto")
+    - aspect_ratio: Proporção do crop (ex: 1.0 para 1:1, 1.777 para 16:9) - default: 1.0
+    - max_file_size_mb: Tamanho máximo do arquivo em MB (default: 5)
+    - accepted_formats: Formatos aceitos (default: ".jpg,.jpeg,.png,.gif,.webp")
+
+    Uso:
+    {% set modal_id = "modalFotoPerfil" %}
+    {% set modal_title = "Alterar Foto de Perfil" %}
+    {% set form_action = "/perfil/atualizar-foto" %}
+    {% set aspect_ratio = 1.0 %}
+    {% include 'components/modal_crop_imagem.html' %}
+-->
+
+{% set aspect_ratio = aspect_ratio if aspect_ratio is defined else 1.0 %}
+{% set max_file_size_mb = max_file_size_mb if max_file_size_mb is defined else 5 %}
+{% set accepted_formats = accepted_formats if accepted_formats is defined else ".jpg,.jpeg,.png,.gif,.webp" %}
+
+<div class="modal fade" id="{{ modal_id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-crop"></i> {{ modal_title }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{{ form_action }}" method="post" id="form-{{ modal_id }}">
+                <div class="modal-body">
+                    <!-- Seleção de arquivo -->
+                    <div class="mb-3" id="upload-section-{{ modal_id }}">
+                        <label for="input-{{ modal_id }}" class="form-label">Selecione uma imagem:</label>
+                        <input type="file"
+                               class="form-control"
+                               id="input-{{ modal_id }}"
+                               accept="{{ accepted_formats }}"
+                               required>
+                        <div class="form-text">
+                            Formatos: JPG, PNG, GIF, WEBP. Tamanho máximo: {{ max_file_size_mb }}MB
+                        </div>
+                    </div>
+
+                    <!-- Container do Cropper (oculto inicialmente) -->
+                    <div id="cropper-container-{{ modal_id }}" class="d-none">
+                        <div class="mb-3">
+                            <img id="cropper-image-{{ modal_id }}"
+                                 src=""
+                                 alt="Imagem para crop"
+                                 style="max-width: 100%;">
+                        </div>
+
+                        <!-- Preview -->
+                        <div class="text-center mb-3">
+                            <p class="mb-2"><strong>Prévia:</strong></p>
+                            <div class="d-inline-block border border-2 border-primary rounded"
+                                 style="overflow: hidden; width: 150px; height: 150px;">
+                                <img id="preview-{{ modal_id }}"
+                                     src=""
+                                     alt="Preview"
+                                     style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+
+                        <!-- Botão para selecionar outra imagem -->
+                        <div class="text-center">
+                            <button type="button"
+                                    class="btn btn-secondary btn-sm"
+                                    id="btn-change-{{ modal_id }}">
+                                <i class="bi bi-arrow-left"></i> Escolher Outra Imagem
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Campo hidden com imagem cropada em base64 -->
+                    <input type="hidden" name="foto_base64" id="foto-base64-{{ modal_id }}">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-{{ modal_id }}" disabled>
+                        <i class="bi bi-upload"></i> Enviar Foto
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Configuração específica deste modal
+    window['config_{{ modal_id }}'] = {
+        modalId: '{{ modal_id }}',
+        aspectRatio: {{ aspect_ratio }},
+        maxFileSizeMB: {{ max_file_size_mb }}
+    };
+</script>

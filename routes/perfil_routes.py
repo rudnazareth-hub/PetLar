@@ -1,26 +1,19 @@
 from typing import Optional
-from fastapi import APIRouter, Form, Request, status, UploadFile, File
+from fastapi import APIRouter, Form, Request, status
 from fastapi.responses import RedirectResponse
 from pydantic import ValidationError
-from pathlib import Path
-import uuid
 
-from dtos.perfil_dto import EditarPerfilDTO, AlterarSenhaDTO, AtualizarFotoDTO
+from dtos.perfil_dto import EditarPerfilDTO, AlterarSenhaDTO
 from repo import usuario_repo
 from util.auth_decorator import requer_autenticacao
 from util.template_util import criar_templates
 from util.flash_messages import informar_sucesso, informar_erro
 from util.security import criar_hash_senha, verificar_senha
+from util.foto_util import salvar_foto_cropada_usuario
 from util.logger_config import logger
 
 router = APIRouter(prefix="/perfil")
 templates = criar_templates("templates/perfil")
-
-# Configurações de upload
-UPLOAD_DIR = Path("static/img/usuarios")
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
-ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
 
 
 @router.get("/visualizar")
@@ -182,67 +175,35 @@ async def post_alterar_senha(
 @requer_autenticacao()
 async def post_atualizar_foto(
     request: Request,
-    foto: UploadFile = File(...),
+    foto_base64: str = Form(...),
     usuario_logado: Optional[dict] = None
 ):
-    """Upload de foto de perfil"""
+    """Upload de foto de perfil cropada"""
     assert usuario_logado is not None
     try:
-        # Ler conteúdo do arquivo
-        contents = await foto.read()
+        usuario_id = usuario_logado["id"]
 
-        # Validar com DTO
-        dto = AtualizarFotoDTO(
-            filename=foto.filename or "",
-            size=len(contents)
-        )
+        # Validação básica
+        if not foto_base64 or len(foto_base64) < 100:
+            informar_erro(request, "Foto inválida. Por favor, tente novamente.")
+            return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
 
-        # Obter extensão do arquivo
-        file_ext = Path(dto.filename).suffix.lower()
+        # Validar tamanho aproximado (base64 é ~33% maior que binário)
+        tamanho_aproximado = len(foto_base64) * 3 / 4
+        max_size = 10 * 1024 * 1024  # 10MB
+        if tamanho_aproximado > max_size:
+            informar_erro(request, "Imagem muito grande. Tamanho máximo: 10MB")
+            return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
 
-        # Gerar nome único para o arquivo
-        unique_filename = f"{uuid.uuid4()}{file_ext}"
-        file_path = UPLOAD_DIR / unique_filename
-
-        # Salvar arquivo
-        with open(file_path, "wb") as f:
-            f.write(contents)
-
-        # Caminho relativo para salvar no banco
-        foto_url = f"/static/img/usuarios/{unique_filename}"
-
-        # Obter usuário e foto antiga
-        usuario = usuario_repo.obter_por_id(usuario_logado["id"])
-        foto_antiga = usuario.foto if usuario else None
-
-        # Atualizar no banco
-        if usuario_repo.atualizar_foto(usuario_logado["id"], foto_url):
-            # Atualizar sessão
-            request.session["usuario_logado"]["foto"] = foto_url
-
-            # Remover foto antiga se existir
-            if foto_antiga and (foto_antiga.startswith("/static/img/usuarios/") or foto_antiga.startswith("/static/uploads/fotos/")):
-                try:
-                    antiga_path = Path(foto_antiga.replace("/static/", "static/"))
-                    if antiga_path.exists():
-                        antiga_path.unlink()
-                except Exception as e:
-                    logger.warning(f"Erro ao remover foto antiga: {e}")
-
-            logger.info(f"Foto de perfil atualizada - Usuário ID: {usuario_logado['id']}")
+        # Salvar foto cropada
+        if salvar_foto_cropada_usuario(usuario_id, foto_base64):
+            logger.info(f"Foto de perfil atualizada - Usuário ID: {usuario_id}")
             informar_sucesso(request, "Foto de perfil atualizada com sucesso!")
         else:
-            # Remover arquivo se falhou ao salvar no banco
-            if file_path.exists():
-                file_path.unlink()
             informar_erro(request, "Erro ao atualizar foto. Tente novamente.")
 
         return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
 
-    except ValidationError as e:
-        erros = [erro['msg'] for erro in e.errors()]
-        informar_erro(request, " | ".join(erros))
-        return RedirectResponse("/perfil/visualizar", status_code=status.HTTP_303_SEE_OTHER)
     except Exception as e:
         logger.error(f"Erro ao fazer upload de foto: {e}")
         informar_erro(request, "Erro ao processar upload da foto")

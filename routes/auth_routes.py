@@ -87,8 +87,7 @@ async def post_login(
             "id": usuario.id,
             "nome": usuario.nome,
             "email": usuario.email,
-            "perfil": usuario.perfil,
-            "foto": usuario.foto
+            "perfil": usuario.perfil
         }
 
         logger.info(f"Usuário {usuario.email} autenticado com sucesso")
