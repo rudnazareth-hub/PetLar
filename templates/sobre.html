@@ -1,0 +1,171 @@
+{% extends "base_publica.html" %}
+
+{% block titulo %}Sobre - {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="text-center py-5">
+            <h1 class="display-4 fw-bold text-primary mb-3">Sobre o Projeto</h1>
+            <p class="lead text-muted mb-4">
+                Projeto Acadêmico desenvolvido no Ifes Campus Cachoeiro de Itapemirim
+            </p>
+            <hr class="my-4 mx-auto" style="max-width: 200px;">
+        </div>
+    </div>
+</div>
+
+<!-- Informações do Projeto -->
+<div class="row mb-5">
+    <div class="col-lg-8 mx-auto">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h4 card-title text-primary mb-4">
+                    <i class="bi bi-mortarboard-fill me-2"></i>Informações Acadêmicas
+                </h2>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Instituição:</strong></p>
+                        <p class="text-muted">Instituto Federal do Espírito Santo</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Campus:</strong></p>
+                        <p class="text-muted">Cachoeiro de Itapemirim</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Curso:</strong></p>
+                        <p class="text-muted">Técnico em Informática para Internet</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Disciplina:</strong></p>
+                        <p class="text-muted">Projeto Integrador</p>
+                    </div>
+                    <div class="col-12">
+                        <p class="mb-2"><strong>Período de Desenvolvimento:</strong></p>
+                        <p class="text-muted">
+                            <i class="bi bi-calendar-event me-1"></i>
+                            Agosto de 2025 a Dezembro de 2025
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stack Tecnológica -->
+<div class="row mb-5">
+    <div class="col-lg-8 mx-auto">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h4 card-title text-primary mb-4">
+                    <i class="bi bi-stack me-2"></i>Stack Tecnológica
+                </h2>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-primary fs-6 py-2 px-3">Python 3.10+</span>
+                    <span class="badge bg-success fs-6 py-2 px-3">FastAPI</span>
+                    <span class="badge bg-info fs-6 py-2 px-3">Jinja2</span>
+                    <span class="badge bg-primary fs-6 py-2 px-3">Bootstrap 5.3.8</span>
+                    <span class="badge bg-secondary fs-6 py-2 px-3">SQLite</span>
+                    <span class="badge bg-warning text-dark fs-6 py-2 px-3">Pydantic</span>
+                    <span class="badge bg-danger fs-6 py-2 px-3">Bcrypt</span>
+                    <span class="badge bg-dark fs-6 py-2 px-3">Pillow</span>
+                    <span class="badge bg-info fs-6 py-2 px-3">Resend</span>
+                    <span class="badge bg-success fs-6 py-2 px-3">Pytest</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Equipe -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="h3 text-center text-primary mb-4">
+            <i class="bi bi-people-fill me-2"></i>Equipe do Projeto
+        </h2>
+    </div>
+</div>
+
+<!-- Professor -->
+<div class="row mb-4">
+    <div class="col-lg-6 mx-auto">
+        <div class="card border-primary shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
+                    <i class="bi bi-person-badge fs-1"></i>
+                </div>
+                <h3 class="h5 card-title mb-2">Prof. Ricardo Maroquio</h3>
+                <p class="text-muted mb-0">
+                    <i class="bi bi-mortarboard me-1"></i>
+                    Professor Orientador
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alunos -->
+<div class="row g-4 mb-5">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                    <i class="bi bi-person-fill fs-3"></i>
+                </div>
+                <h4 class="h6 card-title mb-2">Aluno 1</h4>
+                <p class="text-muted small mb-0">
+                    <i class="bi bi-code-slash me-1"></i>
+                    Desenvolvedor
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="rounded-circle bg-info text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                    <i class="bi bi-person-fill fs-3"></i>
+                </div>
+                <h4 class="h6 card-title mb-2">Aluno 2</h4>
+                <p class="text-muted small mb-0">
+                    <i class="bi bi-code-slash me-1"></i>
+                    Desenvolvedor
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="rounded-circle bg-warning text-dark d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                    <i class="bi bi-person-fill fs-3"></i>
+                </div>
+                <h4 class="h6 card-title mb-2">Aluno 3</h4>
+                <p class="text-muted small mb-0">
+                    <i class="bi bi-code-slash me-1"></i>
+                    Desenvolvedor
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="rounded-circle bg-danger text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                    <i class="bi bi-person-fill fs-3"></i>
+                </div>
+                <h4 class="h6 card-title mb-2">Aluno 4</h4>
+                <p class="text-muted small mb-0">
+                    <i class="bi bi-code-slash me-1"></i>
+                    Desenvolvedor
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

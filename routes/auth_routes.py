@@ -51,7 +51,7 @@ async def get_login(request: Request):
     """Exibe formulário de login"""
     # Se já estiver logado, redireciona
     if request.session.get("usuario_logado"):
-        return RedirectResponse("/", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse("/usuario", status_code=status.HTTP_303_SEE_OTHER)
 
     return templates.TemplateResponse("auth/login.html", {"request": request})
 
@@ -92,7 +92,7 @@ async def post_login(
 
         logger.info(f"Usuário {usuario.email} autenticado com sucesso")
         informar_sucesso(request, f"Bem-vindo(a), {usuario.nome}!")
-        return RedirectResponse("/", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse("/usuario", status_code=status.HTTP_303_SEE_OTHER)
 
     except ValidationError as e:
         erros = [erro['msg'] for erro in e.errors()]
@@ -116,7 +116,7 @@ async def get_cadastrar(request: Request):
     """Exibe formulário de cadastro"""
     # Se já estiver logado, redireciona
     if request.session.get("usuario_logado"):
-        return RedirectResponse("/", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse("/usuario", status_code=status.HTTP_303_SEE_OTHER)
 
     return templates.TemplateResponse("auth/cadastro.html", {"request": request})
 

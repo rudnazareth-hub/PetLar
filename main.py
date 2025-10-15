@@ -19,6 +19,7 @@ from routes.tarefas_routes import router as tarefas_router
 from routes.admin_usuarios_routes import router as admin_usuarios_router
 from routes.admin_configuracoes_routes import router as admin_config_router
 from routes.perfil_routes import router as perfil_router
+from routes.usuario_routes import router as usuario_router
 from routes.public_routes import router as public_router
 
 # Seeds
@@ -74,6 +75,9 @@ logger.info("Router admin de usuários incluído")
 
 app.include_router(admin_config_router, tags=["Admin - Configurações"])
 logger.info("Router admin de configurações incluído")
+
+app.include_router(usuario_router, tags=["Usuário"])
+logger.info("Router de usuário incluído")
 
 # Rotas públicas (deve ser por último para não sobrescrever outras rotas)
 app.include_router(public_router, tags=["Público"])
