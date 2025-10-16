@@ -10,5 +10,5 @@ class Endereco:
     complemento: str
     bairro: str
     cidade: str
-    UF: str
+    Uf: str
     CEP: int
