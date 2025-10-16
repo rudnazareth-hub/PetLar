@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Endereco:
+    id_endereco: int
     id_usuario: int
     titulo: str
     logradouro: str
