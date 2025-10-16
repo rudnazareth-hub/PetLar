@@ -10,5 +10,5 @@ class Raca:
     descricao: str
     temperamento: str
     expectativa_de_vida: str
-    porte: str
+    porte: str 
     
