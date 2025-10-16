@@ -1,5 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
+
+from model.especie_model import Especie
 
 
 @dataclass
@@ -11,4 +14,5 @@ class Raca:
     temperamento: str
     expectativa_de_vida: str
     porte: str 
-    
+    # relacionamentos
+    especie: Optional[Especie]  
