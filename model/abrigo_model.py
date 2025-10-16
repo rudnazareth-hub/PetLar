@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 @dataclass
-class abrigo:
+class Abrigo:
     id_abrigo: int
     responsavel: str
     data_abertura: datetime

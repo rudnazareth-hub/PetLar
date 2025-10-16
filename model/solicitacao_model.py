@@ -1,5 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
+
+from model.adotante_model import Adotante
+from model.animal_model import Animal
 
 
 @dataclass
@@ -10,3 +14,7 @@ class Solicitacao:
     data_solicitacao: datetime
     status: str
     observacoes: str  
+    # Relacionamentos
+    adotante: Optional[Adotante] 
+    animal: Optional[Animal]
+    
