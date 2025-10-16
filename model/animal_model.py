@@ -1,5 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
+
+from model.raca_model import Raca
 
 
 @dataclass
@@ -11,3 +14,5 @@ class Animal:
     data_nascimento: datetime
     data_entrada: datetime
     observacoes: str
+    # Relacionamentos
+    raca: Optional[Raca]
