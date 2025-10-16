@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
+from model.abrigo_model import Abrigo
 from model.raca_model import Raca
 
 
@@ -16,3 +17,4 @@ class Animal:
     observacoes: str
     # Relacionamentos
     raca: Optional[Raca]
+    abrigo: Optional[Abrigo]
