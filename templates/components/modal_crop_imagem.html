@@ -1,5 +1,5 @@
 {#
-    Componente: Modal de Crop de Imagem Reutilizável
+Componente: Modal de Crop de Imagem Reutilizável
 
     Parâmetros esperados:
     - modal_id: ID único do modal (ex: "modalFotoPerfil")
@@ -45,6 +45,9 @@
                                id="input-{{ modal_id }}"
                                accept="{{ accepted_formats }}"
                                required>
+                        <div class="form-text">
+                            Formatos: JPG, PNG, GIF, WEBP. Tamanho máximo: {{ max_file_size_mb }}MB
+                        </div>
                     </div>
                     {% endif %}
 
@@ -52,22 +55,19 @@
                     <div id="cropper-container-{{ modal_id }}" class="{% if show_upload_section %}d-none{% endif %}">
                         <!-- Área da imagem com altura calculada dinamicamente pelo JS -->
                         <div id="cropper-image-area-{{ modal_id }}" class="mb-3" style="overflow: hidden;">
-                            <img id="cropper-image-{{ modal_id }}"
-                                 src=""
-                                 alt="Imagem para crop"
-                                 style="max-width: 100%; display: block;">
+                            <img id="cropper-image-{{ modal_id }}" src="" alt="Imagem para crop"
+                                style="max-width: 100%; display: block;">
                         </div>
 
                         <!-- Área de controles: Preview à esquerda, Botões à direita -->
-                        <div id="cropper-controls-area-{{ modal_id }}" class="d-flex align-items-start gap-3 pt-3 border-top">
+                        <div id="cropper-controls-area-{{ modal_id }}"
+                            class="d-flex align-items-start gap-3 pt-3 border-top">
                             <!-- Preview à esquerda -->
                             <div class="flex-shrink-0 text-center">
                                 <div class="border border-2 border-primary rounded"
-                                     style="overflow: hidden; width: 120px; height: 120px;">
-                                    <img id="preview-{{ modal_id }}"
-                                         src=""
-                                         alt="Preview"
-                                         style="width: 100%; height: 100%; object-fit: cover;">
+                                    style="overflow: hidden; width: 120px; height: 120px;">
+                                    <img id="preview-{{ modal_id }}" src="" alt="Preview"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
                                 </div>
                             </div>
 
@@ -109,6 +109,6 @@
     window['config_{{ modal_id }}'] = {
         modalId: '{{ modal_id }}',
         aspectRatio: {{ aspect_ratio }},
-        maxFileSizeMB: {{ max_file_size_mb }}
+    maxFileSizeMB: { { max_file_size_mb } }
     };
 </script>

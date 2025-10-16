@@ -1,0 +1,122 @@
+{% extends "base_privada.html" %}
+
+{% block titulo %}Personalizar Tema - {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-palette"></i> Personalizar Tema</h2>
+            <a href="/admin/configuracoes/listar" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        </div>
+
+        <div class="alert alert-info mb-4">
+            <i class="bi bi-info-circle"></i>
+            Escolha um dos temas visuais abaixo para personalizar a aparência da aplicação.
+            Após selecionar, <strong>recarregue a página</strong> para visualizar as mudanças.
+        </div>
+
+        {% if temas %}
+        <div class="row g-4">
+            {% for tema in temas %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <form method="POST" action="/admin/configuracoes/tema/aplicar" class="h-100">
+                    <input type="hidden" name="tema" value="{{ tema.nome }}">
+                    <button type="submit"
+                            class="btn btn-outline-{{ 'primary' if tema.selecionado else 'secondary' }}
+                                   p-0 w-100 h-100 position-relative tema-card
+                                   {{ 'tema-selecionado' if tema.selecionado else '' }}"
+                            style="transition: all 0.3s; border-width: {{ '3px' if tema.selecionado else '1px' }};">
+
+                        <!-- Badge "Selecionado" -->
+                        {% if tema.selecionado %}
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary"
+                              style="z-index: 10; padding: 0.5em 1em; font-size: 0.75rem;">
+                            <i class="bi bi-check-circle-fill"></i> Selecionado
+                        </span>
+                        {% endif %}
+
+                        <div class="card h-100 border-0">
+                            <!-- Imagem de Preview do Tema -->
+                            <div class="card-img-top overflow-hidden" style="height: 180px;">
+                                <img src="{{ tema.imagem }}"
+                                     alt="Preview do tema {{ tema.nome_exibicao }}"
+                                     class="w-100 h-100"
+                                     style="object-fit: cover; object-position: top;">
+                            </div>
+
+                            <!-- Nome do Tema -->
+                            <div class="card-body text-center py-2">
+                                <h5 class="card-title mb-0 text-{{ 'primary' if tema.selecionado else 'dark' }}">
+                                    {{ tema.nome_exibicao }}
+                                </h5>
+                            </div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-warning text-center">
+            <i class="bi bi-exclamation-triangle"></i>
+            Nenhum tema disponível. Verifique se os arquivos de tema estão instalados corretamente.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Efeito hover nos cards de tema
+    document.querySelectorAll('.tema-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('tema-selecionado')) {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            }
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+    });
+
+    // Confirmação antes de aplicar tema (opcional)
+    document.querySelectorAll('.tema-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            const temaNome = this.querySelector('input[name="tema"]').value;
+            const isSelecionado = this.classList.contains('tema-selecionado');
+
+            if (isSelecionado) {
+                e.preventDefault();
+                alert('Este tema já está selecionado!');
+                return false;
+            }
+        });
+    });
+</script>
+
+<style>
+    .tema-card {
+        cursor: pointer;
+        text-align: left;
+    }
+
+    .tema-card:hover {
+        border-color: var(--bs-primary) !important;
+    }
+
+    .tema-selecionado {
+        box-shadow: 0 0 15px rgba(13, 110, 253, 0.3) !important;
+    }
+
+    .tema-selecionado:hover {
+        transform: none !important;
+    }
+</style>
+{% endblock %}
