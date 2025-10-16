@@ -24,7 +24,20 @@ def configurar_logger():
         interval=1,                # A cada 1 dia
         backupCount=retention_days # Mantém N dias de histórico
     )
-    file_handler.suffix = '%Y-%m-%d'  # Formato do sufixo: app.log.2025-10-15
+    file_handler.suffix = '%Y.%m.%d'  # Formato do sufixo com pontos
+
+    # Função para customizar o nome do arquivo rotacionado
+    def namer(default_name):
+        """Converte logs/app.log.2025.10.25 para logs/app.2025.10.25.log"""
+        dir_name, base_name = os.path.split(default_name)
+        # Remove o '.log' do meio e adiciona no final
+        parts = base_name.split('.log.')
+        if len(parts) == 2:
+            new_name = f"app.{parts[1]}.log"
+            return os.path.join(dir_name, new_name)
+        return default_name
+
+    file_handler.namer = namer
     file_handler.setFormatter(formato)
 
     # Handler para console
