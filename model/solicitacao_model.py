@@ -1,11 +1,12 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass
-class SolicitacaoModel:
+class Solicitacao:
     id_solicitacao: int
     id_adotante: int
-    id_animal: str
-    data_solicitacao: datatime
+    id_animal: int
+    data_solicitacao: datetime
     status: str
-    observacoes: int  
+    observacoes: str  
