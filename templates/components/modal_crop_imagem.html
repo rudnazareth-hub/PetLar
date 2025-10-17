@@ -64,7 +64,7 @@ Componente: Modal de Crop de Imagem Reutilizável
                             class="d-flex align-items-start gap-3 pt-3 border-top">
                             <!-- Preview à esquerda -->
                             <div class="flex-shrink-0 text-center">
-                                <div class="border border-2 border-primary rounded"
+                                <div class="border border-2 border-dark"
                                     style="overflow: hidden; width: 120px; height: 120px;">
                                     <img id="preview-{{ modal_id }}" src="" alt="Preview"
                                         style="width: 100%; height: 100%; object-fit: cover;">
@@ -72,9 +72,9 @@ Componente: Modal de Crop de Imagem Reutilizável
                             </div>
 
                             <!-- Botões à direita em uma única linha -->
-                            <div class="flex-grow-1 d-flex justify-content-end align-items-start gap-2">
+                            <div class="flex-grow-1 d-flex justify-content-end align-items-start gap-2 mt-auto">
                                 <button type="button"
-                                        class="btn btn-secondary btn-sm"
+                                        class="btn btn-info"
                                         id="btn-change-{{ modal_id }}">
                                     <i class="bi bi-arrow-left"></i> Escolher Outra Imagem
                                 </button>
@@ -84,10 +84,10 @@ Componente: Modal de Crop de Imagem Reutilizável
                                     Cancelar
                                 </button>
                                 <button type="submit"
-                                        class="btn btn-primary"
+                                        class="btn btn-success"
                                         id="btn-submit-{{ modal_id }}"
                                         disabled>
-                                    <i class="bi bi-upload"></i> Enviar Foto
+                                    <i class="bi bi-upload"></i> Salvar Foto
                                 </button>
                             </div>
                         </div>
