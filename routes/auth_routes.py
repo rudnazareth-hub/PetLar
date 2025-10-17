@@ -12,7 +12,14 @@ from util.flash_messages import informar_sucesso, informar_erro
 from util.template_util import criar_templates
 from util.logger_config import logger
 from util.perfis import Perfil
-from util.config import RATE_LIMIT_ESQUECI_SENHA_MAX, RATE_LIMIT_ESQUECI_SENHA_MINUTOS
+from util.config import (
+    RATE_LIMIT_LOGIN_MAX,
+    RATE_LIMIT_LOGIN_MINUTOS,
+    RATE_LIMIT_CADASTRO_MAX,
+    RATE_LIMIT_CADASTRO_MINUTOS,
+    RATE_LIMIT_ESQUECI_SENHA_MAX,
+    RATE_LIMIT_ESQUECI_SENHA_MINUTOS
+)
 
 router = APIRouter()
 templates = criar_templates("templates/auth")
@@ -49,7 +56,14 @@ class SimpleRateLimiter:
         """Limpa todas as tentativas registradas (útil para testes)"""
         self.tentativas.clear()
 
-login_limiter = SimpleRateLimiter(max_tentativas=5, janela_minutos=5)
+login_limiter = SimpleRateLimiter(
+    max_tentativas=RATE_LIMIT_LOGIN_MAX,
+    janela_minutos=RATE_LIMIT_LOGIN_MINUTOS
+)
+cadastro_limiter = SimpleRateLimiter(
+    max_tentativas=RATE_LIMIT_CADASTRO_MAX,
+    janela_minutos=RATE_LIMIT_CADASTRO_MINUTOS
+)
 esqueci_senha_limiter = SimpleRateLimiter(
     max_tentativas=RATE_LIMIT_ESQUECI_SENHA_MAX,
     janela_minutos=RATE_LIMIT_ESQUECI_SENHA_MINUTOS
@@ -140,6 +154,16 @@ async def post_cadastrar(
 ):
     """Processa cadastro de novo usuário"""
     try:
+        # Rate limiting por IP
+        ip = request.client.host if request.client else "unknown"
+        if not cadastro_limiter.verificar(ip):
+            informar_erro(
+                request,
+                f"Muitas tentativas de cadastro. Aguarde {RATE_LIMIT_CADASTRO_MINUTOS} minuto(s)."
+            )
+            logger.warning(f"Rate limit de cadastro excedido para IP: {ip}")
+            return RedirectResponse("/cadastrar", status_code=status.HTTP_303_SEE_OTHER)
+
         # Validar dados com DTO
         dto = CadastroDTO(
             perfil=perfil,
