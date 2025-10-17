@@ -222,7 +222,6 @@ function initImageCropper(modalId, aspectRatio = 1.0, maxFileSizeMB = 5) {
     const cropperContainer = document.getElementById(`cropper-container-${modalId}`);
     const cropperImage = document.getElementById(`cropper-image-${modalId}`);
     const previewImage = document.getElementById(`preview-${modalId}`);
-    const btnChange = document.getElementById(`btn-change-${modalId}`);
     const btnSubmit = document.getElementById(`btn-submit-${modalId}`);
     const fotoBase64Input = document.getElementById(`foto-base64-${modalId}`);
     const form = document.getElementById(`form-${modalId}`);
@@ -239,13 +238,6 @@ function initImageCropper(modalId, aspectRatio = 1.0, maxFileSizeMB = 5) {
             if (file) {
                 loadImageFromFile(modalId, file, aspectRatio, maxFileSizeMB);
             }
-        });
-    }
-
-    // Evento: Escolher outra imagem
-    if (btnChange) {
-        btnChange.addEventListener('click', function() {
-            resetCropper(modalId, uploadSection, cropperContainer, inputFile, btnSubmit);
         });
     }
 
@@ -373,27 +365,11 @@ function resetCropper(modalId, uploadSection, cropperContainer, inputFile, btnSu
         delete cropperInstances[modalId];
     }
 
-    // Verificar se está em modo com upload interno ou externo
-    if (uploadSection) {
-        // Modo interno: mostrar seção de upload novamente
-        uploadSection.classList.remove('d-none');
-        if (cropperContainer) cropperContainer.classList.add('d-none');
-        if (inputFile) inputFile.value = '';
-        if (btnSubmit) btnSubmit.disabled = true;
-    } else {
-        // Modo externo (sem seção de upload): fechar o modal
-        // para que usuário possa selecionar outra imagem via input externo
-        const modalElement = document.getElementById(modalId);
-        if (modalElement) {
-            const modal = bootstrap.Modal.getInstance(modalElement);
-            if (modal) {
-                modal.hide();
-            }
-        }
-        // Resetar estado do cropper container e botão
-        if (cropperContainer) cropperContainer.classList.add('d-none');
-        if (btnSubmit) btnSubmit.disabled = true;
-    }
+    // Resetar UI para estado inicial
+    if (uploadSection) uploadSection.classList.remove('d-none');
+    if (cropperContainer) cropperContainer.classList.add('d-none');
+    if (inputFile) inputFile.value = '';
+    if (btnSubmit) btnSubmit.disabled = true;
 }
 
 /**
