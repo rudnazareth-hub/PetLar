@@ -1,2 +1,2 @@
-# Componente de seleção de imagem está apresentando um modal pequeno assim que seleciona o arquivo
+# No componente de crop de imagem, ao clicar no botao selecionar outra imagem, aparece o componente novamente, encolhido
 # Criar validação padrão para formulários com mensagens dos DTOs

@@ -3,7 +3,7 @@
 {% block titulo %}Dashboard - {{ APP_NAME }}{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container">
     <!-- Cabeçalho de Boas-Vindas -->
     <div class="row mb-4">
         <div class="col-12">
@@ -37,6 +37,8 @@
             </div>
         </div>
 
+        <!-- Configurações (apenas para admin) -->
+        {% if usuario.perfil == 'Administrador' %}
         <!-- Usuários -->
         <div class="col-md-4">
             <div class="card h-100 shadow-sm hover-shadow">
@@ -55,8 +57,6 @@
             </div>
         </div>
 
-        <!-- Configurações (apenas para admin) -->
-        {% if usuario.perfil == 'Administrador' %}
         <div class="col-md-4">
             <div class="card h-100 shadow-sm hover-shadow">
                 <div class="card-body text-center">
@@ -74,6 +74,24 @@
             </div>
         </div>
         {% else %}
+        <!-- Minhas Tarefas -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm hover-shadow">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-people text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">Minhas Tarefas</h5>
+                    <p class="card-text text-muted">
+                        Gerencie suas tarefas pendentes e concluídas
+                    </p>
+                    <a href="/tarefas/listar" class="btn btn-success">
+                        <i class="bi bi-arrow-right-circle"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- Ajuda/Suporte para usuários comuns -->
         <div class="col-md-4">
             <div class="card h-100 shadow-sm hover-shadow">
