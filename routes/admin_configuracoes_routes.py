@@ -2,6 +2,7 @@ from typing import Optional
 import os
 import shutil
 from pathlib import Path
+from datetime import datetime
 from fastapi import APIRouter, Form, Request, status
 from fastapi.responses import RedirectResponse
 
@@ -164,3 +165,108 @@ async def post_aplicar_tema(
         informar_erro(request, f"Erro ao aplicar tema: {str(e)}")
 
     return RedirectResponse("/admin/configuracoes/tema", status_code=status.HTTP_303_SEE_OTHER)
+
+
+def _ler_log_arquivo(data: str, nivel: str) -> tuple[str, int, Optional[str]]:
+    """
+    Lê arquivo de log e filtra por nível
+
+    Args:
+        data: Data no formato YYYY-MM-DD
+        nivel: Nível de log (INFO, WARNING, ERROR, DEBUG, CRITICAL, TODOS)
+
+    Returns:
+        Tupla (conteúdo_filtrado, total_linhas, mensagem_erro)
+    """
+    try:
+        # Converter data para formato do arquivo (YYYY.MM.DD)
+        data_formatada = data.replace('-', '.')
+        arquivo_log = Path(f"logs/app.{data_formatada}.log")
+
+        # Verificar se arquivo existe
+        if not arquivo_log.exists():
+            return "", 0, f"Nenhum arquivo de log encontrado para a data {data}."
+
+        # Verificar tamanho do arquivo (limite de 10MB para performance)
+        tamanho_mb = arquivo_log.stat().st_size / (1024 * 1024)
+        if tamanho_mb > 10:
+            logger.warning(f"Arquivo de log muito grande ({tamanho_mb:.2f} MB): {arquivo_log}")
+            return "", 0, f"Arquivo de log muito grande ({tamanho_mb:.2f} MB). Considere usar ferramentas externas para análise."
+
+        # Ler arquivo
+        with open(arquivo_log, 'r', encoding='utf-8') as f:
+            linhas = f.readlines()
+
+        # Filtrar por nível se não for "TODOS"
+        if nivel != "TODOS":
+            linhas_filtradas = [
+                linha for linha in linhas
+                if f" - {nivel} - " in linha
+            ]
+        else:
+            linhas_filtradas = linhas
+
+        conteudo = ''.join(linhas_filtradas)
+        total = len(linhas_filtradas)
+
+        return conteudo, total, None
+
+    except Exception as e:
+        logger.error(f"Erro ao ler arquivo de log: {str(e)}")
+        return "", 0, f"Erro ao ler arquivo de log: {str(e)}"
+
+
+@router.get("/auditoria")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_auditoria(request: Request, usuario_logado: Optional[dict] = None):
+    """Exibe página de auditoria de logs do sistema"""
+    # Data padrão: hoje
+    data_hoje = datetime.now().strftime('%Y-%m-%d')
+
+    return templates.TemplateResponse(
+        "admin/configuracoes/auditoria.html",
+        {
+            "request": request,
+            "data_selecionada": data_hoje,
+            "nivel_selecionado": "TODOS"
+        }
+    )
+
+
+@router.post("/auditoria/filtrar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_filtrar_auditoria(
+    request: Request,
+    data: str = Form(...),
+    nivel: str = Form(...),
+    usuario_logado: Optional[dict] = None
+):
+    """
+    Filtra logs do sistema por data e nível
+
+    Args:
+        data: Data no formato YYYY-MM-DD
+        nivel: Nível de log (INFO, WARNING, ERROR, DEBUG, CRITICAL, TODOS)
+    """
+    assert usuario_logado is not None
+
+    # Ler e filtrar logs
+    logs, total_linhas, mensagem_erro = _ler_log_arquivo(data, nivel)
+
+    # Log da ação de auditoria
+    logger.info(
+        f"Auditoria de logs realizada por admin {usuario_logado['id']} - "
+        f"Data: {data}, Nível: {nivel}, Linhas encontradas: {total_linhas}"
+    )
+
+    return templates.TemplateResponse(
+        "admin/configuracoes/auditoria.html",
+        {
+            "request": request,
+            "data_selecionada": data,
+            "nivel_selecionado": nivel,
+            "logs": logs,
+            "total_linhas": total_linhas,
+            "mensagem_erro": mensagem_erro
+        }
+    )
