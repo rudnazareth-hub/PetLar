@@ -25,33 +25,25 @@
                 <form method="POST" action="/admin/configuracoes/tema/aplicar" class="h-100">
                     <input type="hidden" name="tema" value="{{ tema.nome }}">
                     <button type="submit"
-                            class="btn btn-outline-{{ 'primary' if tema.selecionado else 'secondary' }}
+                            class="btn 
                                    p-0 w-100 h-100 position-relative tema-card
                                    {{ 'tema-selecionado' if tema.selecionado else '' }}"
-                            style="transition: all 0.3s; border-width: {{ '3px' if tema.selecionado else '1px' }};">
+                            style="transition: all 0.3s; outline-width: {{ '6px' if tema.selecionado else '1px' }}; outline-style: solid; outline-color: {{ 'var(--primary-color)' if tema.selecionado else 'var(--secondary-color)' }}; outline-offset: -1px;">
 
                         <!-- Badge "Selecionado" -->
                         {% if tema.selecionado %}
-                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary"
-                              style="z-index: 10; padding: 0.5em 1em; font-size: 0.75rem;">
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary py-2 px-3 small z-3">
                             <i class="bi bi-check-circle-fill"></i> Selecionado
                         </span>
                         {% endif %}
 
-                        <div class="card h-100 border-0">
+                        <div class="card h-100 border-0 overflow-hidden">
                             <!-- Imagem de Preview do Tema -->
-                            <div class="card-img-top overflow-hidden" style="height: 180px;">
+                            <div class="card-img-top overflow-hidden">
                                 <img src="{{ tema.imagem }}"
                                      alt="Preview do tema {{ tema.nome_exibicao }}"
                                      class="w-100 h-100"
                                      style="object-fit: cover; object-position: top;">
-                            </div>
-
-                            <!-- Nome do Tema -->
-                            <div class="card-body text-center py-2">
-                                <h5 class="card-title mb-0 text-{{ 'primary' if tema.selecionado else 'dark' }}">
-                                    {{ tema.nome_exibicao }}
-                                </h5>
                             </div>
                         </div>
                     </button>
@@ -101,22 +93,5 @@
     });
 </script>
 
-<style>
-    .tema-card {
-        cursor: pointer;
-        text-align: left;
-    }
 
-    .tema-card:hover {
-        border-color: var(--bs-primary) !important;
-    }
-
-    .tema-selecionado {
-        box-shadow: 0 0 15px rgba(13, 110, 253, 0.3) !important;
-    }
-
-    .tema-selecionado:hover {
-        transform: none !important;
-    }
-</style>
 {% endblock %}
