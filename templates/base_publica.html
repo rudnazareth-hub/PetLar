@@ -1,3 +1,5 @@
+{% set erros = {} if not erros %}
+{% set dados = {} if not dados %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -127,6 +129,9 @@
 
     <!-- Script de Validação de Senha -->
     <script src="/static/js/password-validator.js"></script>
+
+    <!-- Script de Máscaras de Input -->
+    <script src="/static/js/input-mask.js"></script>
 
     {% block scripts %}{% endblock %}
 </body>

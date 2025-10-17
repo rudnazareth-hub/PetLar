@@ -92,9 +92,12 @@ async def post_login(
             informar_erro(request, "Muitas tentativas de login. Aguarde alguns minutos.")
             logger.warning(f"Rate limit excedido para IP: {ip}")
             return RedirectResponse("/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+        # Armazena os dados do formulário para reexibição em caso de erro
+        dados_formulario = {"email": email}
 
         # Validar dados com DTO
-        dto = LoginDTO(email=email, senha=senha)
+        dto = LoginDTO(email=email, senha=senha)        
 
         # Buscar usuário
         usuario = usuario_repo.obter_por_email(dto.email)
@@ -118,11 +121,11 @@ async def post_login(
         return RedirectResponse("/usuario", status_code=status.HTTP_303_SEE_OTHER)
 
     except ValidationError as e:
-        erros = [erro['msg'] for erro in e.errors()]
-        informar_erro(request, " | ".join(erros))
+        erros = { erro["loc"][-1]: erro['msg'].replace("Value error, ", "") for erro in e.errors() }
+        informar_erro(request, "Há campos com erros de validação.")
         return templates.TemplateResponse(
             "auth/login.html",
-            {"request": request, "email": email}
+            {"request": request, "dados": dados_formulario, "erros": erros}
         )
 
 @router.get("/logout")

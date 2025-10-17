@@ -38,3 +38,14 @@ async def sobre(request: Request):
         "sobre.html",
         {"request": request}
     )
+
+
+@router.get("/examples/form-fields")
+async def form_fields_demo(request: Request):
+    """
+    Página de demonstração da macro de campos de formulário
+    """
+    return templates_home.TemplateResponse(
+        "examples/form_fields_demo.html",
+        {"request": request}
+    )
