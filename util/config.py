@@ -39,5 +39,9 @@ IS_DEVELOPMENT = RUNNING_MODE.lower() == "development"
 # === Configurações de Fotos de Perfil ===
 FOTO_PERFIL_TAMANHO_MAX = int(os.getenv("FOTO_PERFIL_TAMANHO_MAX", "256"))
 
+# === Configurações de Rate Limiting ===
+RATE_LIMIT_ESQUECI_SENHA_MAX = int(os.getenv("RATE_LIMIT_ESQUECI_SENHA_MAX", "1"))
+RATE_LIMIT_ESQUECI_SENHA_MINUTOS = int(os.getenv("RATE_LIMIT_ESQUECI_SENHA_MINUTOS", "1"))
+
 # === Versão da Aplicação ===
 VERSION = "1.0.0"

@@ -12,6 +12,7 @@ from util.flash_messages import informar_sucesso, informar_erro
 from util.template_util import criar_templates
 from util.logger_config import logger
 from util.perfis import Perfil
+from util.config import RATE_LIMIT_ESQUECI_SENHA_MAX, RATE_LIMIT_ESQUECI_SENHA_MINUTOS
 
 router = APIRouter()
 templates = criar_templates("templates/auth")
@@ -49,6 +50,10 @@ class SimpleRateLimiter:
         self.tentativas.clear()
 
 login_limiter = SimpleRateLimiter(max_tentativas=5, janela_minutos=5)
+esqueci_senha_limiter = SimpleRateLimiter(
+    max_tentativas=RATE_LIMIT_ESQUECI_SENHA_MAX,
+    janela_minutos=RATE_LIMIT_ESQUECI_SENHA_MINUTOS
+)
 
 @router.get("/login")
 async def get_login(request: Request):
@@ -199,6 +204,16 @@ async def post_esqueci_senha(
 ):
     """Processa solicitação de recuperação de senha"""
     try:
+        # Rate limiting por IP
+        ip = request.client.host if request.client else "unknown"
+        if not esqueci_senha_limiter.verificar(ip):
+            informar_erro(
+                request,
+                f"Muitas tentativas de recuperação de senha. Aguarde {RATE_LIMIT_ESQUECI_SENHA_MINUTOS} minuto(s)."
+            )
+            logger.warning(f"Rate limit de recuperação de senha excedido para IP: {ip}")
+            return RedirectResponse("/esqueci-senha", status_code=status.HTTP_303_SEE_OTHER)
+
         # Validar e-mail com DTO
         dto = RecuperacaoSenhaDTO(email=email)
 
