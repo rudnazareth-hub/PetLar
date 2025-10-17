@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse
 from pydantic import ValidationError
 from datetime import datetime
 
-from dtos.login_dto import LoginDTO, CadastroDTO, RecuperacaoSenhaDTO, RedefinirSenhaDTO
+from dtos.auth_dto import LoginDTO, CadastroDTO, RecuperacaoSenhaDTO, RedefinirSenhaDTO
 from model.usuario_model import Usuario
 from repo import usuario_repo
 from util.security import criar_hash_senha, verificar_senha, gerar_token_redefinicao, obter_data_expiracao_token

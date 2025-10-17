@@ -33,6 +33,30 @@
                             <label for="confirmar_senha">Confirmar Nova Senha</label>
                         </div>
 
+                        <!-- Indicador de força da senha -->
+                        <div class="mb-3">
+                            <small class="text-muted">Força da senha:</small>
+                            <div class="progress">
+                                <div class="progress-bar" id="senha-strength" role="progressbar"></div>
+                            </div>
+                            <small id="senha-strength-text" class="text-muted"></small>
+                        </div>
+
+                        <div id="senha-match" class="form-text mb-3"></div>
+
+                        <!-- Requisitos da Senha -->
+                        <div class="mb-3">
+                            <div class="alert alert-info">
+                                <strong><i class="bi bi-info-circle"></i> Requisitos da senha:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li id="req-length">Mínimo de 8 caracteres</li>
+                                    <li id="req-uppercase">Pelo menos 1 letra maiúscula</li>
+                                    <li id="req-lowercase">Pelo menos 1 letra minúscula</li>
+                                    <li id="req-number">Pelo menos 1 número</li>
+                                </ul>
+                            </div>
+                        </div>
+
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-shield-lock"></i> Redefinir Senha
@@ -60,7 +84,18 @@
     const passwordValidator = new PasswordValidator({
         passwordFieldId: 'senha',
         confirmPasswordFieldId: 'confirmar_senha',
-        minLength: 8
+        strengthBarId: 'senha-strength',
+        strengthTextId: 'senha-strength-text',
+        matchMessageId: 'senha-match',
+        requirements: {
+            length: 'req-length',
+            uppercase: 'req-uppercase',
+            lowercase: 'req-lowercase',
+            number: 'req-number'
+        },
+        minLength: 8,
+        showStrength: true,
+        showRequirements: true
     });
 
     // Validação do formulário

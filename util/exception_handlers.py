@@ -23,12 +23,24 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     """
     status_code = exc.status_code
 
-    # Log da exceção
-    logger.warning(
+    # Extensões de arquivos estáticos opcionais que não devem gerar warnings
+    STATIC_OPTIONAL_EXTENSIONS = ('.map', '.ico', '.woff', '.woff2', '.ttf', '.eot')
+
+    # Determinar nível de log baseado no tipo de recurso
+    path_lower = request.url.path.lower()
+    is_optional_static = status_code == 404 and path_lower.endswith(STATIC_OPTIONAL_EXTENSIONS)
+
+    # Log da exceção com nível apropriado
+    log_message = (
         f"HTTPException {status_code}: {exc.detail} - "
         f"Path: {request.url.path} - "
         f"IP: {request.client.host if request.client else 'unknown'}"
     )
+
+    if is_optional_static:
+        logger.debug(log_message)
+    else:
+        logger.warning(log_message)
 
     # 401 - Não autenticado
     if status_code == status.HTTP_401_UNAUTHORIZED:

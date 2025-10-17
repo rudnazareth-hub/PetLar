@@ -31,7 +31,7 @@ class CadastroDTO(BaseModel):
     @classmethod
     def validar_perfil(cls, v: str) -> str:
         """Valida perfil - apenas Cliente ou Vendedor são permitidos no cadastro público"""
-        perfis_permitidos = [Perfil.CLIENTE.value, Perfil.VENDEDOR.value]
+        perfis_permitidos = [perfil.value for perfil in Perfil if perfil not in (Perfil.ADMIN)]
         if v not in perfis_permitidos:
             raise ValueError(f"Perfil inválido. Escolha entre: {', '.join(perfis_permitidos)}")
         return v
