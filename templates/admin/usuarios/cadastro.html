@@ -1,6 +1,6 @@
 {% extends "base_privada.html" %}
 
-{% block titulo %}Cadastrar Usuário - {{ APP_NAME }}{% endblock %}
+{% block titulo %}Cadastrar Usuário{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -15,26 +15,16 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <div class="form-floating">
-                                <input type="text"
-                                       class="form-control"
-                                       id="nome"
-                                       name="nome"
-                                       value="{{ usuario.nome if usuario else '' }}"
-                                       placeholder="Nome Completo"
-                                       required>
+                                <input type="text" class="form-control" id="nome" name="nome"
+                                    value="{{ usuario.nome if usuario else '' }}" placeholder="Nome Completo" required>
                                 <label for="nome">Nome Completo <span class="text-danger">*</span></label>
                             </div>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <div class="form-floating">
-                                <input type="email"
-                                       class="form-control"
-                                       id="email"
-                                       name="email"
-                                       value="{{ usuario.email if usuario else '' }}"
-                                       placeholder="Email"
-                                       required>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    value="{{ usuario.email if usuario else '' }}" placeholder="Email" required>
                                 <label for="email">Email <span class="text-danger">*</span></label>
                             </div>
                         </div>
@@ -44,7 +34,8 @@
                                 <select class="form-select" id="perfil" name="perfil" required>
                                     <option value="">Selecione...</option>
                                     {% for perfil in perfis %}
-                                    <option value="{{ perfil }}" {{ 'selected' if usuario and usuario.perfil == perfil else '' }}>{{ perfil }}</option>
+                                    <option value="{{ perfil }}" {{ 'selected' if usuario and usuario.perfil==perfil
+                                        else '' }}>{{ perfil }}</option>
                                     {% endfor %}
                                 </select>
                                 <label for="perfil">Perfil <span class="text-danger">*</span></label>
@@ -53,36 +44,24 @@
 
                         <div class="col-md-6 mb-3">
                             <div class="form-floating">
-                                <input type="password"
-                                       class="form-control"
-                                       id="senha"
-                                       name="senha"
-                                       placeholder="Senha"
-                                       required>
+                                <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha"
+                                    required>
                                 <label for="senha">Senha <span class="text-danger">*</span></label>
                             </div>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <div class="form-floating">
-                                <input type="password"
-                                       class="form-control"
-                                       id="confirma_senha"
-                                       name="confirma_senha"
-                                       placeholder="Confirmar Senha"
-                                       required>
+                                <input type="password" class="form-control" id="confirma_senha" name="confirma_senha"
+                                    placeholder="Confirmar Senha" required>
                                 <label for="confirma_senha">Confirmar Senha <span class="text-danger">*</span></label>
                             </div>
                         </div>
 
                         <div class="col-md-12 mb-3">
                             <div class="form-check">
-                                <input class="form-check-input"
-                                       type="checkbox"
-                                       id="ativo"
-                                       name="ativo"
-                                       value="1"
-                                       {{ 'checked' if not usuario or usuario.ativo else '' }}>
+                                <input class="form-check-input" type="checkbox" id="ativo" name="ativo" value="1"
+                                    {{ 'checked' if not usuario or usuario.ativo else '' }}>
                                 <label class="form-check-label" for="ativo">
                                     Usuário ativo
                                 </label>
@@ -115,7 +94,7 @@
     });
 
     // Validação do formulário
-    document.querySelector('form').addEventListener('submit', function(e) {
+    document.querySelector('form').addEventListener('submit', function (e) {
         if (!passwordValidator.validateForm()) {
             e.preventDefault();
             return false;

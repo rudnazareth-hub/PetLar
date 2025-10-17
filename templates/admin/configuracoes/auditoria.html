@@ -1,6 +1,6 @@
 {% extends "base_privada.html" %}
 
-{% block titulo %}Auditoria de Logs - {{ APP_NAME }}{% endblock %}
+{% block titulo %}Auditoria de Logs{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -27,12 +27,8 @@
                             <label for="data" class="form-label">
                                 <i class="bi bi-calendar3"></i> Data do Log
                             </label>
-                            <input type="date"
-                                   class="form-control"
-                                   id="data"
-                                   name="data"
-                                   value="{{ data_selecionada }}"
-                                   required>
+                            <input type="date" class="form-control" id="data" name="data" value="{{ data_selecionada }}"
+                                required>
                         </div>
 
                         <div class="col-md-4">
@@ -40,12 +36,17 @@
                                 <i class="bi bi-funnel"></i> Nível de Log
                             </label>
                             <select class="form-select" id="nivel" name="nivel">
-                                <option value="TODOS" {{ 'selected' if nivel_selecionado == 'TODOS' else '' }}>Todos os Níveis</option>
-                                <option value="DEBUG" {{ 'selected' if nivel_selecionado == 'DEBUG' else '' }}>DEBUG</option>
-                                <option value="INFO" {{ 'selected' if nivel_selecionado == 'INFO' else '' }}>INFO</option>
-                                <option value="WARNING" {{ 'selected' if nivel_selecionado == 'WARNING' else '' }}>WARNING</option>
-                                <option value="ERROR" {{ 'selected' if nivel_selecionado == 'ERROR' else '' }}>ERROR</option>
-                                <option value="CRITICAL" {{ 'selected' if nivel_selecionado == 'CRITICAL' else '' }}>CRITICAL</option>
+                                <option value="TODOS" {{ 'selected' if nivel_selecionado=='TODOS' else '' }}>Todos os
+                                    Níveis</option>
+                                <option value="DEBUG" {{ 'selected' if nivel_selecionado=='DEBUG' else '' }}>DEBUG
+                                </option>
+                                <option value="INFO" {{ 'selected' if nivel_selecionado=='INFO' else '' }}>INFO</option>
+                                <option value="WARNING" {{ 'selected' if nivel_selecionado=='WARNING' else '' }}>WARNING
+                                </option>
+                                <option value="ERROR" {{ 'selected' if nivel_selecionado=='ERROR' else '' }}>ERROR
+                                </option>
+                                <option value="CRITICAL" {{ 'selected' if nivel_selecionado=='CRITICAL' else '' }}>
+                                    CRITICAL</option>
                             </select>
                         </div>
 
@@ -68,16 +69,15 @@
                         <i class="bi bi-file-text"></i> Resultados
                     </h5>
                     <span class="badge bg-light text-primary">
-                        {{ total_linhas }} linha{{ 's' if total_linhas != 1 else '' }} encontrada{{ 's' if total_linhas != 1 else '' }}
+                        {{ total_linhas }} linha{{ 's' if total_linhas != 1 else '' }} encontrada{{ 's' if total_linhas
+                        != 1 else '' }}
                     </span>
                 </div>
             </div>
             <div class="card-body p-0">
                 {% if logs %}
-                <textarea readonly
-                          class="form-control font-monospace border-0 rounded-0"
-                          rows="25"
-                          style="resize: none; font-size: 0.85rem; line-height: 1.4;">{{ logs }}</textarea>
+                <textarea readonly class="form-control font-monospace border-0 rounded-0" rows="25"
+                    style="resize: none; font-size: 0.85rem; line-height: 1.4;">{{ logs }}</textarea>
                 {% else %}
                 <div class="alert alert-warning mb-0 rounded-0">
                     <i class="bi bi-exclamation-triangle"></i>
@@ -95,7 +95,7 @@
 {% block scripts %}
 <script>
     // Limitar data máxima a hoje
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const inputData = document.getElementById('data');
         const hoje = new Date().toISOString().split('T')[0];
         inputData.setAttribute('max', hoje);

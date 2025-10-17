@@ -1,6 +1,6 @@
 {% extends "base_privada.html" %}
 
-{% block titulo %}Cadastrar Tarefa - {{ APP_NAME }}{% endblock %}
+{% block titulo %}Cadastrar Tarefa{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -20,7 +20,8 @@
                                 <input type="text" class="form-control" id="titulo" name="titulo"
                                     value="{{ dados.titulo if dados else '' }}" placeholder="Título" required
                                     maxlength="200">
-                                <label for="titulo"> <i class="bi bi-file-earmark-text"></i> Título <span class="text-danger">*</span></label>
+                                <label for="titulo"> <i class="bi bi-file-earmark-text"></i> Título <span
+                                        class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="mb-3">
