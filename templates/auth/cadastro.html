@@ -39,11 +39,13 @@
 
                         <!-- Indicador de força da senha -->
                         <div class="mb-3">
-                            <small class="text-muted">Força da senha:</small>
+                            <div class="d-flex justify-content-between mb-1">
+                                <small class="text-muted">Força da senha:</small>
+                                <small id="senha-strength-text" class="text-muted"></small>
+                            </div>
                             <div class="progress">
                                 <div class="progress-bar" id="senha-strength" role="progressbar"></div>
                             </div>
-                            <small id="senha-strength-text" class="text-muted"></small>
                         </div>
 
                         <div id="senha-match" class="form-text mb-3"></div>
