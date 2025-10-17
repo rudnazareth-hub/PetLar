@@ -1,4 +1,5 @@
 {% extends "base_publica.html" %}
+{% from "macros/form_fields.html" import field %}
 
 {% block titulo %}Redefinir Senha{% endblock %}
 
@@ -17,21 +18,13 @@
                     </p>
 
                     <form method="POST" action="/redefinir-senha">
-                        <input type="hidden" name="token" value="{{ token }}">
+                        {{ field(name='token', type='hidden', value=token) }}
 
-                        <div class="mb-3">
-                            <div class="form-floating">
-                                <input type="password" class="form-control" id="senha" name="senha"
-                                    placeholder="Nova Senha" minlength="8" required autofocus>
-                                <label for="senha">Nova Senha</label>
-                            </div>
-                        </div>
+                        {{ field(name='senha', label='Nova Senha', type='password', required=true, autofocus=true,
+                                 attributes={'minlength': 8}) }}
 
-                        <div class="form-floating mb-3">
-                            <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha"
-                                placeholder="Confirmar Nova Senha" minlength="8" required>
-                            <label for="confirmar_senha">Confirmar Nova Senha</label>
-                        </div>
+                        {{ field(name='confirmar_senha', label='Confirmar Nova Senha', type='password', required=true,
+                                 attributes={'minlength': 8}) }}
 
                         <!-- Indicador de força da senha -->
                         <div class="mb-3">

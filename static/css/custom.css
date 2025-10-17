@@ -9,3 +9,74 @@
     --light-color: #f8f9fa;
     --dark-color: #212529;
 }
+
+/* ===== UTILITY CLASSES ===== */
+
+/* Hover effects */
+.shadow-hover:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Font sizes */
+.fs-hero {
+    font-size: 15rem;
+}
+
+.fs-small {
+    font-size: 0.85rem;
+}
+
+/* Resize utilities */
+.resize-none {
+    resize: none;
+}
+
+/* Object position */
+.object-top {
+    object-position: top;
+}
+
+/* Error pages */
+.error-code {
+    font-size: 10rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error-heading {
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+.error-container {
+    padding: 60px 15px;
+}
+
+/* Theme selection cards */
+.tema-card-btn {
+    transition: all 0.3s;
+    outline: 1px solid var(--secondary-color);
+    outline-offset: -1px;
+}
+
+.tema-card-btn.tema-selected {
+    outline: 6px solid var(--primary-color);
+}
+
+/* Toast container offset */
+.toast-offset {
+    margin-bottom: 60px;
+}
+
+/* Preview image size */
+.preview-120 {
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+}
+
+/* HR separator */
+.hr-separator {
+    max-width: 200px;
+}

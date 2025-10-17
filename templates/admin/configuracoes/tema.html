@@ -24,10 +24,9 @@
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                 <form method="POST" action="/admin/configuracoes/tema/aplicar" class="h-100">
                     <input type="hidden" name="tema" value="{{ tema.nome }}">
-                    <button type="submit" class="btn 
-                                   p-0 w-100 h-100 position-relative tema-card
-                                   {{ 'tema-selecionado' if tema.selecionado else '' }}"
-                        style="transition: all 0.3s; outline-width: {{ '6px' if tema.selecionado else '1px' }}; outline-style: solid; outline-color: {{ 'var(--primary-color)' if tema.selecionado else 'var(--secondary-color)' }}; outline-offset: -1px;">
+                    <button type="submit" class="btn
+                                   p-0 w-100 h-100 position-relative tema-card tema-card-btn
+                                   {{ 'tema-selected' if tema.selecionado else '' }}">
 
                         <!-- Badge "Selecionado" -->
                         {% if tema.selecionado %}
@@ -41,7 +40,7 @@
                             <!-- Imagem de Preview do Tema -->
                             <div class="card-img-top overflow-hidden">
                                 <img src="{{ tema.imagem }}" alt="Preview do tema {{ tema.nome_exibicao }}"
-                                    class="w-100 h-100" style="object-fit: cover; object-position: top;">
+                                    class="w-100 h-100 object-fit-cover object-top">
                             </div>
                         </div>
                     </button>
@@ -64,7 +63,7 @@
     // Efeito hover nos cards de tema
     document.querySelectorAll('.tema-card').forEach(card => {
         card.addEventListener('mouseenter', function () {
-            if (!this.classList.contains('tema-selecionado')) {
+            if (!this.classList.contains('tema-selected')) {
                 this.style.transform = 'translateY(-5px)';
                 this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
             }
@@ -80,7 +79,7 @@
     document.querySelectorAll('.tema-card').forEach(card => {
         card.addEventListener('click', function (e) {
             const temaNome = this.querySelector('input[name="tema"]').value;
-            const isSelecionado = this.classList.contains('tema-selecionado');
+            const isSelecionado = this.classList.contains('tema-selected');
 
             if (isSelecionado) {
                 e.preventDefault();

@@ -1,4 +1,5 @@
 {% extends "base_privada.html" %}
+{% from "macros/form_fields.html" import field %}
 
 {% block titulo %}Alterar Senha{% endblock %}
 
@@ -15,57 +16,24 @@
             <div class="card shadow-sm">
                 <div class="card-body p-4">
                     <form action="/perfil/alterar-senha" method="post" id="formSenha" autocomplete="off">
-                        <!-- Senha Atual -->
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <div class="form-floating">
-                                    <input type="password" class="form-control" id="senha_atual" name="senha_atual" required
-                                        placeholder="Senha Atual" autocomplete="current-password">
-                                    <label for="senha_atual">
-                                        <i class="bi bi-lock"></i> Senha Atual
-                                    </label>
-                                </div>
-                                <button class="btn btn-outline-secondary" type="button"
-                                    onclick="togglePassword('senha_atual')">
-                                    <i class="bi bi-eye" id="icon_senha_atual"></i>
-                                </button>
-                            </div>
-                        </div>                        
+                        {{ field(name='senha_atual', label='Senha Atual', type='password', required=true,
+                                 append_icon='bi-eye', append_button_onclick="togglePassword('senha_atual')",
+                                 attributes={'autocomplete': 'current-password'}) }}
 
                         <!-- Nova Senha e Confirmar Senha lado a lado -->
                         <div class="row">
-                            <!-- Senha Nova -->
                             <div class="col-md-6">
-                                <div class="input-group">
-                                    <div class="form-floating">
-                                        <input type="password" class="form-control" id="senha_nova" name="senha_nova" required
-                                            minlength="8" placeholder="Nova Senha" autocomplete="new-password">
-                                        <label for="senha_nova">
-                                            <i class="bi bi-key"></i> Nova Senha
-                                        </label>
-                                    </div>
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        onclick="togglePassword('senha_nova')">
-                                        <i class="bi bi-eye" id="icon_senha_nova"></i>
-                                    </button>
-                                </div>
+                                {{ field(name='senha_nova', label='Nova Senha', type='password', required=true,
+                                         append_icon='bi-eye', append_button_onclick="togglePassword('senha_nova')",
+                                         attributes={'minlength': 8, 'autocomplete': 'new-password'},
+                                         wrapper_class='mb-0') }}
                             </div>
 
-                            <!-- Confirmar Senha -->
                             <div class="col-md-6">
-                                <div class="input-group">
-                                    <div class="form-floating">
-                                        <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha"
-                                            required minlength="8" placeholder="Confirmar Nova Senha" autocomplete="new-password">
-                                        <label for="confirmar_senha">
-                                            <i class="bi bi-check-circle"></i> Confirmar Nova Senha
-                                        </label>
-                                    </div>
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        onclick="togglePassword('confirmar_senha')">
-                                        <i class="bi bi-eye" id="icon_confirmar_senha"></i>
-                                    </button>
-                                </div>
+                                {{ field(name='confirmar_senha', label='Confirmar Nova Senha', type='password', required=true,
+                                         append_icon='bi-eye', append_button_onclick="togglePassword('confirmar_senha')",
+                                         attributes={'minlength': 8, 'autocomplete': 'new-password'},
+                                         wrapper_class='mb-0') }}
                                 <div id="senha-match" class="form-text mt-2"></div>
                             </div>
 
@@ -76,9 +44,8 @@
                                         <small class="text-muted">Força da senha:</small>
                                         <small id="senha-strength-text" class="text-muted"></small>
                                     </div>
-                                    <div class="progress" style="height: 5px;">
-                                        <div class="progress-bar" id="senha-strength" role="progressbar" style="width: 0%">
-                                        </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" id="senha-strength" role="progressbar"></div>
                                     </div>
                                 </div>
                             </div>

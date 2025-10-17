@@ -1,4 +1,5 @@
 {% extends "base_privada.html" %}
+{% from "macros/form_fields.html" import field %}
 
 {% block titulo %}Editar Perfil{% endblock %}
 
@@ -15,38 +16,14 @@
             <div class="card shadow-sm">
                 <div class="card-body p-4">
                     <form action="/perfil/editar" method="post">
-                        <!-- Nome -->
-                        <div class="mb-3">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="nome" name="nome" value="{{ usuario.nome }}"
-                                    required minlength="3" maxlength="100" placeholder="Nome Completo">
-                                <label for="nome">
-                                    <i class="bi bi-person"></i> Nome Completo
-                                </label>
-                            </div>
-                        </div>
+                        {{ field(name='nome', label='Nome Completo', type='text', required=true,
+                                 value=usuario.nome, attributes={'minlength': 3, 'maxlength': 100}) }}
 
-                        <!-- E-mail -->
-                        <div class="mb-3">
-                            <div class="form-floating">
-                                <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}"
-                                    required placeholder="E-mail">
-                                <label for="email">
-                                    <i class="bi bi-envelope"></i> E-mail
-                                </label>
-                            </div>
-                        </div>
+                        {{ field(name='email', label='E-mail', type='email', required=true,
+                                 value=usuario.email) }}
 
-                        <!-- Informação do Perfil (Read-only) -->
-                        <div class="mb-3">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="perfil"
-                                    value="{{ usuario.perfil }}" disabled placeholder="Perfil de Acesso">
-                                <label for="perfil">
-                                    <i class="bi bi-person-badge"></i> Perfil de Acesso
-                                </label>
-                            </div>
-                        </div>
+                        {{ field(name='perfil', label='Perfil de Acesso', type='text',
+                                 value=usuario.perfil, disabled=true) }}
 
                         <!-- Botões -->
                         <div class="d-flex gap-2">

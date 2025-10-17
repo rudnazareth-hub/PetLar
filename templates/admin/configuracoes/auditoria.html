@@ -76,8 +76,7 @@
             </div>
             <div class="card-body p-0">
                 {% if logs %}
-                <textarea readonly class="form-control font-monospace border-0 rounded-0" rows="25"
-                    style="resize: none; font-size: 0.85rem; line-height: 1.4;">{{ logs }}</textarea>
+                <textarea readonly class="form-control font-monospace border-0 rounded-0 resize-none fs-small lh-sm" rows="25">{{ logs }}</textarea>
                 {% else %}
                 <div class="alert alert-warning mb-0 rounded-0">
                     <i class="bi bi-exclamation-triangle"></i>

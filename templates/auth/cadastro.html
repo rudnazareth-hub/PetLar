@@ -1,4 +1,5 @@
 {% extends "base_publica.html" %}
+{% from "macros/form_fields.html" import field %}
 
 {% block titulo %}Cadastro{% endblock %}
 
@@ -13,77 +14,26 @@
                     </h3>
 
                     <form method="POST" action="/cadastrar">
-                        <!-- Seleção de Perfil -->
-                        <div class="mb-4">
-                            <div class="row g-3">
-                                <div class="col-6">
-                                    <input type="radio" class="visually-hidden" name="perfil" id="perfil-cliente"
-                                        value="Cliente" {% if perfil=='Cliente' %}checked{% endif %} required>
-                                    <label
-                                        class="card h-100 text-center p-4 border border-2 border-secondary rounded-3 shadow-sm"
-                                        for="perfil-cliente" style="cursor: pointer;" data-perfil="Cliente">
-                                        <i class="bi bi-cart3 fs-1 mb-2 text-secondary d-block"></i>
-                                        <h5 class="fw-semibold mb-2 text-body">Comprador</h5>
-                                        <p class="text-muted small mb-0">Procuro produtos e serviços</p>
-                                    </label>
-                                </div>
-                                <div class="col-6">
-                                    <input type="radio" class="visually-hidden" name="perfil" id="perfil-vendedor"
-                                        value="Vendedor" {% if perfil=='Vendedor' %}checked{% endif %} required>
-                                    <label
-                                        class="card h-100 text-center p-4 border border-2 border-secondary rounded-3 shadow-sm"
-                                        for="perfil-vendedor" style="cursor: pointer;" data-perfil="Vendedor">
-                                        <i class="bi bi-shop fs-1 mb-2 text-secondary d-block"></i>
-                                        <h5 class="fw-semibold mb-2 text-body">Vendedor</h5>
-                                        <p class="text-muted small mb-0">Vendo produtos e serviços</p>
-                                    </label>
-                                </div>
-                            </div>
-                            <div id="perfil-error" class="invalid-feedback d-block" style="display: none !important;">
-                            </div>
-                        </div>
+                        {{ field(name='perfil', type='radio', radio_style='buttons', required=true,
+                                 options={'Cliente': 'Cliente', 'Vendedor': 'Vendedor'},
+                                 radio_icons={'Cliente': 'bi-cart3', 'Vendedor': 'bi-shop'}) }}
 
-                        <div class="mb-3">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="nome" name="nome" value="{{ nome or '' }}"
-                                    placeholder="Nome Completo" minlength="3" maxlength="100" required>
-                                <label for="nome">Nome Completo</label>
-                            </div>
-                        </div>
+                        {{ field(name='nome', label='Nome Completo', type='text', required=true,
+                                 attributes={'minlength': 3, 'maxlength': 100}) }}
 
-                        <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="email" name="email" value="{{ email or '' }}"
-                                placeholder="E-mail" required>
-                            <label for="email">E-mail</label>
-                        </div>
+                        {{ field(name='email', label='E-mail', type='email', required=true) }}
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="input-group">
-                                    <div class="form-floating">
-                                        <input type="password" class="form-control" id="senha" name="senha"
-                                            placeholder="Senha" minlength="8" required>
-                                        <label for="senha">Senha</label>
-                                    </div>
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        onclick="togglePassword('senha')">
-                                        <i class="bi bi-eye" id="icon_senha"></i>
-                                    </button>
-                                </div>
+                            <div class="col-md-6">
+                                {{ field(name='senha', label='Senha', type='password', required=true,
+                                         append_icon='bi-eye', append_button_onclick="togglePassword('senha')",
+                                         attributes={'minlength': 8}) }}
                             </div>
 
-                            <div class="col-md-6 mb-3">
-                                <div class="input-group">
-                                    <div class="form-floating">
-                                        <input type="password" class="form-control" id="confirmar_senha"
-                                            name="confirmar_senha" placeholder="Confirmar Senha" minlength="8" required>
-                                        <label for="confirmar_senha">Confirmar Senha</label>
-                                    </div>
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        onclick="togglePassword('confirmar_senha')">
-                                        <i class="bi bi-eye" id="icon_confirmar_senha"></i>
-                                    </button>
-                                </div>
+                            <div class="col-md-6">
+                                {{ field(name='confirmar_senha', label='Confirmar Senha', type='password', required=true,
+                                         append_icon='bi-eye', append_button_onclick="togglePassword('confirmar_senha')",
+                                         attributes={'minlength': 8}) }}
                             </div>
                         </div>
 
@@ -135,60 +85,6 @@
 
 {% block scripts %}
 <script>
-    // ========== CONTROLE DE SELEÇÃO DE PERFIL ==========
-    const perfilRadios = document.querySelectorAll('input[name="perfil"]');
-    const perfilLabels = document.querySelectorAll('label[for^="perfil-"]');
-    const perfilError = document.getElementById('perfil-error');
-
-    // Função para atualizar estilos dos cards baseado na seleção
-    function atualizarEstilosCards() {
-        perfilRadios.forEach(radio => {
-            const label = document.querySelector(`label[for="${radio.id}"]`);
-            const icon = label.querySelector('i');
-            const titulo = label.querySelector('h5');
-            const descricao = label.querySelector('p');
-
-            if (radio.checked) {
-                // Define cores baseado no perfil
-                const isPrimary = radio.value === 'Cliente';
-                const borderClass = isPrimary ? 'border-primary' : 'border-success';
-                const bgClass = isPrimary ? 'bg-primary-subtle' : 'bg-success-subtle';
-                const textClass = isPrimary ? 'text-primary' : 'text-success';
-
-                // Aplica classes de estado ativo
-                label.classList.remove('border-secondary', 'bg-primary-subtle', 'bg-success-subtle');
-                label.classList.add(borderClass, bgClass, 'shadow');
-                icon.classList.remove('text-secondary', 'text-primary', 'text-success');
-                icon.classList.add(textClass);
-                titulo.classList.remove('text-body', 'text-primary', 'text-success');
-                titulo.classList.add(textClass);
-            } else {
-                // Remove estilos de seleção
-                label.classList.remove('border-primary', 'border-success', 'bg-primary-subtle', 'bg-success-subtle', 'shadow');
-                label.classList.add('border-secondary', 'shadow-sm');
-                icon.classList.remove('text-primary', 'text-success');
-                icon.classList.add('text-secondary');
-                titulo.classList.remove('text-primary', 'text-success');
-                titulo.classList.add('text-body');
-            }
-        });
-
-        // Remove mensagem de erro se houver
-        if (perfilError) {
-            perfilError.style.display = 'none';
-        }
-    }
-
-    // Adiciona evento de mudança em cada radio button
-    perfilRadios.forEach(radio => {
-        radio.addEventListener('change', atualizarEstilosCards);
-    });
-
-    // Aplica estilos iniciais se já houver um perfil pré-selecionado
-    window.addEventListener('DOMContentLoaded', atualizarEstilosCards);
-
-    // ========== VALIDAÇÃO DO FORMULÁRIO ==========
-
     // Inicializar validador de senha
     const passwordValidator = new PasswordValidator({
         passwordFieldId: 'senha',
@@ -209,7 +105,6 @@
 
     // Validação do formulário
     document.querySelector('form').addEventListener('submit', function (e) {
-        // Validar senha
         if (!passwordValidator.validateForm()) {
             e.preventDefault();
         }

@@ -50,8 +50,8 @@
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
                             data-bs-toggle="dropdown">
                             <img src="/static/img/usuarios/{{ '%06d' % request.session.get('usuario_logado')['id'] }}.jpg"
-                                alt="Foto do usuário" class="rounded-circle me-2" width="32" height="32"
-                                style="object-fit: cover;" onerror="this.src='/static/img/user.jpg'">
+                                alt="Foto do usuário" class="rounded-circle me-2 object-fit-cover" width="32" height="32"
+                                onerror="this.src='/static/img/user.jpg'">
                             {{ request.session.get('usuario_logado')['nome'] }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -86,7 +86,7 @@
     </nav>
 
     <!-- Container para Toasts (bottom-right) -->
-    <div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-4" style="margin-bottom: 60px;">
+    <div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-4 toast-offset">
     </div>
 
     <!-- Conteúdo Principal -->
