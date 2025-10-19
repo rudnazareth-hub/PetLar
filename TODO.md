@@ -1,1 +1,0 @@
-# Mover o status da força da senha para cima da barra de progresso
