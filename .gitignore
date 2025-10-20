@@ -63,6 +63,7 @@ htmlcov/
 temp/
 tmp/
 .mypy_cache/
+docs/
 
 
 # IA Files
