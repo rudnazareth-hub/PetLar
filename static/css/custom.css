@@ -80,3 +80,14 @@
 .hr-separator {
     max-width: 200px;
 }
+
+/* Text truncation utilities */
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5;
+    max-height: 4.5em; /* 3 lines * 1.5 line-height */
+}
