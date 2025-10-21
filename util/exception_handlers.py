@@ -1,18 +1,20 @@
 from fastapi import Request, status
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, Response
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from util.template_util import criar_templates
 from util.flash_messages import informar_erro, informar_aviso
 from util.logger_config import logger
 from util.config import IS_DEVELOPMENT
+from util.validation_util import processar_erros_validacao
+from util.exceptions import FormValidationError
 import traceback
 
 # Configurar templates de erro
 templates = criar_templates("templates")
 
 
-async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+async def http_exception_handler(request: Request, exc: StarletteHTTPException) -> Response:
     """
     Handler para exceções HTTP do Starlette/FastAPI
 
@@ -23,12 +25,24 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     """
     status_code = exc.status_code
 
-    # Log da exceção
-    logger.warning(
+    # Extensões de arquivos estáticos opcionais que não devem gerar warnings
+    STATIC_OPTIONAL_EXTENSIONS = ('.map', '.ico', '.woff', '.woff2', '.ttf', '.eot')
+
+    # Determinar nível de log baseado no tipo de recurso
+    path_lower = request.url.path.lower()
+    is_optional_static = status_code == 404 and path_lower.endswith(STATIC_OPTIONAL_EXTENSIONS)
+
+    # Log da exceção com nível apropriado
+    log_message = (
         f"HTTPException {status_code}: {exc.detail} - "
         f"Path: {request.url.path} - "
         f"IP: {request.client.host if request.client else 'unknown'}"
     )
+
+    if is_optional_static:
+        logger.debug(log_message)
+    else:
+        logger.warning(log_message)
 
     # 401 - Não autenticado
     if status_code == status.HTTP_401_UNAUTHORIZED:
@@ -77,7 +91,7 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     )
 
 
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
+async def validation_exception_handler(request: Request, exc: RequestValidationError) -> Response:
     """
     Handler para erros de validação do Pydantic
     Loga o erro e exibe mensagem amigável
@@ -128,7 +142,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     )
 
 
-async def generic_exception_handler(request: Request, exc: Exception):
+async def generic_exception_handler(request: Request, exc: Exception) -> Response:
     """
     Handler genérico para todas as exceções não tratadas
     Loga o erro completo e exibe página de erro amigável
@@ -168,4 +182,65 @@ async def generic_exception_handler(request: Request, exc: Exception):
         "errors/500.html",
         context,
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+    )
+
+
+async def form_validation_exception_handler(request: Request, exc: FormValidationError) -> Response:
+    """
+    Handler centralizado para erros de validação de formulários DTO.
+
+    Captura exceções FormValidationError lançadas nas rotas e:
+    1. Processa os erros de validação usando processar_erros_validacao()
+    2. Exibe mensagem flash ao usuário
+    3. Renderiza o template especificado com dados e erros
+
+    Este handler elimina duplicação de código nas rotas, centralizando
+    o padrão de tratamento de erros de validação.
+
+    Args:
+        request: Request do FastAPI
+        exc: FormValidationError contendo ValidationError e contexto
+
+    Returns:
+        TemplateResponse renderizando o formulário com erros
+
+    Example:
+        Em uma rota, ao invés de:
+        >>> except ValidationError as e:
+        ...     erros = processar_erros_validacao(e, "senha")
+        ...     informar_erro(request, "Há campos com erros")
+        ...     return templates.TemplateResponse(...)
+
+        Simplesmente faça:
+        >>> except ValidationError as e:
+        ...     raise FormValidationError(e, "auth/login.html", dados, "senha")
+    """
+    # Processar erros de validação
+    erros = processar_erros_validacao(
+        exc.validation_error, campo_padrao=exc.campo_padrao
+    )
+
+    # Log dos erros para debugging
+    logger.warning(
+        f"Erro de validação de formulário: {exc.template_path} - "
+        f"Erros: {erros} - "
+        f"IP: {request.client.host if request.client else 'unknown'}"
+    )
+
+    # Exibir mensagem flash
+    informar_erro(request, exc.mensagem_flash)
+
+    # Renderizar template com dados e erros
+    # Fazer merge de dados_formulario no contexto para permitir acesso direto
+    # a variáveis auxiliares (perfis, usuario, etc.) além de dados
+    context = {
+        "request": request,
+        "dados": exc.dados_formulario,
+        "erros": erros,
+        **exc.dados_formulario,  # Merge: permite acessar perfis, usuario, etc. diretamente
+    }
+
+    return templates.TemplateResponse(
+        exc.template_path,
+        context,
     )
