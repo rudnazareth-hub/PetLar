@@ -18,6 +18,8 @@
                     </p>
 
                     <form method="POST" action="/redefinir-senha">
+                        {% include "components/alert_erro_geral.html" with context %}
+                        
                         {{ field(name='token', type='hidden', value=token) }}
 
                         {{ field(name='senha', label='Nova Senha', type='password', required=true, autofocus=true,

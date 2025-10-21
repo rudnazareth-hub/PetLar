@@ -14,23 +14,26 @@
             <div class="card-body">
                 <form method="POST" action="/admin/usuarios/editar/{{ usuario.id }}">
                     <div class="row">
+                        <div class="col-12">
+                            {% include "components/alert_erro_geral.html" with context %}
+                        </div>
                         <div class="col-md-12">
                             {{ field(name='nome', label='Nome Completo', type='text', required=true,
-                                     value=usuario.nome, wrapper_class='mb-3') }}
+                            value=usuario.nome, wrapper_class='mb-3') }}
                         </div>
 
                         <div class="col-md-12">
                             {{ field(name='email', label='Email', type='email', required=true,
-                                     value=usuario.email, wrapper_class='mb-3') }}
+                            value=usuario.email, wrapper_class='mb-3') }}
                         </div>
 
                         <div class="col-md-12">
                             {% set perfis_dict = {} %}
                             {% for perfil in perfis %}
-                                {% set _ = perfis_dict.update({perfil: perfil}) %}
+                            {% set _ = perfis_dict.update({perfil: perfil}) %}
                             {% endfor %}
                             {{ field(name='perfil', label='Perfil de Acesso', type='radio', required=true,
-                                     radio_style='buttons', options=perfis_dict, value=usuario.perfil, wrapper_class='mb-3') }}
+                            radio_style='buttons', options=perfis_dict, value=usuario.perfil, wrapper_class='mb-3') }}
                         </div>
 
                         <div class="col-md-12 mb-3">
@@ -42,17 +45,17 @@
 
                         <div class="col-md-6">
                             {{ field(name='senha', label='Nova Senha', type='password',
-                                     wrapper_class='mb-3') }}
+                            wrapper_class='mb-3') }}
                         </div>
 
                         <div class="col-md-6">
                             {{ field(name='confirma_senha', label='Confirmar Nova Senha', type='password',
-                                     wrapper_class='mb-3') }}
+                            wrapper_class='mb-3') }}
                         </div>
 
                         <div class="col-md-12">
                             {{ field(name='ativo', label='Usuário ativo', type='checkbox', value='1',
-                                     wrapper_class='mb-3') }}
+                            wrapper_class='mb-3') }}
                         </div>
                     </div>
 

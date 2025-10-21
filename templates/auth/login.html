@@ -14,11 +14,7 @@
                     </h3>
 
                     <form method="POST" action="/login">
-                        {% if erros.geral %}
-                        <div class="alert alert-danger">
-                            {{ erros.geral }}
-                        </div>
-                        {% endif %}
+                        {% include "components/alert_erro_geral.html" with context %}
 
                         {{ field(name='email', label='E-mail', type='email', required=true, autofocus=true) }}
                         {{ field(name='senha', label='Senha', type='password', required=true) }}

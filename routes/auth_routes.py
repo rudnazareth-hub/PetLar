@@ -16,6 +16,7 @@ from util.email_service import email_service
 from util.flash_messages import informar_sucesso, informar_erro
 from util.template_util import criar_templates
 from util.logger_config import logger
+from util.validation_util import processar_erros_validacao
 from util.perfis import Perfil
 from util.config import (
     RATE_LIMIT_LOGIN_MAX,
@@ -85,7 +86,7 @@ async def get_login(request: Request):
 
 
 @router.post("/login")
-async def post_login(request: Request, email: str = Form(...), senha: str = Form(...)):
+async def post_login(request: Request, email: str = Form(), senha: str = Form()):
     """Processa login do usuário"""
     try:
         # Rate limiting por IP
@@ -135,10 +136,7 @@ async def post_login(request: Request, email: str = Form(...), senha: str = Form
         return RedirectResponse("/usuario", status_code=status.HTTP_303_SEE_OTHER)
 
     except ValidationError as e:
-        erros = {
-            erro["loc"][-1]: erro["msg"].replace("Value error, ", "")
-            for erro in e.errors()
-        }
+        erros = processar_erros_validacao(e, campo_padrao="senha")
         informar_erro(request, "Há campos com erros de validação.")
         return templates.TemplateResponse(
             "auth/login.html",
@@ -169,11 +167,11 @@ async def get_cadastrar(request: Request):
 @router.post("/cadastrar")
 async def post_cadastrar(
     request: Request,
-    perfil: str = Form(...),
-    nome: str = Form(...),
-    email: str = Form(...),
-    senha: str = Form(...),
-    confirmar_senha: str = Form(...),
+    perfil: str = Form(),
+    nome: str = Form(),
+    email: str = Form(),
+    senha: str = Form(),
+    confirmar_senha: str = Form(),
 ):
     """Processa cadastro de novo usuário"""
     try:
@@ -235,10 +233,7 @@ async def post_cadastrar(
             )
 
     except ValidationError as e:
-        erros = {
-            erro["loc"][-1]: erro["msg"].replace("Value error, ", "")
-            for erro in e.errors()
-        }
+        erros = processar_erros_validacao(e, campo_padrao="confirmar_senha")
         informar_erro(request, "Há campos com erros de validação.")
         return templates.TemplateResponse(
             "auth/cadastro.html",
@@ -253,7 +248,7 @@ async def get_esqueci_senha(request: Request):
 
 
 @router.post("/esqueci-senha")
-async def post_esqueci_senha(request: Request, email: str = Form(...)):
+async def post_esqueci_senha(request: Request, email: str = Form()):
     """Processa solicitação de recuperação de senha"""
     try:
         # Rate limiting por IP
@@ -305,10 +300,7 @@ async def post_esqueci_senha(request: Request, email: str = Form(...)):
         return RedirectResponse("/login", status_code=status.HTTP_303_SEE_OTHER)
 
     except ValidationError as e:
-        erros = {
-            erro["loc"][-1]: erro["msg"].replace("Value error, ", "")
-            for erro in e.errors()
-        }
+        erros = processar_erros_validacao(e, campo_padrao="email")
         informar_erro(request, "Há campos com erros de validação.")
         return templates.TemplateResponse(
             "auth/esqueci_senha.html",
@@ -348,9 +340,9 @@ async def get_redefinir_senha(request: Request, token: str):
 @router.post("/redefinir-senha")
 async def post_redefinir_senha(
     request: Request,
-    token: str = Form(...),
-    senha: str = Form(...),
-    confirmar_senha: str = Form(...),
+    token: str = Form(),
+    senha: str = Form(),
+    confirmar_senha: str = Form(),
 ):
     """Processa redefinição de senha"""
     try:

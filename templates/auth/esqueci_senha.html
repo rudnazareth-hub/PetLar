@@ -18,6 +18,8 @@
                     </p>
 
                     <form method="POST" action="/esqueci-senha">
+                        {% include "components/alert_erro_geral.html" with context %}
+                        
                         {{ field(name='email', label='E-mail', type='email', required=true, autofocus=true) }}
 
                         <div class="d-grid gap-2">

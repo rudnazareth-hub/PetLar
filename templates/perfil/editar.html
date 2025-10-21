@@ -16,6 +16,8 @@
             <div class="card shadow-sm">
                 <div class="card-body p-4">
                     <form action="/perfil/editar" method="post">
+                        {% include "components/alert_erro_geral.html" with context %}
+                        
                         {{ field(name='nome', label='Nome Completo', type='text', required=true,
                                  value=usuario.nome, attributes={'minlength': 3, 'maxlength': 100}) }}
 

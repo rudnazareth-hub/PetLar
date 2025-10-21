@@ -10,6 +10,7 @@ from util.auth_decorator import requer_autenticacao
 from util.template_util import criar_templates
 from util.flash_messages import informar_sucesso, informar_erro
 from util.logger_config import logger
+from util.validation_util import processar_erros_validacao
 
 router = APIRouter(prefix="/tarefas")
 templates = criar_templates("templates/tarefas")
@@ -35,8 +36,8 @@ async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None)
 @requer_autenticacao()
 async def post_cadastrar(
     request: Request,
-    titulo: str = Form(...),
-    descricao: str = Form(""),
+    titulo: str = Form(),
+    descricao: str = Form(),
     usuario_logado: Optional[dict] = None
 ):
     """Cadastra uma nova tarefa"""
@@ -65,7 +66,7 @@ async def post_cadastrar(
         return RedirectResponse("/tarefas/listar", status_code=status.HTTP_303_SEE_OTHER)
 
     except ValidationError as e:
-        erros = { erro["loc"][-1]: erro['msg'].replace("Value error, ", "") for erro in e.errors() }
+        erros = processar_erros_validacao(e, campo_padrao="titulo")
         informar_erro(request, "Há campos com erros de validação.")
         return templates.TemplateResponse(
             "tarefas/cadastrar.html",

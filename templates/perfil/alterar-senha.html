@@ -16,6 +16,8 @@
             <div class="card shadow-sm">
                 <div class="card-body p-4">
                     <form action="/perfil/alterar-senha" method="post" id="formSenha" autocomplete="off">
+                        {% include "components/alert_erro_geral.html" with context %}
+                        
                         {{ field(name='senha_atual', label='Senha Atual', type='password', required=true,
                                  append_icon='bi-eye', append_button_onclick="togglePassword('senha_atual')",
                                  attributes={'autocomplete': 'current-password'}) }}
