@@ -9,7 +9,7 @@
         <div class="col-md-8 mx-auto">
             <!-- Cabeçalho -->
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2><i class="bi bi-key-fill"></i> Alterar Senha</h2>                
+                <h2><i class="bi bi-key-fill"></i> Alterar Senha</h2>
             </div>
 
             <!-- Formulário de Alteração de Senha -->
@@ -17,25 +17,26 @@
                 <div class="card-body p-4">
                     <form action="/perfil/alterar-senha" method="post" id="formSenha" autocomplete="off">
                         {% include "components/alert_erro_geral.html" %}
-                        
+
                         {{ field(name='senha_atual', label='Senha Atual', type='password', required=true,
-                                 append_icon='bi-eye', append_button_onclick="togglePassword('senha_atual')",
-                                 attributes={'autocomplete': 'current-password'}) }}
+                        append_icon='bi-eye', append_button_onclick="togglePassword('senha_atual')",
+                        attributes={'autocomplete': 'current-password'}) }}
 
                         <!-- Nova Senha e Confirmar Senha lado a lado -->
                         <div class="row">
                             <div class="col-md-6">
                                 {{ field(name='senha_nova', label='Nova Senha', type='password', required=true,
-                                         append_icon='bi-eye', append_button_onclick="togglePassword('senha_nova')",
-                                         attributes={'minlength': 8, 'autocomplete': 'new-password'},
-                                         wrapper_class='mb-0') }}
+                                append_icon='bi-eye', append_button_onclick="togglePassword('senha_nova')",
+                                attributes={'minlength': 8, 'autocomplete': 'new-password'},
+                                wrapper_class='mb-0') }}
                             </div>
 
                             <div class="col-md-6">
-                                {{ field(name='confirmar_senha', label='Confirmar Nova Senha', type='password', required=true,
-                                         append_icon='bi-eye', append_button_onclick="togglePassword('confirmar_senha')",
-                                         attributes={'minlength': 8, 'autocomplete': 'new-password'},
-                                         wrapper_class='mb-0') }}
+                                {{ field(name='confirmar_senha', label='Confirmar Nova Senha', type='password',
+                                required=true,
+                                append_icon='bi-eye', append_button_onclick="togglePassword('confirmar_senha')",
+                                attributes={'minlength': 8, 'autocomplete': 'new-password'},
+                                wrapper_class='mb-0') }}
                             </div>
 
                             <!-- Indicador de força da senha -->
@@ -48,7 +49,7 @@
                         <div class="row">
                             <div class="col">
                                 <!-- Avisos de Segurança -->
-                                <div class="alert alert-warning" role="alert">
+                                <div class="alert alert-warning mb-3" role="alert">
                                     <i class="bi bi-shield-exclamation"></i>
                                     <strong>Dica de Segurança:</strong>
                                     <ul class="mb-0 mt-2">
@@ -61,7 +62,7 @@
                             </div>
                         </div>
                         <!-- Botões -->
-                        <div class="d-flex gap-2 mt-2">
+                        <div class="d-flex gap-3 mb-0">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-key-fill"></i> Alterar Senha
                             </button>
