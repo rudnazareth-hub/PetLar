@@ -10,17 +10,17 @@ class Perfil(str, Enum):
 
     Exemplos:
         - Correto: perfil = Perfil.ADMIN.value
-        - Correto: perfil = Perfil.CLIENTE.value
-        - Correto: perfil = Perfil.VENDEDOR.value
+        - Correto: perfil = Perfil.ADOTANTE.value
+        - Correto: perfil = Perfil.ABRIGO.value
         - ERRADO: perfil = "admin"
-        - ERRADO: perfil = "cliente"
-        - ERRADO: perfil = "vendedor"
+        - ERRADO: perfil = "ADOTANTE"
+        - ERRADO: perfil = "ABRIGO"
     """
 
     # PERFIS DO SEU SISTEMA #####################################
     ADMIN = "Administrador"
-    CLIENTE = "Cliente"
-    VENDEDOR = "Vendedor"
+    ADOTANTE = "Adotante"
+    ABRIGO = "Abrigo"
     # FIM DOS PERFIS ############################################
 
     def __str__(self) -> str:
@@ -56,7 +56,7 @@ class Perfil(str, Enum):
         Converte uma string para o Enum Perfil correspondente.
 
         Args:
-            valor: String do perfil ("admin" ou "cliente")
+            valor: String do perfil ("admin" ou "adotante")
 
         Returns:
             Enum Perfil correspondente ou None se inválido
