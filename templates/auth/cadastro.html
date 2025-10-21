@@ -14,7 +14,7 @@
                     </h3>
 
                     <form method="POST" action="/cadastrar">
-                        {% include "components/alert_erro_geral.html" with context %}
+                        {% include "components/alert_erro_geral.html" %}
 
                         {{ field(name='perfil', type='radio', radio_style='buttons', required=true,
                                  options={'Cliente': 'Cliente', 'Vendedor': 'Vendedor'},
@@ -40,31 +40,7 @@
                         </div>
 
                         <!-- Indicador de força da senha -->
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <small class="text-muted">Força da senha:</small>
-                                <small id="senha-strength-text" class="text-muted"></small>
-                            </div>
-                            <div class="progress">
-                                <div class="progress-bar" id="senha-strength" role="progressbar"></div>
-                            </div>
-                        </div>
-
-                        <div id="senha-match" class="form-text mb-3"></div>
-
-                        <!-- Requisitos da Senha -->
-                        <div class="mb-3">
-                            <div class="alert alert-info">
-                                <strong><i class="bi bi-info-circle"></i> Requisitos da senha:</strong>
-                                <ul class="mb-0 mt-2">
-                                    <li id="req-length">Mínimo de 8 caracteres</li>
-                                    <li id="req-uppercase">Pelo menos 1 letra maiúscula</li>
-                                    <li id="req-lowercase">Pelo menos 1 letra minúscula</li>
-                                    <li id="req-number">Pelo menos 1 número</li>
-                                    <li id="req-special">Pelo menos 1 caractere especial</li>
-                                </ul>
-                            </div>
-                        </div>
+                        {% include 'components/password_strength_indicator.html' %}
 
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">

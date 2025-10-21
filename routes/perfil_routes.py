@@ -11,7 +11,7 @@ from util.flash_messages import informar_sucesso, informar_erro
 from util.security import criar_hash_senha, verificar_senha
 from util.foto_util import salvar_foto_cropada_usuario
 from util.logger_config import logger
-from util.validation_util import processar_erros_validacao
+from util.exceptions import FormValidationError
 
 router = APIRouter(prefix="/perfil")
 templates = criar_templates("templates/perfil")
@@ -122,11 +122,14 @@ async def post_editar(
             )
 
     except ValidationError as e:
-        erros = processar_erros_validacao(e)
-        informar_erro(request, "Há campos com erros de validação!")
-        return templates.TemplateResponse(
-            "perfil/editar.html",
-            {"request": request, "usuario": usuario, "erros": erros},
+        # Incluir dados do usuário para o template
+        dados_formulario["usuario"] = usuario
+        raise FormValidationError(
+            validation_error=e,
+            template_path="perfil/editar.html",
+            dados_formulario=dados_formulario,
+            campo_padrao="email",
+            mensagem_flash="Há campos com erros de validação!",
         )
     except Exception as e:
         logger.error(f"Erro ao atualizar perfil: {e}")
@@ -228,10 +231,13 @@ async def post_alterar_senha(
             )
 
     except ValidationError as e:
-        erros = processar_erros_validacao(e)
-        informar_erro(request, "Há campos com erros de validação!")
-        return templates.TemplateResponse(
-            "perfil/alterar-senha.html", {"request": request, "erros": erros}
+        # Não preservar senhas no formulário por segurança
+        raise FormValidationError(
+            validation_error=e,
+            template_path="perfil/alterar-senha.html",
+            dados_formulario={},
+            campo_padrao="confirmar_senha",
+            mensagem_flash="Há campos com erros de validação!",
         )
 
     except Exception as e:

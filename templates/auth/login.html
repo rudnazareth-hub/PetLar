@@ -14,7 +14,7 @@
                     </h3>
 
                     <form method="POST" action="/login">
-                        {% include "components/alert_erro_geral.html" with context %}
+                        {% include "components/alert_erro_geral.html" %}
 
                         {{ field(name='email', label='E-mail', type='email', required=true, autofocus=true) }}
                         {{ field(name='senha', label='Senha', type='password', required=true) }}

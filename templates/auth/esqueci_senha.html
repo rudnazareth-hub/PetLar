@@ -18,7 +18,7 @@
                     </p>
 
                     <form method="POST" action="/esqueci-senha">
-                        {% include "components/alert_erro_geral.html" with context %}
+                        {% include "components/alert_erro_geral.html" %}
                         
                         {{ field(name='email', label='E-mail', type='email', required=true, autofocus=true) }}
 

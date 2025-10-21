@@ -16,7 +16,7 @@ from util.email_service import email_service
 from util.flash_messages import informar_sucesso, informar_erro
 from util.template_util import criar_templates
 from util.logger_config import logger
-from util.validation_util import processar_erros_validacao
+from util.exceptions import FormValidationError
 from util.perfis import Perfil
 from util.config import (
     RATE_LIMIT_LOGIN_MAX,
@@ -136,11 +136,11 @@ async def post_login(request: Request, email: str = Form(), senha: str = Form())
         return RedirectResponse("/usuario", status_code=status.HTTP_303_SEE_OTHER)
 
     except ValidationError as e:
-        erros = processar_erros_validacao(e, campo_padrao="senha")
-        informar_erro(request, "Há campos com erros de validação.")
-        return templates.TemplateResponse(
-            "auth/login.html",
-            {"request": request, "dados": dados_formulario, "erros": erros},
+        raise FormValidationError(
+            validation_error=e,
+            template_path="auth/login.html",
+            dados_formulario=dados_formulario,
+            campo_padrao="senha",
         )
 
 
@@ -233,11 +233,11 @@ async def post_cadastrar(
             )
 
     except ValidationError as e:
-        erros = processar_erros_validacao(e, campo_padrao="confirmar_senha")
-        informar_erro(request, "Há campos com erros de validação.")
-        return templates.TemplateResponse(
-            "auth/cadastro.html",
-            {"request": request, "dados": dados_formulario, "erros": erros},
+        raise FormValidationError(
+            validation_error=e,
+            template_path="auth/cadastro.html",
+            dados_formulario=dados_formulario,
+            campo_padrao="confirmar_senha",
         )
 
 
@@ -300,11 +300,11 @@ async def post_esqueci_senha(request: Request, email: str = Form()):
         return RedirectResponse("/login", status_code=status.HTTP_303_SEE_OTHER)
 
     except ValidationError as e:
-        erros = processar_erros_validacao(e, campo_padrao="email")
-        informar_erro(request, "Há campos com erros de validação.")
-        return templates.TemplateResponse(
-            "auth/esqueci_senha.html",
-            {"request": request, "dados": dados_formulario, "erros": erros},
+        raise FormValidationError(
+            validation_error=e,
+            template_path="auth/esqueci_senha.html",
+            dados_formulario=dados_formulario,
+            campo_padrao="email",
         )
 
 
@@ -345,6 +345,9 @@ async def post_redefinir_senha(
     confirmar_senha: str = Form(),
 ):
     """Processa redefinição de senha"""
+    # Armazena os dados do formulário para reexibição em caso de erro
+    dados_formulario = {"token": token}
+
     try:
         # Validar dados com DTO
         dto = RedefinirSenhaDTO(
@@ -387,7 +390,9 @@ async def post_redefinir_senha(
         return RedirectResponse("/login", status_code=status.HTTP_303_SEE_OTHER)
 
     except ValidationError as e:
-        informar_erro(request, "O e-mail informado não está em um formato correto.")
-        return RedirectResponse(
-            f"/redefinir-senha?token={token}", status_code=status.HTTP_303_SEE_OTHER
+        raise FormValidationError(
+            validation_error=e,
+            template_path="auth/redefinir_senha.html",
+            dados_formulario=dados_formulario,
+            campo_padrao="confirmar_senha",
         )

@@ -10,7 +10,7 @@ from util.auth_decorator import requer_autenticacao
 from util.template_util import criar_templates
 from util.flash_messages import informar_sucesso, informar_erro
 from util.logger_config import logger
-from util.validation_util import processar_erros_validacao
+from util.exceptions import FormValidationError
 
 router = APIRouter(prefix="/tarefas")
 templates = criar_templates("templates/tarefas")
@@ -66,11 +66,11 @@ async def post_cadastrar(
         return RedirectResponse("/tarefas/listar", status_code=status.HTTP_303_SEE_OTHER)
 
     except ValidationError as e:
-        erros = processar_erros_validacao(e, campo_padrao="titulo")
-        informar_erro(request, "Há campos com erros de validação.")
-        return templates.TemplateResponse(
-            "tarefas/cadastrar.html",
-            {"request": request, "dados": dados_formulario, "erros": erros}
+        raise FormValidationError(
+            validation_error=e,
+            template_path="tarefas/cadastrar.html",
+            dados_formulario=dados_formulario,
+            campo_padrao="titulo",
         )
 
 @router.post("/{id}/concluir")

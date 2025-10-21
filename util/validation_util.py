@@ -43,7 +43,8 @@ def processar_erros_validacao(
     erros = {}
     for erro in e.errors():
         # Se loc estiver vazia (erro de @model_validator), usar campo padrão
-        campo = erro["loc"][-1] if erro["loc"] else campo_padrao
+        # Converte para str porque loc pode conter int ou str
+        campo = str(erro["loc"][-1]) if erro["loc"] else campo_padrao
 
         # Remover prefixo "Value error, " se presente
         mensagem = erro["msg"].replace("Value error, ", "")

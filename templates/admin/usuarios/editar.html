@@ -15,7 +15,7 @@
                 <form method="POST" action="/admin/usuarios/editar/{{ usuario.id }}">
                     <div class="row">
                         <div class="col-12">
-                            {% include "components/alert_erro_geral.html" with context %}
+                            {% include "components/alert_erro_geral.html" %}
                         </div>
                         <div class="col-md-12">
                             {{ field(name='nome', label='Nome Completo', type='text', required=true,

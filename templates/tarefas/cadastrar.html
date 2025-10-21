@@ -16,7 +16,7 @@
             <div class="card shadow-sm">
                 <div class="card-body p-4">
                     <form method="post" action="/tarefas/cadastrar">
-                        {% include "components/alert_erro_geral.html" with context %}
+                        {% include "components/alert_erro_geral.html" %}
                         
                         {{ field(name='titulo', label='Título', type='text', required=true,
                                  attributes={'maxlength': 256}) }}
