@@ -57,7 +57,7 @@ async def post_cadastrar(
     assert usuario_logado is not None
 
     # Armazena os dados do formulário para reexibição em caso de erro
-    dados_formulario = {"nome": nome, "email": email, "perfil": perfil}
+    dados_formulario: dict = {"nome": nome, "email": email, "perfil": perfil}
 
     try:
         # Validar com DTO
@@ -120,10 +120,19 @@ async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] =
         informar_erro(request, "Usuário não encontrado")
         return RedirectResponse("/admin/usuarios/listar", status_code=status.HTTP_303_SEE_OTHER)
 
+    # Criar cópia dos dados do usuário sem o campo senha (para não expor hash no HTML)
+    dados_usuario = usuario.__dict__.copy()
+    dados_usuario.pop('senha', None)
+
     perfis = Perfil.valores()
     return templates.TemplateResponse(
         "admin/usuarios/editar.html",
-        {"request": request, "usuario": usuario, "perfis": perfis}
+        {
+            "request": request,
+            "usuario": usuario,
+            "dados": dados_usuario,
+            "perfis": perfis
+        }
     )
 
 @router.post("/editar/{id}")
@@ -139,16 +148,16 @@ async def post_editar(
     """Altera dados de um usuário"""
     assert usuario_logado is not None
 
+    # Verificar se usuário existe
+    usuario_atual = usuario_repo.obter_por_id(id)
+    if not usuario_atual:
+        informar_erro(request, "Usuário não encontrado")
+        return RedirectResponse("/admin/usuarios/listar", status_code=status.HTTP_303_SEE_OTHER)
+
     # Armazena os dados do formulário para reexibição em caso de erro
-    dados_formulario = {"nome": nome, "email": email, "perfil": perfil}
+    dados_formulario: dict = {"id": id, "nome": nome, "email": email, "perfil": perfil}
 
     try:
-        # Verificar se usuário existe
-        usuario_atual = usuario_repo.obter_por_id(id)
-        if not usuario_atual:
-            informar_erro(request, "Usuário não encontrado")
-            return RedirectResponse("/admin/usuarios/listar", status_code=status.HTTP_303_SEE_OTHER)
-
         # Validar com DTO
         dto = AlterarUsuarioDTO(
             id=id,
@@ -168,7 +177,7 @@ async def post_editar(
                     "request": request,
                     "usuario": usuario_atual,
                     "perfis": perfis,
-                    "dados": {"nome": nome, "email": email, "perfil": perfil}
+                    "dados": {"id": id, "nome": nome, "email": email, "perfil": perfil}
                 }
             )
 

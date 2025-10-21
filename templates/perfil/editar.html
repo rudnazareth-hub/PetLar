@@ -19,13 +19,13 @@
                         {% include "components/alert_erro_geral.html" %}
                         
                         {{ field(name='nome', label='Nome Completo', type='text', required=true,
-                                 value=usuario.nome, attributes={'minlength': 3, 'maxlength': 100}) }}
+                                 value=dados.nome, attributes={'minlength': 3, 'maxlength': 100}) }}
 
                         {{ field(name='email', label='E-mail', type='email', required=true,
-                                 value=usuario.email) }}
+                                 value=dados.email) }}
 
                         {{ field(name='perfil', label='Perfil de Acesso', type='text',
-                                 value=usuario.perfil, disabled=true) }}
+                                 value=dados.perfil, disabled=true) }}
 
                         <!-- Botões -->
                         <div class="d-flex gap-2">
@@ -52,23 +52,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-    // Validação do formulário
-    document.querySelector('form').addEventListener('submit', function (e) {
-        const nome = document.getElementById('nome').value.trim();
-        const email = document.getElementById('email').value.trim();
-
-        if (nome.length < 3) {
-            e.preventDefault();
-            alert('O nome deve ter no mínimo 3 caracteres');
-            return false;
-        }
-
-        if (!email.includes('@')) {
-            e.preventDefault();
-            alert('Digite um e-mail válido');
-            return false;
-        }
-    });
-</script>
+<!-- Validação é feita server-side via EditarPerfilDTO -->
 {% endblock %}

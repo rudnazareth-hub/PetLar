@@ -59,8 +59,16 @@ async def post_editar(
 ):
     """Processar edição de dados do perfil"""
     assert usuario_logado is not None
+
+    # Obter usuário atual antes do try para ter acesso no except
+    usuario = usuario_repo.obter_por_id(usuario_logado["id"])
+
+    if not usuario:
+        informar_erro(request, "Usuário não encontrado!")
+        return RedirectResponse("/logout", status_code=status.HTTP_303_SEE_OTHER)
+
     # Armazenar dados do formulário para reexibição em caso de erro
-    dados_formulario = {"nome": nome, "email": email}
+    dados_formulario: dict = {"nome": nome, "email": email}
     try:
         # Validar com DTO
         dto = EditarPerfilDTO(nome=nome, email=email)
@@ -84,13 +92,6 @@ async def post_editar(
                     },
                 },
             )
-
-        # Obter usuário atual
-        usuario = usuario_repo.obter_por_id(usuario_logado["id"])
-
-        if not usuario:
-            informar_erro(request, "Usuário não encontrado!")
-            return RedirectResponse("/logout", status_code=status.HTTP_303_SEE_OTHER)
 
         # Atualizar dados
         usuario.nome = dto.nome
@@ -141,7 +142,7 @@ async def post_editar(
             "perfil/editar.html",
             {
                 "request": request,
-                "usuario": dados_formulario,
+                "dados": dados_formulario,
                 "erros": {
                     "geral": "Ocorreu um erro desconhecido ao processar atualização de perfil. A equipe de suporte foi notificada. Tente novamente mais tarde."
                 },

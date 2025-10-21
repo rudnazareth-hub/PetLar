@@ -29,6 +29,7 @@
                                  attributes={'minlength': 8}) }}
 
                         <!-- Indicador de força da senha -->
+                        {% set show_special = true %}
                         {% include 'components/password_strength_indicator.html' %}
 
                         <div class="d-grid">

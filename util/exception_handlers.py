@@ -231,11 +231,16 @@ async def form_validation_exception_handler(request: Request, exc: FormValidatio
     informar_erro(request, exc.mensagem_flash)
 
     # Renderizar template com dados e erros
+    # Fazer merge de dados_formulario no contexto para permitir acesso direto
+    # a variáveis auxiliares (perfis, usuario, etc.) além de dados
+    context = {
+        "request": request,
+        "dados": exc.dados_formulario,
+        "erros": erros,
+        **exc.dados_formulario,  # Merge: permite acessar perfis, usuario, etc. diretamente
+    }
+
     return templates.TemplateResponse(
         exc.template_path,
-        {
-            "request": request,
-            "dados": exc.dados_formulario,
-            "erros": erros,
-        },
+        context,
     )

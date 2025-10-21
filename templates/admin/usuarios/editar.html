@@ -12,19 +12,19 @@
 
         <div class="card shadow-sm">
             <div class="card-body">
-                <form method="POST" action="/admin/usuarios/editar/{{ usuario.id }}">
+                <form method="POST" action="/admin/usuarios/editar/{{ dados.id if dados.id is defined else usuario.id }}">
                     <div class="row">
                         <div class="col-12">
                             {% include "components/alert_erro_geral.html" %}
                         </div>
                         <div class="col-md-12">
                             {{ field(name='nome', label='Nome Completo', type='text', required=true,
-                            value=usuario.nome, wrapper_class='mb-3') }}
+                            value=dados.nome, wrapper_class='mb-3') }}
                         </div>
 
                         <div class="col-md-12">
                             {{ field(name='email', label='Email', type='email', required=true,
-                            value=usuario.email, wrapper_class='mb-3') }}
+                            value=dados.email, wrapper_class='mb-3') }}
                         </div>
 
                         <div class="col-md-12">
@@ -33,7 +33,7 @@
                             {% set _ = perfis_dict.update({perfil: perfil}) %}
                             {% endfor %}
                             {{ field(name='perfil', label='Perfil de Acesso', type='radio', required=true,
-                            radio_style='buttons', options=perfis_dict, value=usuario.perfil, wrapper_class='mb-3') }}
+                            radio_style='buttons', options=perfis_dict, value=dados.perfil, wrapper_class='mb-3') }}
                         </div>
 
                         <div class="col-md-12 mb-3">
