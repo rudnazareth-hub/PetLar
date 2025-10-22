@@ -190,3 +190,22 @@ if __name__ == "__main__":
     except Exception as e:
         logger.error(f"Erro ao iniciar servidor: {e}")
         raise
+
+from routes.admin_especies_routes import router as admin_especies_router
+from routes.admin_racas_routes import router as admin_racas_router
+from routes.admin_abrigos_routes import router as admin_abrigos_router
+from routes.admin_animais_routes import router as admin_animais_router
+from routes.admin_adotantes_routes import router as admin_adotantes_router
+from routes.admin_solicitacoes_routes import router as admin_solicitacoes_router
+from routes.admin_visitas_routes import router as admin_visitas_router
+from routes.admin_dashboard_routes import router as admin_dashboard_router
+
+# Incluir routers
+app.include_router(admin_especies_router, tags=["Admin - Espécies"])
+app.include_router(admin_racas_router, tags=["Admin - Raças"])
+app.include_router(admin_abrigos_router, tags=["Admin - Abrigos"])
+app.include_router(admin_animais_router, tags=["Admin - Animais"])
+app.include_router(admin_adotantes_router, tags=["Admin - Adotantes"])
+app.include_router(admin_solicitacoes_router, tags=["Admin - Solicitações"])
+app.include_router(admin_visitas_router, tags=["Admin - Visitas"])
+app.include_router(admin_dashboard_router, tags=["Admin - Dashboard"])
