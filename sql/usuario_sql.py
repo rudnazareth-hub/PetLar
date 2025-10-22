@@ -7,21 +7,29 @@ CREATE TABLE IF NOT EXISTS usuario (
     nome TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     senha TEXT NOT NULL,
-    perfil TEXT DEFAULT 'cliente',
+    perfil TEXT NOT NULL,
+    data_nascimento TEXT,
+    numero_documento TEXT,
+    telefone TEXT,
+    confirmado INTEGER DEFAULT 0,
     token_redefinicao TEXT,
-    data_token DATETIME,
+    data_token TEXT,
     data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
 )
 """
 
 INSERIR = """
-INSERT INTO usuario (nome, email, senha, perfil)
-VALUES (?, ?, ?, ?)
+INSERT INTO usuario (
+    nome, email, senha, perfil,
+    data_nascimento, numero_documento, telefone, confirmado
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 """
 
-ALTERAR = """
+ATUALIZAR = """
 UPDATE usuario
-SET nome = ?, email = ?, perfil = ?
+SET nome = ?, email = ?, perfil = ?,
+    data_nascimento = ?, numero_documento = ?, telefone = ?
 WHERE id = ?
 """
 
