@@ -26,6 +26,12 @@ INSERT INTO usuario (
 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 """
 
+ALTERAR = """
+UPDATE usuario
+SET nome = ?, email = ?, perfil = ?
+WHERE id = ?
+"""
+
 ATUALIZAR = """
 UPDATE usuario
 SET nome = ?, email = ?, perfil = ?,

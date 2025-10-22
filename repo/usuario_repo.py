@@ -65,6 +65,13 @@ def atualizar(usuario: Usuario) -> None:
             usuario.id
         ))
 
+def atualizar_senha(id: int, senha_hash: str) -> bool:
+    """Atualiza apenas a senha de um usuário"""
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(ALTERAR_SENHA, (senha_hash, id))
+        return cursor.rowcount > 0
+
 def excluir(id: int) -> bool:
     with get_connection() as conn:
         cursor = conn.cursor()

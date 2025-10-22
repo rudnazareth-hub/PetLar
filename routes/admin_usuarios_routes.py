@@ -3,7 +3,7 @@ from fastapi import APIRouter, Form, Request, status
 from fastapi.responses import RedirectResponse
 from pydantic import ValidationError
 
-from dtos.usuario_dto import CriarUsuarioDTO, AlterarUsuarioDTO
+from dtos.usuario_dto import UsuarioCadastroDTO as CriarUsuarioDTO, AlterarUsuarioDTO
 from model.usuario_model import Usuario
 from repo import usuario_repo
 from util.auth_decorator import requer_autenticacao
