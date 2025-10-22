@@ -20,13 +20,17 @@ def limpar_dados():
     endereco_repo.criar_tabela()
     with get_connection() as conn:
         cursor = conn.cursor()
+        cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM endereco")
         cursor.execute("DELETE FROM usuario")
+        cursor.execute("PRAGMA foreign_keys = ON")
     yield
     with get_connection() as conn:
         cursor = conn.cursor()
+        cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM endereco")
         cursor.execute("DELETE FROM usuario")
+        cursor.execute("PRAGMA foreign_keys = ON")
 
 
 @pytest.fixture

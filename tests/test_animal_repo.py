@@ -27,19 +27,23 @@ def limpar_dados():
     animal_repo.criar_tabela()
     with get_connection() as conn:
         cursor = conn.cursor()
+        cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM animal")
         cursor.execute("DELETE FROM abrigo")
         cursor.execute("DELETE FROM raca")
         cursor.execute("DELETE FROM especie")
         cursor.execute("DELETE FROM usuario")
+        cursor.execute("PRAGMA foreign_keys = ON")
     yield
     with get_connection() as conn:
         cursor = conn.cursor()
+        cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM animal")
         cursor.execute("DELETE FROM abrigo")
         cursor.execute("DELETE FROM raca")
         cursor.execute("DELETE FROM especie")
         cursor.execute("DELETE FROM usuario")
+        cursor.execute("PRAGMA foreign_keys = ON")
 
 
 @pytest.fixture

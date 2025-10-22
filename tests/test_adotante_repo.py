@@ -20,13 +20,17 @@ def limpar_adotantes():
     adotante_repo.criar_tabela()
     with get_connection() as conn:
         cursor = conn.cursor()
+        cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM adotante")
         cursor.execute("DELETE FROM usuario")
+        cursor.execute("PRAGMA foreign_keys = ON")
     yield
     with get_connection() as conn:
         cursor = conn.cursor()
+        cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM adotante")
         cursor.execute("DELETE FROM usuario")
+        cursor.execute("PRAGMA foreign_keys = ON")
 
 
 @pytest.fixture

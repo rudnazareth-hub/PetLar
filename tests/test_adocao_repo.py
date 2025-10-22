@@ -34,6 +34,7 @@ def limpar_dados():
     adocao_repo.criar_tabela()
     with get_connection() as conn:
         cursor = conn.cursor()
+        cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM adocao")
         cursor.execute("DELETE FROM animal")
         cursor.execute("DELETE FROM abrigo")
@@ -41,7 +42,19 @@ def limpar_dados():
         cursor.execute("DELETE FROM raca")
         cursor.execute("DELETE FROM especie")
         cursor.execute("DELETE FROM usuario")
+        cursor.execute("PRAGMA foreign_keys = ON")
     yield
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA foreign_keys = OFF")
+        cursor.execute("DELETE FROM adocao")
+        cursor.execute("DELETE FROM animal")
+        cursor.execute("DELETE FROM abrigo")
+        cursor.execute("DELETE FROM adotante")
+        cursor.execute("DELETE FROM raca")
+        cursor.execute("DELETE FROM especie")
+        cursor.execute("DELETE FROM usuario")
+        cursor.execute("PRAGMA foreign_keys = ON")
 
 
 @pytest.fixture
@@ -170,10 +183,13 @@ class TestObterPorAbrigo:
 
     def test_obter_multiplas_adocoes(self, setup_completo):
         """Deve retornar múltiplas adoções do abrigo."""
+        # Obter id_raca do primeiro animal
+        animal_existente = animal_repo.obter_por_id(setup_completo["id_animal"])
+
         # Criar segundo animal
         animal2 = Animal(
             id_animal=0,
-            id_raca=setup_completo["id_animal"],  # usar mesmo id_raca
+            id_raca=animal_existente.id_raca,  # usar mesmo id_raca
             id_abrigo=setup_completo["id_abrigo"],
             nome="Felix",
             sexo="M",

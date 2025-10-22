@@ -20,13 +20,17 @@ def limpar_racas():
     raca_repo.criar_tabela()
     with get_connection() as conn:
         cursor = conn.cursor()
+        cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM raca")
         cursor.execute("DELETE FROM especie")
+        cursor.execute("PRAGMA foreign_keys = ON")
     yield
     with get_connection() as conn:
         cursor = conn.cursor()
+        cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM raca")
         cursor.execute("DELETE FROM especie")
+        cursor.execute("PRAGMA foreign_keys = ON")
 
 
 @pytest.fixture
