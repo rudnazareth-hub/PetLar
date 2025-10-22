@@ -134,7 +134,8 @@ class PasswordValidator {
             length: this.config.requirements.length,
             uppercase: this.config.requirements.uppercase,
             lowercase: this.config.requirements.lowercase,
-            number: this.config.requirements.number
+            number: this.config.requirements.number,
+            special: this.config.requirements.special
         };
 
         Object.keys(reqMap).forEach(key => {
