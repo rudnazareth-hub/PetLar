@@ -1,5 +1,3 @@
-import repo.especie_repo as especie_repo
-from routes import especie_routes
 import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -24,7 +22,21 @@ from util.exception_handlers import (
 from util.exceptions import FormValidationError
 
 # Repositórios
-from repo import usuario_repo, configuracao_repo, tarefa_repo, indices_repo
+from repo import (
+    usuario_repo,
+    configuracao_repo,
+    tarefa_repo,
+    indices_repo,
+    especie_repo,
+    raca_repo,
+    abrigo_repo,
+    adotante_repo,
+    animal_repo,
+    endereco_repo,
+    solicitacao_repo,
+    adocao_repo,
+    visita_repo
+)
 
 # Rotas
 from routes.auth_routes import router as auth_router
@@ -36,6 +48,7 @@ from routes.perfil_routes import router as perfil_router
 from routes.usuario_routes import router as usuario_router
 from routes.public_routes import router as public_router
 from routes.examples_routes import router as examples_router
+from routes import especie_routes, raca_routes, solicitacao_routes
 
 # Seeds
 from util.seed_data import inicializar_dados
@@ -65,10 +78,6 @@ if static_path.exists():
     logger.info("Arquivos estáticos montados em /static")
 
 # Criar tabelas do banco de dados
-
-especie_repo.criar_tabela()
-logger.info("Tabela 'especie' criada/verificada")
-
 logger.info("Criando tabelas do banco de dados...")
 try:
     usuario_repo.criar_tabela()
@@ -80,6 +89,34 @@ try:
     tarefa_repo.criar_tabela()
     logger.info("Tabela 'tarefa' criada/verificada")
 
+    # Tabelas específicas do PetLar
+    especie_repo.criar_tabela()
+    logger.info("Tabela 'especie' criada/verificada")
+
+    raca_repo.criar_tabela()
+    logger.info("Tabela 'raca' criada/verificada")
+
+    abrigo_repo.criar_tabela()
+    logger.info("Tabela 'abrigo' criada/verificada")
+
+    adotante_repo.criar_tabela()
+    logger.info("Tabela 'adotante' criada/verificada")
+
+    endereco_repo.criar_tabela()
+    logger.info("Tabela 'endereco' criada/verificada")
+
+    animal_repo.criar_tabela()
+    logger.info("Tabela 'animal' criada/verificada")
+
+    solicitacao_repo.criar_tabela()
+    logger.info("Tabela 'solicitacao' criada/verificada")
+
+    adocao_repo.criar_tabela()
+    logger.info("Tabela 'adocao' criada/verificada")
+
+    visita_repo.criar_tabela()
+    logger.info("Tabela 'visita' criada/verificada")
+
     # Criar índices para otimização de performance
     indices_repo.criar_indices()
 
@@ -87,7 +124,7 @@ except Exception as e:
     logger.error(f"Erro ao criar tabelas: {e}")
     raise
 
-  
+
 
 # Inicializar dados seed
 try:

@@ -556,6 +556,22 @@ def validar_id_positivo(nome_campo: str = "Identificador") -> Callable[[Any, Any
     return validator
 
 
+def validar_inteiro_positivo(nome_campo: str = "Valor") -> Callable[[Any, Any], Any]:
+    """
+    Valida número inteiro positivo (alias para validar_id_positivo).
+
+    Args:
+        nome_campo: Nome do campo para mensagens de erro
+
+    Returns:
+        Função validadora para uso com field_validator
+
+    Example:
+        _validar_especie = field_validator('id_especie')(validar_inteiro_positivo('ID da Espécie'))
+    """
+    return validar_id_positivo(nome_campo)
+
+
 def validar_slug(tamanho_maximo: int = 128) -> Callable[[Any, Any], Any]:
     """
     Valida slug (URL-friendly string).
