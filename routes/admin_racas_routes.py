@@ -25,3 +25,21 @@ async def listar(request: Request, usuario_logado: Optional[dict] = None):
         "admin/racas/listar.html",
         {"request": request, "racas": racas}
     )
+
+@router.get("/cadastrar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de cadastro de raça"""
+    # Obter todas as espécies para o select
+    especies = especie_repo.obter_todos()
+
+    # Converter para dict para o select
+    especies_dict = {str(e.id_especie): e.nome for e in especies}
+
+    return templates.TemplateResponse(
+        "admin/racas/cadastro.html",
+        {
+            "request": request,
+            "especies": especies_dict
+        }
+    )

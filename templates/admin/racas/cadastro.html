@@ -1,0 +1,51 @@
+{% extends "base_privada.html" %}
+{% from "macros/form_fields.html" import field with context %}
+
+{% block titulo %}Cadastrar Raça{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <h2 class="mb-0"><i class="bi bi-tags-fill"></i> Cadastrar Nova Raça</h2>
+        </div>
+
+        <div class="card shadow-sm">
+            <form method="POST" action="/admin/racas/cadastrar">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-12">
+                            {% include "components/alerta_erro.html" %}
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            {{ field(name='id_especie', label='Espécie', type='select', required=true,
+                            options=especies, help_text='Selecione a espécie desta raça') }}
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            {{ field(name='nome', label='Nome da Raça', type='text', required=true,
+                            help_text='Ex: Labrador, Siamês, Periquito') }}
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            {{ field(name='descricao', label='Descrição', type='textarea', rows=3,
+                            help_text='Descrição opcional sobre a raça') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer p-4">
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Cadastrar
+                        </button>
+                        <a href="/admin/racas/listar" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
