@@ -52,7 +52,16 @@ def alterar(usuario: Usuario) -> bool:
         ))
         return cursor.rowcount > 0
 
-def atualizar(usuario: Usuario) -> None:
+def atualizar(usuario: Usuario) -> bool:
+    """
+    Atualiza os dados completos de um usuário.
+
+    Args:
+        usuario: Objeto Usuario com dados atualizados
+
+    Returns:
+        True se atualização foi bem-sucedida, False caso contrário
+    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(ATUALIZAR, (
@@ -64,6 +73,7 @@ def atualizar(usuario: Usuario) -> None:
             usuario.telefone,
             usuario.id
         ))
+        return cursor.rowcount > 0
 
 def atualizar_senha(id: int, senha_hash: str) -> bool:
     """Atualiza apenas a senha de um usuário"""
