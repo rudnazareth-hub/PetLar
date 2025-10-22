@@ -85,3 +85,22 @@ async def listar(request: Request, usuario_logado: Optional[dict] = None):
         "admin/especies/listar.html",
         {"request": request, "especies": especies}
     )
+
+@router.get("/editar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de edição de espécie"""
+    especie = especie_repo.obter_por_id(id)
+
+    if not especie:
+        informar_erro(request, "Espécie não encontrada")
+        return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    return templates.TemplateResponse(
+        "admin/especies/editar.html",
+        {
+            "request": request,
+            "especie": especie,
+            "dados": especie.__dict__
+        }
+    )
