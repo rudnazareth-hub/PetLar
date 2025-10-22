@@ -4,6 +4,7 @@ Testa visualização, edição de dados, alteração de senha e upload de foto
 """
 import pytest
 from fastapi import status
+from tests.test_helpers import assert_redirects_to, assert_permission_denied, assert_contains_text
 
 
 class TestVisualizarPerfil:
@@ -12,7 +13,7 @@ class TestVisualizarPerfil:
     def test_visualizar_perfil_requer_autenticacao(self, client):
         """Deve exigir autenticação para visualizar perfil"""
         response = client.get("/perfil/visualizar", follow_redirects=False)
-        assert response.status_code == status.HTTP_303_SEE_OTHER
+        assert_permission_denied(response)
 
     def test_visualizar_perfil_usuario_autenticado(self, cliente_autenticado, usuario_teste):
         """Usuário autenticado deve ver seu perfil"""
@@ -28,12 +29,13 @@ class TestEditarPerfil:
     def test_get_formulario_edicao_requer_autenticacao(self, client):
         """Deve exigir autenticação para acessar formulário de edição"""
         response = client.get("/perfil/editar", follow_redirects=False)
-        assert response.status_code == status.HTTP_303_SEE_OTHER
+        assert_permission_denied(response)
 
     def test_get_formulario_edicao_usuario_autenticado(self, cliente_autenticado):
         """Usuário autenticado deve acessar formulário de edição"""
         response = cliente_autenticado.get("/perfil/editar")
         assert response.status_code == status.HTTP_200_OK
+        # Verificar que contém pelo menos uma das palavras-chave
         assert "editar" in response.text.lower() or "perfil" in response.text.lower()
 
     def test_editar_perfil_com_dados_validos(self, cliente_autenticado, usuario_teste):
@@ -44,8 +46,7 @@ class TestEditarPerfil:
         }, follow_redirects=False)
 
         # Deve redirecionar para visualizar
-        assert response.status_code == status.HTTP_303_SEE_OTHER
-        assert response.headers["location"] == "/perfil/visualizar"
+        assert_redirects_to(response, "/perfil/visualizar")
 
         # Verificar que dados foram atualizados
         response_visualizar = cliente_autenticado.get("/perfil/visualizar")
@@ -112,13 +113,13 @@ class TestAlterarSenha:
     def test_get_formulario_alterar_senha_requer_autenticacao(self, client):
         """Deve exigir autenticação para acessar formulário"""
         response = client.get("/perfil/alterar-senha", follow_redirects=False)
-        assert response.status_code == status.HTTP_303_SEE_OTHER
+        assert_permission_denied(response)
 
     def test_get_formulario_alterar_senha_usuario_autenticado(self, cliente_autenticado):
         """Usuário autenticado deve acessar formulário de alteração de senha"""
         response = cliente_autenticado.get("/perfil/alterar-senha")
         assert response.status_code == status.HTTP_200_OK
-        assert "senha" in response.text.lower()
+        assert_contains_text(response, "senha")
 
     def test_alterar_senha_com_dados_validos(self, cliente_autenticado, usuario_teste):
         """Deve permitir alterar senha com dados válidos"""
@@ -129,8 +130,7 @@ class TestAlterarSenha:
         }, follow_redirects=False)
 
         # Deve redirecionar para visualizar
-        assert response.status_code == status.HTTP_303_SEE_OTHER
-        assert response.headers["location"] == "/perfil/visualizar"
+        assert_redirects_to(response, "/perfil/visualizar")
 
         # Fazer logout e tentar login com nova senha
         cliente_autenticado.get("/logout")
@@ -196,7 +196,7 @@ class TestAtualizarFoto:
         response = client.post("/perfil/atualizar-foto", data={
             "foto_base64": foto_teste_base64
         }, follow_redirects=False)
-        assert response.status_code == status.HTTP_303_SEE_OTHER
+        assert_permission_denied(response)
 
     def test_atualizar_foto_com_dados_validos(self, cliente_autenticado, foto_teste_base64):
         """Deve permitir atualizar foto com dados válidos"""
@@ -205,8 +205,7 @@ class TestAtualizarFoto:
         }, follow_redirects=False)
 
         # Deve redirecionar para visualizar
-        assert response.status_code == status.HTTP_303_SEE_OTHER
-        assert response.headers["location"] == "/perfil/visualizar"
+        assert_redirects_to(response, "/perfil/visualizar")
 
     def test_atualizar_foto_com_dados_invalidos(self, cliente_autenticado):
         """Deve rejeitar dados inválidos"""

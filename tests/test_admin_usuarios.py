@@ -5,6 +5,7 @@ Testa CRUD completo de usuários por administradores
 import pytest
 from fastapi import status
 from util.perfis import Perfil
+from tests.test_helpers import assert_redirects_to, assert_permission_denied, assert_contains_text
 
 
 class TestListarUsuarios:
@@ -30,7 +31,7 @@ class TestListarUsuarios:
     def test_listar_usuarios_sem_autenticacao(self, client):
         """Não autenticado deve ser redirecionado"""
         response = client.get("/admin/usuarios/listar", follow_redirects=False)
-        assert response.status_code == status.HTTP_303_SEE_OTHER
+        assert_permission_denied(response)
 
 
 class TestCadastrarUsuario:
@@ -45,7 +46,7 @@ class TestCadastrarUsuario:
         """Admin deve acessar formulário de cadastro"""
         response = admin_autenticado.get("/admin/usuarios/cadastrar")
         assert response.status_code == status.HTTP_200_OK
-        assert "cadastr" in response.text.lower()
+        assert_contains_text(response, "cadastr")
 
     def test_cadastrar_usuario_com_dados_validos(self, admin_autenticado):
         """Admin deve poder cadastrar usuário com todos os perfis"""
@@ -57,8 +58,7 @@ class TestCadastrarUsuario:
         }, follow_redirects=False)
 
         # Deve redirecionar para listagem
-        assert response.status_code == status.HTTP_303_SEE_OTHER
-        assert response.headers["location"] == "/admin/usuarios/listar"
+        assert_redirects_to(response, "/admin/usuarios/listar")
 
         # Verificar que usuário foi criado
         from repo import usuario_repo
@@ -160,7 +160,7 @@ class TestEditarUsuario:
 
         response = admin_autenticado.get(f"/admin/usuarios/editar/{admin.id}")
         assert response.status_code == status.HTTP_200_OK
-        assert "editar" in response.text.lower()
+        assert_contains_text(response, "editar")
 
     def test_editar_usuario_com_dados_validos(self, admin_autenticado, criar_usuario):
         """Admin deve poder editar usuário"""
@@ -298,5 +298,6 @@ class TestRedirecionamentos:
     def test_index_redireciona_para_listar(self, admin_autenticado):
         """GET /admin/usuarios/ deve redirecionar para /listar"""
         response = admin_autenticado.get("/admin/usuarios/", follow_redirects=False)
+        # Redireciona com status 307 (Temporary Redirect) para /listar
         assert response.status_code == status.HTTP_307_TEMPORARY_REDIRECT
         assert "/admin/usuarios/listar" in response.headers["location"]
