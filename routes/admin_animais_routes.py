@@ -66,3 +66,14 @@ async def visualizar(request: Request, id: int, usuario_logado: Optional[dict] =
             "visitas": visitas
         }
     )
+
+@router.post("/alterar-status/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_alterar_status(
+    request: Request,
+    id: int,
+    status: str = Form(...),
+    usuario_logado: Optional[dict] = None
+):
+    """Altera apenas o status do animal"""
+    # Implementação similar aos outros POSTs
