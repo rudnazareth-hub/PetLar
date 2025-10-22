@@ -1,3 +1,5 @@
+import repo.especie_repo as especie_repo
+from routes import especie_routes
 import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -58,6 +60,10 @@ if static_path.exists():
     logger.info("Arquivos estáticos montados em /static")
 
 # Criar tabelas do banco de dados
+
+especie_repo.criar_tabela()
+logger.info("Tabela 'especie' criada/verificada")
+
 logger.info("Criando tabelas do banco de dados...")
 try:
     usuario_repo.criar_tabela()
@@ -73,6 +79,8 @@ except Exception as e:
     logger.error(f"Erro ao criar tabelas: {e}")
     raise
 
+  
+
 # Inicializar dados seed
 try:
     inicializar_dados()
@@ -83,6 +91,9 @@ except Exception as e:
 # IMPORTANTE: public_router deve ser incluído por último para que a rota "/" funcione corretamente
 app.include_router(auth_router, tags=["Autenticação"])
 logger.info("Router de autenticação incluído")
+
+app.include_router(especie_routes.router, tags=["Espécies"])
+logger.info("Router de espécies incluído")
 
 app.include_router(perfil_router, tags=["Perfil"])
 logger.info("Router de perfil incluído")
