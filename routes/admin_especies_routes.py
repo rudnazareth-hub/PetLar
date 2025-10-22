@@ -86,21 +86,55 @@ async def listar(request: Request, usuario_logado: Optional[dict] = None):
         {"request": request, "especies": especies}
     )
 
-@router.get("/editar/{id}")
+@router.post("/editar/{id}")
 @requer_autenticacao([Perfil.ADMIN.value])
-async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] = None):
-    """Exibe formulário de edição de espécie"""
-    especie = especie_repo.obter_por_id(id)
+async def post_editar(
+    request: Request,
+    id: int,
+    nome: str = Form(...),
+    descricao: str = Form(None),
+    usuario_logado: Optional[dict] = None
+):
+    """Altera dados de uma espécie"""
+    assert usuario_logado is not None
 
-    if not especie:
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_especies_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se espécie existe
+    especie_atual = especie_repo.obter_por_id(id)
+    if not especie_atual:
         informar_erro(request, "Espécie não encontrada")
         return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
 
-    return templates.TemplateResponse(
-        "admin/especies/editar.html",
-        {
-            "request": request,
-            "especie": especie,
-            "dados": especie.__dict__
-        }
-    )
+    # Dados do formulário para reexibição em caso de erro
+    dados_formulario = {"id_especie": id, "nome": nome, "descricao": descricao}
+
+    try:
+        # Validar com DTO
+        dto = AlterarEspecieDTO(id_especie=id, nome=nome, descricao=descricao)
+
+        # Atualizar espécie
+        especie_atualizada = Especie(
+            id_especie=id,
+            nome=dto.nome,
+            descricao=dto.descricao
+        )
+
+        especie_repo.alterar(especie_atualizada)
+        logger.info(f"Espécie {id} alterada por admin {usuario_logado['id']}")
+
+        informar_sucesso(request, "Espécie alterada com sucesso!")
+        return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    except ValidationError as e:
+        dados_formulario["especie"] = especie_atual
+        raise FormValidationError(
+            validation_error=e,
+            template_path="admin/especies/editar.html",
+            dados_formulario=dados_formulario,
+            campo_padrao="nome"
+        )
