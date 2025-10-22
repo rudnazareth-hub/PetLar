@@ -160,6 +160,7 @@ async def post_excluir(
 @router.get("/download/{nome_arquivo}")
 @requer_autenticacao([Perfil.ADMIN.value])
 async def get_download(
+    request: Request,
     nome_arquivo: str,
     usuario_logado: Optional[dict] = None
 ):

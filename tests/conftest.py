@@ -230,3 +230,65 @@ def criar_tarefa(cliente_autenticado):
         return response
 
     return _criar_tarefa
+
+
+@pytest.fixture
+def vendedor_teste():
+    """Dados de um vendedor de teste"""
+    return {
+        "nome": "Vendedor Teste",
+        "email": "vendedor@example.com",
+        "senha": "Vendedor@123",
+        "perfil": Perfil.VENDEDOR.value
+    }
+
+
+@pytest.fixture
+def vendedor_autenticado(client, criar_usuario, fazer_login, vendedor_teste):
+    """
+    Fixture que retorna um cliente autenticado como vendedor
+    """
+    # Importar para manipular diretamente o banco
+    from repo import usuario_repo
+    from model.usuario_model import Usuario
+    from util.security import criar_hash_senha
+
+    # Criar vendedor diretamente no banco
+    vendedor = Usuario(
+        id=0,
+        nome=vendedor_teste["nome"],
+        email=vendedor_teste["email"],
+        senha=criar_hash_senha(vendedor_teste["senha"]),
+        perfil=Perfil.VENDEDOR.value
+    )
+    usuario_repo.inserir(vendedor)
+
+    # Fazer login
+    fazer_login(vendedor_teste["email"], vendedor_teste["senha"])
+
+    # Retornar cliente autenticado
+    return client
+
+
+@pytest.fixture
+def foto_teste_base64():
+    """
+    Retorna uma imagem 1x1 pixel PNG válida em base64
+    Útil para testes de upload de foto
+    """
+    # PNG 1x1 pixel transparente em base64
+    return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+
+
+@pytest.fixture
+def criar_backup():
+    """
+    Fixture que retorna uma função para criar backup de teste
+    """
+    def _criar_backup():
+        """Cria um backup via util/backup_util"""
+        from util import backup_util
+        sucesso, mensagem = backup_util.criar_backup()
+        return sucesso, mensagem
+
+    return _criar_backup
