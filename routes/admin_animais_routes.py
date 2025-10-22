@@ -40,3 +40,40 @@ async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None)
             "status_opcoes": status_opcoes
         }
     )
+
+@router.get("/visualizar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def visualizar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exibe detalhes completos do animal"""
+    animal = animal_repo.obter_por_id_com_relacoes(id)
+
+    if not animal:
+        informar_erro(request, "Animal não encontrado")
+        return RedirectResponse("/admin/animais/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Obter solicitações de adoção relacionadas
+    solicitacoes = solicitacao_repo.obter_por_animal(id)
+
+    # Obter visitas agendadas
+    visitas = visita_repo.obter_por_animal(id)
+
+    return templates.TemplateResponse(
+        "admin/animais/visualizar.html",
+        {
+            "request": request,
+            "animal": animal,
+            "solicitacoes": solicitacoes,
+            "visitas": visitas
+        }
+    )
+
+@router.post("/alterar-status/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_alterar_status(
+    request: Request,
+    id: int,
+    status: str = Form(...),
+    usuario_logado: Optional[dict] = None
+):
+    """Altera apenas o status do animal"""
+    # Implementação similar aos outros POSTs
