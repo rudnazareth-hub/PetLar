@@ -16,7 +16,7 @@
             <div class="card shadow-sm">
                 <div class="card-body p-4">
                     <form action="/perfil/alterar-senha" method="post" id="formSenha" autocomplete="off">
-                        {% include "components/alert_erro_geral.html" %}
+                        {% include "components/alerta_erro.html" %}
 
                         {{ field(name='senha_atual', label='Senha Atual', type='password', required=true,
                         append_icon='bi-eye', append_button_onclick="togglePassword('senha_atual')",
@@ -42,7 +42,7 @@
                             <!-- Indicador de força da senha -->
                             <div class="col-12">
                                 {% set show_special = true %}
-                                {% include 'components/password_strength_indicator.html' %}
+                                {% include 'components/indicador_senha.html' %}
                             </div>
                         </div>
                         <!-- Dicas de Segurança -->
