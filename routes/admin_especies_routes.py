@@ -7,6 +7,15 @@ from util.template_util import criar_templates
 from util.perfis import Perfil
 from repo import especie_repo
 
+@router.get("/cadastrar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de cadastro de espécie"""
+    return templates.TemplateResponse(
+        "admin/especies/cadastro.html",
+        {"request": request}
+    )
+
 router = APIRouter(prefix="/admin/especies")
 templates = criar_templates("templates/admin/especies")
 
