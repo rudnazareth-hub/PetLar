@@ -1,44 +1,22 @@
-"""
-Comandos SQL para a tabela abrigo.
-Relacionamento 1:1 com usuario (id_abrigo = id do usuario)
-"""
+from dataclasses import dataclass
+from typing import Optional
 
-CRIAR_TABELA = """
-CREATE TABLE IF NOT EXISTS abrigo (
-    id_abrigo INTEGER PRIMARY KEY,
-    responsavel TEXT NOT NULL,
-    descricao TEXT,
-    data_abertura TEXT,
-    data_membros TEXT,
-    FOREIGN KEY (id_abrigo) REFERENCES usuario(id)
-)
-"""
+@dataclass
+class Abrigo:
+    """
+    Model de abrigo do sistema.
 
-INSERIR = """
-INSERT INTO abrigo (id_abrigo, responsavel, descricao, data_abertura, data_membros)
-VALUES (?, ?, ?, ?, ?)
-"""
+    Relacionamento 1:1 com Usuario (id_abrigo = id do usuario)
 
-OBTER_TODOS = """
-SELECT a.*, u.nome, u.email
-FROM abrigo a
-INNER JOIN usuario u ON a.id_abrigo = u.id
-ORDER BY u.nome
-"""
-
-OBTER_POR_ID = """
-SELECT a.*, u.nome, u.email
-FROM abrigo a
-INNER JOIN usuario u ON a.id_abrigo = u.id
-WHERE a.id_abrigo = ?
-"""
-
-ATUALIZAR = """
-UPDATE abrigo
-SET responsavel = ?, descricao = ?, data_abertura = ?, data_membros = ?
-WHERE id_abrigo = ?
-"""
-
-EXCLUIR = """
-DELETE FROM abrigo WHERE id_abrigo = ?
-"""
+    Attributes:
+        id_abrigo: ID do abrigo (mesmo ID do usuário)
+        responsavel: Nome do responsável pelo abrigo
+        descricao: Descrição do abrigo
+        data_abertura: Data de abertura do abrigo
+        data_membros: Data de cadastro dos membros
+    """
+    id_abrigo: int
+    responsavel: str
+    descricao: Optional[str] = None
+    data_abertura: Optional[str] = None
+    data_membros: Optional[str] = None

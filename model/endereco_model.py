@@ -6,6 +6,22 @@ from model.usuario_model import Usuario
 
 @dataclass
 class Endereco:
+    """
+    Model de endereço do sistema.
+
+    Attributes:
+        id_endereco: Identificador único do endereço
+        id_usuario: ID do usuário (FK)
+        titulo: Título do endereço (ex: Casa, Trabalho)
+        logradouro: Rua/Avenida
+        numero: Número do imóvel
+        complemento: Complemento do endereço
+        bairro: Bairro
+        cidade: Cidade
+        uf: Estado (UF)
+        cep: CEP (formato: 00000-000)
+        usuario: Objeto Usuario relacionado (opcional)
+    """
     id_endereco: int
     id_usuario: int
     titulo: str
@@ -14,7 +30,6 @@ class Endereco:
     complemento: str
     bairro: str
     cidade: str
-    Uf: str
-    CEP: int
-
-    usuario: Optional[Usuario]
+    uf: str
+    cep: str
+    usuario: Optional[Usuario] = None

@@ -7,6 +7,7 @@ from util.db_util import get_connection
 
 
 def _row_to_endereco(row) -> Endereco:
+    """Converte linha do banco em objeto Endereco."""
     return Endereco(
         id_endereco=row["id_endereco"],
         id_usuario=row["id_usuario"],
@@ -16,9 +17,9 @@ def _row_to_endereco(row) -> Endereco:
         complemento=row["complemento"],
         bairro=row["bairro"],
         cidade=row["cidade"],
-        Uf=row["uf"],
-        CEP=row["cep"],
-        usuario=None  # Carregar se necessário
+        uf=row["uf"],
+        cep=row["cep"],
+        usuario=None
     )
 
 
@@ -29,12 +30,21 @@ def criar_tabela() -> None:
 
 
 def inserir(endereco: Endereco) -> int:
+    """
+    Insere um novo endereço no banco de dados.
+
+    Args:
+        endereco: Objeto Endereco a ser inserido
+
+    Returns:
+        ID do endereço inserido
+    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(INSERIR, (
             endereco.id_usuario, endereco.titulo, endereco.logradouro,
             endereco.numero, endereco.complemento, endereco.bairro,
-            endereco.cidade, endereco.Uf, endereco.CEP
+            endereco.cidade, endereco.uf, endereco.cep
         ))
         return cursor.lastrowid
 
@@ -46,17 +56,37 @@ def obter_por_usuario(id_usuario: int) -> List[Endereco]:
         return [_row_to_endereco(row) for row in cursor.fetchall()]
 
 
-def atualizar(endereco: Endereco) -> None:
+def atualizar(endereco: Endereco) -> bool:
+    """
+    Atualiza um endereço existente.
+
+    Args:
+        endereco: Objeto Endereco com dados atualizados
+
+    Returns:
+        True se atualização foi bem-sucedida, False caso contrário
+    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(ATUALIZAR, (
             endereco.titulo, endereco.logradouro, endereco.numero,
             endereco.complemento, endereco.bairro, endereco.cidade,
-            endereco.Uf, endereco.CEP, endereco.id_endereco
+            endereco.uf, endereco.cep, endereco.id_endereco
         ))
+        return cursor.rowcount > 0
 
 
-def excluir(id_endereco: int) -> None:
+def excluir(id_endereco: int) -> bool:
+    """
+    Exclui um endereço pelo ID.
+
+    Args:
+        id_endereco: ID do endereço a ser excluído
+
+    Returns:
+        True se exclusão foi bem-sucedida, False caso contrário
+    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(EXCLUIR, (id_endereco,))
+        return cursor.rowcount > 0

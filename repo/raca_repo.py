@@ -74,8 +74,16 @@ def obter_por_especie(id_especie: int) -> List[Raca]:
         return [_row_to_raca(row) for row in cursor.fetchall()]
 
 
-def atualizar(raca: Raca) -> None:
-    """Atualiza uma raça existente."""
+def atualizar(raca: Raca) -> bool:
+    """
+    Atualiza uma raça existente.
+
+    Args:
+        raca: Objeto Raca com dados atualizados
+
+    Returns:
+        True se atualização foi bem-sucedida, False caso contrário
+    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(ATUALIZAR, (
@@ -87,10 +95,22 @@ def atualizar(raca: Raca) -> None:
             raca.porte,
             raca.id_raca
         ))
+        return cursor.rowcount > 0
 
 
-def excluir(id_raca: int) -> None:
-    """Exclui uma raça pelo ID."""
+def excluir(id_raca: int) -> bool:
+    """
+    Exclui uma raça pelo ID.
+
+    Args:
+        id_raca: ID da raça a ser excluída
+
+    Returns:
+        True se exclusão foi bem-sucedida, False caso contrário
+
+    Raises:
+        Exception: Se a raça tiver animais vinculados
+    """
     # Verificar se tem animais vinculados
     with get_connection() as conn:
         cursor = conn.cursor()
@@ -104,3 +124,4 @@ def excluir(id_raca: int) -> None:
             )
 
         cursor.execute(EXCLUIR, (id_raca,))
+        return cursor.rowcount > 0

@@ -90,12 +90,15 @@ def obter_por_nome(nome: str) -> Optional[Especie]:
         return _row_to_especie(row) if row else None
 
 
-def atualizar(especie: Especie) -> None:
+def atualizar(especie: Especie) -> bool:
     """
     Atualiza uma espécie existente.
 
     Args:
         especie: Objeto Especie com dados atualizados
+
+    Returns:
+        True se atualização foi bem-sucedida, False caso contrário
     """
     with get_connection() as conn:
         cursor = conn.cursor()
@@ -104,14 +107,18 @@ def atualizar(especie: Especie) -> None:
             especie.descricao,
             especie.id_especie
         ))
+        return cursor.rowcount > 0
 
 
-def excluir(id_especie: int) -> None:
+def excluir(id_especie: int) -> bool:
     """
     Exclui uma espécie pelo ID.
 
     Args:
         id_especie: ID da espécie a ser excluída
+
+    Returns:
+        True se exclusão foi bem-sucedida, False caso contrário
 
     Raises:
         Exception: Se a espécie tiver raças vinculadas
@@ -129,6 +136,7 @@ def excluir(id_especie: int) -> None:
             )
 
         cursor.execute(EXCLUIR, (id_especie,))
+        return cursor.rowcount > 0
 
 
 def existe_nome(nome: str, id_excluir: Optional[int] = None) -> bool:
