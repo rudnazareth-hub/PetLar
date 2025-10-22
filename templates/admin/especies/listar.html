@@ -1,0 +1,88 @@
+{% extends "base_privada.html" %}
+
+{% block titulo %}Gerenciar Espécies{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-tag"></i> Gerenciar Espécies</h2>
+            <a href="/admin/especies/cadastrar" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Nova Espécie
+            </a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if especies %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Descrição</th>
+                                <th scope="col" class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for especie in especies %}
+                            <tr>
+                                <td>{{ especie.id_especie }}</td>
+                                <td><strong>{{ especie.nome }}</strong></td>
+                                <td>{{ especie.descricao or '-' }}</td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="/admin/especies/editar/{{ especie.id_especie }}"
+                                            class="btn btn-outline-primary"
+                                            title="Editar"
+                                            aria-label="Editar espécie {{ especie.nome }}">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                            title="Excluir"
+                                            aria-label="Excluir espécie {{ especie.nome }}"
+                                            onclick="excluirEspecie({{ especie.id_especie }}, '{{ especie.nome|replace("'", "\\'") }}')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info text-center mb-0">
+                    <i class="bi bi-info-circle"></i> Nenhuma espécie cadastrada.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function excluirEspecie(especieId, especieNome) {
+        const detalhes = `
+        <div class="card bg-light">
+            <div class="card-body">
+                <p class="mb-0"><strong>Espécie:</strong> ${especieNome}</p>
+                <p class="text-warning mt-2 mb-0">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <small>Todas as raças vinculadas a esta espécie também serão afetadas.</small>
+                </p>
+            </div>
+        </div>
+        `;
+
+        abrirModalConfirmacao({
+            url: `/admin/especies/excluir/${especieId}`,
+            mensagem: 'Tem certeza que deseja excluir esta espécie?',
+            detalhes: detalhes
+        });
+    }
+</script>
+{% endblock %}
