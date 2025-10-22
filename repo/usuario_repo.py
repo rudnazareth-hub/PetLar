@@ -4,28 +4,42 @@ from sql.usuario_sql import *
 from util.db_util import get_connection
 from util.foto_util import criar_foto_padrao_usuario
 
+def _row_to_usuario(row) -> Usuario:
+    return Usuario(
+        id=row["id"],
+        nome=row["nome"],
+        email=row["email"],
+        senha=row["senha"],
+        perfil=row["perfil"],
+        data_nascimento=row["data_nascimento"],
+        numero_documento=row["numero_documento"],
+        telefone=row["telefone"],
+        confirmado=bool(row["confirmado"]),
+        token_redefinicao=row["token_redefinicao"],
+        data_token=row["data_token"],
+        data_cadastro=row["data_cadastro"]
+    )
+
 def criar_tabela() -> bool:
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
         return True
 
-def inserir(usuario: Usuario) -> Optional[int]:
+def inserir(usuario: Usuario) -> int:
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(INSERIR, (
             usuario.nome,
             usuario.email,
             usuario.senha,
-            usuario.perfil
+            usuario.perfil,
+            usuario.data_nascimento,
+            usuario.numero_documento,
+            usuario.telefone,
+            1 if usuario.confirmado else 0
         ))
-        usuario_id = cursor.lastrowid
-
-        # Criar foto padrão para o novo usuário
-        if usuario_id:
-            criar_foto_padrao_usuario(usuario_id)
-
-        return usuario_id
+        return cursor.lastrowid
 
 def alterar(usuario: Usuario) -> bool:
     with get_connection() as conn:
@@ -38,11 +52,18 @@ def alterar(usuario: Usuario) -> bool:
         ))
         return cursor.rowcount > 0
 
-def atualizar_senha(id: int, senha: str) -> bool:
+def atualizar(usuario: Usuario) -> None:
     with get_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute(ALTERAR_SENHA, (senha, id))
-        return cursor.rowcount > 0
+        cursor.execute(ATUALIZAR, (
+            usuario.nome,
+            usuario.email,
+            usuario.perfil,
+            usuario.data_nascimento,
+            usuario.numero_documento,
+            usuario.telefone,
+            usuario.id
+        ))
 
 def excluir(id: int) -> bool:
     with get_connection() as conn:
