@@ -57,7 +57,18 @@ WHERE a.id_animal = ?
 """
 
 OBTER_POR_ABRIGO = """
-SELECT * FROM animal WHERE id_abrigo = ? ORDER BY data_entrada DESC
+SELECT
+    a.*,
+    r.id_raca, r.nome as raca_nome, r.descricao as raca_descricao,
+    r.temperamento, r.expectativa_de_vida, r.porte,
+    e.id_especie, e.nome as especie_nome,
+    ab.id_abrigo, ab.responsavel
+FROM animal a
+LEFT JOIN raca r ON a.id_raca = r.id_raca
+LEFT JOIN especie e ON r.id_especie = e.id_especie
+LEFT JOIN abrigo ab ON a.id_abrigo = ab.id_abrigo
+WHERE a.id_abrigo = ?
+ORDER BY a.data_entrada DESC
 """
 
 BUSCAR_DISPONIVEIS = """

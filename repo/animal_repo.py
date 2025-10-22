@@ -15,17 +15,21 @@ def _row_to_animal(row) -> Animal:
         id_animal=row["id_animal"],
         id_raca=row["id_raca"],
         id_abrigo=row["id_abrigo"],
+        nome=row["nome"],
+        sexo=row["sexo"],
         data_nascimento=row.get("data_nascimento"),
         data_entrada=row["data_entrada"],
         observacoes=row.get("observacoes"),
+        status=row.get("status", "Disponível"),
+        foto=row.get("foto"),
         raca=Raca(
             id_raca=row["id_raca"],
             id_especie=row.get("id_especie", 0),
             nome=row.get("raca_nome", ""),
-            descricao=row.get("raca_descricao", ""),
-            temperamento=row.get("temperamento", ""),
-            expectativa_de_vida=row.get("expectativa_de_vida", ""),
-            porte=row.get("porte", ""),
+            descricao=row.get("raca_descricao"),
+            temperamento=row.get("temperamento"),
+            expectativa_de_vida=row.get("expectativa_de_vida"),
+            porte=row.get("porte"),
             especie=None
         ) if row.get("raca_nome") else None,
         abrigo=Abrigo(
@@ -36,11 +40,12 @@ def _row_to_animal(row) -> Animal:
     )
 
 
-def criar_tabela() -> None:
+def criar_tabela() -> bool:
     """Cria a tabela animal se não existir."""
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
+        return True
 
 
 def inserir(animal: Animal) -> int:
@@ -115,6 +120,30 @@ def obter_por_abrigo(id_abrigo: int) -> List[Animal]:
         return [_row_to_animal(row) for row in cursor.fetchall()]
 
 
+def atualizar(animal: Animal) -> bool:
+    """
+    Atualiza dados completos de um animal.
+
+    Args:
+        animal: Objeto Animal com dados atualizados
+
+    Returns:
+        True se atualização foi bem-sucedida, False caso contrário
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(ATUALIZAR, (
+            animal.id_raca,
+            animal.nome,
+            animal.sexo,
+            animal.data_nascimento,
+            animal.observacoes,
+            animal.status,
+            animal.id_animal
+        ))
+        return cursor.rowcount > 0
+
+
 def atualizar_status(id_animal: int, novo_status: str) -> bool:
     """
     Atualiza status do animal.
@@ -129,4 +158,20 @@ def atualizar_status(id_animal: int, novo_status: str) -> bool:
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(ATUALIZAR_STATUS, (novo_status, id_animal))
+        return cursor.rowcount > 0
+
+
+def excluir(id_animal: int) -> bool:
+    """
+    Exclui um animal pelo ID.
+
+    Args:
+        id_animal: ID do animal a ser excluído
+
+    Returns:
+        True se exclusão foi bem-sucedida, False caso contrário
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(EXCLUIR, (id_animal,))
         return cursor.rowcount > 0

@@ -16,11 +16,12 @@ def _row_to_adotante(row) -> Adotante:
     )
 
 
-def criar_tabela() -> None:
+def criar_tabela() -> bool:
     """Cria a tabela adotante se não existir."""
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
+        return True
 
 
 def inserir(adotante: Adotante) -> int:
@@ -79,4 +80,20 @@ def atualizar(adotante: Adotante) -> bool:
             adotante.estado_saude,
             adotante.id_adotante
         ))
+        return cursor.rowcount > 0
+
+
+def excluir(id_adotante: int) -> bool:
+    """
+    Exclui um adotante pelo ID.
+
+    Args:
+        id_adotante: ID do adotante a ser excluído
+
+    Returns:
+        True se exclusão foi bem-sucedida, False caso contrário
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(EXCLUIR, (id_adotante,))
         return cursor.rowcount > 0

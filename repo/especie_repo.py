@@ -13,15 +13,16 @@ def _row_to_especie(row) -> Especie:
     return Especie(
         id_especie=row["id_especie"],
         nome=row["nome"],
-        descricao=row["descricao"]
+        descricao=row.get("descricao")
     )
 
 
-def criar_tabela() -> None:
+def criar_tabela() -> bool:
     """Cria a tabela especie se não existir."""
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
+        return True
 
 
 def inserir(especie: Especie) -> int:

@@ -23,10 +23,12 @@ def _row_to_endereco(row) -> Endereco:
     )
 
 
-def criar_tabela() -> None:
+def criar_tabela() -> bool:
+    """Cria a tabela endereco se não existir."""
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
+        return True
 
 
 def inserir(endereco: Endereco) -> int:
@@ -50,6 +52,15 @@ def inserir(endereco: Endereco) -> int:
 
 
 def obter_por_usuario(id_usuario: int) -> List[Endereco]:
+    """
+    Retorna todos os endereços de um usuário.
+
+    Args:
+        id_usuario: ID do usuário
+
+    Returns:
+        Lista de objetos Endereco
+    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_USUARIO, (id_usuario,))

@@ -6,11 +6,12 @@ from sql.solicitacao_sql import *
 from util.db_util import get_connection
 
 
-def criar_tabela() -> None:
+def criar_tabela() -> bool:
     """Cria a tabela solicitacao se não existir."""
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
+        return True
 
 
 def inserir(solicitacao: Solicitacao) -> int:

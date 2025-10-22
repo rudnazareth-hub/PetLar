@@ -13,8 +13,9 @@ class Solicitacao:
     id_animal: int
     data_solicitacao: datetime
     status: str
-    observacoes: str  
+    observacoes: Optional[str] = None
+    resposta_abrigo: Optional[str] = None
     # Relacionamentos
-    adotante: Optional[Adotante] 
-    animal: Optional[Animal]
+    adotante: Optional[Adotante] = None
+    animal: Optional[Animal] = None
     

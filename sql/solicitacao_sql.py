@@ -43,8 +43,37 @@ WHERE a.id_abrigo = ?
 ORDER BY s.data_solicitacao DESC
 """
 
+OBTER_POR_ID = """
+SELECT
+    s.*,
+    a.nome as animal_nome,
+    u.nome as adotante_nome, u.email as adotante_email
+FROM solicitacao s
+INNER JOIN animal a ON s.id_animal = a.id_animal
+INNER JOIN adotante ad ON s.id_adotante = ad.id_adotante
+INNER JOIN usuario u ON ad.id_adotante = u.id
+WHERE s.id_solicitacao = ?
+"""
+
+OBTER_TODOS = """
+SELECT
+    s.*,
+    a.nome as animal_nome,
+    u.nome as adotante_nome, u.email as adotante_email
+FROM solicitacao s
+INNER JOIN animal a ON s.id_animal = a.id_animal
+INNER JOIN adotante ad ON s.id_adotante = ad.id_adotante
+INNER JOIN usuario u ON ad.id_adotante = u.id
+ORDER BY s.data_solicitacao DESC
+"""
+
 ATUALIZAR_STATUS = """
 UPDATE solicitacao
 SET status = ?, resposta_abrigo = ?
+WHERE id_solicitacao = ?
+"""
+
+EXCLUIR = """
+DELETE FROM solicitacao
 WHERE id_solicitacao = ?
 """

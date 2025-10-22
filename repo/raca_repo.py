@@ -15,23 +15,24 @@ def _row_to_raca(row) -> Raca:
         id_raca=row["id_raca"],
         id_especie=row["id_especie"],
         nome=row["nome"],
-        descricao=row["descricao"],
-        temperamento=row["temperamento"],
-        expectativa_de_vida=row["expectativa_de_vida"],
-        porte=row["porte"],
+        descricao=row.get("descricao"),
+        temperamento=row.get("temperamento"),
+        expectativa_de_vida=row.get("expectativa_de_vida"),
+        porte=row.get("porte"),
         especie=Especie(
             id_especie=row["especie_id"],
             nome=row["especie_nome"],
-            descricao=row["especie_descricao"]
+            descricao=row.get("especie_descricao")
         ) if row.get("especie_id") else None
     )
 
 
-def criar_tabela() -> None:
+def criar_tabela() -> bool:
     """Cria a tabela raca se não existir."""
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
+        return True
 
 
 def inserir(raca: Raca) -> int:

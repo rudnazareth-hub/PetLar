@@ -12,8 +12,8 @@ class Visita:
     id_adotante: int
     id_abrigo: int
     data_agendada: datetime
-    observacoes: str
-    status: str
+    observacoes: Optional[str] = None
+    status: str = "Agendada"
 
-    adotante: Optional[Adotante]
-    abrigo: Optional[Abrigo]
+    adotante: Optional[Adotante] = None
+    abrigo: Optional[Abrigo] = None
