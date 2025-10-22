@@ -13,7 +13,7 @@ def _row_to_especie(row) -> Especie:
     return Especie(
         id_especie=row["id_especie"],
         nome=row["nome"],
-        descricao=row.get("descricao")
+        descricao=row["descricao"]
     )
 
 

@@ -1,33 +1,35 @@
-"""SQL para adoções finalizadas."""
+"""SQL para abrigos."""
 
 CRIAR_TABELA = """
-CREATE TABLE IF NOT EXISTS adocao (
-    id_adocao INTEGER PRIMARY KEY AUTOINCREMENT,
-    id_adotante INTEGER NOT NULL,
-    id_animal INTEGER NOT NULL,
-    data_solicitacao DATETIME NOT NULL,
-    data_adocao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    status TEXT DEFAULT 'Concluída',
-    observacoes TEXT,
-    FOREIGN KEY (id_adotante) REFERENCES adotante(id_adotante),
-    FOREIGN KEY (id_animal) REFERENCES animal(id_animal),
-    UNIQUE(id_animal)
+CREATE TABLE IF NOT EXISTS abrigo (
+    id_abrigo INTEGER PRIMARY KEY,
+    responsavel TEXT NOT NULL,
+    descricao TEXT,
+    data_abertura TEXT,
+    data_membros TEXT,
+    FOREIGN KEY (id_abrigo) REFERENCES usuario(id)
 )
 """
 
 INSERIR = """
-INSERT INTO adocao (id_adotante, id_animal, data_solicitacao, observacoes)
-VALUES (?, ?, ?, ?)
+INSERT INTO abrigo (id_abrigo, responsavel, descricao, data_abertura, data_membros)
+VALUES (?, ?, ?, ?, ?)
 """
 
-OBTER_POR_ABRIGO = """
-SELECT
-    ad.*,
-    a.nome as animal_nome,
-    u.nome as adotante_nome
-FROM adocao ad
-INNER JOIN animal a ON ad.id_animal = a.id_animal
-INNER JOIN usuario u ON ad.id_adotante = u.id
-WHERE a.id_abrigo = ?
-ORDER BY ad.data_adocao DESC
+OBTER_POR_ID = """
+SELECT * FROM abrigo WHERE id_abrigo = ?
+"""
+
+OBTER_TODOS = """
+SELECT * FROM abrigo
+"""
+
+ATUALIZAR = """
+UPDATE abrigo
+SET responsavel = ?, descricao = ?, data_abertura = ?, data_membros = ?
+WHERE id_abrigo = ?
+"""
+
+EXCLUIR = """
+DELETE FROM abrigo WHERE id_abrigo = ?
 """

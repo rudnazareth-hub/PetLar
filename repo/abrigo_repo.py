@@ -11,9 +11,9 @@ def _row_to_abrigo(row) -> Abrigo:
     return Abrigo(
         id_abrigo=row["id_abrigo"],
         responsavel=row["responsavel"],
-        descricao=row.get("descricao"),
-        data_abertura=row.get("data_abertura"),
-        data_membros=row.get("data_membros")
+        descricao=row["descricao"],
+        data_abertura=row["data_abertura"],
+        data_membros=row["data_membros"]
     )
 
 

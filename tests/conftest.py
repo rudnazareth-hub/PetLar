@@ -81,11 +81,34 @@ def limpar_banco_dados():
             cursor = conn.cursor()
             # Verificar se tabelas existem antes de limpar
             cursor.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('tarefa', 'usuario', 'configuracao')"
+                "SELECT name FROM sqlite_master WHERE type='table'"
             )
             tabelas_existentes = [row[0] for row in cursor.fetchall()]
 
             # Limpar apenas tabelas que existem (respeitando foreign keys)
+            # Ordem: primeiro as tabelas dependentes, depois as principais
+
+            # Tabelas do PetLar (dependem de outras)
+            if 'adocao' in tabelas_existentes:
+                cursor.execute("DELETE FROM adocao")
+            if 'visita' in tabelas_existentes:
+                cursor.execute("DELETE FROM visita")
+            if 'solicitacao' in tabelas_existentes:
+                cursor.execute("DELETE FROM solicitacao")
+            if 'animal' in tabelas_existentes:
+                cursor.execute("DELETE FROM animal")
+            if 'endereco' in tabelas_existentes:
+                cursor.execute("DELETE FROM endereco")
+            if 'abrigo' in tabelas_existentes:
+                cursor.execute("DELETE FROM abrigo")
+            if 'adotante' in tabelas_existentes:
+                cursor.execute("DELETE FROM adotante")
+            if 'raca' in tabelas_existentes:
+                cursor.execute("DELETE FROM raca")
+            if 'especie' in tabelas_existentes:
+                cursor.execute("DELETE FROM especie")
+
+            # Tabelas base
             if 'tarefa' in tabelas_existentes:
                 cursor.execute("DELETE FROM tarefa")
             if 'usuario' in tabelas_existentes:

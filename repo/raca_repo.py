@@ -15,15 +15,15 @@ def _row_to_raca(row) -> Raca:
         id_raca=row["id_raca"],
         id_especie=row["id_especie"],
         nome=row["nome"],
-        descricao=row.get("descricao"),
-        temperamento=row.get("temperamento"),
-        expectativa_de_vida=row.get("expectativa_de_vida"),
-        porte=row.get("porte"),
+        descricao=row["descricao"],
+        temperamento=row["temperamento"],
+        expectativa_de_vida=row["expectativa_de_vida"],
+        porte=row["porte"],
         especie=Especie(
             id_especie=row["especie_id"],
             nome=row["especie_nome"],
-            descricao=row.get("especie_descricao")
-        ) if row.get("especie_id") else None
+            descricao=row["especie_descricao"]
+        ) if row["especie_id"] else None
     )
 
 

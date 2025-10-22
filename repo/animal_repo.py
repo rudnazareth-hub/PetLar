@@ -11,32 +11,35 @@ from util.db_util import get_connection
 
 def _row_to_animal(row) -> Animal:
     """Converte linha em objeto Animal com relacionamentos."""
+    # Campos status e foto podem vir com valores default
+    status = row["status"] if row["status"] else "Disponível"
+
     return Animal(
         id_animal=row["id_animal"],
         id_raca=row["id_raca"],
         id_abrigo=row["id_abrigo"],
         nome=row["nome"],
         sexo=row["sexo"],
-        data_nascimento=row.get("data_nascimento"),
+        data_nascimento=row["data_nascimento"],
         data_entrada=row["data_entrada"],
-        observacoes=row.get("observacoes"),
-        status=row.get("status", "Disponível"),
-        foto=row.get("foto"),
+        observacoes=row["observacoes"],
+        status=status,
+        foto=row["foto"],
         raca=Raca(
             id_raca=row["id_raca"],
-            id_especie=row.get("id_especie", 0),
-            nome=row.get("raca_nome", ""),
-            descricao=row.get("raca_descricao"),
-            temperamento=row.get("temperamento"),
-            expectativa_de_vida=row.get("expectativa_de_vida"),
-            porte=row.get("porte"),
+            id_especie=row["id_especie"] if row["id_especie"] else 0,
+            nome=row["raca_nome"] if row["raca_nome"] else "",
+            descricao=row["raca_descricao"],
+            temperamento=row["temperamento"],
+            expectativa_de_vida=row["expectativa_de_vida"],
+            porte=row["porte"],
             especie=None
-        ) if row.get("raca_nome") else None,
+        ) if row["raca_nome"] else None,
         abrigo=Abrigo(
             id_abrigo=row["id_abrigo"],
-            responsavel=row.get("responsavel", ""),
+            responsavel=row["responsavel"] if row["responsavel"] else "",
             data_abertura=None
-        ) if row.get("id_abrigo") else None
+        ) if row["id_abrigo"] else None
     )
 
 
