@@ -82,3 +82,46 @@ def atualizar_status(id_solicitacao: int, status: str, resposta: str) -> bool:
         cursor = conn.cursor()
         cursor.execute(ATUALIZAR_STATUS, (status, resposta, id_solicitacao))
         return cursor.rowcount > 0
+    
+def obter_todos() -> List[dict]:
+    """
+    Lista todas as solicitações do sistema com informações completas.
+
+    Returns:
+        Lista de dicionários com dados das solicitações
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(OBTER_TODOS)
+        return [dict(row) for row in cursor.fetchall()]
+
+def obter_por_id(id_solicitacao: int) -> Optional[dict]:
+    """
+    Busca uma solicitação específica pelo ID.
+
+    Args:
+        id_solicitacao: ID da solicitação
+
+    Returns:
+        Dicionário com dados da solicitação ou None se não encontrada
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(OBTER_POR_ID, (id_solicitacao,))
+        row = cursor.fetchone()
+        return dict(row) if row else None
+
+def excluir(id_solicitacao: int) -> bool:
+    """
+    Exclui uma solicitação.
+
+    Args:
+        id_solicitacao: ID da solicitação a ser excluída
+
+    Returns:
+        True se exclusão foi bem-sucedida, False caso contrário
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(EXCLUIR, (id_solicitacao,))
+        return cursor.rowcount > 0
