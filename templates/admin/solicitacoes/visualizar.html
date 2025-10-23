@@ -1,0 +1,123 @@
+```html
+{% extends "base_privada.html" %}
+
+{% block titulo %}Detalhes da Solicitação #{{ solicitacao.id_solicitacao }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-file-earmark-text"></i> Detalhes da Solicitação #{{ solicitacao.id_solicitacao }}</h2>
+            <a href="/admin/solicitacoes/listar" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        </div>
+
+        <div class="row">
+            <!-- Informações da Solicitação -->
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informações da Solicitação</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>Data da Solicitação:</strong><br>
+                            {{ solicitacao.data_solicitacao|data_hora_br }}
+                        </div>
+                        <div class="mb-3">
+                            <strong>Status:</strong><br>
+                            {% set status_map = {
+                                'Pendente': 'warning',
+                                'Aprovada': 'success',
+                                'Rejeitada': 'danger',
+                                'Cancelada': 'secondary'
+                            } %}
+                            <span class="badge bg-{{ status_map.get(solicitacao.status, 'secondary') }}">
+                                {{ solicitacao.status }}
+                            </span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Observações do Adotante:</strong><br>
+                            {{ solicitacao.observacoes or 'Sem observações' }}
+                        </div>
+                        {% if solicitacao.resposta_abrigo %}
+                        <div class="mb-3">
+                            <strong>Resposta do Abrigo:</strong><br>
+                            {{ solicitacao.resposta_abrigo }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informações do Adotante -->
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="bi bi-person"></i> Dados do Adotante</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>Nome:</strong><br>
+                            {{ solicitacao.adotante_nome }}
+                        </div>
+                        <div class="mb-3">
+                            <strong>Email:</strong><br>
+                            {{ solicitacao.adotante_email }}
+                        </div>
+                        <div class="mb-3">
+                            <a href="/admin/adotantes/visualizar/{{ solicitacao.id_adotante }}" class="btn btn-sm btn-outline-info">
+                                <i class="bi bi-eye"></i> Ver Perfil Completo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações do Animal -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="bi bi-heart"></i> Dados do Animal</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>Nome:</strong><br>
+                            {{ solicitacao.animal_nome }}
+                        </div>
+                        <div class="mb-3">
+                            <a href="/admin/animais/visualizar/{{ solicitacao.id_animal }}" class="btn btn-sm btn-outline-success">
+                                <i class="bi bi-eye"></i> Ver Ficha Completa
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ações -->
+        {% if solicitacao.status == 'Pendente' %}
+        <div class="card shadow-sm mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-lightning"></i> Ações Disponíveis</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex gap-3">
+                    <button type="button" class="btn btn-success"
+                        onclick="aprovarSolicitacao({{ solicitacao.id_solicitacao }}, '{{ solicitacao.adotante_nome }}', '{{ solicitacao.animal_nome }}')">
+                        <i class="bi bi-check-circle"></i> Aprovar Solicitação
+                    </button>
+                    <button type="button" class="btn btn-danger"
+                        onclick="rejeitarSolicitacao({{ solicitacao.id_solicitacao }}, '{{ solicitacao.adotante_nome }}', '{{ solicitacao.animal_nome }}')">
+                        <i class="bi bi-x-circle"></i> Rejeitar Solicitação
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Incluir mesmos modais da página de listagem -->
+<!-- ... (copiar modais de aprovar e rejeitar) ... -->
+{% endblock %}
+```
