@@ -787,3 +787,63 @@ def validar_perfil_usuario(perfil_enum: Any) -> Callable[[Any, Any], Any]:
         return v
 
     return validator
+
+
+def validar_sexo_animal():
+    """Valida sexo do animal (Macho/Fêmea)"""
+    def validator(cls, v: str) -> str:
+        valores_validos = {'Macho', 'Fêmea'}
+        if v not in valores_validos:
+            raise ValueError(f"Sexo deve ser 'Macho' ou 'Fêmea', recebido: '{v}'")
+        return v
+    return validator
+
+def validar_status_animal():
+    """Valida status do animal"""
+    def validator(cls, v: str) -> str:
+        valores_validos = {'Disponível', 'Em Processo', 'Adotado', 'Indisponível'}
+        if v not in valores_validos:
+            raise ValueError(f"Status inválido: '{v}'")
+        return v
+    return validator
+
+def validar_valor_monetario(minimo: float = 0.0):
+    """Valida valores monetários"""
+    def validator(cls, v: Optional[float]) -> Optional[float]:
+        if v is None:
+            return v
+        if v < minimo:
+            raise ValueError(f"Valor deve ser maior ou igual a R$ {minimo:.2f}")
+        return v
+    return validator
+
+def validar_data_opcional():
+    """Valida datas opcionais no formato YYYY-MM-DD ou dd/mm/yyyy"""
+    def validator(cls, v: Optional[str]) -> Optional[str]:
+        if v is None or v.strip() == '':
+            return None
+
+        # Tentar formato ISO (YYYY-MM-DD)
+        try:
+            datetime.strptime(v, '%Y-%m-%d')
+            return v
+        except ValueError:
+            pass
+
+        # Tentar formato brasileiro (dd/mm/yyyy)
+        try:
+            dt = datetime.strptime(v, '%d/%m/%Y')
+            return dt.strftime('%Y-%m-%d')
+        except ValueError:
+            raise ValueError("Data deve estar no formato YYYY-MM-DD ou dd/mm/yyyy")
+
+    return validator
+
+def validar_status_solicitacao():
+    """Valida status da solicitação"""
+    def validator(cls, v: str) -> str:
+        valores_validos = {'Pendente', 'Aprovada', 'Rejeitada', 'Cancelada'}
+        if v not in valores_validos:
+            raise ValueError(f"Status inválido: '{v}'")
+        return v
+    return validator
