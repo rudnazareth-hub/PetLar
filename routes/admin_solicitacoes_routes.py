@@ -70,3 +70,66 @@ async def visualizar(request: Request, id: int, usuario_logado: Optional[dict] =
             "solicitacao": solicitacao
         }
     )
+
+
+from fastapi import Form
+from pydantic import ValidationError
+from dtos.solicitacao_dto import AprovarSolicitacaoDTO, RejeitarSolicitacaoDTO
+from util.flash_messages import informar_sucesso, informar_erro
+from util.logger_config import logger
+from util.rate_limiter import RateLimiter, obter_identificador_cliente
+
+# Rate limiter
+admin_solicitacoes_limiter = RateLimiter(
+    max_tentativas=20,
+    janela_minutos=1,
+    nome="admin_solicitacoes"
+)
+
+@router.post("/aprovar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_aprovar(
+    request: Request,
+    id: int,
+    resposta_abrigo: str = Form(None),
+    usuario_logado: Optional[dict] = None
+):
+    """Aprova uma solicitação de adoção"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_solicitacoes_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se solicitação existe
+    solicitacao = solicitacao_repo.obter_por_id(id)
+    if not solicitacao:
+        informar_erro(request, "Solicitação não encontrada")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se está pendente
+    if solicitacao['status'] != 'Pendente':
+        informar_erro(request, "Esta solicitação já foi processada")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    try:
+        # Validar com DTO
+        dto = AprovarSolicitacaoDTO(
+            id_solicitacao=id,
+            resposta_abrigo=resposta_abrigo
+        )
+
+        # Atualizar status
+        resposta = dto.resposta_abrigo or "Solicitação aprovada pelo administrador do sistema."
+        solicitacao_repo.atualizar_status(id, "Aprovada", resposta)
+
+        logger.info(f"Solicitação {id} aprovada por admin {usuario_logado['id']}")
+        informar_sucesso(request, "Solicitação aprovada com sucesso!")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    except ValidationError as e:
+        logger.error(f"Erro ao aprovar solicitação {id}: {e}")
+        informar_erro(request, "Erro ao aprovar solicitação. Verifique os dados.")
+        return RedirectResponse(f"/admin/solicitacoes/visualizar/{id}", status_code=status.HTTP_303_SEE_OTHER)
