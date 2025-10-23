@@ -1,0 +1,96 @@
+{% extends "base_privada.html" %}
+
+{% block titulo %}Gerenciar Abrigos{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-building"></i> Gerenciar Abrigos</h2>
+            <a href="/admin/abrigos/cadastrar" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Novo Abrigo
+            </a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if abrigos %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Responsável</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Data Abertura</th>
+                                <th scope="col" class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for abrigo in abrigos %}
+                            <tr>
+                                <td>{{ abrigo.id_abrigo }}</td>
+                                <td><strong>{{ abrigo.responsavel }}</strong></td>
+                                <td>{{ abrigo.usuario.email if abrigo.usuario else '-' }}</td>
+                                <td>{{ abrigo.data_abertura|data_br if abrigo.data_abertura else '-' }}</td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="/admin/abrigos/visualizar/{{ abrigo.id_abrigo }}"
+                                            class="btn btn-outline-info"
+                                            title="Visualizar"
+                                            aria-label="Visualizar abrigo {{ abrigo.responsavel }}">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/admin/abrigos/editar/{{ abrigo.id_abrigo }}"
+                                            class="btn btn-outline-primary"
+                                            title="Editar"
+                                            aria-label="Editar abrigo {{ abrigo.responsavel }}">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                            title="Excluir"
+                                            aria-label="Excluir abrigo {{ abrigo.responsavel }}"
+                                            onclick="excluirAbrigo({{ abrigo.id_abrigo }}, '{{ abrigo.responsavel|replace("'", "\\'") }}')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info text-center mb-0">
+                    <i class="bi bi-info-circle"></i> Nenhum abrigo cadastrado.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function excluirAbrigo(abrigoId, abrigoNome) {
+        const detalhes = `
+        <div class="card bg-light">
+            <div class="card-body">
+                <p class="mb-0"><strong>Abrigo:</strong> ${abrigoNome}</p>
+                <p class="text-warning mt-2 mb-0">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <small>O usuário associado e todos os animais vinculados a este abrigo também serão excluídos.</small>
+                </p>
+            </div>
+        </div>
+        `;
+
+        abrirModalConfirmacao({
+            url: `/admin/abrigos/excluir/${abrigoId}`,
+            mensagem: 'Tem certeza que deseja excluir este abrigo?',
+            detalhes: detalhes
+        });
+    }
+</script>
+{% endblock %}
