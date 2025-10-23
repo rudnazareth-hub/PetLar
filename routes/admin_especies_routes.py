@@ -138,3 +138,35 @@ async def post_editar(
             dados_formulario=dados_formulario,
             campo_padrao="nome"
         )
+
+@router.post("/excluir/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_excluir(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exclui uma espécie"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_especies_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    especie = especie_repo.obter_por_id(id)
+
+    if not especie:
+        informar_erro(request, "Espécie não encontrada")
+        return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se existem espécies vinculadas
+    especies_vinculadas = especie_repo.obter_por_especie(id)
+    if especies_vinculadas:
+        informar_erro(
+            request,
+            f"Não é possível excluir esta espécie pois existem {len(especies_vinculadas)} espécie(s) vinculada(s) a ela."
+        )
+        return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    especie_repo.excluir(id)
+    logger.info(f"Espécie {id} ({especie.nome}) excluída por admin {usuario_logado['id']}")
+    informar_sucesso(request, "Espécie excluída com sucesso!")
+    return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
