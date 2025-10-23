@@ -42,3 +42,32 @@ async def listar(request: Request, usuario_logado: Optional[dict] = None):
         "admin/adotantes/listar.html",
         {"request": request, "adotantes": adotantes_completos}
     )
+
+@router.get("/editar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de edição de adotante"""
+    adotante = adotante_repo.obter_por_id(id)
+    usuario = usuario_repo.obter_por_id(id)
+
+    if not adotante or not usuario:
+        informar_erro(request, "Adotante não encontrado")
+        return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    dados = {
+        'id_adotante': adotante.id_adotante,
+        'nome': usuario.nome,
+        'email': usuario.email,
+        'renda_media': adotante.renda_media,
+        'tem_filhos': adotante.tem_filhos,
+        'estado_saude': adotante.estado_saude
+    }
+
+    return templates.TemplateResponse(
+        "admin/adotantes/editar.html",
+        {
+            "request": request,
+            "adotante": adotante,
+            "dados": dados
+        }
+    )
