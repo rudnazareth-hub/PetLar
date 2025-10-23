@@ -1,0 +1,6 @@
+services:
+  web:
+    container_name: petlar.cachoeiro.es
+    build: .
+    ports:
+      - "8404:8000"
