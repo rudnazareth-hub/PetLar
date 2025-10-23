@@ -6,7 +6,7 @@ from pydantic import BaseModel, field_validator
 from typing import Optional
 from dtos.validators import (
     validar_string_obrigatoria,
-    validar_texto_longo_opcional,
+    validar_comprimento,
     validar_id_positivo
 )
 
@@ -21,7 +21,7 @@ class CadastrarRacaDTO(BaseModel):
     )
     _validar_id_especie = field_validator('id_especie')(validar_id_positivo())
     _validar_descricao = field_validator('descricao')(
-        validar_texto_longo_opcional(tamanho_maximo=200)
+        validar_comprimento(tamanho_maximo=200)
     )
 
 class AlterarRacaDTO(BaseModel):
@@ -37,5 +37,5 @@ class AlterarRacaDTO(BaseModel):
     )
     _validar_id_especie = field_validator('id_especie')(validar_id_positivo())
     _validar_descricao = field_validator('descricao')(
-        validar_texto_longo_opcional(tamanho_maximo=200)
+        validar_comprimento(tamanho_maximo=200)
     )

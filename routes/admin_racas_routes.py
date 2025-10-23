@@ -1,6 +1,6 @@
 from fastapi import Form
 from pydantic import ValidationError
-from dtos.raca_dto import CadastrarRacaDTO
+from dtos.raca_dto import CadastrarRacaDTO, AlterarRacaDTO
 from model.raca_model import Raca
 from util.flash_messages import informar_sucesso, informar_erro
 from util.logger_config import logger
@@ -13,6 +13,10 @@ from util.auth_decorator import requer_autenticacao
 from util.template_util import criar_templates
 from util.perfis import Perfil
 from repo import raca_repo, especie_repo
+
+# Configuração do router e templates
+router = APIRouter(prefix="/admin/racas")
+templates = criar_templates("templates/admin/racas")
 
 # Rate limiter
 admin_racas_limiter = RateLimiter(
@@ -79,9 +83,6 @@ async def post_cadastrar(
         )
 
 
-
-router = APIRouter(prefix="/admin/racas")
-templates = criar_templates("templates/admin/racas")
 
 @router.get("/")
 @requer_autenticacao([Perfil.ADMIN.value])

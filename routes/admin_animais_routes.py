@@ -1,9 +1,17 @@
 from typing import Optional
-from fastapi import APIRouter, Request
-from repo import abrigo_repo, raca_repo
+from fastapi import APIRouter, Request, Form, status
+from fastapi.responses import RedirectResponse
+from pydantic import ValidationError
+from repo import abrigo_repo, raca_repo, animal_repo, solicitacao_repo, visita_repo
 from util.auth_decorator import requer_autenticacao
 from util.perfis import Perfil
 from util.template_util import criar_templates
+from util.flash_messages import informar_sucesso, informar_erro
+from util.logger_config import logger
+from util.exceptions import FormValidationError
+from util.rate_limiter import RateLimiter, obter_identificador_cliente
+from dtos.animal_dto import CadastrarAnimalDTO, AlterarAnimalDTO, AlterarStatusAnimalDTO
+from model.animal_model import Animal
 
 
 router = APIRouter(prefix="/admin/animais")
