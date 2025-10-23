@@ -35,3 +35,4 @@ class AlterarEspecieDTO(BaseModel):
     _validar_descricao = field_validator('descricao')(
         validar_texto_longo_opcional(tamanho_maximo=200)
     )
+
