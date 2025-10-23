@@ -133,3 +133,50 @@ async def post_aprovar(
         logger.error(f"Erro ao aprovar solicitação {id}: {e}")
         informar_erro(request, "Erro ao aprovar solicitação. Verifique os dados.")
         return RedirectResponse(f"/admin/solicitacoes/visualizar/{id}", status_code=status.HTTP_303_SEE_OTHER)
+    
+    @router.post("/rejeitar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_rejeitar(
+    request: Request,
+    id: int,
+    resposta_abrigo: str = Form(...),
+    usuario_logado: Optional[dict] = None
+):
+    """Rejeita uma solicitação de adoção"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_solicitacoes_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se solicitação existe
+    solicitacao = solicitacao_repo.obter_por_id(id)
+    if not solicitacao:
+        informar_erro(request, "Solicitação não encontrada")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se está pendente
+    if solicitacao['status'] != 'Pendente':
+        informar_erro(request, "Esta solicitação já foi processada")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    try:
+        # Validar com DTO (motivo é obrigatório)
+        dto = RejeitarSolicitacaoDTO(
+            id_solicitacao=id,
+            resposta_abrigo=resposta_abrigo
+        )
+
+        # Atualizar status
+        solicitacao_repo.atualizar_status(id, "Rejeitada", dto.resposta_abrigo)
+
+        logger.info(f"Solicitação {id} rejeitada por admin {usuario_logado['id']}")
+        informar_sucesso(request, "Solicitação rejeitada.")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    except ValidationError as e:
+        logger.error(f"Erro ao rejeitar solicitação {id}: {e}")
+        informar_erro(request, "Erro ao rejeitar solicitação. É obrigatório informar o motivo.")
+        return RedirectResponse(f"/admin/solicitacoes/visualizar/{id}", status_code=status.HTTP_303_SEE_OTHER)
