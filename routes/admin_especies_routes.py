@@ -8,12 +8,16 @@ from util.perfis import Perfil
 from repo import especie_repo
 from fastapi import Form
 from pydantic import ValidationError
-from dtos.especie_dto import CadastrarEspecieDTO
+from dtos.especie_dto import CadastrarEspecieDTO, AlterarEspecieDTO
 from model.especie_model import Especie
 from util.flash_messages import informar_sucesso, informar_erro
 from util.logger_config import logger
 from util.exceptions import FormValidationError
 from util.rate_limiter import RateLimiter, obter_identificador_cliente
+
+# Configuração do router e templates
+router = APIRouter(prefix="/admin/especies")
+templates = criar_templates("templates/admin/especies")
 
 # Rate limiter
 admin_especies_limiter = RateLimiter(
@@ -66,9 +70,6 @@ async def post_cadastrar(
             dados_formulario=dados_formulario,
             campo_padrao="nome"
         )
-
-router = APIRouter(prefix="/admin/especies")
-templates = criar_templates("templates/admin/especies")
 
 @router.get("/")
 @requer_autenticacao([Perfil.ADMIN.value])
