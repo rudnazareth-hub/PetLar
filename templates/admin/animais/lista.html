@@ -1,0 +1,123 @@
+{% extends "base_privada.html" %}
+
+{% block titulo %}Gerenciar Animais{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-heart"></i> Gerenciar Animais</h2>
+            <a href="/admin/animais/cadastrar" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Novo Animal
+            </a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if animais %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Foto</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Raça</th>
+                                <th scope="col">Abrigo</th>
+                                <th scope="col">Status</th>
+                                <th scope="col" class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for animal in animais %}
+                            <tr>
+                                <td>{{ animal.id_animal }}</td>
+                                <td>
+                                    {% if animal.foto %}
+                                    <img src="{{ animal.foto }}" alt="{{ animal.nome }}"
+                                        class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                    {% else %}
+                                    <div class="bg-secondary rounded d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="bi bi-image text-white"></i>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                                <td><strong>{{ animal.nome }}</strong></td>
+                                <td>
+                                    {{ animal.raca.nome if animal.raca else '-' }}
+                                    <br>
+                                    <small class="text-muted">
+                                        {{ animal.raca.especie.nome if animal.raca and animal.raca.especie else '' }}
+                                    </small>
+                                </td>
+                                <td>{{ animal.abrigo.responsavel if animal.abrigo else '-' }}</td>
+                                <td>
+                                    {% set status_map = {
+                                        'Disponível': 'success',
+                                        'Em Processo': 'warning',
+                                        'Adotado': 'info',
+                                        'Indisponível': 'secondary'
+                                    } %}
+                                    <span class="badge bg-{{ status_map.get(animal.status, 'secondary') }}">
+                                        {{ animal.status }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="/admin/animais/visualizar/{{ animal.id_animal }}"
+                                            class="btn btn-outline-info"
+                                            title="Visualizar">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/admin/animais/editar/{{ animal.id_animal }}"
+                                            class="btn btn-outline-primary"
+                                            title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                            title="Excluir"
+                                            onclick="excluirAnimal({{ animal.id_animal }}, '{{ animal.nome|replace("'", "\\'") }}')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info text-center mb-0">
+                    <i class="bi bi-info-circle"></i> Nenhum animal cadastrado.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function excluirAnimal(animalId, animalNome) {
+        const detalhes = `
+        <div class="card bg-light">
+            <div class="card-body">
+                <p class="mb-0"><strong>Animal:</strong> ${animalNome}</p>
+                <p class="text-warning mt-2 mb-0">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <small>Todas as solicitações de adoção relacionadas a este animal serão removidas.</small>
+                </p>
+            </div>
+        </div>
+        `;
+
+        abrirModalConfirmacao({
+            url: `/admin/animais/excluir/${animalId}`,
+            mensagem: 'Tem certeza que deseja excluir este animal?',
+            detalhes: detalhes
+        });
+    }
+</script>
+{% endblock %}
