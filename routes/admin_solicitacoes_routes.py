@@ -51,3 +51,22 @@ async def listar(
             }
         }
     )
+
+
+@router.get("/visualizar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def visualizar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exibe detalhes completos de uma solicitação"""
+    solicitacao = solicitacao_repo.obter_por_id(id)
+
+    if not solicitacao:
+        informar_erro(request, "Solicitação não encontrada")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    return templates.TemplateResponse(
+        "admin/solicitacoes/visualizar.html",
+        {
+            "request": request,
+            "solicitacao": solicitacao
+        }
+    )
