@@ -1594,81 +1594,2156 @@ async def post_alterar_status(
 
 ## 5. Gerenciar Adotantes
 
-Permite ao administrador listar, editar, visualizar e excluir adotantes.
+Permite ao administrador listar, editar, visualizar e excluir adotantes cadastrados no sistema.
 
 ### 5.1. Listar Adotantes
 
-*Seguir padrão estabelecido*
+#### 5.1.1. Rota GET
 
-**Template**: Tabela com colunas ID, Nome, Email, Renda Média, Tem Filhos, Estado de Saúde, Ações
+**Arquivo**: `routes/admin_adotantes_routes.py`
+
+```python
+from typing import Optional
+from fastapi import APIRouter, Request, status
+from fastapi.responses import RedirectResponse
+
+from util.auth_decorator import requer_autenticacao
+from util.template_util import criar_templates
+from util.perfis import Perfil
+from repo import adotante_repo, usuario_repo
+
+router = APIRouter(prefix="/admin/adotantes")
+templates = criar_templates("templates/admin/adotantes")
+
+@router.get("/")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def index(request: Request, usuario_logado: Optional[dict] = None):
+    """Redireciona para lista de adotantes"""
+    return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+
+@router.get("/listar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def listar(request: Request, usuario_logado: Optional[dict] = None):
+    """Lista todos os adotantes cadastrados com seus dados de usuário"""
+    # Obter todos os usuários com perfil ADOTANTE
+    usuarios = usuario_repo.obter_todos()
+    adotantes_completos = []
+
+    for usuario in usuarios:
+        if usuario.perfil == Perfil.ADOTANTE.value:
+            adotante = adotante_repo.obter_por_id(usuario.id)
+            if adotante:
+                adotantes_completos.append({
+                    'id_adotante': adotante.id_adotante,
+                    'nome': usuario.nome,
+                    'email': usuario.email,
+                    'telefone': usuario.telefone,
+                    'renda_media': adotante.renda_media,
+                    'tem_filhos': adotante.tem_filhos,
+                    'estado_saude': adotante.estado_saude
+                })
+
+    return templates.TemplateResponse(
+        "admin/adotantes/listar.html",
+        {"request": request, "adotantes": adotantes_completos}
+    )
+```
+
+#### 5.1.2. Template
+
+**Arquivo**: `templates/admin/adotantes/listar.html`
+
+```html
+{% extends "base_privada.html" %}
+
+{% block titulo %}Gerenciar Adotantes{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-people"></i> Gerenciar Adotantes</h2>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if adotantes %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Telefone</th>
+                                <th scope="col">Renda Média</th>
+                                <th scope="col">Tem Filhos</th>
+                                <th scope="col">Estado de Saúde</th>
+                                <th scope="col" class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for adotante in adotantes %}
+                            <tr>
+                                <td>{{ adotante.id_adotante }}</td>
+                                <td><strong>{{ adotante.nome }}</strong></td>
+                                <td>{{ adotante.email }}</td>
+                                <td>{{ adotante.telefone or '-' }}</td>
+                                <td>R$ {{ "{:,.2f}".format(adotante.renda_media) if adotante.renda_media else '-' }}</td>
+                                <td>
+                                    {% if adotante.tem_filhos %}
+                                        <span class="badge bg-info">Sim</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Não</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ adotante.estado_saude or '-' }}</td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="/admin/adotantes/visualizar/{{ adotante.id_adotante }}"
+                                            class="btn btn-outline-info"
+                                            title="Visualizar"
+                                            aria-label="Visualizar adotante {{ adotante.nome }}">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/admin/adotantes/editar/{{ adotante.id_adotante }}"
+                                            class="btn btn-outline-primary"
+                                            title="Editar"
+                                            aria-label="Editar adotante {{ adotante.nome }}">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                            title="Excluir"
+                                            aria-label="Excluir adotante {{ adotante.nome }}"
+                                            onclick="excluirAdotante({{ adotante.id_adotante }}, '{{ adotante.nome|replace("'", "\\'") }}')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info text-center mb-0">
+                    <i class="bi bi-info-circle"></i> Nenhum adotante cadastrado.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function excluirAdotante(adotanteId, adotanteNome) {
+        const detalhes = `
+        <div class="card bg-light">
+            <div class="card-body">
+                <p class="mb-0"><strong>Adotante:</strong> ${adotanteNome}</p>
+                <p class="text-warning mt-2 mb-0">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <small>O usuário e todas as solicitações relacionadas serão excluídos.</small>
+                </p>
+            </div>
+        </div>
+        `;
+
+        abrirModalConfirmacao({
+            url: `/admin/adotantes/excluir/${adotanteId}`,
+            mensagem: 'Tem certeza que deseja excluir este adotante?',
+            detalhes: detalhes
+        });
+    }
+</script>
+{% endblock %}
+```
 
 ### 5.2. Editar Adotante
 
-*Formulário com campos do perfil do adotante*
+#### 5.2.1. DTO
+
+**Arquivo**: `dtos/adotante_dto.py`
+
+```python
+from pydantic import BaseModel, field_validator
+from typing import Optional
+from dtos.validators import (
+    validar_id_positivo,
+    validar_valor_monetario,
+    validar_string_obrigatoria
+)
+
+class AlterarAdotanteDTO(BaseModel):
+    """DTO para alteração de dados do adotante pelo admin"""
+    id_adotante: int
+    renda_media: float
+    tem_filhos: bool
+    estado_saude: str
+
+    _validar_id = field_validator('id_adotante')(validar_id_positivo())
+    _validar_renda = field_validator('renda_media')(validar_valor_monetario(minimo=0.0))
+    _validar_estado_saude = field_validator('estado_saude')(
+        validar_string_obrigatoria('Estado de Saúde', tamanho_minimo=3, tamanho_maximo=100)
+    )
+```
+
+#### 5.2.2. Rota GET
+
+**Arquivo**: `routes/admin_adotantes_routes.py` (adicionar)
+
+```python
+@router.get("/editar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de edição de adotante"""
+    adotante = adotante_repo.obter_por_id(id)
+    usuario = usuario_repo.obter_por_id(id)
+
+    if not adotante or not usuario:
+        informar_erro(request, "Adotante não encontrado")
+        return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    dados = {
+        'id_adotante': adotante.id_adotante,
+        'nome': usuario.nome,
+        'email': usuario.email,
+        'renda_media': adotante.renda_media,
+        'tem_filhos': adotante.tem_filhos,
+        'estado_saude': adotante.estado_saude
+    }
+
+    return templates.TemplateResponse(
+        "admin/adotantes/editar.html",
+        {
+            "request": request,
+            "adotante": adotante,
+            "dados": dados
+        }
+    )
+```
+
+#### 5.2.3. Template
+
+**Arquivo**: `templates/admin/adotantes/editar.html`
+
+```html
+{% extends "base_privada.html" %}
+{% from "macros/form_fields.html" import field with context %}
+
+{% block titulo %}Editar Adotante{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <h2 class="mb-0"><i class="bi bi-pencil-square"></i> Editar Adotante</h2>
+        </div>
+
+        <div class="card shadow-sm">
+            <form method="POST" action="/admin/adotantes/editar/{{ dados.id_adotante }}">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-12">
+                            {% include "components/alerta_erro.html" %}
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <div class="alert alert-info">
+                                <strong>Nome:</strong> {{ dados.nome }}<br>
+                                <strong>Email:</strong> {{ dados.email }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='renda_media', label='Renda Média', type='decimal', required=true,
+                            value=dados.renda_media, help_text='Em reais (R$)') }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='tem_filhos', label='Tem Filhos?', type='radio', required=true,
+                            options={'true': 'Sim', 'false': 'Não'},
+                            value='true' if dados.tem_filhos else 'false',
+                            radio_style='buttons', radio_layout='horizontal') }}
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            {{ field(name='estado_saude', label='Estado de Saúde', type='text', required=true,
+                            value=dados.estado_saude) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer p-4">
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Salvar Alterações
+                        </button>
+                        <a href="/admin/adotantes/listar" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+```
+
+#### 5.2.4. Rota POST
+
+**Arquivo**: `routes/admin_adotantes_routes.py` (adicionar)
+
+```python
+from fastapi import Form
+from pydantic import ValidationError
+from dtos.adotante_dto import AlterarAdotanteDTO
+from model.adotante_model import Adotante
+from util.flash_messages import informar_sucesso, informar_erro
+from util.logger_config import logger
+from util.exceptions import FormValidationError
+from util.rate_limiter import RateLimiter, obter_identificador_cliente
+
+# Rate limiter
+admin_adotantes_limiter = RateLimiter(
+    max_tentativas=10,
+    janela_minutos=1,
+    nome="admin_adotantes"
+)
+
+@router.post("/editar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_editar(
+    request: Request,
+    id: int,
+    renda_media: float = Form(...),
+    tem_filhos: str = Form(...),
+    estado_saude: str = Form(...),
+    usuario_logado: Optional[dict] = None
+):
+    """Altera dados de um adotante"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_adotantes_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se adotante existe
+    adotante_atual = adotante_repo.obter_por_id(id)
+    usuario = usuario_repo.obter_por_id(id)
+
+    if not adotante_atual or not usuario:
+        informar_erro(request, "Adotante não encontrado")
+        return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Converter string para bool
+    tem_filhos_bool = tem_filhos.lower() == 'true'
+
+    # Dados do formulário para reexibição em caso de erro
+    dados_formulario = {
+        "id_adotante": id,
+        "nome": usuario.nome,
+        "email": usuario.email,
+        "renda_media": renda_media,
+        "tem_filhos": tem_filhos_bool,
+        "estado_saude": estado_saude
+    }
+
+    try:
+        # Validar com DTO
+        dto = AlterarAdotanteDTO(
+            id_adotante=id,
+            renda_media=renda_media,
+            tem_filhos=tem_filhos_bool,
+            estado_saude=estado_saude
+        )
+
+        # Atualizar adotante
+        adotante_atualizado = Adotante(
+            id_adotante=id,
+            renda_media=dto.renda_media,
+            tem_filhos=dto.tem_filhos,
+            estado_saude=dto.estado_saude
+        )
+
+        adotante_repo.atualizar(adotante_atualizado)
+        logger.info(f"Adotante {id} alterado por admin {usuario_logado['id']}")
+
+        informar_sucesso(request, "Adotante alterado com sucesso!")
+        return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    except ValidationError as e:
+        dados_formulario["adotante"] = adotante_atual
+        raise FormValidationError(
+            validation_error=e,
+            template_path="admin/adotantes/editar.html",
+            dados_formulario=dados_formulario,
+            campo_padrao="renda_media"
+        )
+```
 
 ### 5.3. Visualizar Adotante
 
-*Detalhes completos + histórico de solicitações e adoções*
+#### 5.3.1. Rota GET
+
+**Arquivo**: `routes/admin_adotantes_routes.py` (adicionar)
+
+```python
+from repo import solicitacao_repo, adocao_repo
+
+@router.get("/visualizar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def visualizar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exibe detalhes completos do adotante"""
+    adotante = adotante_repo.obter_por_id(id)
+    usuario = usuario_repo.obter_por_id(id)
+
+    if not adotante or not usuario:
+        informar_erro(request, "Adotante não encontrado")
+        return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Obter solicitações do adotante
+    solicitacoes = solicitacao_repo.obter_por_adotante(id)
+
+    # Obter adoções realizadas
+    adocoes = adocao_repo.obter_por_adotante(id) if hasattr(adocao_repo, 'obter_por_adotante') else []
+
+    return templates.TemplateResponse(
+        "admin/adotantes/visualizar.html",
+        {
+            "request": request,
+            "adotante": adotante,
+            "usuario": usuario,
+            "solicitacoes": solicitacoes,
+            "adocoes": adocoes
+        }
+    )
+```
+
+#### 5.3.2. Template
+
+**Arquivo**: `templates/admin/adotantes/visualizar.html`
+
+```html
+{% extends "base_privada.html" %}
+
+{% block titulo %}Visualizar Adotante{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-person-badge"></i> Detalhes do Adotante</h2>
+            <a href="/admin/adotantes/listar" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        </div>
+
+        <!-- Informações Pessoais -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-person"></i> Informações Pessoais</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <strong>Nome:</strong><br>
+                        {{ usuario.nome }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Email:</strong><br>
+                        {{ usuario.email }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Telefone:</strong><br>
+                        {{ usuario.telefone or 'Não informado' }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Documento:</strong><br>
+                        {{ usuario.numero_documento or 'Não informado' }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Renda Média:</strong><br>
+                        R$ {{ "{:,.2f}".format(adotante.renda_media) if adotante.renda_media else 'Não informado' }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Tem Filhos:</strong><br>
+                        {% if adotante.tem_filhos %}
+                            <span class="badge bg-info">Sim</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Não</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-12 mb-3">
+                        <strong>Estado de Saúde:</strong><br>
+                        {{ adotante.estado_saude or 'Não informado' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solicitações de Adoção -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0"><i class="bi bi-file-text"></i> Solicitações de Adoção</h5>
+            </div>
+            <div class="card-body">
+                {% if solicitacoes %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Animal</th>
+                                <th>Data</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sol in solicitacoes %}
+                            <tr>
+                                <td>{{ sol.id_solicitacao }}</td>
+                                <td>{{ sol.animal_nome }}</td>
+                                <td>{{ sol.data_solicitacao|data_hora_br }}</td>
+                                <td>
+                                    {% set status_map = {
+                                        'Pendente': 'warning',
+                                        'Aprovada': 'success',
+                                        'Rejeitada': 'danger',
+                                        'Cancelada': 'secondary'
+                                    } %}
+                                    <span class="badge bg-{{ status_map.get(sol.status, 'secondary') }}">
+                                        {{ sol.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted mb-0">Nenhuma solicitação registrada.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Adoções Realizadas -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-check-circle"></i> Adoções Realizadas</h5>
+            </div>
+            <div class="card-body">
+                {% if adocoes %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Animal</th>
+                                <th>Data Adoção</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for adocao in adocoes %}
+                            <tr>
+                                <td>{{ adocao.id_adocao }}</td>
+                                <td>{{ adocao.animal_nome }}</td>
+                                <td>{{ adocao.data_adocao|data_br }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted mb-0">Nenhuma adoção realizada.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+```
 
 ### 5.4. Excluir Adotante
 
-*Verificar se há adoções ativas antes de excluir*
+#### 5.4.1. Rota POST
+
+**Arquivo**: `routes/admin_adotantes_routes.py` (adicionar)
+
+```python
+@router.post("/excluir/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_excluir(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exclui um adotante"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_adotantes_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    adotante = adotante_repo.obter_por_id(id)
+    usuario = usuario_repo.obter_por_id(id)
+
+    if not adotante or not usuario:
+        informar_erro(request, "Adotante não encontrado")
+        return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se existem adoções ativas
+    adocoes = adocao_repo.obter_por_adotante(id) if hasattr(adocao_repo, 'obter_por_adotante') else []
+    if adocoes:
+        informar_erro(
+            request,
+            f"Não é possível excluir este adotante pois existem {len(adocoes)} adoção(ões) vinculada(s)."
+        )
+        return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Excluir adotante e usuário
+    adotante_repo.excluir(id)
+    usuario_repo.excluir(id)
+
+    logger.info(f"Adotante {id} ({usuario.nome}) excluído por admin {usuario_logado['id']}")
+    informar_sucesso(request, "Adotante excluído com sucesso!")
+    return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
+```
 
 ---
 
 ## 6. Gerenciar Solicitações
 
-Permite ao administrador visualizar, aprovar, rejeitar e cancelar solicitações de adoção.
+Permite ao administrador visualizar, aprovar, rejeitar e cancelar solicitações de adoção em todo o sistema.
 
 ### 6.1. Listar Solicitações
 
-#### 6.1.1. Template
+#### 6.1.1. Método no Repositório
+
+Primeiro, adicionar método em `repo/solicitacao_repo.py`:
+
+```python
+def obter_todos() -> List[dict]:
+    """
+    Lista todas as solicitações do sistema com informações completas.
+
+    Returns:
+        Lista de dicionários com dados das solicitações
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(OBTER_TODOS)
+        return [dict(row) for row in cursor.fetchall()]
+
+def obter_por_id(id_solicitacao: int) -> Optional[dict]:
+    """
+    Busca uma solicitação específica pelo ID.
+
+    Args:
+        id_solicitacao: ID da solicitação
+
+    Returns:
+        Dicionário com dados da solicitação ou None se não encontrada
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(OBTER_POR_ID, (id_solicitacao,))
+        row = cursor.fetchone()
+        return dict(row) if row else None
+
+def excluir(id_solicitacao: int) -> bool:
+    """
+    Exclui uma solicitação.
+
+    Args:
+        id_solicitacao: ID da solicitação a ser excluída
+
+    Returns:
+        True se exclusão foi bem-sucedida, False caso contrário
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(EXCLUIR, (id_solicitacao,))
+        return cursor.rowcount > 0
+```
+
+#### 6.1.2. Rota GET
+
+**Arquivo**: `routes/admin_solicitacoes_routes.py`
+
+```python
+from typing import Optional
+from fastapi import APIRouter, Request, status, Query
+from fastapi.responses import RedirectResponse
+
+from util.auth_decorator import requer_autenticacao
+from util.template_util import criar_templates
+from util.perfis import Perfil
+from repo import solicitacao_repo
+
+router = APIRouter(prefix="/admin/solicitacoes")
+templates = criar_templates("templates/admin/solicitacoes")
+
+@router.get("/")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def index(request: Request, usuario_logado: Optional[dict] = None):
+    """Redireciona para lista de solicitações"""
+    return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+
+@router.get("/listar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def listar(
+    request: Request,
+    filtro_status: Optional[str] = Query(None),
+    usuario_logado: Optional[dict] = None
+):
+    """Lista todas as solicitações de adoção do sistema"""
+    # Obter todas as solicitações
+    solicitacoes = solicitacao_repo.obter_todos()
+
+    # Aplicar filtro de status se especificado
+    if filtro_status and filtro_status != 'Todas':
+        solicitacoes = [s for s in solicitacoes if s['status'] == filtro_status]
+
+    # Calcular estatísticas
+    total_solicitacoes = len(solicitacao_repo.obter_todos())
+    pendentes = len([s for s in solicitacao_repo.obter_todos() if s['status'] == 'Pendente'])
+    aprovadas = len([s for s in solicitacao_repo.obter_todos() if s['status'] == 'Aprovada'])
+    rejeitadas = len([s for s in solicitacao_repo.obter_todos() if s['status'] == 'Rejeitada'])
+
+    return templates.TemplateResponse(
+        "admin/solicitacoes/listar.html",
+        {
+            "request": request,
+            "solicitacoes": solicitacoes,
+            "filtro_status": filtro_status or 'Todas',
+            "estatisticas": {
+                'total': total_solicitacoes,
+                'pendentes': pendentes,
+                'aprovadas': aprovadas,
+                'rejeitadas': rejeitadas
+            }
+        }
+    )
+```
+
+#### 6.1.3. Template
 
 **Arquivo**: `templates/admin/solicitacoes/listar.html`
 
-*Tabela com:*
-- ID Solicitação
-- Adotante (nome)
-- Animal (nome)
-- Data Solicitação
-- Status (badge colorido)
-- Ações (visualizar, aprovar, rejeitar, cancelar)
+```html
+{% extends "base_privada.html" %}
 
-*Filtros por status: Todas, Pendentes, Aprovadas, Rejeitadas*
+{% block titulo %}Gerenciar Solicitações de Adoção{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-file-earmark-text"></i> Gerenciar Solicitações de Adoção</h2>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <h6 class="card-title">Total</h6>
+                        <h3 class="mb-0">{{ estatisticas.total }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <h6 class="card-title">Pendentes</h6>
+                        <h3 class="mb-0">{{ estatisticas.pendentes }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <h6 class="card-title">Aprovadas</h6>
+                        <h3 class="mb-0">{{ estatisticas.aprovadas }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-danger">
+                    <div class="card-body">
+                        <h6 class="card-title">Rejeitadas</h6>
+                        <h3 class="mb-0">{{ estatisticas.rejeitadas }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <form method="GET" action="/admin/solicitacoes/listar" class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="filtro_status" class="form-label">Filtrar por Status</label>
+                        <select name="filtro_status" id="filtro_status" class="form-select">
+                            <option value="Todas" {% if filtro_status == 'Todas' %}selected{% endif %}>Todas</option>
+                            <option value="Pendente" {% if filtro_status == 'Pendente' %}selected{% endif %}>Pendentes</option>
+                            <option value="Aprovada" {% if filtro_status == 'Aprovada' %}selected{% endif %}>Aprovadas</option>
+                            <option value="Rejeitada" {% if filtro_status == 'Rejeitada' %}selected{% endif %}>Rejeitadas</option>
+                            <option value="Cancelada" {% if filtro_status == 'Cancelada' %}selected{% endif %}>Canceladas</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-funnel"></i> Filtrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de Solicitações -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if solicitacoes %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Adotante</th>
+                                <th scope="col">Animal</th>
+                                <th scope="col">Data Solicitação</th>
+                                <th scope="col">Status</th>
+                                <th scope="col" class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sol in solicitacoes %}
+                            <tr>
+                                <td>{{ sol.id_solicitacao }}</td>
+                                <td>
+                                    <strong>{{ sol.adotante_nome }}</strong><br>
+                                    <small class="text-muted">{{ sol.adotante_email }}</small>
+                                </td>
+                                <td>{{ sol.animal_nome }}</td>
+                                <td>{{ sol.data_solicitacao|data_hora_br }}</td>
+                                <td>
+                                    {% set status_map = {
+                                        'Pendente': 'warning',
+                                        'Aprovada': 'success',
+                                        'Rejeitada': 'danger',
+                                        'Cancelada': 'secondary'
+                                    } %}
+                                    <span class="badge bg-{{ status_map.get(sol.status, 'secondary') }}">
+                                        {{ sol.status }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="/admin/solicitacoes/visualizar/{{ sol.id_solicitacao }}"
+                                            class="btn btn-outline-info"
+                                            title="Visualizar">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        {% if sol.status == 'Pendente' %}
+                                        <button type="button" class="btn btn-outline-success"
+                                            title="Aprovar"
+                                            onclick="aprovarSolicitacao({{ sol.id_solicitacao }}, '{{ sol.adotante_nome }}', '{{ sol.animal_nome }}')">
+                                            <i class="bi bi-check-circle"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger"
+                                            title="Rejeitar"
+                                            onclick="rejeitarSolicitacao({{ sol.id_solicitacao }}, '{{ sol.adotante_nome }}', '{{ sol.animal_nome }}')">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info text-center mb-0">
+                    <i class="bi bi-info-circle"></i> Nenhuma solicitação encontrada.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Aprovar -->
+<div class="modal fade" id="modalAprovar" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formAprovar" method="POST">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Aprovar Solicitação</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="mensagemAprovar"></p>
+                    <div class="mb-3">
+                        <label for="respostaAprovar" class="form-label">Mensagem para o adotante (opcional)</label>
+                        <textarea name="resposta_abrigo" id="respostaAprovar" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Aprovar Solicitação</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Rejeitar -->
+<div class="modal fade" id="modalRejeitar" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formRejeitar" method="POST">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Rejeitar Solicitação</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="mensagemRejeitar"></p>
+                    <div class="mb-3">
+                        <label for="respostaRejeitar" class="form-label">Motivo da rejeição <span class="text-danger">*</span></label>
+                        <textarea name="resposta_abrigo" id="respostaRejeitar" class="form-control" rows="3" required></textarea>
+                        <div class="form-text">Obrigatório informar o motivo da rejeição</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Rejeitar Solicitação</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function aprovarSolicitacao(solicitacaoId, adotanteNome, animalNome) {
+        document.getElementById('mensagemAprovar').innerHTML =
+            `Aprovar a solicitação de <strong>${adotanteNome}</strong> para adotar <strong>${animalNome}</strong>?`;
+        document.getElementById('formAprovar').action = `/admin/solicitacoes/aprovar/${solicitacaoId}`;
+
+        const modal = new bootstrap.Modal(document.getElementById('modalAprovar'));
+        modal.show();
+    }
+
+    function rejeitarSolicitacao(solicitacaoId, adotanteNome, animalNome) {
+        document.getElementById('mensagemRejeitar').innerHTML =
+            `Rejeitar a solicitação de <strong>${adotanteNome}</strong> para adotar <strong>${animalNome}</strong>?`;
+        document.getElementById('formRejeitar').action = `/admin/solicitacoes/rejeitar/${solicitacaoId}`;
+        document.getElementById('respostaRejeitar').value = '';
+
+        const modal = new bootstrap.Modal(document.getElementById('modalRejeitar'));
+        modal.show();
+    }
+</script>
+{% endblock %}
+```
 
 ### 6.2. Visualizar Solicitação
 
-*Detalhes completos da solicitação + formulário de resposta*
+#### 6.2.1. Rota GET
+
+**Arquivo**: `routes/admin_solicitacoes_routes.py` (adicionar)
+
+```python
+@router.get("/visualizar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def visualizar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exibe detalhes completos de uma solicitação"""
+    solicitacao = solicitacao_repo.obter_por_id(id)
+
+    if not solicitacao:
+        informar_erro(request, "Solicitação não encontrada")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    return templates.TemplateResponse(
+        "admin/solicitacoes/visualizar.html",
+        {
+            "request": request,
+            "solicitacao": solicitacao
+        }
+    )
+```
+
+#### 6.2.2. Template
+
+**Arquivo**: `templates/admin/solicitacoes/visualizar.html`
+
+```html
+{% extends "base_privada.html" %}
+
+{% block titulo %}Detalhes da Solicitação #{{ solicitacao.id_solicitacao }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-file-earmark-text"></i> Detalhes da Solicitação #{{ solicitacao.id_solicitacao }}</h2>
+            <a href="/admin/solicitacoes/listar" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        </div>
+
+        <div class="row">
+            <!-- Informações da Solicitação -->
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informações da Solicitação</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>Data da Solicitação:</strong><br>
+                            {{ solicitacao.data_solicitacao|data_hora_br }}
+                        </div>
+                        <div class="mb-3">
+                            <strong>Status:</strong><br>
+                            {% set status_map = {
+                                'Pendente': 'warning',
+                                'Aprovada': 'success',
+                                'Rejeitada': 'danger',
+                                'Cancelada': 'secondary'
+                            } %}
+                            <span class="badge bg-{{ status_map.get(solicitacao.status, 'secondary') }}">
+                                {{ solicitacao.status }}
+                            </span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Observações do Adotante:</strong><br>
+                            {{ solicitacao.observacoes or 'Sem observações' }}
+                        </div>
+                        {% if solicitacao.resposta_abrigo %}
+                        <div class="mb-3">
+                            <strong>Resposta do Abrigo:</strong><br>
+                            {{ solicitacao.resposta_abrigo }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informações do Adotante -->
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="bi bi-person"></i> Dados do Adotante</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>Nome:</strong><br>
+                            {{ solicitacao.adotante_nome }}
+                        </div>
+                        <div class="mb-3">
+                            <strong>Email:</strong><br>
+                            {{ solicitacao.adotante_email }}
+                        </div>
+                        <div class="mb-3">
+                            <a href="/admin/adotantes/visualizar/{{ solicitacao.id_adotante }}" class="btn btn-sm btn-outline-info">
+                                <i class="bi bi-eye"></i> Ver Perfil Completo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações do Animal -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="bi bi-heart"></i> Dados do Animal</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>Nome:</strong><br>
+                            {{ solicitacao.animal_nome }}
+                        </div>
+                        <div class="mb-3">
+                            <a href="/admin/animais/visualizar/{{ solicitacao.id_animal }}" class="btn btn-sm btn-outline-success">
+                                <i class="bi bi-eye"></i> Ver Ficha Completa
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ações -->
+        {% if solicitacao.status == 'Pendente' %}
+        <div class="card shadow-sm mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-lightning"></i> Ações Disponíveis</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex gap-3">
+                    <button type="button" class="btn btn-success"
+                        onclick="aprovarSolicitacao({{ solicitacao.id_solicitacao }}, '{{ solicitacao.adotante_nome }}', '{{ solicitacao.animal_nome }}')">
+                        <i class="bi bi-check-circle"></i> Aprovar Solicitação
+                    </button>
+                    <button type="button" class="btn btn-danger"
+                        onclick="rejeitarSolicitacao({{ solicitacao.id_solicitacao }}, '{{ solicitacao.adotante_nome }}', '{{ solicitacao.animal_nome }}')">
+                        <i class="bi bi-x-circle"></i> Rejeitar Solicitação
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Incluir mesmos modais da página de listagem -->
+<!-- ... (copiar modais de aprovar e rejeitar) ... -->
+{% endblock %}
+```
 
 ### 6.3. Aprovar Solicitação
 
-**DTO**: `AprovarSolicitacaoDTO` (id_solicitacao, resposta_abrigo opcional)
+#### 6.3.1. DTO
+
+**Arquivo**: `dtos/solicitacao_dto.py`
+
+```python
+from pydantic import BaseModel, field_validator
+from typing import Optional
+from dtos.validators import validar_id_positivo, validar_texto_longo_opcional
+
+class AprovarSolicitacaoDTO(BaseModel):
+    """DTO para aprovação de solicitação"""
+    id_solicitacao: int
+    resposta_abrigo: Optional[str] = None
+
+    _validar_id = field_validator('id_solicitacao')(validar_id_positivo())
+    _validar_resposta = field_validator('resposta_abrigo')(
+        validar_texto_longo_opcional(tamanho_maximo=500)
+    )
+
+class RejeitarSolicitacaoDTO(BaseModel):
+    """DTO para rejeição de solicitação"""
+    id_solicitacao: int
+    resposta_abrigo: str
+
+    _validar_id = field_validator('id_solicitacao')(validar_id_positivo())
+    _validar_resposta = field_validator('resposta_abrigo')(
+        validar_string_obrigatoria('Motivo da rejeição', tamanho_minimo=10, tamanho_maximo=500)
+    )
+```
+
+#### 6.3.2. Rota POST
+
+**Arquivo**: `routes/admin_solicitacoes_routes.py` (adicionar)
+
+```python
+from fastapi import Form
+from pydantic import ValidationError
+from dtos.solicitacao_dto import AprovarSolicitacaoDTO, RejeitarSolicitacaoDTO
+from util.flash_messages import informar_sucesso, informar_erro
+from util.logger_config import logger
+from util.rate_limiter import RateLimiter, obter_identificador_cliente
+
+# Rate limiter
+admin_solicitacoes_limiter = RateLimiter(
+    max_tentativas=20,
+    janela_minutos=1,
+    nome="admin_solicitacoes"
+)
+
+@router.post("/aprovar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_aprovar(
+    request: Request,
+    id: int,
+    resposta_abrigo: str = Form(None),
+    usuario_logado: Optional[dict] = None
+):
+    """Aprova uma solicitação de adoção"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_solicitacoes_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se solicitação existe
+    solicitacao = solicitacao_repo.obter_por_id(id)
+    if not solicitacao:
+        informar_erro(request, "Solicitação não encontrada")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se está pendente
+    if solicitacao['status'] != 'Pendente':
+        informar_erro(request, "Esta solicitação já foi processada")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    try:
+        # Validar com DTO
+        dto = AprovarSolicitacaoDTO(
+            id_solicitacao=id,
+            resposta_abrigo=resposta_abrigo
+        )
+
+        # Atualizar status
+        resposta = dto.resposta_abrigo or "Solicitação aprovada pelo administrador do sistema."
+        solicitacao_repo.atualizar_status(id, "Aprovada", resposta)
+
+        logger.info(f"Solicitação {id} aprovada por admin {usuario_logado['id']}")
+        informar_sucesso(request, "Solicitação aprovada com sucesso!")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    except ValidationError as e:
+        logger.error(f"Erro ao aprovar solicitação {id}: {e}")
+        informar_erro(request, "Erro ao aprovar solicitação. Verifique os dados.")
+        return RedirectResponse(f"/admin/solicitacoes/visualizar/{id}", status_code=status.HTTP_303_SEE_OTHER)
+```
 
 ### 6.4. Rejeitar Solicitação
 
-**DTO**: `RejeitarSolicitacaoDTO` (id_solicitacao, resposta_abrigo obrigatório)
+#### 6.4.1. Rota POST
+
+**Arquivo**: `routes/admin_solicitacoes_routes.py` (adicionar)
+
+```python
+@router.post("/rejeitar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_rejeitar(
+    request: Request,
+    id: int,
+    resposta_abrigo: str = Form(...),
+    usuario_logado: Optional[dict] = None
+):
+    """Rejeita uma solicitação de adoção"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_solicitacoes_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se solicitação existe
+    solicitacao = solicitacao_repo.obter_por_id(id)
+    if not solicitacao:
+        informar_erro(request, "Solicitação não encontrada")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se está pendente
+    if solicitacao['status'] != 'Pendente':
+        informar_erro(request, "Esta solicitação já foi processada")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    try:
+        # Validar com DTO (motivo é obrigatório)
+        dto = RejeitarSolicitacaoDTO(
+            id_solicitacao=id,
+            resposta_abrigo=resposta_abrigo
+        )
+
+        # Atualizar status
+        solicitacao_repo.atualizar_status(id, "Rejeitada", dto.resposta_abrigo)
+
+        logger.info(f"Solicitação {id} rejeitada por admin {usuario_logado['id']}")
+        informar_sucesso(request, "Solicitação rejeitada.")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    except ValidationError as e:
+        logger.error(f"Erro ao rejeitar solicitação {id}: {e}")
+        informar_erro(request, "Erro ao rejeitar solicitação. É obrigatório informar o motivo.")
+        return RedirectResponse(f"/admin/solicitacoes/visualizar/{id}", status_code=status.HTTP_303_SEE_OTHER)
+```
+
+### 6.5. Cancelar Solicitação
+
+#### 6.5.1. Rota POST
+
+**Arquivo**: `routes/admin_solicitacoes_routes.py` (adicionar)
+
+```python
+@router.post("/cancelar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_cancelar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Cancela uma solicitação de adoção"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_solicitacoes_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se solicitação existe
+    solicitacao = solicitacao_repo.obter_por_id(id)
+    if not solicitacao:
+        informar_erro(request, "Solicitação não encontrada")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Cancelar
+    solicitacao_repo.atualizar_status(id, "Cancelada", "Cancelada pelo administrador do sistema")
+
+    logger.info(f"Solicitação {id} cancelada por admin {usuario_logado['id']}")
+    informar_sucesso(request, "Solicitação cancelada com sucesso!")
+    return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+```
 
 ---
 
 ## 7. Gerenciar Visitas
 
-Permite ao administrador visualizar, agendar, reagendar e cancelar visitas.
+Permite ao administrador visualizar, agendar, reagendar e cancelar visitas agendadas entre adotantes e abrigos.
 
 ### 7.1. Listar Visitas
 
-*Tabela com adotante, animal, abrigo, data agendada, status*
+#### 7.1.1. Método no Repositório
+
+Adicionar métodos em `repo/visita_repo.py`:
+
+```python
+def obter_todos() -> List[dict]:
+    """
+    Lista todas as visitas do sistema com informações completas.
+
+    Returns:
+        Lista de dicionários com dados das visitas
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        # SQL para obter todas as visitas com dados de adotante e abrigo
+        sql = """
+        SELECT
+            v.*,
+            u.nome as adotante_nome,
+            u.telefone as adotante_telefone,
+            ab.responsavel as abrigo_nome
+        FROM visita v
+        INNER JOIN usuario u ON v.id_adotante = u.id
+        INNER JOIN abrigo ab ON v.id_abrigo = ab.id_abrigo
+        ORDER BY v.data_agendada DESC
+        """
+        cursor.execute(sql)
+        return [dict(row) for row in cursor.fetchall()]
+
+def obter_por_id(id_visita: int) -> Optional[dict]:
+    """
+    Busca uma visita específica pelo ID.
+
+    Args:
+        id_visita: ID da visita
+
+    Returns:
+        Dicionário com dados da visita ou None se não encontrada
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        sql = """
+        SELECT
+            v.*,
+            u.nome as adotante_nome,
+            u.telefone as adotante_telefone,
+            u.email as adotante_email,
+            ab.responsavel as abrigo_nome
+        FROM visita v
+        INNER JOIN usuario u ON v.id_adotante = u.id
+        INNER JOIN abrigo ab ON v.id_abrigo = ab.id_abrigo
+        WHERE v.id_visita = ?
+        """
+        cursor.execute(sql, (id_visita,))
+        row = cursor.fetchone()
+        return dict(row) if row else None
+
+def excluir(id_visita: int) -> bool:
+    """
+    Exclui uma visita.
+
+    Args:
+        id_visita: ID da visita a ser excluída
+
+    Returns:
+        True se exclusão foi bem-sucedida, False caso contrário
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM visita WHERE id_visita = ?", (id_visita,))
+        return cursor.rowcount > 0
+```
+
+#### 7.1.2. Rota GET
+
+**Arquivo**: `routes/admin_visitas_routes.py`
+
+```python
+from typing import Optional
+from fastapi import APIRouter, Request, status, Query
+from fastapi.responses import RedirectResponse
+
+from util.auth_decorator import requer_autenticacao
+from util.template_util import criar_templates
+from util.perfis import Perfil
+from repo import visita_repo
+
+router = APIRouter(prefix="/admin/visitas")
+templates = criar_templates("templates/admin/visitas")
+
+@router.get("/")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def index(request: Request, usuario_logado: Optional[dict] = None):
+    """Redireciona para lista de visitas"""
+    return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+
+@router.get("/listar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def listar(
+    request: Request,
+    filtro_status: Optional[str] = Query(None),
+    usuario_logado: Optional[dict] = None
+):
+    """Lista todas as visitas agendadas do sistema"""
+    # Obter todas as visitas
+    visitas = visita_repo.obter_todos()
+
+    # Aplicar filtro de status se especificado
+    if filtro_status and filtro_status != 'Todas':
+        visitas = [v for v in visitas if v['status'] == filtro_status]
+
+    # Calcular estatísticas
+    todas_visitas = visita_repo.obter_todos()
+    total_visitas = len(todas_visitas)
+    agendadas = len([v for v in todas_visitas if v['status'] == 'Agendada'])
+    realizadas = len([v for v in todas_visitas if v['status'] == 'Realizada'])
+    canceladas = len([v for v in todas_visitas if v['status'] == 'Cancelada'])
+
+    return templates.TemplateResponse(
+        "admin/visitas/listar.html",
+        {
+            "request": request,
+            "visitas": visitas,
+            "filtro_status": filtro_status or 'Todas',
+            "estatisticas": {
+                'total': total_visitas,
+                'agendadas': agendadas,
+                'realizadas': realizadas,
+                'canceladas': canceladas
+            }
+        }
+    )
+```
+
+#### 7.1.3. Template
+
+**Arquivo**: `templates/admin/visitas/listar.html`
+
+```html
+{% extends "base_privada.html" %}
+
+{% block titulo %}Gerenciar Visitas{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-calendar-check"></i> Gerenciar Visitas</h2>
+            <a href="/admin/visitas/agendar" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Agendar Nova Visita
+            </a>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <h6 class="card-title">Total</h6>
+                        <h3 class="mb-0">{{ estatisticas.total }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info">
+                    <div class="card-body">
+                        <h6 class="card-title">Agendadas</h6>
+                        <h3 class="mb-0">{{ estatisticas.agendadas }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <h6 class="card-title">Realizadas</h6>
+                        <h3 class="mb-0">{{ estatisticas.realizadas }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-secondary">
+                    <div class="card-body">
+                        <h6 class="card-title">Canceladas</h6>
+                        <h3 class="mb-0">{{ estatisticas.canceladas }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <form method="GET" action="/admin/visitas/listar" class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="filtro_status" class="form-label">Filtrar por Status</label>
+                        <select name="filtro_status" id="filtro_status" class="form-select">
+                            <option value="Todas" {% if filtro_status == 'Todas' %}selected{% endif %}>Todas</option>
+                            <option value="Agendada" {% if filtro_status == 'Agendada' %}selected{% endif %}>Agendadas</option>
+                            <option value="Realizada" {% if filtro_status == 'Realizada' %}selected{% endif %}>Realizadas</option>
+                            <option value="Cancelada" {% if filtro_status == 'Cancelada' %}selected{% endif %}>Canceladas</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-funnel"></i> Filtrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de Visitas -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if visitas %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Adotante</th>
+                                <th scope="col">Abrigo</th>
+                                <th scope="col">Data Agendada</th>
+                                <th scope="col">Status</th>
+                                <th scope="col" class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for visita in visitas %}
+                            <tr>
+                                <td>{{ visita.id_visita }}</td>
+                                <td>
+                                    <strong>{{ visita.adotante_nome }}</strong><br>
+                                    <small class="text-muted">{{ visita.adotante_telefone or 'Sem telefone' }}</small>
+                                </td>
+                                <td>{{ visita.abrigo_nome }}</td>
+                                <td>{{ visita.data_agendada|data_hora_br }}</td>
+                                <td>
+                                    {% set status_map = {
+                                        'Agendada': 'info',
+                                        'Realizada': 'success',
+                                        'Cancelada': 'secondary'
+                                    } %}
+                                    <span class="badge bg-{{ status_map.get(visita.status, 'secondary') }}">
+                                        {{ visita.status }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        {% if visita.status == 'Agendada' %}
+                                        <a href="/admin/visitas/reagendar/{{ visita.id_visita }}"
+                                            class="btn btn-outline-warning"
+                                            title="Reagendar">
+                                            <i class="bi bi-calendar-event"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-success"
+                                            title="Marcar como Realizada"
+                                            onclick="marcarRealizada({{ visita.id_visita }}, '{{ visita.adotante_nome }}', '{{ visita.abrigo_nome }}')">
+                                            <i class="bi bi-check-circle"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger"
+                                            title="Cancelar"
+                                            onclick="cancelarVisita({{ visita.id_visita }}, '{{ visita.adotante_nome }}', '{{ visita.abrigo_nome }}')">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info text-center mb-0">
+                    <i class="bi bi-info-circle"></i> Nenhuma visita encontrada.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function marcarRealizada(visitaId, adotanteNome, abrigoNome) {
+        const detalhes = `
+        <div class="card bg-light">
+            <div class="card-body">
+                <p><strong>Adotante:</strong> ${adotanteNome}</p>
+                <p class="mb-0"><strong>Abrigo:</strong> ${abrigoNome}</p>
+            </div>
+        </div>
+        `;
+
+        abrirModalConfirmacao({
+            url: `/admin/visitas/marcar-realizada/${visitaId}`,
+            mensagem: 'Marcar esta visita como realizada?',
+            detalhes: detalhes
+        });
+    }
+
+    function cancelarVisita(visitaId, adotanteNome, abrigoNome) {
+        const detalhes = `
+        <div class="card bg-light">
+            <div class="card-body">
+                <p><strong>Adotante:</strong> ${adotanteNome}</p>
+                <p class="mb-0"><strong>Abrigo:</strong> ${abrigoNome}</p>
+            </div>
+        </div>
+        `;
+
+        abrirModalConfirmacao({
+            url: `/admin/visitas/cancelar/${visitaId}`,
+            mensagem: 'Tem certeza que deseja cancelar esta visita?',
+            detalhes: detalhes
+        });
+    }
+</script>
+{% endblock %}
+```
 
 ### 7.2. Agendar Visita
 
-*Formulário com seleção de adotante, animal e data/hora*
+#### 7.2.1. DTO
+
+**Arquivo**: `dtos/visita_dto.py`
+
+```python
+from pydantic import BaseModel, field_validator
+from typing import Optional
+from datetime import datetime
+from dtos.validators import (
+    validar_id_positivo,
+    validar_texto_longo_opcional,
+    validar_data_hora_futura
+)
+
+class AgendarVisitaDTO(BaseModel):
+    """DTO para agendamento de visita"""
+    id_adotante: int
+    id_abrigo: int
+    data_agendada: str  # Formato: YYYY-MM-DD HH:MM
+    observacoes: Optional[str] = None
+
+    _validar_id_adotante = field_validator('id_adotante')(validar_id_positivo())
+    _validar_id_abrigo = field_validator('id_abrigo')(validar_id_positivo())
+    _validar_data_agendada = field_validator('data_agendada')(validar_data_hora_futura())
+    _validar_observacoes = field_validator('observacoes')(
+        validar_texto_longo_opcional(tamanho_maximo=500)
+    )
+
+class ReagendarVisitaDTO(BaseModel):
+    """DTO para reagendamento de visita"""
+    id_visita: int
+    data_agendada: str  # Formato: YYYY-MM-DD HH:MM
+
+    _validar_id = field_validator('id_visita')(validar_id_positivo())
+    _validar_data_agendada = field_validator('data_agendada')(validar_data_hora_futura())
+```
+
+**Adicionar validador em `dtos/validators.py`**:
+
+```python
+from datetime import datetime
+
+def validar_data_hora_futura():
+    """Valida se a data/hora é futura"""
+    def validator(cls, v: str) -> str:
+        if not v:
+            raise ValueError("Data e hora são obrigatórias")
+
+        try:
+            # Tentar formato com hora
+            dt = datetime.strptime(v, '%Y-%m-%d %H:%M')
+        except ValueError:
+            raise ValueError("Data e hora devem estar no formato YYYY-MM-DD HH:MM")
+
+        # Verificar se é futura
+        if dt <= datetime.now():
+            raise ValueError("Data e hora devem ser futuras")
+
+        return v
+    return validator
+```
+
+#### 7.2.2. Rota GET
+
+**Arquivo**: `routes/admin_visitas_routes.py` (adicionar)
+
+```python
+from repo import adotante_repo, abrigo_repo, usuario_repo
+
+@router.get("/agendar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_agendar(request: Request, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de agendamento de visita"""
+    # Obter adotantes (usuários com perfil ADOTANTE)
+    usuarios = usuario_repo.obter_todos()
+    adotantes = [(u.id, u.nome) for u in usuarios if u.perfil == Perfil.ADOTANTE.value]
+
+    # Obter abrigos
+    abrigos = abrigo_repo.obter_todos()
+    abrigos_list = [(a.id_abrigo, a.responsavel) for a in abrigos]
+
+    # Converter para dict para os selects
+    adotantes_dict = {str(id): nome for id, nome in adotantes}
+    abrigos_dict = {str(id): nome for id, nome in abrigos_list}
+
+    return templates.TemplateResponse(
+        "admin/visitas/agendar.html",
+        {
+            "request": request,
+            "adotantes": adotantes_dict,
+            "abrigos": abrigos_dict
+        }
+    )
+```
+
+#### 7.2.3. Template
+
+**Arquivo**: `templates/admin/visitas/agendar.html`
+
+```html
+{% extends "base_privada.html" %}
+{% from "macros/form_fields.html" import field with context %}
+
+{% block titulo %}Agendar Nova Visita{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <h2 class="mb-0"><i class="bi bi-calendar-plus"></i> Agendar Nova Visita</h2>
+        </div>
+
+        <div class="card shadow-sm">
+            <form method="POST" action="/admin/visitas/agendar">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-12">
+                            {% include "components/alerta_erro.html" %}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='id_adotante', label='Adotante', type='select', required=true,
+                            options=adotantes, help_text='Selecione o adotante') }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='id_abrigo', label='Abrigo', type='select', required=true,
+                            options=abrigos, help_text='Selecione o abrigo') }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="data_agendada_data" class="form-label">Data da Visita <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="data_agendada_data" required
+                                min="{{ now().strftime('%Y-%m-%d') }}">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="data_agendada_hora" class="form-label">Hora da Visita <span class="text-danger">*</span></label>
+                            <input type="time" class="form-control" id="data_agendada_hora" required>
+                        </div>
+
+                        <input type="hidden" name="data_agendada" id="data_agendada">
+
+                        <div class="col-12 mb-3">
+                            {{ field(name='observacoes', label='Observações', type='textarea', rows=3,
+                            help_text='Informações adicionais sobre a visita') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer p-4">
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary" onclick="combinarDataHora(event)">
+                            <i class="bi bi-check-circle"></i> Agendar Visita
+                        </button>
+                        <a href="/admin/visitas/listar" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function combinarDataHora(event) {
+        const data = document.getElementById('data_agendada_data').value;
+        const hora = document.getElementById('data_agendada_hora').value;
+
+        if (data && hora) {
+            document.getElementById('data_agendada').value = `${data} ${hora}`;
+        }
+    }
+</script>
+{% endblock %}
+```
+
+#### 7.2.4. Rota POST
+
+**Arquivo**: `routes/admin_visitas_routes.py` (adicionar)
+
+```python
+from fastapi import Form
+from pydantic import ValidationError
+from dtos.visita_dto import AgendarVisitaDTO, ReagendarVisitaDTO
+from model.visita_model import Visita
+from util.flash_messages import informar_sucesso, informar_erro
+from util.logger_config import logger
+from util.exceptions import FormValidationError
+from util.rate_limiter import RateLimiter, obter_identificador_cliente
+
+# Rate limiter
+admin_visitas_limiter = RateLimiter(
+    max_tentativas=20,
+    janela_minutos=1,
+    nome="admin_visitas"
+)
+
+@router.post("/agendar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_agendar(
+    request: Request,
+    id_adotante: int = Form(...),
+    id_abrigo: int = Form(...),
+    data_agendada: str = Form(...),
+    observacoes: str = Form(None),
+    usuario_logado: Optional[dict] = None
+):
+    """Agenda uma nova visita"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_visitas_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Dados do formulário para reexibição em caso de erro
+    dados_formulario = {
+        "id_adotante": id_adotante,
+        "id_abrigo": id_abrigo,
+        "data_agendada": data_agendada,
+        "observacoes": observacoes
+    }
+
+    try:
+        # Validar com DTO
+        dto = AgendarVisitaDTO(
+            id_adotante=id_adotante,
+            id_abrigo=id_abrigo,
+            data_agendada=data_agendada,
+            observacoes=observacoes
+        )
+
+        # Verificar se adotante e abrigo existem
+        adotante = adotante_repo.obter_por_id(dto.id_adotante)
+        abrigo = abrigo_repo.obter_por_id(dto.id_abrigo)
+
+        if not adotante:
+            informar_erro(request, "Adotante não encontrado")
+            return RedirectResponse("/admin/visitas/agendar", status_code=status.HTTP_303_SEE_OTHER)
+
+        if not abrigo:
+            informar_erro(request, "Abrigo não encontrado")
+            return RedirectResponse("/admin/visitas/agendar", status_code=status.HTTP_303_SEE_OTHER)
+
+        # Criar visita
+        visita = Visita(
+            id_visita=0,
+            id_adotante=dto.id_adotante,
+            id_abrigo=dto.id_abrigo,
+            data_agendada=dto.data_agendada,
+            observacoes=dto.observacoes,
+            status="Agendada"
+        )
+
+        visita_repo.inserir(visita)
+        logger.info(f"Visita agendada por admin {usuario_logado['id']}: adotante {dto.id_adotante}, abrigo {dto.id_abrigo}")
+
+        informar_sucesso(request, "Visita agendada com sucesso!")
+        return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    except ValidationError as e:
+        # Recarregar listas
+        usuarios = usuario_repo.obter_todos()
+        adotantes = [(u.id, u.nome) for u in usuarios if u.perfil == Perfil.ADOTANTE.value]
+        abrigos = abrigo_repo.obter_todos()
+        abrigos_list = [(a.id_abrigo, a.responsavel) for a in abrigos]
+
+        dados_formulario["adotantes"] = {str(id): nome for id, nome in adotantes}
+        dados_formulario["abrigos"] = {str(id): nome for id, nome in abrigos_list}
+
+        raise FormValidationError(
+            validation_error=e,
+            template_path="admin/visitas/agendar.html",
+            dados_formulario=dados_formulario,
+            campo_padrao="data_agendada"
+        )
+```
 
 ### 7.3. Reagendar Visita
 
-*Formulário para alterar data/hora*
+#### 7.3.1. Rota GET
 
-### 7.4. Cancelar Visita
+**Arquivo**: `routes/admin_visitas_routes.py` (adicionar)
 
-*Confirmação via modal*
+```python
+@router.get("/reagendar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_reagendar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de reagendamento de visita"""
+    visita = visita_repo.obter_por_id(id)
+
+    if not visita:
+        informar_erro(request, "Visita não encontrada")
+        return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    if visita['status'] != 'Agendada':
+        informar_erro(request, "Somente visitas agendadas podem ser reagendadas")
+        return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    return templates.TemplateResponse(
+        "admin/visitas/reagendar.html",
+        {
+            "request": request,
+            "visita": visita
+        }
+    )
+```
+
+#### 7.3.2. Template
+
+**Arquivo**: `templates/admin/visitas/reagendar.html`
+
+```html
+{% extends "base_privada.html" %}
+
+{% block titulo %}Reagendar Visita{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <h2 class="mb-0"><i class="bi bi-calendar-event"></i> Reagendar Visita</h2>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Informações da Visita</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Adotante:</strong> {{ visita.adotante_nome }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Abrigo:</strong> {{ visita.abrigo_nome }}
+                    </div>
+                    <div class="col-12 mt-2">
+                        <strong>Data Atual:</strong> {{ visita.data_agendada|data_hora_br }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <form method="POST" action="/admin/visitas/reagendar/{{ visita.id_visita }}">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-12">
+                            {% include "components/alerta_erro.html" %}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="nova_data" class="form-label">Nova Data <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="nova_data" required
+                                min="{{ now().strftime('%Y-%m-%d') }}">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="nova_hora" class="form-label">Nova Hora <span class="text-danger">*</span></label>
+                            <input type="time" class="form-control" id="nova_hora" required>
+                        </div>
+
+                        <input type="hidden" name="data_agendada" id="data_agendada">
+                    </div>
+                </div>
+                <div class="card-footer p-4">
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary" onclick="combinarDataHora(event)">
+                            <i class="bi bi-check-circle"></i> Reagendar
+                        </button>
+                        <a href="/admin/visitas/listar" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function combinarDataHora(event) {
+        const data = document.getElementById('nova_data').value;
+        const hora = document.getElementById('nova_hora').value;
+
+        if (data && hora) {
+            document.getElementById('data_agendada').value = `${data} ${hora}`;
+        }
+    }
+</script>
+{% endblock %}
+```
+
+#### 7.3.3. Rota POST
+
+**Arquivo**: `routes/admin_visitas_routes.py` (adicionar)
+
+```python
+@router.post("/reagendar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_reagendar(
+    request: Request,
+    id: int,
+    data_agendada: str = Form(...),
+    usuario_logado: Optional[dict] = None
+):
+    """Reagenda uma visita"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_visitas_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se visita existe
+    visita = visita_repo.obter_por_id(id)
+    if not visita:
+        informar_erro(request, "Visita não encontrada")
+        return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    if visita['status'] != 'Agendada':
+        informar_erro(request, "Somente visitas agendadas podem ser reagendadas")
+        return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    try:
+        # Validar com DTO
+        dto = ReagendarVisitaDTO(
+            id_visita=id,
+            data_agendada=data_agendada
+        )
+
+        # Reagendar
+        visita_repo.reagendar(id, dto.data_agendada)
+        logger.info(f"Visita {id} reagendada por admin {usuario_logado['id']}")
+
+        informar_sucesso(request, "Visita reagendada com sucesso!")
+        return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    except ValidationError as e:
+        logger.error(f"Erro ao reagendar visita {id}: {e}")
+        informar_erro(request, "Erro ao reagendar. A data deve ser futura.")
+        return RedirectResponse(f"/admin/visitas/reagendar/{id}", status_code=status.HTTP_303_SEE_OTHER)
+```
+
+### 7.4. Marcar como Realizada
+
+#### 7.4.1. Rota POST
+
+**Arquivo**: `routes/admin_visitas_routes.py` (adicionar)
+
+```python
+@router.post("/marcar-realizada/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_marcar_realizada(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Marca uma visita como realizada"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_visitas_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se visita existe
+    visita = visita_repo.obter_por_id(id)
+    if not visita:
+        informar_erro(request, "Visita não encontrada")
+        return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Marcar como realizada
+    visita_repo.atualizar_status(id, "Realizada")
+    logger.info(f"Visita {id} marcada como realizada por admin {usuario_logado['id']}")
+
+    informar_sucesso(request, "Visita marcada como realizada!")
+    return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+```
+
+### 7.5. Cancelar Visita
+
+#### 7.5.1. Rota POST
+
+**Arquivo**: `routes/admin_visitas_routes.py` (adicionar)
+
+```python
+@router.post("/cancelar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_cancelar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Cancela uma visita"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_visitas_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se visita existe
+    visita = visita_repo.obter_por_id(id)
+    if not visita:
+        informar_erro(request, "Visita não encontrada")
+        return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Cancelar
+    visita_repo.atualizar_status(id, "Cancelada")
+    logger.info(f"Visita {id} cancelada por admin {usuario_logado['id']}")
+
+    informar_sucesso(request, "Visita cancelada com sucesso!")
+    return RedirectResponse("/admin/visitas/listar", status_code=status.HTTP_303_SEE_OTHER)
+```
 
 ---
 
