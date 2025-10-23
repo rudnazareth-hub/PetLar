@@ -116,3 +116,35 @@ async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None)
             "especies": especies_dict
         }
     )
+
+@router.post("/excluir/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_excluir(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exclui uma raça"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_racas_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    raca = raca_repo.obter_por_id(id)
+
+    if not raca:
+        informar_erro(request, "Raça não encontrada")
+        return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se existem raças vinculadas
+    racas_vinculadas = raca_repo.obter_por_racas(id)
+    if racas_vinculadas:
+        informar_erro(
+            request,
+            f"Não é possível excluir esta raça pois existem {len(racas_vinculadas)} raça(s) vinculada(s) a ela."
+        )
+        return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    raca_repo.excluir(id)
+    logger.info(f"Raça {id} ({raca.nome}) excluída por admin {usuario_logado['id']}")
+    informar_sucesso(request, "Raça excluída com sucesso!")
+    return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)

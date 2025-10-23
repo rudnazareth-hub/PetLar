@@ -157,12 +157,12 @@ async def post_excluir(request: Request, id: int, usuario_logado: Optional[dict]
         informar_erro(request, "Espécie não encontrada")
         return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
 
-    # Verificar se existem raças vinculadas
-    racas_vinculadas = raca_repo.obter_por_especie(id)
-    if racas_vinculadas:
+    # Verificar se existem espécies vinculadas
+    especies_vinculadas = especie_repo.obter_por_especie(id)
+    if especies_vinculadas:
         informar_erro(
             request,
-            f"Não é possível excluir esta espécie pois existem {len(racas_vinculadas)} raça(s) vinculada(s) a ela."
+            f"Não é possível excluir esta espécie pois existem {len(especies_vinculadas)} espécie(s) vinculada(s) a ela."
         )
         return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
 
