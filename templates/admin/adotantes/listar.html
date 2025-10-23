@@ -1,0 +1,105 @@
+{% extends "base_privada.html" %}
+
+{% block titulo %}Gerenciar Adotantes{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-people"></i> Gerenciar Adotantes</h2>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if adotantes %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Telefone</th>
+                                <th scope="col">Renda Média</th>
+                                <th scope="col">Tem Filhos</th>
+                                <th scope="col">Estado de Saúde</th>
+                                <th scope="col" class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for adotante in adotantes %}
+                            <tr>
+                                <td>{{ adotante.id_adotante }}</td>
+                                <td><strong>{{ adotante.nome }}</strong></td>
+                                <td>{{ adotante.email }}</td>
+                                <td>{{ adotante.telefone or '-' }}</td>
+                                <td>R$ {{ "{:,.2f}".format(adotante.renda_media) if adotante.renda_media else '-' }}</td>
+                                <td>
+                                    {% if adotante.tem_filhos %}
+                                        <span class="badge bg-info">Sim</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Não</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ adotante.estado_saude or '-' }}</td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="/admin/adotantes/visualizar/{{ adotante.id_adotante }}"
+                                            class="btn btn-outline-info"
+                                            title="Visualizar"
+                                            aria-label="Visualizar adotante {{ adotante.nome }}">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/admin/adotantes/editar/{{ adotante.id_adotante }}"
+                                            class="btn btn-outline-primary"
+                                            title="Editar"
+                                            aria-label="Editar adotante {{ adotante.nome }}">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                            title="Excluir"
+                                            aria-label="Excluir adotante {{ adotante.nome }}"
+                                            onclick="excluirAdotante({{ adotante.id_adotante }}, '{{ adotante.nome|replace("'", "\\'") }}')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info text-center mb-0">
+                    <i class="bi bi-info-circle"></i> Nenhum adotante cadastrado.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function excluirAdotante(adotanteId, adotanteNome) {
+        const detalhes = `
+        <div class="card bg-light">
+            <div class="card-body">
+                <p class="mb-0"><strong>Adotante:</strong> ${adotanteNome}</p>
+                <p class="text-warning mt-2 mb-0">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <small>O usuário e todas as solicitações relacionadas serão excluídos.</small>
+                </p>
+            </div>
+        </div>
+        `;
+
+        abrirModalConfirmacao({
+            url: `/admin/adotantes/excluir/${adotanteId}`,
+            mensagem: 'Tem certeza que deseja excluir este adotante?',
+            detalhes: detalhes
+        });
+    }
+</script>
+{% endblock %}
