@@ -134,7 +134,7 @@ async def post_aprovar(
         informar_erro(request, "Erro ao aprovar solicitação. Verifique os dados.")
         return RedirectResponse(f"/admin/solicitacoes/visualizar/{id}", status_code=status.HTTP_303_SEE_OTHER)
     
-    @router.post("/rejeitar/{id}")
+@router.post("/rejeitar/{id}")
 @requer_autenticacao([Perfil.ADMIN.value])
 async def post_rejeitar(
     request: Request,
@@ -180,3 +180,28 @@ async def post_rejeitar(
         logger.error(f"Erro ao rejeitar solicitação {id}: {e}")
         informar_erro(request, "Erro ao rejeitar solicitação. É obrigatório informar o motivo.")
         return RedirectResponse(f"/admin/solicitacoes/visualizar/{id}", status_code=status.HTTP_303_SEE_OTHER)
+
+@router.post("/cancelar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_cancelar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Cancela uma solicitação de adoção"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_solicitacoes_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se solicitação existe
+    solicitacao = solicitacao_repo.obter_por_id(id)
+    if not solicitacao:
+        informar_erro(request, "Solicitação não encontrada")
+        return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Cancelar
+    solicitacao_repo.atualizar_status(id, "Cancelada", "Cancelada pelo administrador do sistema")
+
+    logger.info(f"Solicitação {id} cancelada por admin {usuario_logado['id']}")
+    informar_sucesso(request, "Solicitação cancelada com sucesso!")
+    return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
