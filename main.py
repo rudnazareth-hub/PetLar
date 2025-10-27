@@ -22,14 +22,16 @@ from util.exception_handlers import (
 from util.exceptions import FormValidationError
 
 # Repositórios
-from repo import usuario_repo, configuracao_repo, tarefa_repo, indices_repo
+from repo import usuario_repo, configuracao_repo, tarefa_repo, chamado_repo, indices_repo
 
 # Rotas
 from routes.auth_routes import router as auth_router
 from routes.tarefas_routes import router as tarefas_router
+from routes.chamados_routes import router as chamados_router
 from routes.admin_usuarios_routes import router as admin_usuarios_router
 from routes.admin_configuracoes_routes import router as admin_config_router
 from routes.admin_backups_routes import router as admin_backups_router
+from routes.admin_chamados_routes import router as admin_chamados_router
 from routes.usuario_routes import router as usuario_router
 from routes.public_routes import router as public_router
 from routes.examples_routes import router as examples_router
@@ -73,6 +75,9 @@ try:
     tarefa_repo.criar_tabela()
     logger.info("Tabela 'tarefa' criada/verificada")
 
+    chamado_repo.criar_tabela()
+    logger.info("Tabela 'chamado' criada/verificada")
+
     # Criar índices para otimização de performance
     indices_repo.criar_indices()
 
@@ -94,6 +99,9 @@ logger.info("Router de autenticação incluído")
 app.include_router(tarefas_router, tags=["Tarefas"])
 logger.info("Router de tarefas incluído")
 
+app.include_router(chamados_router, tags=["Chamados"])
+logger.info("Router de chamados incluído")
+
 app.include_router(admin_usuarios_router, tags=["Admin - Usuários"])
 logger.info("Router admin de usuários incluído")
 
@@ -102,6 +110,9 @@ logger.info("Router admin de configurações incluído")
 
 app.include_router(admin_backups_router, tags=["Admin - Backups"])
 logger.info("Router admin de backups incluído")
+
+app.include_router(admin_chamados_router, tags=["Admin - Chamados"])
+logger.info("Router admin de chamados incluído")
 
 app.include_router(usuario_router, tags=["Usuário"])
 logger.info("Router de usuário incluído")
