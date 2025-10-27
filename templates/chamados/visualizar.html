@@ -1,0 +1,144 @@
+{% extends 'base_privada.html' %}
+
+{% block titulo %}Detalhes do Chamado #{{ chamado.id }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <!-- Cabeçalho -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="bi bi-ticket-detailed"></i> Chamado #{{ chamado.id }}</h2>
+                <a href="/chamados/listar" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+            </div>
+
+            <!-- Card Principal -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{ chamado.titulo }}</h5>
+                        <div class="d-flex gap-2">
+                            <!-- Badge de Status -->
+                            {% if chamado.status == 'Aberto' %}
+                            <span class="badge bg-light text-dark">{{ chamado.status }}</span>
+                            {% elif chamado.status == 'Em Análise' %}
+                            <span class="badge bg-info">{{ chamado.status }}</span>
+                            {% elif chamado.status == 'Resolvido' %}
+                            <span class="badge bg-success">{{ chamado.status }}</span>
+                            {% elif chamado.status == 'Fechado' %}
+                            <span class="badge bg-secondary">{{ chamado.status }}</span>
+                            {% endif %}
+                            <!-- Badge de Prioridade -->
+                            {% if chamado.prioridade == 'Urgente' %}
+                            <span class="badge bg-danger">{{ chamado.prioridade }}</span>
+                            {% elif chamado.prioridade == 'Alta' %}
+                            <span class="badge bg-warning text-dark">{{ chamado.prioridade }}</span>
+                            {% elif chamado.prioridade == 'Média' %}
+                            <span class="badge bg-info">{{ chamado.prioridade }}</span>
+                            {% elif chamado.prioridade == 'Baixa' %}
+                            <span class="badge bg-light text-dark">{{ chamado.prioridade }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <h6 class="text-muted mb-3">Descrição:</h6>
+                    <p class="mb-4" style="white-space: pre-wrap;">{{ chamado.descricao }}</p>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted d-block mb-1">
+                                <i class="bi bi-calendar3"></i> Data de Abertura
+                            </small>
+                            <strong>{{ chamado.data_abertura.strftime('%d/%m/%Y às %H:%M') }}</strong>
+                        </div>
+                        {% if chamado.data_fechamento %}
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted d-block mb-1">
+                                <i class="bi bi-check2-circle"></i> Data de Fechamento
+                            </small>
+                            <strong>{{ chamado.data_fechamento.strftime('%d/%m/%Y às %H:%M') }}</strong>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resposta do Administrador -->
+            {% if chamado.resposta_admin %}
+            <div class="card shadow-sm border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-reply-fill"></i> Resposta da Equipe
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <p class="mb-0" style="white-space: pre-wrap;">{{ chamado.resposta_admin }}</p>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-info" role="alert">
+                <i class="bi bi-hourglass-split"></i>
+                <strong>Aguardando Resposta</strong>
+                <p class="mb-0 mt-2">Sua solicitação está em análise. Em breve nossa equipe entrará em contato.</p>
+            </div>
+            {% endif %}
+
+            <!-- Timeline (se houver resposta) -->
+            {% if chamado.resposta_admin %}
+            <div class="card shadow-sm mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="bi bi-clock-history"></i> Histórico</h6>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <!-- Abertura -->
+                        <div class="d-flex mb-3">
+                            <div class="me-3">
+                                <div class="bg-primary rounded-circle p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-plus-circle text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Chamado Aberto</h6>
+                                <small class="text-muted">{{ chamado.data_abertura.strftime('%d/%m/%Y às %H:%M') }}</small>
+                            </div>
+                        </div>
+                        <!-- Resposta -->
+                        <div class="d-flex mb-3">
+                            <div class="me-3">
+                                <div class="bg-success rounded-circle p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-reply-fill text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Resposta Recebida</h6>
+                                <small class="text-muted">Status alterado para: {{ chamado.status }}</small>
+                            </div>
+                        </div>
+                        <!-- Fechamento -->
+                        {% if chamado.data_fechamento %}
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <div class="bg-secondary rounded-circle p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-check-circle text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Chamado Fechado</h6>
+                                <small class="text-muted">{{ chamado.data_fechamento.strftime('%d/%m/%Y às %H:%M') }}</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
