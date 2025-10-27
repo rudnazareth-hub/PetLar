@@ -1,0 +1,133 @@
+{% extends "base_privada.html" %}
+{% from "macros/form_fields.html" import field with context %}
+
+{% block titulo %}Responder Chamado #{{ chamado.id }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <!-- Cabeçalho -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="bi bi-reply-fill"></i> Responder Chamado #{{ chamado.id }}</h2>
+                <a href="/admin/chamados/listar" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+            </div>
+
+            <!-- Informações do Chamado -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{ chamado.titulo }}</h5>
+                        <div class="d-flex gap-2">
+                            <!-- Badge de Status -->
+                            {% if chamado.status == 'Aberto' %}
+                            <span class="badge bg-light text-dark">{{ chamado.status }}</span>
+                            {% elif chamado.status == 'Em Análise' %}
+                            <span class="badge bg-info">{{ chamado.status }}</span>
+                            {% elif chamado.status == 'Resolvido' %}
+                            <span class="badge bg-success">{{ chamado.status }}</span>
+                            {% elif chamado.status == 'Fechado' %}
+                            <span class="badge bg-secondary">{{ chamado.status }}</span>
+                            {% endif %}
+                            <!-- Badge de Prioridade -->
+                            {% if chamado.prioridade == 'Urgente' %}
+                            <span class="badge bg-danger">{{ chamado.prioridade }}</span>
+                            {% elif chamado.prioridade == 'Alta' %}
+                            <span class="badge bg-warning text-dark">{{ chamado.prioridade }}</span>
+                            {% elif chamado.prioridade == 'Média' %}
+                            <span class="badge bg-info">{{ chamado.prioridade }}</span>
+                            {% elif chamado.prioridade == 'Baixa' %}
+                            <span class="badge bg-light text-dark">{{ chamado.prioridade }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <small class="text-muted d-block mb-1">
+                                <i class="bi bi-person"></i> Usuário
+                            </small>
+                            <strong>{{ chamado.usuario_nome }}</strong>
+                            <br>
+                            <small class="text-muted">{{ chamado.usuario_email }}</small>
+                        </div>
+                        <div class="col-md-6">
+                            <small class="text-muted d-block mb-1">
+                                <i class="bi bi-calendar3"></i> Data de Abertura
+                            </small>
+                            <strong>{{ chamado.data_abertura.strftime('%d/%m/%Y às %H:%M') }}</strong>
+                        </div>
+                    </div>
+                    <hr>
+                    <h6 class="text-muted mb-2">Descrição do Problema:</h6>
+                    <p class="mb-0" style="white-space: pre-wrap;">{{ chamado.descricao }}</p>
+                </div>
+            </div>
+
+            <!-- Resposta Anterior (se existir) -->
+            {% if chamado.resposta_admin %}
+            <div class="alert alert-warning" role="alert">
+                <h6><i class="bi bi-exclamation-triangle"></i> Resposta Anterior</h6>
+                <p class="mb-0" style="white-space: pre-wrap;">{{ chamado.resposta_admin }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Formulário de Resposta -->
+            <div class="card shadow-sm">
+                <form method="post" action="/admin/chamados/{{ chamado.id }}/responder">
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-12">
+                                {% include "components/alerta_erro.html" %}
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                {{ field(
+                                    name='resposta',
+                                    label='Sua Resposta',
+                                    type='textarea',
+                                    rows=8,
+                                    required=true,
+                                    placeholder='Digite aqui sua resposta ao usuário. Seja claro e objetivo.',
+                                    help='Forneça uma resposta detalhada (10-2000 caracteres)',
+                                    attributes={'maxlength': 2000}
+                                ) }}
+                            </div>
+
+                            <div class="col-12">
+                                {{ field(
+                                    name='status_chamado',
+                                    label='Novo Status',
+                                    type='select',
+                                    required=true,
+                                    options=[
+                                        {'value': 'Aberto', 'label': 'Aberto - Aguardando análise'},
+                                        {'value': 'Em Análise', 'label': 'Em Análise - Investigando o problema'},
+                                        {'value': 'Resolvido', 'label': 'Resolvido - Problema solucionado'},
+                                        {'value': 'Fechado', 'label': 'Fechado - Encerrado'}
+                                    ],
+                                    help='Defina o novo status do chamado após sua resposta',
+                                    wrapper_class='mb-0'
+                                ) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer p-4">
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-send"></i> Enviar Resposta
+                            </button>
+                            <a href="/admin/chamados/listar" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
