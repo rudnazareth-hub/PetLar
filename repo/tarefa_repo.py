@@ -87,3 +87,22 @@ def excluir(id: int) -> bool:
         cursor = conn.cursor()
         cursor.execute(EXCLUIR, (id,))
         return cursor.rowcount > 0
+
+def contar_pendentes_por_usuario(usuario_id: int) -> int:
+    """
+    Conta quantas tarefas não concluídas um usuário possui.
+
+    Args:
+        usuario_id: ID do usuário
+
+    Returns:
+        Número de tarefas com concluida = 0
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT COUNT(*) as total FROM tarefa WHERE usuario_id = ? AND concluida = 0",
+            (usuario_id,)
+        )
+        row = cursor.fetchone()
+        return row["total"] if row else 0

@@ -119,7 +119,9 @@
                         Gerencie chamados de suporte dos usuários
                     </p>
                     {% if chamados_pendentes > 0 %}
-                    <span class="badge bg-danger mb-2">{{ chamados_pendentes }} pendente(s)</span>
+                    <div class="mb-3">
+                        <span class="badge bg-danger">{{ chamados_pendentes }} pendente(s)</span>
+                    </div>
                     {% endif %}
                     <a href="/admin/chamados/listar" class="btn btn-danger">
                         <i class="bi bi-arrow-right-circle"></i> Acessar
@@ -133,12 +135,17 @@
             <div class="card h-100 shadow-sm shadow-hover">
                 <div class="card-body text-center">
                     <div class="mb-3">
-                        <i class="bi bi-people text-success display-3"></i>
+                        <i class="bi bi-list-task text-success display-3"></i>
                     </div>
                     <h5 class="card-title">Minhas Tarefas</h5>
                     <p class="card-text text-muted">
                         Gerencie suas tarefas pendentes e concluídas
                     </p>
+                    {% if tarefas_pendentes > 0 %}
+                    <div class="mb-3">
+                        <span class="badge bg-success">{{ tarefas_pendentes }} pendente(s)</span>
+                    </div>
+                    {% endif %}
                     <a href="/tarefas/listar" class="btn btn-success">
                         <i class="bi bi-arrow-right-circle"></i> Acessar
                     </a>
@@ -158,7 +165,9 @@
                         Abra chamados de suporte e acompanhe suas solicitações
                     </p>
                     {% if chamados_abertos > 0 %}
-                    <span class="badge bg-danger mb-2">{{ chamados_abertos }} em aberto</span>
+                    <div class="mb-3">
+                        <span class="badge bg-danger">{{ chamados_abertos }} em aberto</span>
+                    </div>
                     {% endif %}
                     <a href="/chamados/listar" class="btn btn-danger">
                         <i class="bi bi-arrow-right-circle"></i> Acessar
