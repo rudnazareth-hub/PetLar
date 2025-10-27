@@ -35,7 +35,7 @@
                             <div class="col-12 mb-3">
                                 {{ field(name='titulo', label='Título', type='text', required=true,
                                 placeholder='Descreva brevemente o problema ou dúvida',
-                                help='Título curto e objetivo (10-200 caracteres)',
+                                help_text='Título curto e objetivo (10-200 caracteres)',
                                 attributes={'maxlength': 200}) }}
                             </div>
 
@@ -43,7 +43,7 @@
                                 {{ field(name='descricao', label='Descrição Detalhada', type='textarea', rows=6,
                                 required=true,
                                 placeholder='Descreva detalhadamente seu problema, incluindo passos para reproduzir, mensagens de erro, etc.',
-                                help='Forneça o máximo de detalhes possível (20-2000 caracteres)',
+                                help_text='Forneça o máximo de detalhes possível (20-2000 caracteres)',
                                 attributes={'maxlength': 2000}) }}
                             </div>
 
@@ -59,7 +59,7 @@
                                         {'value': 'Alta', 'label': 'Alta - Importante'},
                                         {'value': 'Urgente', 'label': 'Urgente - Crítico'}
                                     ],
-                                    help='Selecione a prioridade do seu chamado',
+                                    help_text='Selecione a prioridade do seu chamado',
                                     wrapper_class='mb-0'
                                 ) }}
                             </div>
