@@ -40,6 +40,10 @@ def _row_to_chamado(row) -> Chamado:
     Returns:
         Objeto Chamado populado
     """
+    # Verificar se os campos do JOIN existem (nem todas as queries fazem JOIN)
+    usuario_nome = row["usuario_nome"] if "usuario_nome" in row.keys() else None
+    usuario_email = row["usuario_email"] if "usuario_email" in row.keys() else None
+
     return Chamado(
         id=row["id"],
         titulo=row["titulo"],
@@ -50,8 +54,8 @@ def _row_to_chamado(row) -> Chamado:
         data_abertura=_converter_data(row["data_abertura"]),
         data_fechamento=_converter_data(row["data_fechamento"]),
         resposta_admin=row["resposta_admin"],
-        usuario_nome=row.get("usuario_nome"),  # Do JOIN com tabela usuario
-        usuario_email=row.get("usuario_email")  # Do JOIN com tabela usuario
+        usuario_nome=usuario_nome,  # Do JOIN com tabela usuario
+        usuario_email=usuario_email  # Do JOIN com tabela usuario
     )
 
 
