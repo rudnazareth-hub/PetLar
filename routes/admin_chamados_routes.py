@@ -13,8 +13,12 @@ from fastapi import APIRouter, Form, Request, status
 from fastapi.responses import RedirectResponse
 from pydantic import ValidationError
 
-from dtos.chamado_dto import ResponderChamadoDTO
-from repo import chamado_repo
+from datetime import datetime
+from dtos.chamado_dto import AlterarStatusDTO
+from dtos.chamado_interacao_dto import CriarInteracaoDTO
+from model.chamado_model import StatusChamado
+from model.chamado_interacao_model import ChamadoInteracao, TipoInteracao
+from repo import chamado_repo, chamado_interacao_repo
 from util.auth_decorator import requer_autenticacao
 from util.perfis import Perfil
 from util.template_util import criar_templates
@@ -40,16 +44,19 @@ async def listar(request: Request, usuario_logado: Optional[dict] = None):
 @router.get("/{id}/responder")
 @requer_autenticacao([Perfil.ADMIN.value])
 async def get_responder(request: Request, id: int, usuario_logado: Optional[dict] = None):
-    """Exibe formulário para responder um chamado."""
+    """Exibe formulário para responder um chamado com histórico completo."""
     chamado = chamado_repo.obter_por_id(id)
 
     if not chamado:
         informar_erro(request, "Chamado não encontrado")
         return RedirectResponse("/admin/chamados/listar", status_code=status.HTTP_303_SEE_OTHER)
 
+    # Obter histórico de interações
+    interacoes = chamado_interacao_repo.obter_por_chamado(id)
+
     return templates.TemplateResponse(
         "admin/chamados/responder.html",
-        {"request": request, "chamado": chamado}
+        {"request": request, "chamado": chamado, "interacoes": interacoes}
     )
 
 
@@ -58,11 +65,11 @@ async def get_responder(request: Request, id: int, usuario_logado: Optional[dict
 async def post_responder(
     request: Request,
     id: int,
-    resposta: str = Form(),
+    mensagem: str = Form(),
     status_chamado: str = Form(),
     usuario_logado: Optional[dict] = None
 ):
-    """Salva resposta do administrador ao chamado."""
+    """Salva resposta do administrador ao chamado e atualiza status."""
     assert usuario_logado is not None
 
     chamado = chamado_repo.obter_por_id(id)
@@ -70,33 +77,45 @@ async def post_responder(
         informar_erro(request, "Chamado não encontrado")
         return RedirectResponse("/admin/chamados/listar", status_code=status.HTTP_303_SEE_OTHER)
 
+    # Obter interações para reexibir em caso de erro
+    interacoes = chamado_interacao_repo.obter_por_chamado(id)
+
     # Armazena os dados do formulário para reexibição em caso de erro
     dados_formulario: dict = {
-        "resposta": resposta,
+        "mensagem": mensagem,
         "status_chamado": status_chamado,
-        "chamado": chamado  # type: ignore[dict-item]
+        "chamado": chamado,  # type: ignore[dict-item]
+        "interacoes": interacoes  # type: ignore[dict-item]
     }
 
     try:
-        # Validar com DTO
-        dto = ResponderChamadoDTO(
-            resposta=resposta,
-            status=status_chamado
-        )
+        # Validar mensagem e status
+        dto_mensagem = CriarInteracaoDTO(mensagem=mensagem)
+        dto_status = AlterarStatusDTO(status=status_chamado)
 
-        # Atualizar chamado
-        fechar = (dto.status == "Fechado")
+        # Criar interação do admin
+        interacao = ChamadoInteracao(
+            id=0,
+            chamado_id=id,
+            usuario_id=usuario_logado["id"],
+            mensagem=dto_mensagem.mensagem,
+            tipo=TipoInteracao.RESPOSTA_ADMIN,
+            data_interacao=datetime.now(),
+            status_resultante=dto_status.status
+        )
+        chamado_interacao_repo.inserir(interacao)
+
+        # Atualizar status do chamado
+        fechar = (dto_status.status == StatusChamado.FECHADO.value)
         sucesso = chamado_repo.atualizar_status(
             id=id,
-            status=dto.status,
-            resposta_admin=dto.resposta,
-            fechar=fechar,
-            admin_id=usuario_logado["id"]
+            status=dto_status.status,
+            fechar=fechar
         )
 
         if sucesso:
             logger.info(
-                f"Chamado {id} respondido por admin {usuario_logado['id']}, status: {dto.status}"
+                f"Chamado {id} respondido por admin {usuario_logado['id']}, status: {dto_status.status}"
             )
             informar_sucesso(request, "Resposta salva com sucesso!")
             return RedirectResponse("/admin/chamados/listar", status_code=status.HTTP_303_SEE_OTHER)
@@ -109,14 +128,14 @@ async def post_responder(
             validation_error=e,
             template_path="admin/chamados/responder.html",
             dados_formulario=dados_formulario,
-            campo_padrao="resposta",
+            campo_padrao="mensagem",
         )
 
 
 @router.post("/{id}/fechar")
 @requer_autenticacao([Perfil.ADMIN.value])
 async def fechar(request: Request, id: int, usuario_logado: Optional[dict] = None):
-    """Fecha um chamado sem adicionar resposta."""
+    """Fecha um chamado alterando apenas o status, sem adicionar mensagem."""
     assert usuario_logado is not None
 
     chamado = chamado_repo.obter_por_id(id)
@@ -126,8 +145,7 @@ async def fechar(request: Request, id: int, usuario_logado: Optional[dict] = Non
 
     sucesso = chamado_repo.atualizar_status(
         id=id,
-        status="Fechado",
-        resposta_admin=chamado.resposta_admin,  # Mantém resposta existente
+        status=StatusChamado.FECHADO.value,
         fechar=True
     )
 

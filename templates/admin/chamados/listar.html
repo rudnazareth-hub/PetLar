@@ -34,36 +34,31 @@
                                         <div class="text-truncate" style="max-width: 300px;" title="{{ chamado.titulo }}">
                                             {{ chamado.titulo }}
                                         </div>
-                                        {% if chamado.descricao %}
-                                        <small class="text-muted d-block text-truncate" style="max-width: 300px;">
-                                            {{ chamado.descricao[:80] }}{% if chamado.descricao|length > 80 %}...{% endif %}
-                                        </small>
-                                        {% endif %}
                                     </td>
                                     <td>
                                         <small class="d-block">{{ chamado.usuario_nome }}</small>
                                         <small class="text-muted">{{ chamado.usuario_email }}</small>
                                     </td>
                                     <td>
-                                        {% if chamado.status == 'Aberto' %}
-                                        <span class="badge bg-primary">{{ chamado.status }}</span>
-                                        {% elif chamado.status == 'Em Análise' %}
-                                        <span class="badge bg-info">{{ chamado.status }}</span>
-                                        {% elif chamado.status == 'Resolvido' %}
-                                        <span class="badge bg-success">{{ chamado.status }}</span>
-                                        {% elif chamado.status == 'Fechado' %}
-                                        <span class="badge bg-secondary">{{ chamado.status }}</span>
+                                        {% if chamado.status.value == 'Aberto' %}
+                                        <span class="badge bg-primary">{{ chamado.status.value }}</span>
+                                        {% elif chamado.status.value == 'Em Análise' %}
+                                        <span class="badge bg-info">{{ chamado.status.value }}</span>
+                                        {% elif chamado.status.value == 'Resolvido' %}
+                                        <span class="badge bg-success">{{ chamado.status.value }}</span>
+                                        {% elif chamado.status.value == 'Fechado' %}
+                                        <span class="badge bg-secondary">{{ chamado.status.value }}</span>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% if chamado.prioridade == 'Urgente' %}
-                                        <span class="badge bg-danger">{{ chamado.prioridade }}</span>
-                                        {% elif chamado.prioridade == 'Alta' %}
-                                        <span class="badge bg-warning text-dark">{{ chamado.prioridade }}</span>
-                                        {% elif chamado.prioridade == 'Média' %}
-                                        <span class="badge bg-info">{{ chamado.prioridade }}</span>
-                                        {% elif chamado.prioridade == 'Baixa' %}
-                                        <span class="badge bg-secondary">{{ chamado.prioridade }}</span>
+                                        {% if chamado.prioridade.value == 'Urgente' %}
+                                        <span class="badge bg-danger">{{ chamado.prioridade.value }}</span>
+                                        {% elif chamado.prioridade.value == 'Alta' %}
+                                        <span class="badge bg-warning text-dark">{{ chamado.prioridade.value }}</span>
+                                        {% elif chamado.prioridade.value == 'Média' %}
+                                        <span class="badge bg-info">{{ chamado.prioridade.value }}</span>
+                                        {% elif chamado.prioridade.value == 'Baixa' %}
+                                        <span class="badge bg-secondary">{{ chamado.prioridade.value }}</span>
                                         {% endif %}
                                     </td>
                                     <td>
@@ -77,7 +72,7 @@
                                                title="Responder chamado">
                                                 <i class="bi bi-reply"></i>
                                             </a>
-                                            {% if chamado.status != 'Fechado' %}
+                                            {% if chamado.status.value != 'Fechado' %}
                                             <button type="button"
                                                     class="btn btn-secondary"
                                                     title="Fechar chamado"
@@ -98,11 +93,11 @@
             <div class="mt-3">
                 <small class="text-muted">
                     Total: {{ chamados|length }} chamado(s)
-                    {% set pendentes = chamados|selectattr('status', 'in', ['Aberto', 'Em Análise'])|list %}
+                    {% set pendentes = chamados|selectattr('status.value', 'in', ['Aberto', 'Em Análise'])|list %}
                     {% if pendentes %}
                     | Pendentes: <strong class="text-danger">{{ pendentes|length }}</strong>
                     {% endif %}
-                    {% set resolvidos = chamados|selectattr('status', 'equalto', 'Resolvido')|list %}
+                    {% set resolvidos = chamados|selectattr('status.value', 'equalto', 'Resolvido')|list %}
                     {% if resolvidos %}
                     | Resolvidos: <strong class="text-success">{{ resolvidos|length }}</strong>
                     {% endif %}

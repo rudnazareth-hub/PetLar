@@ -7,7 +7,7 @@ seguindo o padrão de Repository com funções CRUD.
 
 from datetime import datetime
 from typing import Optional
-from model.chamado_model import Chamado
+from model.chamado_model import Chamado, StatusChamado, PrioridadeChamado
 from sql.chamado_sql import *
 from util.db_util import get_connection
 
@@ -43,35 +43,34 @@ def _row_to_chamado(row) -> Chamado:
     # Verificar se os campos do JOIN existem (nem todas as queries fazem JOIN)
     usuario_nome = row["usuario_nome"] if "usuario_nome" in row.keys() else None
     usuario_email = row["usuario_email"] if "usuario_email" in row.keys() else None
-    admin_nome = row["admin_nome"] if "admin_nome" in row.keys() else None
 
     return Chamado(
         id=row["id"],
         titulo=row["titulo"],
-        descricao=row["descricao"],
-        status=row["status"],
-        prioridade=row["prioridade"],
+        status=StatusChamado(row["status"]),
+        prioridade=PrioridadeChamado(row["prioridade"]),
         usuario_id=row["usuario_id"],
         data_abertura=_converter_data(row["data_abertura"]),
         data_fechamento=_converter_data(row["data_fechamento"]),
-        resposta_admin=row["resposta_admin"],
-        admin_id=row["admin_id"] if row["admin_id"] else None,
-        data_resposta=_converter_data(row["data_resposta"]) if row.get("data_resposta") else None,
-        usuario_nome=usuario_nome,  # Do JOIN com tabela usuario
-        usuario_email=usuario_email,  # Do JOIN com tabela usuario
-        admin_nome=admin_nome  # Do JOIN com tabela usuario (admin)
+        usuario_nome=usuario_nome,
+        usuario_email=usuario_email
     )
 
 
 def criar_tabela() -> bool:
     """
-    Cria a tabela de chamados no banco de dados se não existir.
+    Cria a tabela de chamados no banco de dados.
+
+    IMPORTANTE: Esta função executa DROP TABLE para remover campos obsoletos
+    (resposta_admin, admin_id, data_resposta) da versão anterior.
+    Dados existentes serão perdidos.
 
     Returns:
         True se operação foi bem sucedida
     """
     with get_connection() as conn:
         cursor = conn.cursor()
+        cursor.execute(DROP_TABELA)
         cursor.execute(CRIAR_TABELA)
         return True
 
@@ -79,6 +78,10 @@ def criar_tabela() -> bool:
 def inserir(chamado: Chamado) -> Optional[int]:
     """
     Insere um novo chamado no banco de dados.
+
+    IMPORTANTE: Este método insere apenas os metadados do chamado.
+    A descrição/mensagem inicial deve ser inserida separadamente
+    na tabela chamado_interacao usando chamado_interacao_repo.
 
     Args:
         chamado: Objeto Chamado a ser inserido
@@ -90,9 +93,8 @@ def inserir(chamado: Chamado) -> Optional[int]:
         cursor = conn.cursor()
         cursor.execute(INSERIR, (
             chamado.titulo,
-            chamado.descricao,
-            chamado.prioridade,
-            chamado.status,
+            chamado.prioridade.value,
+            chamado.status.value,
             chamado.usuario_id
         ))
         return cursor.lastrowid
@@ -156,35 +158,29 @@ def obter_por_id(id: int) -> Optional[Chamado]:
 def atualizar_status(
     id: int,
     status: str,
-    resposta_admin: Optional[str] = None,
-    fechar: bool = False,
-    admin_id: Optional[int] = None
+    fechar: bool = False
 ) -> bool:
     """
     Atualiza o status de um chamado.
 
+    IMPORTANTE: Respostas/mensagens não são mais armazenadas aqui.
+    Use chamado_interacao_repo para inserir novas interações.
+
     Args:
         id: ID do chamado
         status: Novo status (Aberto, Em Análise, Resolvido, Fechado)
-        resposta_admin: Resposta do administrador (opcional)
         fechar: Se True, define data_fechamento para agora
-        admin_id: ID do administrador que está respondendo (opcional)
 
     Returns:
         True se atualização foi bem sucedida, False caso contrário
     """
     data_fechamento = datetime.now().strftime('%Y-%m-%d %H:%M:%S') if fechar else None
-    # Define data_resposta se admin_id foi fornecido
-    data_resposta = datetime.now().strftime('%Y-%m-%d %H:%M:%S') if admin_id else None
 
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(ATUALIZAR_STATUS, (
             status,
-            resposta_admin,
             data_fechamento,
-            admin_id,
-            data_resposta,
             id
         ))
         return cursor.rowcount > 0

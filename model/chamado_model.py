@@ -1,27 +1,37 @@
 from dataclasses import dataclass
 from datetime import datetime
+from enum import Enum
 from typing import Optional
+
+class StatusChamado(Enum):
+    ABERTO = "Aberto"
+    EM_ANALISE = "Em Análise"
+    RESOLVIDO = "Resolvido"
+    FECHADO = "Fechado"
+
+class PrioridadeChamado(Enum):
+    BAIXA = "Baixa"
+    MEDIA = "Média"
+    ALTA = "Alta"
+    URGENTE = "Urgente"
 
 
 @dataclass
 class Chamado:
     """
-    Modelo de dados para um chamado de suporte.
+    Representa um chamado (ticket de suporte).
 
-    Representa um ticket/chamado aberto por um usuário para ser
-    respondido por administradores do sistema.
+    IMPORTANTE: Este model armazena apenas os metadados do chamado.
+    As mensagens/interações (incluindo a descrição inicial) são armazenadas
+    na tabela chamado_interacao.
     """
     id: int
     titulo: str
-    descricao: str
-    status: str  # Aberto, Em Análise, Resolvido, Fechado
-    prioridade: str  # Baixa, Média, Alta, Urgente
+    status: StatusChamado
+    prioridade: PrioridadeChamado
     usuario_id: int
     data_abertura: Optional[datetime] = None
     data_fechamento: Optional[datetime] = None
-    resposta_admin: Optional[str] = None
-    admin_id: Optional[int] = None  # ID do admin que respondeu
-    data_resposta: Optional[datetime] = None  # Data/hora da resposta
-    usuario_nome: Optional[str] = None  # Nome do usuário (do JOIN)
-    usuario_email: Optional[str] = None  # Email do usuário (do JOIN)
-    admin_nome: Optional[str] = None  # Nome do admin que respondeu (do JOIN)
+    # Campos do JOIN (para exibição)
+    usuario_nome: Optional[str] = None
+    usuario_email: Optional[str] = None

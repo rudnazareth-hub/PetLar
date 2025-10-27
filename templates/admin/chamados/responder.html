@@ -1,12 +1,11 @@
 {% extends "base_privada.html" %}
-{% from "macros/form_fields.html" import field with context %}
 
 {% block titulo %}Responder Chamado #{{ chamado.id }}{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-10 mx-auto">
+        <div class="col-12">
             <!-- Cabeçalho -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2><i class="bi bi-reply-fill"></i> Responder Chamado #{{ chamado.id }}</h2>
@@ -15,31 +14,31 @@
                 </a>
             </div>
 
-            <!-- Informações do Chamado -->
+            <!-- Card Principal -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-primary text-white">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">{{ chamado.titulo }}</h5>
                         <div class="d-flex gap-2">
                             <!-- Badge de Status -->
-                            {% if chamado.status == 'Aberto' %}
-                            <span class="badge bg-light text-dark">{{ chamado.status }}</span>
-                            {% elif chamado.status == 'Em Análise' %}
-                            <span class="badge bg-info">{{ chamado.status }}</span>
-                            {% elif chamado.status == 'Resolvido' %}
-                            <span class="badge bg-success">{{ chamado.status }}</span>
-                            {% elif chamado.status == 'Fechado' %}
-                            <span class="badge bg-secondary">{{ chamado.status }}</span>
+                            {% if chamado.status.value == 'Aberto' %}
+                            <span class="badge bg-light text-dark">{{ chamado.status.value }}</span>
+                            {% elif chamado.status.value == 'Em Análise' %}
+                            <span class="badge bg-info">{{ chamado.status.value }}</span>
+                            {% elif chamado.status.value == 'Resolvido' %}
+                            <span class="badge bg-success">{{ chamado.status.value }}</span>
+                            {% elif chamado.status.value == 'Fechado' %}
+                            <span class="badge bg-secondary">{{ chamado.status.value }}</span>
                             {% endif %}
                             <!-- Badge de Prioridade -->
-                            {% if chamado.prioridade == 'Urgente' %}
-                            <span class="badge bg-danger">{{ chamado.prioridade }}</span>
-                            {% elif chamado.prioridade == 'Alta' %}
-                            <span class="badge bg-warning text-dark">{{ chamado.prioridade }}</span>
-                            {% elif chamado.prioridade == 'Média' %}
-                            <span class="badge bg-info">{{ chamado.prioridade }}</span>
-                            {% elif chamado.prioridade == 'Baixa' %}
-                            <span class="badge bg-light text-dark">{{ chamado.prioridade }}</span>
+                            {% if chamado.prioridade.value == 'Urgente' %}
+                            <span class="badge bg-danger">{{ chamado.prioridade.value }}</span>
+                            {% elif chamado.prioridade.value == 'Alta' %}
+                            <span class="badge bg-warning text-dark">{{ chamado.prioridade.value }}</span>
+                            {% elif chamado.prioridade.value == 'Média' %}
+                            <span class="badge bg-info">{{ chamado.prioridade.value }}</span>
+                            {% elif chamado.prioridade.value == 'Baixa' %}
+                            <span class="badge bg-light text-dark">{{ chamado.prioridade.value }}</span>
                             {% endif %}
                         </div>
                     </div>
@@ -61,84 +60,122 @@
                             <strong>{{ chamado.data_abertura.strftime('%d/%m/%Y às %H:%M') }}</strong>
                         </div>
                     </div>
-                    <hr>
-                    <h6 class="text-muted mb-2">Descrição do Problema:</h6>
-                    <p class="mb-0" style="white-space: pre-wrap;">{{ chamado.descricao }}</p>
                 </div>
             </div>
 
-            <!-- Resposta Anterior (se existir) -->
-            {% if chamado.resposta_admin %}
-            <div class="alert alert-warning" role="alert">
-                <h6><i class="bi bi-exclamation-triangle"></i> Resposta Anterior</h6>
-                {% if chamado.admin_nome or chamado.data_resposta %}
-                <div class="mb-2 small text-muted">
-                    {% if chamado.admin_nome %}
-                    <i class="bi bi-person-badge"></i> Respondido por: <strong>{{ chamado.admin_nome }}</strong>
-                    {% endif %}
-                    {% if chamado.data_resposta %}
-                    <span class="ms-2">
-                        <i class="bi bi-calendar-check"></i> {{ chamado.data_resposta.strftime('%d/%m/%Y às %H:%M') }}
-                    </span>
-                    {% endif %}
+            <!-- Histórico de Interações -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-chat-dots"></i> Histórico de Mensagens</h5>
                 </div>
-                {% endif %}
-                <p class="mb-0" style="white-space: pre-wrap;">{{ chamado.resposta_admin }}</p>
-            </div>
-            {% endif %}
-
-            <!-- Formulário de Resposta -->
-            <div class="card shadow-sm">
-                <form method="post" action="/admin/chamados/{{ chamado.id }}/responder">
-                    <div class="card-body p-4">
-                        <div class="row">
-                            <div class="col-12">
-                                {% include "components/alerta_erro.html" %}
-                            </div>
-
-                            <div class="col-12 mb-3">
-                                {{ field(
-                                    name='resposta',
-                                    label='Sua Resposta',
-                                    type='textarea',
-                                    rows=8,
-                                    required=true,
-                                    placeholder='Digite aqui sua resposta ao usuário. Seja claro e objetivo.',
-                                    help_text='Forneça uma resposta detalhada (10-2000 caracteres)',
-                                    attributes={'maxlength': 2000}
-                                ) }}
-                            </div>
-
-                            <div class="col-12">
-                                {{ field(
-                                    name='status_chamado',
-                                    label='Novo Status',
-                                    type='select',
-                                    required=true,
-                                    options={
-                                        'Aberto': 'Aberto - Aguardando análise',
-                                        'Em Análise': 'Em Análise - Investigando o problema',
-                                        'Resolvido': 'Resolvido - Problema solucionado',
-                                        'Fechado': 'Fechado - Encerrado'
-                                    },
-                                    help_text='Defina o novo status do chamado após sua resposta',
-                                    wrapper_class='mb-0'
-                                ) }}
+                <div class="card-body">
+                    {% if interacoes %}
+                        {% for interacao in interacoes %}
+                        <div class="mb-4 pb-4 {% if not loop.last %}border-bottom{% endif %}">
+                            <div class="d-flex align-items-start gap-3">
+                                <!-- Avatar/Ícone -->
+                                <div>
+                                    {% if interacao.tipo.value == 'Resposta do Administrador' %}
+                                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center"
+                                         style="width: 45px; height: 45px;">
+                                        <i class="bi bi-headset fs-5"></i>
+                                    </div>
+                                    {% else %}
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                         style="width: 45px; height: 45px;">
+                                        <i class="bi bi-person-fill fs-5"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <!-- Conteúdo -->
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <strong>{{ interacao.usuario_nome }}</strong>
+                                            <span class="badge bg-secondary ms-2">{{ interacao.tipo.value }}</span>
+                                        </div>
+                                        <small class="text-muted">
+                                            {{ interacao.data_interacao.strftime('%d/%m/%Y às %H:%M') }}
+                                        </small>
+                                    </div>
+                                    <div class="bg-light rounded p-3">
+                                        <p class="mb-0" style="white-space: pre-wrap;">{{ interacao.mensagem }}</p>
+                                    </div>
+                                    {% if interacao.status_resultante %}
+                                    <small class="text-muted d-block mt-2">
+                                        <i class="bi bi-arrow-right"></i> Status alterado para: <strong>{{ interacao.status_resultante }}</strong>
+                                    </small>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-footer p-4">
-                        <div class="d-flex gap-3">
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted mb-0">Nenhuma mensagem registrada.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Formulário de Resposta -->
+            {% if chamado.status.value != 'Fechado' %}
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-reply-fill"></i> Adicionar Resposta</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="/admin/chamados/{{ chamado.id }}/responder">
+                        <!-- CSRF Token -->
+                        <input type="hidden" name="csrf_token" value="{{ request.session.get('csrf_token') }}">
+
+                        <div class="mb-3">
+                            <label for="mensagem" class="form-label">Mensagem</label>
+                            <textarea
+                                class="form-control {% if erros and 'mensagem' in erros %}is-invalid{% endif %}"
+                                id="mensagem"
+                                name="mensagem"
+                                rows="5"
+                                placeholder="Digite sua resposta ao usuário..."
+                                required>{{ dados.mensagem if dados and dados.mensagem else '' }}</textarea>
+                            {% if erros and 'mensagem' in erros %}
+                            <div class="invalid-feedback">{{ erros['mensagem'] }}</div>
+                            {% endif %}
+                            <div class="form-text">Mínimo 10 caracteres, máximo 2000 caracteres</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="status_chamado" class="form-label">Novo Status</label>
+                            <select
+                                class="form-select {% if erros and 'status_chamado' in erros %}is-invalid{% endif %}"
+                                id="status_chamado"
+                                name="status_chamado"
+                                required>
+                                <option value="Aberto" {% if (dados and dados.status_chamado == 'Aberto') or chamado.status.value == 'Aberto' %}selected{% endif %}>Aberto</option>
+                                <option value="Em Análise" {% if (dados and dados.status_chamado == 'Em Análise') or (not dados and chamado.status.value != 'Aberto') %}selected{% endif %}>Em Análise</option>
+                                <option value="Resolvido" {% if dados and dados.status_chamado == 'Resolvido' %}selected{% endif %}>Resolvido</option>
+                                <option value="Fechado" {% if dados and dados.status_chamado == 'Fechado' %}selected{% endif %}>Fechado</option>
+                            </select>
+                            {% if erros and 'status_chamado' in erros %}
+                            <div class="invalid-feedback">{{ erros['status_chamado'] }}</div>
+                            {% endif %}
+                            <div class="form-text">Selecione o status após sua resposta</div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="/admin/chamados/listar" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-success">
                                 <i class="bi bi-send"></i> Enviar Resposta
                             </button>
-                            <a href="/admin/chamados/listar" class="btn btn-secondary">
-                                <i class="bi bi-x-circle"></i> Cancelar
-                            </a>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
+            {% else %}
+            <div class="alert alert-secondary" role="alert">
+                <i class="bi bi-lock-fill"></i>
+                <strong>Chamado Fechado</strong>
+                <p class="mb-0 mt-2">Este chamado foi fechado e não aceita mais respostas.</p>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

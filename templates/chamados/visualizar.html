@@ -21,34 +21,29 @@
                         <h5 class="mb-0">{{ chamado.titulo }}</h5>
                         <div class="d-flex gap-2">
                             <!-- Badge de Status -->
-                            {% if chamado.status == 'Aberto' %}
-                            <span class="badge bg-light text-dark">{{ chamado.status }}</span>
-                            {% elif chamado.status == 'Em Análise' %}
-                            <span class="badge bg-info">{{ chamado.status }}</span>
-                            {% elif chamado.status == 'Resolvido' %}
-                            <span class="badge bg-success">{{ chamado.status }}</span>
-                            {% elif chamado.status == 'Fechado' %}
-                            <span class="badge bg-secondary">{{ chamado.status }}</span>
+                            {% if chamado.status.value == 'Aberto' %}
+                            <span class="badge bg-light text-dark">{{ chamado.status.value }}</span>
+                            {% elif chamado.status.value == 'Em Análise' %}
+                            <span class="badge bg-info">{{ chamado.status.value }}</span>
+                            {% elif chamado.status.value == 'Resolvido' %}
+                            <span class="badge bg-success">{{ chamado.status.value }}</span>
+                            {% elif chamado.status.value == 'Fechado' %}
+                            <span class="badge bg-secondary">{{ chamado.status.value }}</span>
                             {% endif %}
                             <!-- Badge de Prioridade -->
-                            {% if chamado.prioridade == 'Urgente' %}
-                            <span class="badge bg-danger">{{ chamado.prioridade }}</span>
-                            {% elif chamado.prioridade == 'Alta' %}
-                            <span class="badge bg-warning text-dark">{{ chamado.prioridade }}</span>
-                            {% elif chamado.prioridade == 'Média' %}
-                            <span class="badge bg-info">{{ chamado.prioridade }}</span>
-                            {% elif chamado.prioridade == 'Baixa' %}
-                            <span class="badge bg-light text-dark">{{ chamado.prioridade }}</span>
+                            {% if chamado.prioridade.value == 'Urgente' %}
+                            <span class="badge bg-danger">{{ chamado.prioridade.value }}</span>
+                            {% elif chamado.prioridade.value == 'Alta' %}
+                            <span class="badge bg-warning text-dark">{{ chamado.prioridade.value }}</span>
+                            {% elif chamado.prioridade.value == 'Média' %}
+                            <span class="badge bg-info">{{ chamado.prioridade.value }}</span>
+                            {% elif chamado.prioridade.value == 'Baixa' %}
+                            <span class="badge bg-light text-dark">{{ chamado.prioridade.value }}</span>
                             {% endif %}
                         </div>
                     </div>
                 </div>
-                <div class="card-body p-4">
-                    <h6 class="text-muted mb-3">Descrição:</h6>
-                    <p class="mb-4" style="white-space: pre-wrap;">{{ chamado.descricao }}</p>
-
-                    <hr>
-
+                <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <small class="text-muted d-block mb-1">
@@ -68,74 +63,99 @@
                 </div>
             </div>
 
-            <!-- Resposta do Administrador -->
-            {% if chamado.resposta_admin %}
-            <div class="card shadow-sm border-success">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">
-                        <i class="bi bi-reply-fill"></i> Resposta da Equipe
-                    </h5>
+            <!-- Histórico de Interações -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-chat-dots"></i> Histórico de Mensagens</h5>
                 </div>
-                <div class="card-body p-4">
-                    <p class="mb-0" style="white-space: pre-wrap;">{{ chamado.resposta_admin }}</p>
+                <div class="card-body">
+                    {% if interacoes %}
+                        {% for interacao in interacoes %}
+                        <div class="mb-4 pb-4 {% if not loop.last %}border-bottom{% endif %}">
+                            <div class="d-flex align-items-start gap-3">
+                                <!-- Avatar/Ícone -->
+                                <div>
+                                    {% if interacao.tipo.value == 'Abertura' or interacao.tipo.value == 'Resposta do Usuário' %}
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                         style="width: 45px; height: 45px;">
+                                        <i class="bi bi-person-fill fs-5"></i>
+                                    </div>
+                                    {% else %}
+                                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center"
+                                         style="width: 45px; height: 45px;">
+                                        <i class="bi bi-headset fs-5"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <!-- Conteúdo -->
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <strong>{{ interacao.usuario_nome }}</strong>
+                                            <span class="badge bg-secondary ms-2">{{ interacao.tipo.value }}</span>
+                                        </div>
+                                        <small class="text-muted">
+                                            {{ interacao.data_interacao.strftime('%d/%m/%Y às %H:%M') }}
+                                        </small>
+                                    </div>
+                                    <div class="bg-light rounded p-3">
+                                        <p class="mb-0" style="white-space: pre-wrap;">{{ interacao.mensagem }}</p>
+                                    </div>
+                                    {% if interacao.status_resultante %}
+                                    <small class="text-muted d-block mt-2">
+                                        <i class="bi bi-arrow-right"></i> Status: <strong>{{ interacao.status_resultante }}</strong>
+                                    </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted mb-0">Nenhuma mensagem registrada.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Formulário para Responder -->
+            {% if chamado.status.value != 'Fechado' %}
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-reply"></i> Adicionar Mensagem</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="/chamados/{{ chamado.id }}/responder">
+                        <!-- CSRF Token -->
+                        <input type="hidden" name="csrf_token" value="{{ request.session.get('csrf_token') }}">
+
+                        <div class="mb-3">
+                            <label for="mensagem" class="form-label">Sua Mensagem</label>
+                            <textarea
+                                class="form-control {% if erros and 'mensagem' in erros %}is-invalid{% endif %}"
+                                id="mensagem"
+                                name="mensagem"
+                                rows="5"
+                                placeholder="Digite sua mensagem..."
+                                required>{{ dados.mensagem if dados and dados.mensagem else '' }}</textarea>
+                            {% if erros and 'mensagem' in erros %}
+                            <div class="invalid-feedback">{{ erros['mensagem'] }}</div>
+                            {% endif %}
+                            <div class="form-text">Mínimo 10 caracteres, máximo 2000 caracteres</div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="/chamados/listar" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send"></i> Enviar Mensagem
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
             {% else %}
-            <div class="alert alert-info" role="alert">
-                <i class="bi bi-hourglass-split"></i>
-                <strong>Aguardando Resposta</strong>
-                <p class="mb-0 mt-2">Sua solicitação está em análise. Em breve nossa equipe entrará em contato.</p>
-            </div>
-            {% endif %}
-
-            <!-- Timeline (se houver resposta) -->
-            {% if chamado.resposta_admin %}
-            <div class="card shadow-sm mt-4">
-                <div class="card-header">
-                    <h6 class="mb-0"><i class="bi bi-clock-history"></i> Histórico</h6>
-                </div>
-                <div class="card-body">
-                    <div class="timeline">
-                        <!-- Abertura -->
-                        <div class="d-flex mb-3">
-                            <div class="me-3">
-                                <div class="bg-primary rounded-circle p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="bi bi-plus-circle text-white"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <h6 class="mb-1">Chamado Aberto</h6>
-                                <small class="text-muted">{{ chamado.data_abertura.strftime('%d/%m/%Y às %H:%M') }}</small>
-                            </div>
-                        </div>
-                        <!-- Resposta -->
-                        <div class="d-flex mb-3">
-                            <div class="me-3">
-                                <div class="bg-success rounded-circle p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="bi bi-reply-fill text-white"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <h6 class="mb-1">Resposta Recebida</h6>
-                                <small class="text-muted">Status alterado para: {{ chamado.status }}</small>
-                            </div>
-                        </div>
-                        <!-- Fechamento -->
-                        {% if chamado.data_fechamento %}
-                        <div class="d-flex">
-                            <div class="me-3">
-                                <div class="bg-secondary rounded-circle p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="bi bi-check-circle text-white"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <h6 class="mb-1">Chamado Fechado</h6>
-                                <small class="text-muted">{{ chamado.data_fechamento.strftime('%d/%m/%Y às %H:%M') }}</small>
-                            </div>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
+            <div class="alert alert-secondary" role="alert">
+                <i class="bi bi-lock-fill"></i>
+                <strong>Chamado Fechado</strong>
+                <p class="mb-0 mt-2">Este chamado foi fechado e não aceita mais mensagens.</p>
             </div>
             {% endif %}
         </div>

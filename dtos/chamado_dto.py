@@ -10,6 +10,7 @@ from dtos.validators import (
     validar_string_obrigatoria,
     validar_comprimento,
 )
+from model.chamado_model import StatusChamado, PrioridadeChamado
 
 
 class CriarChamadoDTO(BaseModel):
@@ -43,7 +44,7 @@ class CriarChamadoDTO(BaseModel):
     @classmethod
     def validar_prioridade(cls, v: str) -> str:
         """Valida se prioridade está entre os valores permitidos."""
-        prioridades_validas = ["Baixa", "Média", "Alta", "Urgente"]
+        prioridades_validas = [p.value for p in PrioridadeChamado]
         if v not in prioridades_validas:
             raise ValueError(
                 f"Prioridade inválida. Use: {', '.join(prioridades_validas)}"
@@ -51,29 +52,20 @@ class CriarChamadoDTO(BaseModel):
         return v
 
 
-class ResponderChamadoDTO(BaseModel):
+class AlterarStatusDTO(BaseModel):
     """
-    DTO para resposta de administrador a um chamado.
+    DTO para alteração de status de um chamado.
 
-    Usado quando administradores respondem e alteram status de chamados.
+    Usado quando administradores alteram o status sem adicionar mensagem.
     """
 
-    resposta: str
     status: str
-
-    _validar_resposta = field_validator("resposta")(
-        validar_string_obrigatoria(
-            nome_campo="Resposta",
-            tamanho_minimo=10,
-            tamanho_maximo=2000
-        )
-    )
 
     @field_validator("status")
     @classmethod
     def validar_status(cls, v: str) -> str:
         """Valida se status está entre os valores permitidos."""
-        status_validos = ["Aberto", "Em Análise", "Resolvido", "Fechado"]
+        status_validos = [s.value for s in StatusChamado]
         if v not in status_validos:
             raise ValueError(
                 f"Status inválido. Use: {', '.join(status_validos)}"
