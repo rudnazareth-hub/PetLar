@@ -90,7 +90,8 @@ async def post_responder(
             id=id,
             status=dto.status,
             resposta_admin=dto.resposta,
-            fechar=fechar
+            fechar=fechar,
+            admin_id=usuario_logado["id"]
         )
 
         if sucesso:

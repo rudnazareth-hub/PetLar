@@ -16,7 +16,10 @@ CREATE TABLE IF NOT EXISTS chamado (
     data_abertura DATETIME DEFAULT CURRENT_TIMESTAMP,
     data_fechamento DATETIME,
     resposta_admin TEXT,
-    FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+    admin_id INTEGER,
+    data_resposta DATETIME,
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id),
+    FOREIGN KEY (admin_id) REFERENCES usuario(id)
 )
 """
 
@@ -26,9 +29,13 @@ VALUES (?, ?, ?, ?, ?)
 """
 
 OBTER_TODOS = """
-SELECT c.*, u.nome as usuario_nome, u.email as usuario_email
+SELECT c.*,
+       u.nome as usuario_nome,
+       u.email as usuario_email,
+       a.nome as admin_nome
 FROM chamado c
 INNER JOIN usuario u ON c.usuario_id = u.id
+LEFT JOIN usuario a ON c.admin_id = a.id
 ORDER BY
     CASE c.prioridade
         WHEN 'Urgente' THEN 1
@@ -40,9 +47,13 @@ ORDER BY
 """
 
 OBTER_POR_USUARIO = """
-SELECT c.*, u.nome as usuario_nome, u.email as usuario_email
+SELECT c.*,
+       u.nome as usuario_nome,
+       u.email as usuario_email,
+       a.nome as admin_nome
 FROM chamado c
 INNER JOIN usuario u ON c.usuario_id = u.id
+LEFT JOIN usuario a ON c.admin_id = a.id
 WHERE c.usuario_id = ?
 ORDER BY
     CASE c.status
@@ -55,15 +66,19 @@ ORDER BY
 """
 
 OBTER_POR_ID = """
-SELECT c.*, u.nome as usuario_nome, u.email as usuario_email
+SELECT c.*,
+       u.nome as usuario_nome,
+       u.email as usuario_email,
+       a.nome as admin_nome
 FROM chamado c
 INNER JOIN usuario u ON c.usuario_id = u.id
+LEFT JOIN usuario a ON c.admin_id = a.id
 WHERE c.id = ?
 """
 
 ATUALIZAR_STATUS = """
 UPDATE chamado
-SET status = ?, resposta_admin = ?, data_fechamento = ?
+SET status = ?, resposta_admin = ?, data_fechamento = ?, admin_id = ?, data_resposta = ?
 WHERE id = ?
 """
 

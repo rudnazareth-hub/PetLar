@@ -43,6 +43,7 @@ def _row_to_chamado(row) -> Chamado:
     # Verificar se os campos do JOIN existem (nem todas as queries fazem JOIN)
     usuario_nome = row["usuario_nome"] if "usuario_nome" in row.keys() else None
     usuario_email = row["usuario_email"] if "usuario_email" in row.keys() else None
+    admin_nome = row["admin_nome"] if "admin_nome" in row.keys() else None
 
     return Chamado(
         id=row["id"],
@@ -54,8 +55,11 @@ def _row_to_chamado(row) -> Chamado:
         data_abertura=_converter_data(row["data_abertura"]),
         data_fechamento=_converter_data(row["data_fechamento"]),
         resposta_admin=row["resposta_admin"],
+        admin_id=row["admin_id"] if row["admin_id"] else None,
+        data_resposta=_converter_data(row["data_resposta"]) if row.get("data_resposta") else None,
         usuario_nome=usuario_nome,  # Do JOIN com tabela usuario
-        usuario_email=usuario_email  # Do JOIN com tabela usuario
+        usuario_email=usuario_email,  # Do JOIN com tabela usuario
+        admin_nome=admin_nome  # Do JOIN com tabela usuario (admin)
     )
 
 
@@ -153,7 +157,8 @@ def atualizar_status(
     id: int,
     status: str,
     resposta_admin: Optional[str] = None,
-    fechar: bool = False
+    fechar: bool = False,
+    admin_id: Optional[int] = None
 ) -> bool:
     """
     Atualiza o status de um chamado.
@@ -163,11 +168,14 @@ def atualizar_status(
         status: Novo status (Aberto, Em Análise, Resolvido, Fechado)
         resposta_admin: Resposta do administrador (opcional)
         fechar: Se True, define data_fechamento para agora
+        admin_id: ID do administrador que está respondendo (opcional)
 
     Returns:
         True se atualização foi bem sucedida, False caso contrário
     """
     data_fechamento = datetime.now().strftime('%Y-%m-%d %H:%M:%S') if fechar else None
+    # Define data_resposta se admin_id foi fornecido
+    data_resposta = datetime.now().strftime('%Y-%m-%d %H:%M:%S') if admin_id else None
 
     with get_connection() as conn:
         cursor = conn.cursor()
@@ -175,6 +183,8 @@ def atualizar_status(
             status,
             resposta_admin,
             data_fechamento,
+            admin_id,
+            data_resposta,
             id
         ))
         return cursor.rowcount > 0

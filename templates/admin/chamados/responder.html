@@ -71,6 +71,18 @@
             {% if chamado.resposta_admin %}
             <div class="alert alert-warning" role="alert">
                 <h6><i class="bi bi-exclamation-triangle"></i> Resposta Anterior</h6>
+                {% if chamado.admin_nome or chamado.data_resposta %}
+                <div class="mb-2 small text-muted">
+                    {% if chamado.admin_nome %}
+                    <i class="bi bi-person-badge"></i> Respondido por: <strong>{{ chamado.admin_nome }}</strong>
+                    {% endif %}
+                    {% if chamado.data_resposta %}
+                    <span class="ms-2">
+                        <i class="bi bi-calendar-check"></i> {{ chamado.data_resposta.strftime('%d/%m/%Y às %H:%M') }}
+                    </span>
+                    {% endif %}
+                </div>
+                {% endif %}
                 <p class="mb-0" style="white-space: pre-wrap;">{{ chamado.resposta_admin }}</p>
             </div>
             {% endif %}
