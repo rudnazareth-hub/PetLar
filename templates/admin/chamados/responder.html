@@ -103,12 +103,12 @@
                                     label='Novo Status',
                                     type='select',
                                     required=true,
-                                    options=[
-                                        {'value': 'Aberto', 'label': 'Aberto - Aguardando análise'},
-                                        {'value': 'Em Análise', 'label': 'Em Análise - Investigando o problema'},
-                                        {'value': 'Resolvido', 'label': 'Resolvido - Problema solucionado'},
-                                        {'value': 'Fechado', 'label': 'Fechado - Encerrado'}
-                                    ],
+                                    options={
+                                        'Aberto': 'Aberto - Aguardando análise',
+                                        'Em Análise': 'Em Análise - Investigando o problema',
+                                        'Resolvido': 'Resolvido - Problema solucionado',
+                                        'Fechado': 'Fechado - Encerrado'
+                                    },
                                     help_text='Defina o novo status do chamado após sua resposta',
                                     wrapper_class='mb-0'
                                 ) }}

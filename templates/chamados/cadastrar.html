@@ -53,12 +53,12 @@
                                     label='Prioridade',
                                     type='select',
                                     required=true,
-                                    options=[
-                                        {'value': 'Baixa', 'label': 'Baixa - Não urgente'},
-                                        {'value': 'Média', 'label': 'Média - Normal'},
-                                        {'value': 'Alta', 'label': 'Alta - Importante'},
-                                        {'value': 'Urgente', 'label': 'Urgente - Crítico'}
-                                    ],
+                                    options={
+                                        'Baixa': 'Baixa - Não urgente',
+                                        'Média': 'Média - Normal',
+                                        'Alta': 'Alta - Importante',
+                                        'Urgente': 'Urgente - Crítico'
+                                    },
                                     help_text='Selecione a prioridade do seu chamado',
                                     wrapper_class='mb-0'
                                 ) }}
