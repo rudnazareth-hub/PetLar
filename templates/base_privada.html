@@ -39,8 +39,8 @@
                             href="/usuario">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if '/perfil/' in request.path else '' }}"
-                            href="/perfil/visualizar">Perfil</a>
+                        <a class="nav-link {{ 'active' if '/usuario/perfil/' in request.path else '' }}"
+                            href="/usuario/perfil/visualizar">Perfil</a>
                     </li>
                     {% if request.session.get('usuario_logado')['perfil'] == 'Administrador' %}
                     <li class="nav-item">

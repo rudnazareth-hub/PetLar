@@ -30,7 +30,6 @@ from routes.tarefas_routes import router as tarefas_router
 from routes.admin_usuarios_routes import router as admin_usuarios_router
 from routes.admin_configuracoes_routes import router as admin_config_router
 from routes.admin_backups_routes import router as admin_backups_router
-from routes.perfil_routes import router as perfil_router
 from routes.usuario_routes import router as usuario_router
 from routes.public_routes import router as public_router
 from routes.examples_routes import router as examples_router
@@ -91,9 +90,6 @@ except Exception as e:
 # IMPORTANTE: public_router deve ser incluído por último para que a rota "/" funcione corretamente
 app.include_router(auth_router, tags=["Autenticação"])
 logger.info("Router de autenticação incluído")
-
-app.include_router(perfil_router, tags=["Perfil"])
-logger.info("Router de perfil incluído")
 
 app.include_router(tarefas_router, tags=["Tarefas"])
 logger.info("Router de tarefas incluído")
