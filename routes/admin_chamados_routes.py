@@ -71,12 +71,11 @@ async def post_responder(
         return RedirectResponse("/admin/chamados/listar", status_code=status.HTTP_303_SEE_OTHER)
 
     # Armazena os dados do formulário para reexibição em caso de erro
-    dados_formulario = {
+    dados_formulario: dict = {
         "resposta": resposta,
-        "status_chamado": status_chamado
+        "status_chamado": status_chamado,
+        "chamado": chamado  # type: ignore[dict-item]
     }
-    # Adiciona dados do chamado para reexibir no template
-    dados_formulario["chamado"] = chamado
 
     try:
         # Validar com DTO
