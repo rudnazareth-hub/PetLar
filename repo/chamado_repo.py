@@ -49,7 +49,9 @@ def _row_to_chamado(row) -> Chamado:
         usuario_id=row["usuario_id"],
         data_abertura=_converter_data(row["data_abertura"]),
         data_fechamento=_converter_data(row["data_fechamento"]),
-        resposta_admin=row["resposta_admin"]
+        resposta_admin=row["resposta_admin"],
+        usuario_nome=row.get("usuario_nome"),  # Do JOIN com tabela usuario
+        usuario_email=row.get("usuario_email")  # Do JOIN com tabela usuario
     )
 
 

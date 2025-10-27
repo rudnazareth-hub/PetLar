@@ -20,3 +20,5 @@ class Chamado:
     data_abertura: Optional[datetime] = None
     data_fechamento: Optional[datetime] = None
     resposta_admin: Optional[str] = None
+    usuario_nome: Optional[str] = None  # Nome do usuário (do JOIN)
+    usuario_email: Optional[str] = None  # Email do usuário (do JOIN)
