@@ -44,6 +44,10 @@
                     </li>
                     {% if request.session.get('usuario_logado')['perfil'] == 'Administrador' %}
                     <li class="nav-item">
+                        <a class="nav-link {{ 'active' if '/admin/chamados/' in request.path else '' }}"
+                            href="/admin/chamados/listar">Chamados</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {{ 'active' if '/admin/usuarios/' in request.path else '' }}"
                             href="/admin/usuarios/listar">Usuários</a>
                     </li>
@@ -58,6 +62,11 @@
                     <li class="nav-item">
                         <a class="nav-link {{ 'active' if '/admin/backups/' in request.path else '' }}"
                             href="/admin/backups/listar">Backup</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if '/chamados/' in request.path else '' }}"
+                            href="/chamados/listar">Chamados</a>
                     </li>
                     {% endif %}
                 </ul>
