@@ -107,6 +107,26 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm shadow-hover">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-headset text-danger display-3"></i>
+                    </div>
+                    <h5 class="card-title">Chamados</h5>
+                    <p class="card-text text-muted">
+                        Gerencie chamados de suporte dos usuários
+                    </p>
+                    {% if chamados_pendentes > 0 %}
+                    <span class="badge bg-danger mb-2">{{ chamados_pendentes }} pendente(s)</span>
+                    {% endif %}
+                    <a href="/admin/chamados/listar" class="btn btn-danger">
+                        <i class="bi bi-arrow-right-circle"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
         {% else %}
         <!-- Minhas Tarefas -->
         <div class="col-md-4">
@@ -126,20 +146,23 @@
             </div>
         </div>
 
-        <!-- Ajuda/Suporte para usuários comuns -->
+        <!-- Chamados para usuários comuns -->
         <div class="col-md-4">
             <div class="card h-100 shadow-sm shadow-hover">
                 <div class="card-body text-center">
                     <div class="mb-3">
-                        <i class="bi bi-question-circle text-info display-3"></i>
+                        <i class="bi bi-headset text-danger display-3"></i>
                     </div>
-                    <h5 class="card-title">Ajuda</h5>
+                    <h5 class="card-title">Meus Chamados</h5>
                     <p class="card-text text-muted">
-                        Precisa de ajuda? Consulte nossa documentação
+                        Abra chamados de suporte e acompanhe suas solicitações
                     </p>
-                    <button class="btn btn-info" disabled>
-                        <i class="bi bi-book"></i> Em Breve
-                    </button>
+                    {% if chamados_abertos > 0 %}
+                    <span class="badge bg-danger mb-2">{{ chamados_abertos }} em aberto</span>
+                    {% endif %}
+                    <a href="/chamados/listar" class="btn btn-danger">
+                        <i class="bi bi-arrow-right-circle"></i> Acessar
+                    </a>
                 </div>
             </div>
         </div>
