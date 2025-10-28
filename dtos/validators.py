@@ -789,6 +789,23 @@ def validar_tipo(nome_campo: str, tipo_enum: Any) -> Callable[[Any, Any], Any]:
     return validator
 
 
+def validar_perfil_usuario(tipo_enum: Any) -> Callable[[Any, Any], Any]:
+    """
+    Valida perfil de usuário usando um Enum.
+
+    Args:
+        tipo_enum: Classe Enum Perfil
+
+    Returns:
+        Função validadora para uso com field_validator
+
+    Example:
+        from util.perfis import Perfil
+        _validar_perfil = field_validator('perfil')(validar_perfil_usuario(Perfil))
+    """
+    return validar_tipo("Perfil", tipo_enum)
+
+
 def validar_sexo_animal():
     """Valida sexo do animal (Macho/Fêmea)"""
     def validator(cls, v: str) -> str:
