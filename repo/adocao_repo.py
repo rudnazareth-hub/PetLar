@@ -76,3 +76,46 @@ def obter_por_abrigo(id_abrigo: int) -> List[dict]:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_ABRIGO, (id_abrigo,))
         return [dict(row) for row in cursor.fetchall()]
+
+
+def obter_todos() -> List[dict]:
+    """
+    Retorna todas as adoções cadastradas.
+
+    Returns:
+        Lista de dicionários com dados das adoções
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(OBTER_TODOS)
+        return [dict(row) for row in cursor.fetchall()]
+
+
+def contar() -> int:
+    """
+    Retorna o total de adoções cadastradas.
+
+    Returns:
+        Número total de adoções
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(CONTAR)
+        return cursor.fetchone()[0]
+
+
+def buscar_por_termo(termo: str) -> List[dict]:
+    """
+    Busca adoções por termo (nome do animal, adotante ou observações).
+
+    Args:
+        termo: Termo de busca
+
+    Returns:
+        Lista de dicionários com dados das adoções que correspondem ao termo
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        termo_like = f"%{termo}%"
+        cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like))
+        return [dict(row) for row in cursor.fetchall()]

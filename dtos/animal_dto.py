@@ -9,8 +9,8 @@ from dtos.validators import (
     validar_status_animal
 )
 
-class CadastrarAnimalDTO(BaseModel):
-    """DTO para cadastro de animal"""
+class CriarAnimalDTO(BaseModel):
+    """DTO para criação de animal"""
     nome: str
     id_raca: int
     id_abrigo: int
@@ -32,6 +32,9 @@ class CadastrarAnimalDTO(BaseModel):
     _validar_observacoes = field_validator('observacoes')(
         validar_comprimento(tamanho_maximo=1000)
     )
+
+# Mantém compatibilidade com código existente
+CadastrarAnimalDTO = CriarAnimalDTO
 
 class AlterarAnimalDTO(BaseModel):
     """DTO para alteração de animal"""

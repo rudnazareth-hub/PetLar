@@ -180,3 +180,33 @@ def excluir(id_animal: int) -> bool:
         cursor = conn.cursor()
         cursor.execute(EXCLUIR, (id_animal,))
         return cursor.rowcount > 0
+
+
+def contar() -> int:
+    """
+    Retorna o total de animais cadastrados.
+
+    Returns:
+        Número total de animais
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(CONTAR)
+        return cursor.fetchone()[0]
+
+
+def buscar_por_termo(termo: str) -> List[Animal]:
+    """
+    Busca animais por termo (nome do animal, raça, espécie ou abrigo).
+
+    Args:
+        termo: Termo de busca
+
+    Returns:
+        Lista de objetos Animal que correspondem ao termo
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        termo_like = f"%{termo}%"
+        cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like, termo_like))
+        return [_row_to_animal(row) for row in cursor.fetchall()]

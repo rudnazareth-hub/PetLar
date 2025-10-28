@@ -126,3 +126,62 @@ def reagendar(id_visita: int, nova_data: str) -> bool:
         cursor = conn.cursor()
         cursor.execute(REAGENDAR, (nova_data, id_visita))
         return cursor.rowcount > 0
+
+
+def obter_todos() -> List[dict]:
+    """
+    Retorna todas as visitas cadastradas.
+
+    Returns:
+        Lista de dicionários com dados das visitas
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(OBTER_TODOS)
+        return [dict(row) for row in cursor.fetchall()]
+
+
+def contar() -> int:
+    """
+    Retorna o total de visitas cadastradas.
+
+    Returns:
+        Número total de visitas
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(CONTAR)
+        return cursor.fetchone()[0]
+
+
+def buscar_por_termo(termo: str) -> List[dict]:
+    """
+    Busca visitas por termo (nome do adotante, abrigo ou observações).
+
+    Args:
+        termo: Termo de busca
+
+    Returns:
+        Lista de dicionários com dados das visitas que correspondem ao termo
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        termo_like = f"%{termo}%"
+        cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like))
+        return [dict(row) for row in cursor.fetchall()]
+
+
+def excluir(id_visita: int) -> bool:
+    """
+    Exclui uma visita pelo ID.
+
+    Args:
+        id_visita: ID da visita a ser excluída
+
+    Returns:
+        True se exclusão foi bem-sucedida, False caso contrário
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(EXCLUIR, (id_visita,))
+        return cursor.rowcount > 0

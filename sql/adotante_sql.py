@@ -34,3 +34,20 @@ WHERE id_adotante = ?
 EXCLUIR = """
 DELETE FROM adotante WHERE id_adotante = ?
 """
+
+CONTAR = """
+SELECT COUNT(*) FROM adotante
+"""
+
+OBTER_TODOS = """
+SELECT id_adotante, renda_media, tem_filhos, estado_de_saude, data_cadastro, data_atualizacao
+FROM adotante
+ORDER BY id_adotante
+"""
+
+BUSCAR_POR_TERMO = """
+SELECT id_adotante, renda_media, tem_filhos, estado_de_saude, data_cadastro, data_atualizacao
+FROM adotante
+WHERE estado_de_saude LIKE ?
+ORDER BY id_adotante
+"""

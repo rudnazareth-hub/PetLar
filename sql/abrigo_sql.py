@@ -37,3 +37,14 @@ WHERE id_abrigo = ?
 EXCLUIR = """
 DELETE FROM abrigo WHERE id_abrigo = ?
 """
+
+CONTAR = """
+SELECT COUNT(*) FROM abrigo
+"""
+
+BUSCAR_POR_TERMO = """
+SELECT id_abrigo, responsavel, descricao, data_abertura, data_membros, data_cadastro, data_atualizacao
+FROM abrigo
+WHERE responsavel LIKE ? OR descricao LIKE ?
+ORDER BY responsavel
+"""
