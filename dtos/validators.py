@@ -764,7 +764,7 @@ def validar_tipo(nome_campo: str, tipo_enum: Any) -> Callable[[Any, Any], Any]:
     def validator(cls: Any, v: Any) -> Any:  # noqa: N805
         valores_validos = [t.value for t in tipo_enum]
         if v not in valores_validos:
-            tipos_validos = ", ".join([f"'{t}'" for t in tipo_enum.valores()])
+            tipos_validos = ", ".join([f"'{t.value}'" for t in tipo_enum])
             raise ValueError(
                 f"{nome_campo} deve ter um valor válido. Valores válidos: {tipos_validos}."
             )

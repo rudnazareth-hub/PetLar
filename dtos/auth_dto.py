@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, field_validator, model_validator
 from dtos.validators import (
     validar_email,
-    validar_perfil_usuario,
+    validar_tipo,
     validar_senha_forte,
     validar_nome_pessoa,
     validar_string_obrigatoria,
@@ -25,7 +25,7 @@ class CadastroDTO(BaseModel):
     senha: str = Field(..., description="Senha do usuário", min_length=8, max_length=128)
     confirmar_senha: str = Field(..., description="Confirmação da senha", min_length=8, max_length=128)
 
-    _validar_perfil = field_validator("perfil")(validar_perfil_usuario(Perfil))
+    _validar_perfil = field_validator("perfil")(validar_tipo("Perfil", Perfil))
     _validar_nome = field_validator("nome")(validar_nome_pessoa())
     _validar_email = field_validator("email")(validar_email())
     _validar_senha = field_validator("senha")(validar_senha_forte())
