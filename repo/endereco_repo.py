@@ -19,7 +19,9 @@ def _row_to_endereco(row) -> Endereco:
         cidade=row["cidade"],
         uf=row["uf"],
         cep=row["cep"],
-        usuario=None
+        usuario=None,
+        data_cadastro=row.get("data_cadastro"),
+        data_atualizacao=row.get("data_atualizacao")
     )
 
 

@@ -13,7 +13,9 @@ def _row_to_abrigo(row) -> Abrigo:
         responsavel=row["responsavel"],
         descricao=row["descricao"],
         data_abertura=row["data_abertura"],
-        data_membros=row["data_membros"]
+        data_membros=row["data_membros"],
+        data_cadastro=row.get("data_cadastro"),
+        data_atualizacao=row.get("data_atualizacao")
     )
 
 

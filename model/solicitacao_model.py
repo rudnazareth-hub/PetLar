@@ -15,6 +15,7 @@ class Solicitacao:
     status: str
     observacoes: Optional[str] = None
     resposta_abrigo: Optional[str] = None
+    data_atualizacao: Optional[datetime] = None
     # Relacionamentos
     adotante: Optional[Adotante] = None
     animal: Optional[Animal] = None

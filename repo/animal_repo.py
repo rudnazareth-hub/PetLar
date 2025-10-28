@@ -39,7 +39,9 @@ def _row_to_animal(row) -> Animal:
             id_abrigo=row["id_abrigo"],
             responsavel=row["responsavel"] if row["responsavel"] else "",
             data_abertura=None
-        ) if row["id_abrigo"] else None
+        ) if row["id_abrigo"] else None,
+        data_cadastro=row.get("data_cadastro"),
+        data_atualizacao=row.get("data_atualizacao")
     )
 
 

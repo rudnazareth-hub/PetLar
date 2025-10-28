@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS animal (
     observacoes TEXT,
     status TEXT DEFAULT 'Disponível',
     foto TEXT,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_raca) REFERENCES raca(id_raca),
     FOREIGN KEY (id_abrigo) REFERENCES abrigo(id_abrigo)
 )
@@ -86,12 +88,12 @@ WHERE a.status = 'Disponível'
 ATUALIZAR = """
 UPDATE animal
 SET id_raca = ?, nome = ?, sexo = ?, data_nascimento = ?,
-    observacoes = ?, status = ?
+    observacoes = ?, status = ?, data_atualizacao = CURRENT_TIMESTAMP
 WHERE id_animal = ?
 """
 
 ATUALIZAR_STATUS = """
-UPDATE animal SET status = ? WHERE id_animal = ?
+UPDATE animal SET status = ?, data_atualizacao = CURRENT_TIMESTAMP WHERE id_animal = ?
 """
 
 EXCLUIR = """

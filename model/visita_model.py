@@ -14,6 +14,8 @@ class Visita:
     data_agendada: datetime
     observacoes: Optional[str] = None
     status: str = "Agendada"
+    data_cadastro: Optional[datetime] = None
+    data_atualizacao: Optional[datetime] = None
 
     adotante: Optional[Adotante] = None
     abrigo: Optional[Abrigo] = None

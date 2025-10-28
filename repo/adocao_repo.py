@@ -27,6 +27,7 @@ def _row_to_adocao(row) -> Adocao:
         data_adocao=_converter_data(row["data_adocao"]),
         status=row["status"] if row["status"] else "Concluída",
         observacoes=row["observacoes"],
+        data_atualizacao=row.get("data_atualizacao"),
         adotante=None,
         animal=None
     )

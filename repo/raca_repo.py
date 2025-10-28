@@ -19,6 +19,8 @@ def _row_to_raca(row) -> Raca:
         temperamento=row["temperamento"],
         expectativa_de_vida=row["expectativa_de_vida"],
         porte=row["porte"],
+        data_cadastro=row.get("data_cadastro"),
+        data_atualizacao=row.get("data_atualizacao"),
         especie=Especie(
             id_especie=row["especie_id"],
             nome=row["especie_nome"],
@@ -35,7 +37,7 @@ def criar_tabela() -> bool:
         return True
 
 
-def inserir(raca: Raca) -> int:
+def inserir(raca: Raca) -> Optional[int]:
     """Insere uma nova raça e retorna o ID gerado."""
     with get_connection() as conn:
         cursor = conn.cursor()
@@ -126,3 +128,33 @@ def excluir(id_raca: int) -> bool:
 
         cursor.execute(EXCLUIR, (id_raca,))
         return cursor.rowcount > 0
+
+
+def contar() -> int:
+    """
+    Retorna o total de raças cadastradas.
+
+    Returns:
+        Número total de raças
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(CONTAR)
+        return cursor.fetchone()[0]
+
+
+def buscar_por_termo(termo: str) -> List[Raca]:
+    """
+    Busca raças por termo (nome da raça, descrição ou espécie).
+
+    Args:
+        termo: Termo de busca
+
+    Returns:
+        Lista de objetos Raca que correspondem ao termo
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        termo_like = f"%{termo}%"
+        cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like))
+        return [_row_to_raca(row) for row in cursor.fetchall()]

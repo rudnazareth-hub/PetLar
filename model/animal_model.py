@@ -24,6 +24,8 @@ class Animal:
         foto: Caminho da foto do animal
         raca: Objeto Raca relacionado (opcional)
         abrigo: Objeto Abrigo relacionado (opcional)
+        data_cadastro: Data de cadastro do animal
+        data_atualizacao: Data da última atualização
     """
     id_animal: int
     id_raca: int
@@ -38,3 +40,6 @@ class Animal:
     # Relacionamentos
     raca: Optional[Raca] = None
     abrigo: Optional[Abrigo] = None
+    # Timestamps
+    data_cadastro: Optional[datetime] = None
+    data_atualizacao: Optional[datetime] = None

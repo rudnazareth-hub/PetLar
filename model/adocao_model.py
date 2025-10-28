@@ -15,6 +15,7 @@ class Adocao:
     data_adocao: Optional[datetime] = None
     status: str = "Concluída"
     observacoes: Optional[str] = None
+    data_atualizacao: Optional[datetime] = None
 
     adotante: Optional[Adotante] = None
     animal: Optional[Animal] = None 

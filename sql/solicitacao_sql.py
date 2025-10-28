@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS solicitacao (
     status TEXT DEFAULT 'Pendente',
     observacoes TEXT,
     resposta_abrigo TEXT,
+    data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_adotante) REFERENCES adotante(id_adotante),
     FOREIGN KEY (id_animal) REFERENCES animal(id_animal)
 )
@@ -23,7 +24,9 @@ VALUES (?, ?, ?)
 """
 
 OBTER_POR_ADOTANTE = """
-SELECT s.*, a.nome as animal_nome, a.foto
+SELECT s.id_solicitacao, s.id_adotante, s.id_animal, s.data_solicitacao,
+       s.status, s.observacoes, s.resposta_abrigo, s.data_atualizacao,
+       a.nome as animal_nome, a.foto
 FROM solicitacao s
 INNER JOIN animal a ON s.id_animal = a.id_animal
 WHERE s.id_adotante = ?
@@ -32,7 +35,8 @@ ORDER BY s.data_solicitacao DESC
 
 OBTER_POR_ABRIGO = """
 SELECT
-    s.*,
+    s.id_solicitacao, s.id_adotante, s.id_animal, s.data_solicitacao,
+    s.status, s.observacoes, s.resposta_abrigo, s.data_atualizacao,
     a.nome as animal_nome,
     u.nome as adotante_nome, u.email as adotante_email, u.telefone
 FROM solicitacao s
@@ -45,7 +49,8 @@ ORDER BY s.data_solicitacao DESC
 
 OBTER_POR_ID = """
 SELECT
-    s.*,
+    s.id_solicitacao, s.id_adotante, s.id_animal, s.data_solicitacao,
+    s.status, s.observacoes, s.resposta_abrigo, s.data_atualizacao,
     a.nome as animal_nome,
     u.nome as adotante_nome, u.email as adotante_email
 FROM solicitacao s
@@ -57,7 +62,8 @@ WHERE s.id_solicitacao = ?
 
 OBTER_TODOS = """
 SELECT
-    s.*,
+    s.id_solicitacao, s.id_adotante, s.id_animal, s.data_solicitacao,
+    s.status, s.observacoes, s.resposta_abrigo, s.data_atualizacao,
     a.nome as animal_nome,
     u.nome as adotante_nome, u.email as adotante_email
 FROM solicitacao s
@@ -69,7 +75,7 @@ ORDER BY s.data_solicitacao DESC
 
 ATUALIZAR_STATUS = """
 UPDATE solicitacao
-SET status = ?, resposta_abrigo = ?
+SET status = ?, resposta_abrigo = ?, data_atualizacao = CURRENT_TIMESTAMP
 WHERE id_solicitacao = ?
 """
 

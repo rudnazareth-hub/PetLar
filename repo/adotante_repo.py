@@ -12,7 +12,9 @@ def _row_to_adotante(row) -> Adotante:
         id_adotante=row["id_adotante"],
         renda_media=row["renda_media"],
         tem_filhos=bool(row["tem_filhos"]),
-        estado_saude=row["estado_de_saude"]
+        estado_saude=row["estado_de_saude"],
+        data_cadastro=row.get("data_cadastro"),
+        data_atualizacao=row.get("data_atualizacao")
     )
 
 

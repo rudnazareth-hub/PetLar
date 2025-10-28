@@ -20,7 +20,9 @@ def _row_to_configuracao(row) -> Configuracao:
         id=row["id"],
         chave=row["chave"],
         valor=row["valor"],
-        descricao=row["descricao"] if "descricao" in row.keys() else None
+        descricao=row["descricao"] if "descricao" in row.keys() else None,
+        data_cadastro=row.get("data_cadastro"),
+        data_atualizacao=row.get("data_atualizacao")
     )
 
 
