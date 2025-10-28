@@ -1,0 +1,86 @@
+<div class="row">
+    <!-- Cards de Estatísticas -->
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5>Total de Animais</h5>
+                <h2>{{ total_animais }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5>Animais Adotados</h5>
+                <h2>{{ animais_adotados }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5>Solicitações Pendentes</h5>
+                <h2>{{ solicitacoes_pendentes }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5>Abrigos Ativos</h5>
+                <h2>{{ abrigos_ativos }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Gráfico de Adoções por Mês -->
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Adoções por Mês</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoAdocoes"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Animais por Espécie -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Animais por Espécie</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoEspecies"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Atividades Recentes -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Atividades Recentes</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for atividade in atividades_recentes %}
+                    <li class="list-group-item">
+                        <i class="bi {{ atividade.icone }}"></i>
+                        {{ atividade.descricao }}
+                        <span class="text-muted float-end">{{ atividade.data|data_hora_br }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

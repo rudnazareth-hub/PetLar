@@ -1,3 +1,6 @@
+# IMPORTANTE: O valor padrão 'cliente' deve corresponder a Perfil.CLIENTE.value
+# Fonte única da verdade: util.perfis.Perfil
+# Valores válidos: 'admin' (Perfil.ADMIN.value), 'cliente' (Perfil.CLIENTE.value)
 CRIAR_TABELA = """
 CREATE TABLE IF NOT EXISTS usuario (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -5,27 +8,40 @@ CREATE TABLE IF NOT EXISTS usuario (
     email TEXT UNIQUE NOT NULL,
     senha TEXT NOT NULL,
     perfil TEXT NOT NULL,
+    data_nascimento TEXT,
+    numero_documento TEXT,
+    telefone TEXT,
+    confirmado INTEGER DEFAULT 0,
     token_redefinicao TEXT,
-    data_token TIMESTAMP,
-    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    data_atualizacao TIMESTAMP
+    data_token TEXT,
+    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
 )
 """
 
 INSERIR = """
-INSERT INTO usuario (nome, email, senha, perfil)
-VALUES (?, ?, ?, ?)
+INSERT INTO usuario (
+    nome, email, senha, perfil,
+    data_nascimento, numero_documento, telefone, confirmado
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 """
 
 ALTERAR = """
 UPDATE usuario
-SET nome = ?, email = ?, perfil = ?, data_atualizacao = CURRENT_TIMESTAMP
+SET nome = ?, email = ?, perfil = ?
+WHERE id = ?
+"""
+
+ATUALIZAR = """
+UPDATE usuario
+SET nome = ?, email = ?, perfil = ?,
+    data_nascimento = ?, numero_documento = ?, telefone = ?
 WHERE id = ?
 """
 
 ALTERAR_SENHA = """
 UPDATE usuario
-SET senha = ?, data_atualizacao = CURRENT_TIMESTAMP
+SET senha = ?
 WHERE id = ?
 """
 

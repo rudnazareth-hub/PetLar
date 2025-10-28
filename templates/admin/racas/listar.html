@@ -1,0 +1,103 @@
+{% extends "base_privada.html" %}
+
+{% block titulo %}Gerenciar Raças{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-tags"></i> Gerenciar Raças</h2>
+            <a href="/admin/racas/cadastrar" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Nova Raça
+            </a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if racas %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Espécie</th>
+                                <th scope="col">Raça</th>
+                                <th scope="col">Descrição</th>
+                                <th scope="col" class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for raca in racas %}
+                            <tr>
+                                <td>{{ raca.id_raca }}</td>
+                                <td>
+                                    <span class="badge bg-secondary">
+                                        {{ raca.especie.nome if raca.especie else '-' }}
+                                    </span>
+                                </td>
+                                <td><strong>{{ raca.nome }}</strong></td>
+                                <td>{{ raca.descricao or '-' }}</td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="/admin/racas/editar/{{ raca.id_raca }}"
+                                            class="btn btn-outline-primary"
+                                            title="Editar"
+                                            aria-label="Editar raça {{ raca.nome }}">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                            title="Excluir"
+                                            aria-label="Excluir raça {{ raca.nome }}"
+                                            onclick="excluirRaca({{ raca.id_raca }}, '{{ raca.nome|replace("'", "\\'") }}', '{{ raca.especie.nome if raca.especie else "N/A" }}')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info text-center mb-0">
+                    <i class="bi bi-info-circle"></i> Nenhuma raça cadastrada.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function excluirRaca(racaId, racaNome, especieNome) {
+        const detalhes = `
+        <div class="card bg-light">
+            <div class="card-body">
+                <table class="table table-sm table-borderless mb-0">
+                    <tr>
+                        <th scope="row" width="30%">Raça:</th>
+                        <td>${racaNome}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Espécie:</th>
+                        <td><span class="badge bg-secondary">${especieNome}</span></td>
+                    </tr>
+                </table>
+                <p class="text-warning mt-2 mb-0">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <small>Animais cadastrados com esta raça também serão afetados.</small>
+                </p>
+            </div>
+        </div>
+        `;
+
+        abrirModalConfirmacao({
+            url: `/admin/racas/excluir/${racaId}`,
+            mensagem: 'Tem certeza que deseja excluir esta raça?',
+            detalhes: detalhes
+        });
+    }
+</script>
+{% endblock %}

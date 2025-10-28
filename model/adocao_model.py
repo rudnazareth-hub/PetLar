@@ -12,9 +12,9 @@ class Adocao:
     id_adotante: int
     id_animal: int
     data_solicitacao: datetime
-    data_adocao: datetime
-    status: str
-    observacoes: str
-    
-    adotante: Optional[Adotante] 
-    animal: Optional[Animal] 
+    data_adocao: Optional[datetime] = None
+    status: str = "Concluída"
+    observacoes: Optional[str] = None
+
+    adotante: Optional[Adotante] = None
+    animal: Optional[Animal] = None 

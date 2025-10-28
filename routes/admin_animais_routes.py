@@ -1,0 +1,87 @@
+from typing import Optional
+from fastapi import APIRouter, Request, Form, status
+from fastapi.responses import RedirectResponse
+from pydantic import ValidationError
+from repo import abrigo_repo, raca_repo, animal_repo, solicitacao_repo, visita_repo
+from util.auth_decorator import requer_autenticacao
+from util.perfis import Perfil
+from util.template_util import criar_templates
+from util.flash_messages import informar_sucesso, informar_erro
+from util.logger_config import logger
+from util.exceptions import FormValidationError
+from util.rate_limiter import RateLimiter, obter_identificador_cliente
+from dtos.animal_dto import CadastrarAnimalDTO, AlterarAnimalDTO, AlterarStatusAnimalDTO
+from model.animal_model import Animal
+
+
+router = APIRouter(prefix="/admin/animais")
+templates = criar_templates("templates/admin/animais")
+
+@router.get("/cadastrar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de cadastro de animal"""
+    # Obter raças e abrigos para os selects
+    racas = raca_repo.obter_todos_com_especies()
+    abrigos = abrigo_repo.obter_todos()
+
+    # Converter para dict para os selects
+    racas_dict = {str(r.id_raca): f"{r.nome} ({r.especie.nome if r.especie else 'N/A'})" for r in racas}
+    abrigos_dict = {str(a.id_abrigo): a.responsavel for a in abrigos}
+
+    # Opções de sexo e status
+    sexo_opcoes = {"Macho": "Macho", "Fêmea": "Fêmea"}
+    status_opcoes = {
+        "Disponível": "Disponível",
+        "Em Processo": "Em Processo",
+        "Adotado": "Adotado",
+        "Indisponível": "Indisponível"
+    }
+
+    return templates.TemplateResponse(
+        "admin/animais/cadastro.html",
+        {
+            "request": request,
+            "racas": racas_dict,
+            "abrigos": abrigos_dict,
+            "sexo_opcoes": sexo_opcoes,
+            "status_opcoes": status_opcoes
+        }
+    )
+
+@router.get("/visualizar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def visualizar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exibe detalhes completos do animal"""
+    animal = animal_repo.obter_por_id_com_relacoes(id)
+
+    if not animal:
+        informar_erro(request, "Animal não encontrado")
+        return RedirectResponse("/admin/animais/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Obter solicitações de adoção relacionadas
+    solicitacoes = solicitacao_repo.obter_por_animal(id)
+
+    # Obter visitas agendadas
+    visitas = visita_repo.obter_por_animal(id)
+
+    return templates.TemplateResponse(
+        "admin/animais/visualizar.html",
+        {
+            "request": request,
+            "animal": animal,
+            "solicitacoes": solicitacoes,
+            "visitas": visitas
+        }
+    )
+
+@router.post("/alterar-status/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_alterar_status(
+    request: Request,
+    id: int,
+    status: str = Form(...),
+    usuario_logado: Optional[dict] = None
+):
+    """Altera apenas o status do animal"""
+    # Implementação similar aos outros POSTs

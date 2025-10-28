@@ -10,9 +10,9 @@ class Raca:
     id_raca: int
     id_especie: int
     nome: str
-    descricao: str
-    temperamento: str
-    expectativa_de_vida: str
-    porte: str 
+    descricao: Optional[str] = None
+    temperamento: Optional[str] = None
+    expectativa_de_vida: Optional[str] = None
+    porte: Optional[str] = None
     # relacionamentos
-    especie: Optional[Especie]  
+    especie: Optional[Especie] = None  
