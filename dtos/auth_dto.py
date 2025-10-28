@@ -1,9 +1,3 @@
-"""
-DTOs para autenticação e gerenciamento de acesso.
-
-Contém validações para login, cadastro, recuperação e redefinição de senha.
-"""
-
 from pydantic import BaseModel, Field, field_validator, model_validator
 from dtos.validators import (
     validar_email,
@@ -17,8 +11,6 @@ from util.perfis import Perfil
 
 
 class LoginDTO(BaseModel):
-    """DTO para validação de dados de login."""
-
     email: str = Field(..., description="E-mail do usuário", examples=["usuario@exemplo.com"])
     senha: str = Field(..., description="Senha do usuário", min_length=8, max_length=128)
 
@@ -27,8 +19,6 @@ class LoginDTO(BaseModel):
 
 
 class CadastroDTO(BaseModel):
-    """DTO para validação de dados de cadastro de novo usuário."""
-
     perfil: str = Field(..., description="Perfil/Role do usuário", examples=["Cliente", "Vendedor"])
     nome: str = Field(..., description="Nome completo do usuário", min_length=4, max_length=128)
     email: str = Field(..., description="E-mail do usuário", examples=["usuario@exemplo.com"])
@@ -49,16 +39,12 @@ class CadastroDTO(BaseModel):
 
 
 class EsqueciSenhaDTO(BaseModel):
-    """DTO para validação de solicitação de recuperação de senha."""
-
     email: str = Field(..., description="E-mail cadastrado do usuário", examples=["usuario@exemplo.com"])
 
     _validar_email = field_validator("email")(validar_email())
 
 
 class RedefinirSenhaDTO(BaseModel):
-    """DTO para validação de redefinição de senha via token."""
-
     token: str = Field(..., description="Token de redefinição recebido por e-mail", min_length=1)
     senha: str = Field(..., description="Nova senha do usuário", min_length=8, max_length=128)
     confirmar_senha: str = Field(..., description="Confirmação da nova senha", min_length=8, max_length=128)

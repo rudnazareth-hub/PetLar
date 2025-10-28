@@ -4,6 +4,34 @@ from model.tarefa_model import Tarefa
 from sql.tarefa_sql import *
 from util.db_util import get_connection
 
+
+def _row_to_tarefa(row) -> Tarefa:
+    """
+    Converte uma linha do banco de dados em objeto Tarefa.
+
+    Args:
+        row: Linha do cursor SQLite (sqlite3.Row)
+
+    Returns:
+        Objeto Tarefa populado
+    """
+    # Campos do JOIN (opcionais)
+    usuario_nome = row["usuario_nome"] if "usuario_nome" in row.keys() else None
+    usuario_email = row["usuario_email"] if "usuario_email" in row.keys() else None
+
+    return Tarefa(
+        id=row["id"],
+        titulo=row["titulo"],
+        descricao=row["descricao"],
+        concluida=bool(row["concluida"]),
+        usuario_id=row["usuario_id"],
+        data_criacao=row["data_criacao"],
+        data_conclusao=row["data_conclusao"],
+        usuario_nome=usuario_nome,
+        usuario_email=usuario_email
+    )
+
+
 def criar_tabela() -> bool:
     with get_connection() as conn:
         cursor = conn.cursor()
@@ -25,18 +53,7 @@ def obter_todos_por_usuario(usuario_id: int) -> list[Tarefa]:
         cursor = conn.cursor()
         cursor.execute(OBTER_TODOS_POR_USUARIO, (usuario_id,))
         rows = cursor.fetchall()
-        return [
-            Tarefa(
-                id=row["id"],
-                titulo=row["titulo"],
-                descricao=row["descricao"],
-                concluida=bool(row["concluida"]),
-                usuario_id=row["usuario_id"],
-                data_criacao=row["data_criacao"],
-                data_conclusao=row["data_conclusao"]
-            )
-            for row in rows
-        ]
+        return [_row_to_tarefa(row) for row in rows]
 
 def obter_por_id(id: int) -> Optional[Tarefa]:
     with get_connection() as conn:
@@ -44,15 +61,7 @@ def obter_por_id(id: int) -> Optional[Tarefa]:
         cursor.execute(OBTER_POR_ID, (id,))
         row = cursor.fetchone()
         if row:
-            return Tarefa(
-                id=row["id"],
-                titulo=row["titulo"],
-                descricao=row["descricao"],
-                concluida=bool(row["concluida"]),
-                usuario_id=row["usuario_id"],
-                data_criacao=row["data_criacao"],
-                data_conclusao=row["data_conclusao"]
-            )
+            return _row_to_tarefa(row)
         return None
 
 def atualizar(tarefa: Tarefa) -> bool:
