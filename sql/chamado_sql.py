@@ -1,17 +1,3 @@
-"""
-Queries SQL para a tabela de chamados.
-
-Todas as queries usam prepared statements com placeholders (?)
-para prevenir SQL injection.
-
-IMPORTANTE: Esta tabela armazena apenas os metadados do chamado.
-As mensagens/interações (incluindo a descrição inicial) são armazenadas
-na tabela chamado_interacao.
-"""
-
-# DROP necessário para remover campos obsoletos (resposta_admin, admin_id, data_resposta)
-DROP_TABELA = "DROP TABLE IF EXISTS chamado"
-
 CRIAR_TABELA = """
 CREATE TABLE IF NOT EXISTS chamado (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,8 +5,8 @@ CREATE TABLE IF NOT EXISTS chamado (
     status TEXT NOT NULL DEFAULT 'Aberto',
     prioridade TEXT NOT NULL DEFAULT 'Média',
     usuario_id INTEGER NOT NULL,
-    data_abertura DATETIME DEFAULT CURRENT_TIMESTAMP,
-    data_fechamento DATETIME,
+    data_abertura TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_fechamento TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuario(id)
 )
 """

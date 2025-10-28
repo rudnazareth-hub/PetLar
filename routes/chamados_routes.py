@@ -13,11 +13,11 @@ from fastapi import APIRouter, Form, Request, status
 from fastapi.responses import RedirectResponse
 from pydantic import ValidationError
 
-from datetime import datetime
 from dtos.chamado_dto import CriarChamadoDTO
 from dtos.chamado_interacao_dto import CriarInteracaoDTO
 from model.chamado_model import Chamado, StatusChamado, PrioridadeChamado
 from model.chamado_interacao_model import ChamadoInteracao, TipoInteracao
+from util.datetime_util import agora
 from repo import chamado_repo, chamado_interacao_repo
 from util.auth_decorator import requer_autenticacao
 from util.template_util import criar_templates
@@ -34,6 +34,8 @@ templates = criar_templates("templates/chamados")
 async def listar(request: Request, usuario_logado: Optional[dict] = None):
     """Lista todos os chamados do usuário logado."""
     assert usuario_logado is not None
+    # Passa usuario_id para obter_por_usuario - a função já usa esse ID
+    # para contar apenas mensagens de OUTROS usuários
     chamados = chamado_repo.obter_por_usuario(usuario_logado["id"])
     return templates.TemplateResponse(
         "chamados/listar.html",
@@ -96,7 +98,7 @@ async def post_cadastrar(
             usuario_id=usuario_logado["id"],
             mensagem=dto.descricao,
             tipo=TipoInteracao.ABERTURA,
-            data_interacao=datetime.now(),
+            data_interacao=agora(),
             status_resultante=StatusChamado.ABERTO.value
         )
         chamado_interacao_repo.inserir(interacao)
@@ -131,6 +133,9 @@ async def visualizar(request: Request, id: int, usuario_logado: Optional[dict] =
             f"Usuário {usuario_logado['id']} tentou acessar chamado {id} sem permissão"
         )
         return RedirectResponse("/chamados/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Marcar mensagens como lidas (apenas as de outros usuários)
+    chamado_interacao_repo.marcar_como_lidas(id, usuario_logado["id"])
 
     # Obter histórico de interações
     interacoes = chamado_interacao_repo.obter_por_chamado(id)
@@ -178,7 +183,7 @@ async def post_responder(
             usuario_id=usuario_logado["id"],
             mensagem=dto.mensagem,
             tipo=TipoInteracao.RESPOSTA_USUARIO,
-            data_interacao=datetime.now(),
+            data_interacao=agora(),
             status_resultante=chamado.status.value  # Mantém status atual
         )
         chamado_interacao_repo.inserir(interacao)
@@ -202,19 +207,37 @@ async def post_responder(
 @router.post("/{id}/excluir")
 @requer_autenticacao()
 async def post_excluir(request: Request, id: int, usuario_logado: Optional[dict] = None):
-    """Exclui um chamado do usuário."""
+    """Exclui um chamado do usuário (apenas se aberto e sem respostas de admin)."""
     assert usuario_logado is not None
     chamado = chamado_repo.obter_por_id(id)
 
     # Verificar se chamado existe e pertence ao usuário
-    if chamado and chamado.usuario_id == usuario_logado["id"]:
-        chamado_repo.excluir(id)
-        logger.info(f"Chamado {id} excluído por usuário {usuario_logado['id']}")
-        informar_sucesso(request, "Chamado excluído com sucesso!")
-    else:
+    if not chamado or chamado.usuario_id != usuario_logado["id"]:
         informar_erro(request, "Chamado não encontrado")
         logger.warning(
             f"Usuário {usuario_logado['id']} tentou excluir chamado {id} sem permissão"
         )
+        return RedirectResponse("/chamados/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se chamado está aberto
+    if chamado.status != StatusChamado.ABERTO:
+        informar_erro(request, "Apenas chamados abertos podem ser excluídos")
+        logger.warning(
+            f"Usuário {usuario_logado['id']} tentou excluir chamado {id} com status {chamado.status.value}"
+        )
+        return RedirectResponse("/chamados/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se há respostas de administrador
+    if chamado_interacao_repo.tem_resposta_admin(id):
+        informar_erro(request, "Não é possível excluir chamados que já possuem resposta do administrador")
+        logger.warning(
+            f"Usuário {usuario_logado['id']} tentou excluir chamado {id} que possui respostas de admin"
+        )
+        return RedirectResponse("/chamados/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Tudo OK, pode excluir
+    chamado_repo.excluir(id)
+    logger.info(f"Chamado {id} excluído por usuário {usuario_logado['id']}")
+    informar_sucesso(request, "Chamado excluído com sucesso!")
 
     return RedirectResponse("/chamados/listar", status_code=status.HTTP_303_SEE_OTHER)

@@ -18,13 +18,6 @@ class PrioridadeChamado(Enum):
 
 @dataclass
 class Chamado:
-    """
-    Representa um chamado (ticket de suporte).
-
-    IMPORTANTE: Este model armazena apenas os metadados do chamado.
-    As mensagens/interações (incluindo a descrição inicial) são armazenadas
-    na tabela chamado_interacao.
-    """
     id: int
     titulo: str
     status: StatusChamado
@@ -35,3 +28,5 @@ class Chamado:
     # Campos do JOIN (para exibição)
     usuario_nome: Optional[str] = None
     usuario_email: Optional[str] = None
+    mensagens_nao_lidas: int = 0
+    tem_resposta_admin: bool = False

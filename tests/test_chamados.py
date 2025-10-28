@@ -229,24 +229,18 @@ class TestAdminListarChamados:
 class TestAdminResponderChamado:
     """Testes de resposta a chamados pelo admin"""
 
-    def test_admin_acessa_formulario_responder(self, client, admin_teste, criar_usuario, fazer_login):
+    def test_admin_acessa_formulario_responder(self, cliente_autenticado, admin_autenticado):
         """Admin deve acessar formulário de resposta"""
-        # Criar admin e usuário
-        criar_usuario(admin_teste["nome"], admin_teste["email"],
-                     admin_teste["senha"], admin_teste["perfil"])
-        criar_usuario("Usuario", "user@test.com", "Senha@123")
-
         # Usuário cria chamado
-        fazer_login("user@test.com", "Senha@123")
-        client.post("/chamados/cadastrar", data={
-            "titulo": "Preciso de ajuda",
-            "descricao": "Descrição detalhada do problema que preciso resolver",
+        response = cliente_autenticado.post("/chamados/cadastrar", data={
+            "titulo": "Preciso de ajuda urgente",
+            "descricao": "Descrição detalhada do problema que preciso resolver no sistema",
             "prioridade": "Alta"
-        })
+        }, follow_redirects=False)
+        assert response.status_code == status.HTTP_303_SEE_OTHER
 
-        # Admin acessa formulário
-        fazer_login(admin_teste["email"], admin_teste["senha"])
-        response = client.get("/admin/chamados/1/responder")
+        # Admin acessa formulário de resposta
+        response = admin_autenticado.get("/admin/chamados/1/responder")
         assert response.status_code == status.HTTP_200_OK
         assert "resposta" in response.text.lower() or "responder" in response.text.lower()
 

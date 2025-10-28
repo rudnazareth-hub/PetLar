@@ -45,13 +45,18 @@
                                     {% elif chamado.prioridade.value == 'Baixa' %}
                                     <span class="badge bg-secondary">{{ chamado.prioridade.value }}</span>
                                     {% endif %}
+                                    <!-- Badge de Mensagens Não Lidas -->
+                                    {% if chamado.mensagens_nao_lidas > 0 %}
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-envelope-fill"></i>
+                                        {{ chamado.mensagens_nao_lidas }} não lida{% if chamado.mensagens_nao_lidas > 1 %}s{% endif %}
+                                    </span>
+                                    {% endif %}
                                 </div>
                                 <small class="text-muted">
-                                    <i class="bi bi-calendar3"></i> Aberto em: {{
-                                    chamado.data_abertura.strftime('%d/%m/%Y %H:%M') }}
+                                    <i class="bi bi-calendar3"></i> Aberto em: {{ chamado.data_abertura|format_data_hora }}
                                     {% if chamado.data_fechamento %}
-                                    | <i class="bi bi-check2-circle"></i> Fechado em: {{
-                                    chamado.data_fechamento.strftime('%d/%m/%Y %H:%M') }}
+                                    | <i class="bi bi-check2-circle"></i> Fechado em: {{ chamado.data_fechamento|format_data_hora }}
                                     {% endif %}
                                 </small>
                             </div>
@@ -60,7 +65,7 @@
                                     title="Ver detalhes">
                                     <i class="bi bi-eye"></i> Detalhes
                                 </a>
-                                {% if chamado.status.value not in ['Resolvido', 'Fechado'] %}
+                                {% if chamado.status.value == 'Aberto' and not chamado.tem_resposta_admin %}
                                 <button type="button" class="btn btn-sm btn-danger" title="Excluir chamado"
                                     onclick="excluirChamado({{ chamado.id }}, '{{ chamado.titulo|replace("'", "\\'") }}')">
                                     <i class="bi bi-trash"></i>

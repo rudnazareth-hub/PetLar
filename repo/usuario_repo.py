@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 from model.usuario_model import Usuario
 from sql.usuario_sql import *
@@ -64,7 +65,8 @@ def obter_por_id(id: int) -> Optional[Usuario]:
                 perfil=row["perfil"],
                 token_redefinicao=row["token_redefinicao"],
                 data_token=row["data_token"],
-                data_cadastro=row["data_cadastro"]
+                data_cadastro=row["data_cadastro"],
+                data_atualizacao=row["data_atualizacao"] if "data_atualizacao" in row.keys() else None
             )
         return None
 
@@ -82,7 +84,8 @@ def obter_todos() -> list[Usuario]:
                 perfil=row["perfil"],
                 token_redefinicao=row["token_redefinicao"] if "token_redefinicao" in row.keys() else None,
                 data_token=row["data_token"] if "data_token" in row.keys() else None,
-                data_cadastro=row["data_cadastro"] if "data_cadastro" in row.keys() else None
+                data_cadastro=row["data_cadastro"] if "data_cadastro" in row.keys() else None,
+                data_atualizacao=row["data_atualizacao"] if "data_atualizacao" in row.keys() else None
             )
             for row in rows
         ]
@@ -107,11 +110,13 @@ def obter_por_email(email: str) -> Optional[Usuario]:
                 senha=row["senha"],
                 perfil=row["perfil"],
                 token_redefinicao=row["token_redefinicao"] if "token_redefinicao" in row.keys() else None,
-                data_token=row["data_token"] if "data_token" in row.keys() else None
+                data_token=row["data_token"] if "data_token" in row.keys() else None,
+                data_cadastro=row["data_cadastro"] if "data_cadastro" in row.keys() else None,
+                data_atualizacao=row["data_atualizacao"] if "data_atualizacao" in row.keys() else None
             )
         return None
 
-def atualizar_token(email: str, token: str, data_expiracao: str) -> bool:
+def atualizar_token(email: str, token: str, data_expiracao: datetime) -> bool:
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(ATUALIZAR_TOKEN, (token, data_expiracao, email))
@@ -130,7 +135,9 @@ def obter_por_token(token: str) -> Optional[Usuario]:
                 senha=row["senha"],
                 perfil=row["perfil"],
                 token_redefinicao=row["token_redefinicao"],
-                data_token=row["data_token"]
+                data_token=row["data_token"],
+                data_cadastro=row["data_cadastro"] if "data_cadastro" in row.keys() else None,
+                data_atualizacao=row["data_atualizacao"] if "data_atualizacao" in row.keys() else None
             )
         return None
 
@@ -152,7 +159,8 @@ def obter_todos_por_perfil(perfil: str) -> list[Usuario]:
                 email=row["email"],
                 senha=row["senha"],
                 perfil=row["perfil"],
-                data_cadastro=row["data_cadastro"]
+                data_cadastro=row["data_cadastro"] if "data_cadastro" in row.keys() else None,
+                data_atualizacao=row["data_atualizacao"] if "data_atualizacao" in row.keys() else None
             )
             for row in rows
         ]

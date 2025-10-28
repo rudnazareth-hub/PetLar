@@ -12,24 +12,6 @@ from sql.chamado_interacao_sql import *
 from util.db_util import get_connection
 
 
-def _converter_data(data_str: Optional[str]) -> datetime:
-    """
-    Converte string de data do banco em objeto datetime.
-
-    Args:
-        data_str: String no formato 'YYYY-MM-DD HH:MM:SS'
-
-    Returns:
-        datetime object
-    """
-    if not data_str:
-        return datetime.now()
-    try:
-        return datetime.strptime(data_str, '%Y-%m-%d %H:%M:%S')
-    except ValueError:
-        return datetime.now()
-
-
 def _row_to_interacao(row) -> ChamadoInteracao:
     """
     Converte uma linha do banco de dados em objeto ChamadoInteracao.
@@ -43,6 +25,7 @@ def _row_to_interacao(row) -> ChamadoInteracao:
     # Verificar se os campos do JOIN existem
     usuario_nome = row["usuario_nome"] if "usuario_nome" in row.keys() else None
     usuario_email = row["usuario_email"] if "usuario_email" in row.keys() else None
+    data_leitura = row["data_leitura"] if "data_leitura" in row.keys() and row["data_leitura"] else None
 
     return ChamadoInteracao(
         id=row["id"],
@@ -50,8 +33,9 @@ def _row_to_interacao(row) -> ChamadoInteracao:
         usuario_id=row["usuario_id"],
         mensagem=row["mensagem"],
         tipo=TipoInteracao(row["tipo"]),
-        data_interacao=_converter_data(row["data_interacao"]),
+        data_interacao=row["data_interacao"],
         status_resultante=row["status_resultante"] if row["status_resultante"] else None,
+        data_leitura=data_leitura,
         usuario_nome=usuario_nome,
         usuario_email=usuario_email
     )
@@ -162,3 +146,70 @@ def excluir_por_chamado(chamado_id: int) -> bool:
         cursor = conn.cursor()
         cursor.execute(EXCLUIR_POR_CHAMADO, (chamado_id,))
         return cursor.rowcount >= 0  # Pode ser 0 se não havia interações
+
+
+def marcar_como_lidas(chamado_id: int, usuario_logado_id: int) -> bool:
+    """
+    Marca como lidas todas as mensagens de um chamado que NÃO foram
+    criadas pelo usuário logado.
+
+    Estratégia: Ao visualizar um chamado, marca automaticamente como lidas
+    todas as mensagens enviadas por outros usuários (não marca próprias mensagens).
+
+    Args:
+        chamado_id: ID do chamado
+        usuario_logado_id: ID do usuário que está visualizando
+
+    Returns:
+        True se marcação foi bem sucedida
+    """
+    from util.datetime_util import agora
+
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(MARCAR_COMO_LIDAS, (agora(), chamado_id, usuario_logado_id))
+        return True
+
+
+def obter_contador_nao_lidas(usuario_id: int) -> dict[int, int]:
+    """
+    Obtém um dicionário com a contagem de mensagens não lidas por chamado.
+
+    Conta apenas mensagens de OUTROS usuários (não conta próprias mensagens).
+
+    Args:
+        usuario_id: ID do usuário para excluir suas próprias mensagens da contagem
+
+    Returns:
+        Dict {chamado_id: quantidade_nao_lidas}
+        Exemplo: {1: 3, 5: 1, 7: 2} significa que o chamado 1 tem 3 mensagens
+        não lidas de outros usuários, o chamado 5 tem 1, e o chamado 7 tem 2.
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(CONTAR_NAO_LIDAS_POR_CHAMADO, (usuario_id,))
+        rows = cursor.fetchall()
+
+        # Criar dicionário {chamado_id: count}
+        resultado = {}
+        for row in rows:
+            resultado[row["chamado_id"]] = row["nao_lidas"]
+
+        return resultado
+
+
+def tem_resposta_admin(chamado_id: int) -> bool:
+    """
+    Verifica se um chamado possui ao menos uma resposta de administrador.
+
+    Args:
+        chamado_id: ID do chamado
+
+    Returns:
+        True se houver pelo menos uma resposta de admin, False caso contrário
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(TEM_RESPOSTA_ADMIN, (chamado_id,))
+        row = cursor.fetchone()
+        return row["total"] > 0 if row else False

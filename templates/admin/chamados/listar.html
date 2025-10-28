@@ -34,6 +34,13 @@
                                         <div class="text-truncate" style="max-width: 300px;" title="{{ chamado.titulo }}">
                                             {{ chamado.titulo }}
                                         </div>
+                                        <!-- Badge de Mensagens Não Lidas -->
+                                        {% if chamado.mensagens_nao_lidas > 0 %}
+                                        <span class="badge bg-warning text-dark mt-1">
+                                            <i class="bi bi-envelope-fill"></i>
+                                            {{ chamado.mensagens_nao_lidas }} não lida{% if chamado.mensagens_nao_lidas > 1 %}s{% endif %}
+                                        </span>
+                                        {% endif %}
                                     </td>
                                     <td>
                                         <small class="d-block">{{ chamado.usuario_nome }}</small>
@@ -62,8 +69,8 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <small>{{ chamado.data_abertura.strftime('%d/%m/%Y') }}</small>
-                                        <small class="d-block text-muted">{{ chamado.data_abertura.strftime('%H:%M') }}</small>
+                                        <small>{{ chamado.data_abertura|format_data }}</small>
+                                        <small class="d-block text-muted">{{ chamado.data_abertura|format_hora }}</small>
                                     </td>
                                     <td class="text-center">
                                         <div class="btn-group btn-group-sm" role="group">
@@ -72,7 +79,14 @@
                                                title="Responder chamado">
                                                 <i class="bi bi-reply"></i>
                                             </a>
-                                            {% if chamado.status.value != 'Fechado' %}
+                                            {% if chamado.status.value == 'Fechado' %}
+                                            <button type="button"
+                                                    class="btn btn-success"
+                                                    title="Reabrir chamado"
+                                                    onclick="reabrirChamado({{ chamado.id }}, '{{ chamado.titulo|replace("'", "\\'") }}')">
+                                                <i class="bi bi-arrow-counterclockwise"></i>
+                                            </button>
+                                            {% else %}
                                             <button type="button"
                                                     class="btn btn-secondary"
                                                     title="Fechar chamado"
@@ -120,15 +134,16 @@
 <script>
     function fecharChamado(chamadoId, chamadoTitulo) {
         const detalhes = `
-        <div class="card bg-light">
+        <div class="card bg-light border-secondary">
             <div class="card-body">
                 <h6 class="card-title mb-2">
-                    <i class="bi bi-ticket-detailed"></i> Chamado:
+                    <i class="bi bi-ticket-detailed"></i> Chamado #${chamadoId}:
                 </h6>
                 <p class="mb-0"><strong>${chamadoTitulo}</strong></p>
                 <hr>
                 <small class="text-muted">
-                    <i class="bi bi-exclamation-triangle"></i> Esta ação irá fechar o chamado sem adicionar uma resposta.
+                    <i class="bi bi-info-circle"></i> O chamado será fechado sem adicionar uma nova mensagem.
+                    <br>O usuário será notificado sobre o fechamento.
                 </small>
             </div>
         </div>
@@ -136,8 +151,44 @@
 
         abrirModalConfirmacao({
             url: `/admin/chamados/${chamadoId}/fechar`,
+            tipo: 'warning',
+            titulo: 'Confirmar Fechamento',
+            icone: 'bi-lock-fill',
             mensagem: 'Tem certeza que deseja fechar este chamado?',
-            detalhes: detalhes
+            detalhes: detalhes,
+            btnTexto: 'Fechar Chamado',
+            btnIcone: 'bi-lock-fill',
+            avisoTexto: 'Esta ação pode ser revertida reabrindo o chamado.'
+        });
+    }
+
+    function reabrirChamado(chamadoId, chamadoTitulo) {
+        const detalhes = `
+        <div class="card bg-light border-success">
+            <div class="card-body">
+                <h6 class="card-title mb-2">
+                    <i class="bi bi-ticket-detailed"></i> Chamado #${chamadoId}:
+                </h6>
+                <p class="mb-0"><strong>${chamadoTitulo}</strong></p>
+                <hr>
+                <small class="text-muted">
+                    <i class="bi bi-info-circle"></i> O chamado será reaberto com status "Em Análise".
+                    <br>O usuário poderá adicionar novas mensagens ao chamado.
+                </small>
+            </div>
+        </div>
+    `;
+
+        abrirModalConfirmacao({
+            url: `/admin/chamados/${chamadoId}/reabrir`,
+            tipo: 'success',
+            titulo: 'Confirmar Reabertura',
+            icone: 'bi-arrow-counterclockwise',
+            mensagem: 'Tem certeza que deseja reabrir este chamado?',
+            detalhes: detalhes,
+            btnTexto: 'Reabrir Chamado',
+            btnIcone: 'bi-arrow-counterclockwise',
+            avisoTexto: 'O chamado voltará ao status "Em Análise".'
         });
     }
 </script>

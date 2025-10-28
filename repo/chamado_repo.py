@@ -1,46 +1,11 @@
-"""
-Repositório para operações de banco de dados relacionadas a chamados.
-
-Implementa a camada de acesso a dados (DAL) para a entidade Chamado,
-seguindo o padrão de Repository com funções CRUD.
-"""
-
-from datetime import datetime
 from typing import Optional
 from model.chamado_model import Chamado, StatusChamado, PrioridadeChamado
 from sql.chamado_sql import *
 from util.db_util import get_connection
-
-
-def _converter_data(data_str: Optional[str]) -> Optional[datetime]:
-    """
-    Converte string de data do banco em objeto datetime.
-
-    Args:
-        data_str: String no formato 'YYYY-MM-DD HH:MM:SS' ou None
-
-    Returns:
-        datetime object ou None se data_str for None
-    """
-    if not data_str:
-        return None
-    try:
-        return datetime.strptime(data_str, '%Y-%m-%d %H:%M:%S')
-    except ValueError:
-        return None
+from util.datetime_util import agora
 
 
 def _row_to_chamado(row) -> Chamado:
-    """
-    Converte uma linha do banco de dados em objeto Chamado.
-
-    Args:
-        row: Linha do cursor SQLite (sqlite3.Row)
-
-    Returns:
-        Objeto Chamado populado
-    """
-    # Verificar se os campos do JOIN existem (nem todas as queries fazem JOIN)
     usuario_nome = row["usuario_nome"] if "usuario_nome" in row.keys() else None
     usuario_email = row["usuario_email"] if "usuario_email" in row.keys() else None
 
@@ -50,45 +15,21 @@ def _row_to_chamado(row) -> Chamado:
         status=StatusChamado(row["status"]),
         prioridade=PrioridadeChamado(row["prioridade"]),
         usuario_id=row["usuario_id"],
-        data_abertura=_converter_data(row["data_abertura"]),
-        data_fechamento=_converter_data(row["data_fechamento"]),
+        data_abertura=row["data_abertura"],
+        data_fechamento=row["data_fechamento"],
         usuario_nome=usuario_nome,
         usuario_email=usuario_email
     )
 
 
 def criar_tabela() -> bool:
-    """
-    Cria a tabela de chamados no banco de dados.
-
-    IMPORTANTE: Esta função executa DROP TABLE para remover campos obsoletos
-    (resposta_admin, admin_id, data_resposta) da versão anterior.
-    Dados existentes serão perdidos.
-
-    Returns:
-        True se operação foi bem sucedida
-    """
     with get_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute(DROP_TABELA)
         cursor.execute(CRIAR_TABELA)
         return True
 
 
 def inserir(chamado: Chamado) -> Optional[int]:
-    """
-    Insere um novo chamado no banco de dados.
-
-    IMPORTANTE: Este método insere apenas os metadados do chamado.
-    A descrição/mensagem inicial deve ser inserida separadamente
-    na tabela chamado_interacao usando chamado_interacao_repo.
-
-    Args:
-        chamado: Objeto Chamado a ser inserido
-
-    Returns:
-        ID do chamado inserido ou None em caso de erro
-    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(INSERIR, (
@@ -100,52 +41,46 @@ def inserir(chamado: Chamado) -> Optional[int]:
         return cursor.lastrowid
 
 
-def obter_todos() -> list[Chamado]:
-    """
-    Obtém todos os chamados do sistema (para administradores).
+def obter_todos(usuario_logado_id: int) -> list[Chamado]:
+    from repo import chamado_interacao_repo
 
-    Ordena por prioridade (Urgente > Alta > Média > Baixa) e data de abertura.
-
-    Returns:
-        Lista de objetos Chamado
-    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_TODOS)
         rows = cursor.fetchall()
-        return [_row_to_chamado(row) for row in rows]
+        chamados = [_row_to_chamado(row) for row in rows]
+
+        # Obter contador de mensagens não lidas (excluindo próprias mensagens)
+        contador_nao_lidas = chamado_interacao_repo.obter_contador_nao_lidas(usuario_logado_id)
+
+        # Adicionar contador aos chamados
+        for chamado in chamados:
+            chamado.mensagens_nao_lidas = contador_nao_lidas.get(chamado.id, 0)
+
+        return chamados
 
 
 def obter_por_usuario(usuario_id: int) -> list[Chamado]:
-    """
-    Obtém todos os chamados de um usuário específico.
+    from repo import chamado_interacao_repo
 
-    Ordena por status (Aberto > Em Análise > Resolvido > Fechado)
-    e data de abertura.
-
-    Args:
-        usuario_id: ID do usuário
-
-    Returns:
-        Lista de objetos Chamado do usuário
-    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_USUARIO, (usuario_id,))
         rows = cursor.fetchall()
-        return [_row_to_chamado(row) for row in rows]
+        chamados = [_row_to_chamado(row) for row in rows]
+
+        # Obter contador de mensagens não lidas (excluindo próprias mensagens do usuário)
+        contador_nao_lidas = chamado_interacao_repo.obter_contador_nao_lidas(usuario_id)
+
+        # Adicionar informações aos chamados
+        for chamado in chamados:
+            chamado.mensagens_nao_lidas = contador_nao_lidas.get(chamado.id, 0)
+            chamado.tem_resposta_admin = chamado_interacao_repo.tem_resposta_admin(chamado.id)
+
+        return chamados
 
 
 def obter_por_id(id: int) -> Optional[Chamado]:
-    """
-    Obtém um chamado específico por ID.
-
-    Args:
-        id: ID do chamado
-
-    Returns:
-        Objeto Chamado ou None se não encontrado
-    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_ID, (id,))
@@ -160,21 +95,8 @@ def atualizar_status(
     status: str,
     fechar: bool = False
 ) -> bool:
-    """
-    Atualiza o status de um chamado.
-
-    IMPORTANTE: Respostas/mensagens não são mais armazenadas aqui.
-    Use chamado_interacao_repo para inserir novas interações.
-
-    Args:
-        id: ID do chamado
-        status: Novo status (Aberto, Em Análise, Resolvido, Fechado)
-        fechar: Se True, define data_fechamento para agora
-
-    Returns:
-        True se atualização foi bem sucedida, False caso contrário
-    """
-    data_fechamento = datetime.now().strftime('%Y-%m-%d %H:%M:%S') if fechar else None
+    # Passar datetime diretamente (não usar strftime) para preservar timezone
+    data_fechamento = agora() if fechar else None
 
     with get_connection() as conn:
         cursor = conn.cursor()
@@ -187,15 +109,6 @@ def atualizar_status(
 
 
 def excluir(id: int) -> bool:
-    """
-    Exclui um chamado do banco de dados.
-
-    Args:
-        id: ID do chamado a ser excluído
-
-    Returns:
-        True se exclusão foi bem sucedida, False caso contrário
-    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(EXCLUIR, (id,))
@@ -203,15 +116,6 @@ def excluir(id: int) -> bool:
 
 
 def contar_abertos_por_usuario(usuario_id: int) -> int:
-    """
-    Conta quantos chamados abertos um usuário possui.
-
-    Args:
-        usuario_id: ID do usuário
-
-    Returns:
-        Número de chamados com status 'Aberto' ou 'Em Análise'
-    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(CONTAR_ABERTOS_POR_USUARIO, (usuario_id,))
@@ -220,12 +124,6 @@ def contar_abertos_por_usuario(usuario_id: int) -> int:
 
 
 def contar_pendentes() -> int:
-    """
-    Conta quantos chamados pendentes existem no sistema (para admins).
-
-    Returns:
-        Número de chamados com status 'Aberto' ou 'Em Análise'
-    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(CONTAR_PENDENTES)
