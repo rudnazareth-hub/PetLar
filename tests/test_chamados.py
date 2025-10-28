@@ -434,55 +434,69 @@ class TestHistoricoInteracoes:
 
     def test_usuario_pode_responder_proprio_chamado(self, cliente_autenticado):
         """Usuário deve poder adicionar mensagens ao seu próprio chamado"""
+        import re
+
         # Criar chamado
         response = cliente_autenticado.post("/chamados/cadastrar", data={
             "titulo": "Chamado com múltiplas mensagens",
             "descricao": "Descrição inicial do chamado",
             "prioridade": "Alta"
-        }, follow_redirects=False)
+        }, follow_redirects=True)
 
-        assert response.status_code == status.HTTP_303_SEE_OTHER
+        assert response.status_code == status.HTTP_200_OK
+
+        # Extrair ID do chamado criado
+        match = re.search(r'href="/chamados/(\d+)/visualizar"', response.text)
+        assert match, "Chamado criado não encontrado na listagem"
+        chamado_id = match.group(1)
 
         # Usuário adiciona informação adicional
-        response = cliente_autenticado.post("/chamados/1/responder", data={
+        response = cliente_autenticado.post(f"/chamados/{chamado_id}/responder", data={
             "mensagem": "Informação adicional sobre o problema reportado"
         }, follow_redirects=False)
 
         assert response.status_code == status.HTTP_303_SEE_OTHER
-        assert response.headers["location"] == "/chamados/1/visualizar"
+        assert response.headers["location"] == f"/chamados/{chamado_id}/visualizar"
 
     def test_historico_mostra_todas_interacoes(self, cliente_autenticado, admin_autenticado):
         """Histórico deve mostrar todas as interações em ordem"""
+        import re
+
         # Usuário cria chamado
         response = cliente_autenticado.post("/chamados/cadastrar", data={
             "titulo": "Chamado com histórico completo",
             "descricao": "Descrição inicial do problema",
             "prioridade": "Alta"
-        }, follow_redirects=False)
-        assert response.status_code == status.HTTP_303_SEE_OTHER
+        }, follow_redirects=True)
+        assert response.status_code == status.HTTP_200_OK
+
+        # Extrair ID do chamado criado
+        match = re.search(r'href="/chamados/(\d+)/visualizar"', response.text)
+        assert match, "Chamado criado não encontrado na listagem"
+        chamado_id = match.group(1)
 
         # Admin responde
-        response = admin_autenticado.post("/admin/chamados/1/responder", data={
+        response = admin_autenticado.post(f"/admin/chamados/{chamado_id}/responder", data={
             "mensagem": "Primeira resposta do admin",
             "status_chamado": "Em Análise"
         }, follow_redirects=False)
         assert response.status_code == status.HTTP_303_SEE_OTHER
 
         # Usuário responde
-        response = cliente_autenticado.post("/chamados/1/responder", data={
+        response = cliente_autenticado.post(f"/chamados/{chamado_id}/responder", data={
             "mensagem": "Resposta do usuário com mais informações"
         }, follow_redirects=False)
         assert response.status_code == status.HTTP_303_SEE_OTHER
 
         # Admin responde novamente
-        response = admin_autenticado.post("/admin/chamados/1/responder", data={
+        response = admin_autenticado.post(f"/admin/chamados/{chamado_id}/responder", data={
             "mensagem": "Segunda resposta do admin",
             "status_chamado": "Resolvido"
         }, follow_redirects=False)
         assert response.status_code == status.HTTP_303_SEE_OTHER
 
         # Verificar histórico
-        response = cliente_autenticado.get("/chamados/1/visualizar")
+        response = cliente_autenticado.get(f"/chamados/{chamado_id}/visualizar")
         assert response.status_code == status.HTTP_200_OK
         assert "Descrição inicial do problema" in response.text
         assert "Primeira resposta do admin" in response.text
