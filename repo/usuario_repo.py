@@ -134,3 +134,28 @@ def obter_todos_por_perfil(perfil: str) -> list[Usuario]:
         cursor.execute(OBTER_TODOS_POR_PERFIL, (perfil,))
         rows = cursor.fetchall()
         return [_row_to_usuario(row) for row in rows]
+
+def buscar_por_termo(termo: str, limit: int = 10) -> list[Usuario]:
+    """
+    Busca usuários por termo (pesquisa em nome e email).
+
+    Args:
+        termo: Termo de busca
+        limit: Número máximo de resultados
+
+    Returns:
+        Lista de usuários que correspondem à busca
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """SELECT id, nome, email, senha, perfil,
+                      token_redefinicao, data_token,
+                      data_cadastro[timestamp], data_atualizacao[timestamp]
+               FROM usuario
+               WHERE (LOWER(nome) LIKE LOWER(?) OR LOWER(email) LIKE LOWER(?))
+               LIMIT ?""",
+            (f"%{termo}%", f"%{termo}%", limit)
+        )
+        rows = cursor.fetchall()
+        return [_row_to_usuario(row) for row in rows]

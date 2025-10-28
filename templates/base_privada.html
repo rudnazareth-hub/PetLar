@@ -14,6 +14,9 @@
     <!-- CSS Customizado -->
     <link rel="stylesheet" href="/static/css/custom.css">
 
+    <!-- Chat Widget CSS -->
+    <link rel="stylesheet" href="/static/css/chat-widget.css">
+
     {% block head %}{% endblock %}
 </head>
 
@@ -98,6 +101,9 @@
     <!-- Modal de Alerta (componente genérico) -->
     {% include 'components/modal_alerta.html' %}
 
+    <!-- Chat Widget -->
+    {% include 'components/chat_widget.html' %}
+
     <!-- Footer -->
     <footer class="bg-light text-center text-muted py-3 mt-auto">
         <div class="container">
@@ -127,6 +133,22 @@
 
     <!-- Script de Máscaras de Input -->
     <script src="/static/js/input-mask.js"></script>
+
+    <!-- Chat Widget JS -->
+    <script src="/static/js/chat-widget.js" defer></script>
+    <script>
+        // Guardar ID do usuário logado no body para o chat
+        {% if request.session.get('usuario_logado') %}
+        document.body.dataset.usuarioId = {{ request.session.get('usuario_logado')['id'] }};
+        {% endif %}
+
+        // Inicializar chat quando DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof chatWidget !== 'undefined') {
+                chatWidget.init();
+            }
+        });
+    </script>
 
     {% block scripts %}{% endblock %}
 </body>

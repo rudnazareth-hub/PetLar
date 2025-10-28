@@ -23,6 +23,7 @@ from util.exceptions import FormValidationError
 
 # Repositórios
 from repo import usuario_repo, configuracao_repo, tarefa_repo, chamado_repo, chamado_interacao_repo, indices_repo
+from repo import chat_sala_repo, chat_participante_repo, chat_mensagem_repo
 
 # Rotas
 from routes.auth_routes import router as auth_router
@@ -33,6 +34,7 @@ from routes.admin_configuracoes_routes import router as admin_config_router
 from routes.admin_backups_routes import router as admin_backups_router
 from routes.admin_chamados_routes import router as admin_chamados_router
 from routes.usuario_routes import router as usuario_router
+from routes.chat_routes import router as chat_router
 from routes.public_routes import router as public_router
 from routes.examples_routes import router as examples_router
 
@@ -81,6 +83,15 @@ try:
     chamado_interacao_repo.criar_tabela()
     logger.info("Tabela 'chamado_interacao' criada/verificada")
 
+    chat_sala_repo.criar_tabela()
+    logger.info("Tabela 'chat_sala' criada/verificada")
+
+    chat_participante_repo.criar_tabela()
+    logger.info("Tabela 'chat_participante' criada/verificada")
+
+    chat_mensagem_repo.criar_tabela()
+    logger.info("Tabela 'chat_mensagem' criada/verificada")
+
     # Criar índices para otimização de performance
     indices_repo.criar_indices()
 
@@ -119,6 +130,9 @@ logger.info("Router admin de chamados incluído")
 
 app.include_router(usuario_router, tags=["Usuário"])
 logger.info("Router de usuário incluído")
+
+app.include_router(chat_router, tags=["Chat"])
+logger.info("Router de chat incluído")
 
 # Rotas públicas (deve ser por último para não sobrescrever outras rotas)
 app.include_router(public_router, tags=["Público"])
