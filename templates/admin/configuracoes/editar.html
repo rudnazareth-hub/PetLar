@@ -1,5 +1,5 @@
 {% extends "base_privada.html" %}
-{% from 'macros/form_fields.html' import input_text, textarea %}
+{% from 'macros/form_fields.html' import field %}
 
 {% block titulo %}Editar Configuração{% endblock %}
 
@@ -59,45 +59,43 @@
                         <!-- Campo de Valor -->
                         {% if 'senha' in config.chave or 'secret' in config.chave or 'api_key' in config.chave %}
                             {# Campos sensíveis como textarea #}
-                            {{ textarea(
+                            {{ field(
                                 name='valor',
                                 label='Novo Valor',
+                                type='textarea',
                                 value=dados.get('valor', ''),
-                                error=erros.get('valor'),
-                                required=True,
+                                required=true,
                                 rows=3,
                                 help_text='Campo sensível - digite com atenção'
                             ) }}
                         {% elif 'max' in config.chave or 'minutos' in config.chave or 'tamanho' in config.chave or 'bytes' in config.chave or 'delay' in config.chave %}
                             {# Campos numéricos #}
-                            {{ input_text(
+                            {{ field(
                                 name='valor',
                                 label='Novo Valor',
+                                type='number',
                                 value=dados.get('valor', ''),
-                                error=erros.get('valor'),
-                                required=True,
-                                input_type='number',
+                                required=true,
                                 help_text='Valor numérico inteiro'
                             ) }}
                         {% elif 'email' in config.chave %}
                             {# Campos de email #}
-                            {{ input_text(
+                            {{ field(
                                 name='valor',
                                 label='Novo Valor',
+                                type='email',
                                 value=dados.get('valor', ''),
-                                error=erros.get('valor'),
-                                required=True,
-                                input_type='email',
+                                required=true,
                                 help_text='Endereço de email válido'
                             ) }}
                         {% else %}
                             {# Campos de texto padrão #}
-                            {{ input_text(
+                            {{ field(
                                 name='valor',
                                 label='Novo Valor',
+                                type='text',
                                 value=dados.get('valor', ''),
-                                error=erros.get('valor'),
-                                required=True,
+                                required=true,
                                 help_text='Digite o novo valor para esta configuração'
                             ) }}
                         {% endif %}
