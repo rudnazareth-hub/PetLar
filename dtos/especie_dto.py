@@ -36,11 +36,5 @@ class AlterarEspecieDTO(BaseModel):
         validar_string_obrigatoria('Nome', tamanho_minimo=2, tamanho_maximo=50)
     )
     _validar_descricao = field_validator('descricao')(
-<<<<<<< HEAD
-        validar_texto_longo_opcional(tamanho_maximo=200)
-    )
-
-=======
         validar_comprimento(tamanho_maximo=200)
     )
->>>>>>> 94b51611858862b1b07628a54fe3ccd46f45137a
