@@ -11,11 +11,11 @@ from util.db_util import get_connection
 def _row_to_especie(row) -> Especie:
     """Converte uma linha do banco em objeto Especie."""
     return Especie(
-        id_especie=row["id_especie"],
+        id=row["id"],
         nome=row["nome"],
         descricao=row["descricao"],
-        data_cadastro=row.get("data_cadastro"),
-        data_atualizacao=row.get("data_atualizacao")
+        data_cadastro=row["data_cadastro"],
+        data_atualizacao=row["data_atualizacao"]
     )
 
 
@@ -108,7 +108,7 @@ def atualizar(especie: Especie) -> bool:
         cursor.execute(ATUALIZAR, (
             especie.nome,
             especie.descricao,
-            especie.id_especie
+            especie.id
         ))
         return cursor.rowcount > 0
 
@@ -186,6 +186,6 @@ def existe_nome(nome: str, id_excluir: Optional[int] = None) -> bool:
     especie = obter_por_nome(nome)
     if not especie:
         return False
-    if id_excluir and especie.id_especie == id_excluir:
+    if id_excluir and especie.id == id_excluir:
         return False
     return True

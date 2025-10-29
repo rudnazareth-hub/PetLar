@@ -40,8 +40,8 @@ def _row_to_animal(row) -> Animal:
             responsavel=row["responsavel"] if row["responsavel"] else "",
             data_abertura=None
         ) if row["id_abrigo"] else None,
-        data_cadastro=row.get("data_cadastro"),
-        data_atualizacao=row.get("data_atualizacao")
+        data_cadastro=row["data_cadastro"],
+        data_atualizacao=row["data_atualizacao"]
     )
 
 

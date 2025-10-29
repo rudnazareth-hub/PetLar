@@ -28,12 +28,12 @@
                         <tbody>
                             {% for especie in especies %}
                             <tr>
-                                <td>{{ especie.id_especie }}</td>
+                                <td>{{ especie.id }}</td>
                                 <td><strong>{{ especie.nome }}</strong></td>
                                 <td>{{ especie.descricao or '-' }}</td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
-                                        <a href="/admin/especies/editar/{{ especie.id_especie }}"
+                                        <a href="/admin/especies/editar/{{ especie.id }}"
                                             class="btn btn-outline-primary"
                                             title="Editar"
                                             aria-label="Editar espécie {{ especie.nome }}">
@@ -42,7 +42,7 @@
                                         <button type="button" class="btn btn-outline-danger"
                                             title="Excluir"
                                             aria-label="Excluir espécie {{ especie.nome }}"
-                                            onclick="excluirEspecie({{ especie.id_especie }}, '{{ especie.nome|replace("'", "\\'") }}')">
+                                            onclick="excluirEspecie({{ especie.id }}, '{{ especie.nome|replace("'", "\\'") }}')">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>

@@ -26,7 +26,7 @@ async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None)
     abrigos = abrigo_repo.obter_todos()
 
     # Converter para dict para os selects
-    racas_dict = {str(r.id_raca): f"{r.nome} ({r.especie.nome if r.especie else 'N/A'})" for r in racas}
+    racas_dict = {str(r.id): f"{r.nome} ({r.especie.nome if r.especie else 'N/A'})" for r in racas}
     abrigos_dict = {str(a.id_abrigo): a.responsavel for a in abrigos}
 
     # Opções de sexo e status

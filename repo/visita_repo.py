@@ -26,8 +26,8 @@ def _row_to_visita(row) -> Visita:
         data_agendada=_converter_data(row["data_agendada"]),
         observacoes=row["observacoes"],
         status=row["status"] if row["status"] else "Agendada",
-        data_cadastro=row.get("data_cadastro"),
-        data_atualizacao=row.get("data_atualizacao"),
+        data_cadastro=row["data_cadastro"],
+        data_atualizacao=row["data_atualizacao"],
         adotante=None,
         abrigo=None
     )

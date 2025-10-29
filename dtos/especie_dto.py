@@ -27,11 +27,11 @@ CadastrarEspecieDTO = CriarEspecieDTO
 
 class AlterarEspecieDTO(BaseModel):
     """DTO para alteração de espécie"""
-    id_especie: int
+    id: int
     nome: str
     descricao: str = ""
 
-    _validar_id = field_validator('id_especie')(validar_id_positivo())
+    _validar_id = field_validator('id')(validar_id_positivo())
     _validar_nome = field_validator('nome')(
         validar_string_obrigatoria('Nome', tamanho_minimo=2, tamanho_maximo=50)
     )

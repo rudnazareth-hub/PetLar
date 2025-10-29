@@ -52,7 +52,7 @@ async def post_cadastrar(
 
         # Criar espécie
         especie = Especie(
-            id_especie=0,
+            id=0,
             nome=dto.nome,
             descricao=dto.descricao
         )
@@ -112,20 +112,20 @@ async def post_editar(
         return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
 
     # Dados do formulário para reexibição em caso de erro
-    dados_formulario = {"id_especie": id, "nome": nome, "descricao": descricao}
+    dados_formulario = {"id": id, "nome": nome, "descricao": descricao}
 
     try:
         # Validar com DTO
-        dto = AlterarEspecieDTO(id_especie=id, nome=nome, descricao=descricao)
+        dto = AlterarEspecieDTO(id=id, nome=nome, descricao=descricao)
 
         # Atualizar espécie
         especie_atualizada = Especie(
-            id_especie=id,
+            id=id,
             nome=dto.nome,
             descricao=dto.descricao
         )
 
-        especie_repo.alterar(especie_atualizada)
+        especie_repo.atualizar(especie_atualizada)
         logger.info(f"Espécie {id} alterada por admin {usuario_logado['id']}")
 
         informar_sucesso(request, "Espécie alterada com sucesso!")

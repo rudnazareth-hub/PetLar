@@ -12,17 +12,17 @@ from util.db_util import get_connection
 def _row_to_raca(row) -> Raca:
     """Converte uma linha do banco em objeto Raca com Especie."""
     return Raca(
-        id_raca=row["id_raca"],
+        id=row["id"],
         id_especie=row["id_especie"],
         nome=row["nome"],
         descricao=row["descricao"],
         temperamento=row["temperamento"],
         expectativa_de_vida=row["expectativa_de_vida"],
         porte=row["porte"],
-        data_cadastro=row.get("data_cadastro"),
-        data_atualizacao=row.get("data_atualizacao"),
+        data_cadastro=row["data_cadastro"],
+        data_atualizacao=row["data_atualizacao"],
         especie=Especie(
-            id_especie=row["especie_id"],
+            id=row["especie_id"],
             nome=row["especie_nome"],
             descricao=row["especie_descricao"]
         ) if row["especie_id"] else None
@@ -96,7 +96,7 @@ def atualizar(raca: Raca) -> bool:
             raca.temperamento,
             raca.expectativa_de_vida,
             raca.porte,
-            raca.id_raca
+            raca.id
         ))
         return cursor.rowcount > 0
 

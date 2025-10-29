@@ -29,12 +29,12 @@ CadastrarRacaDTO = CriarRacaDTO
 
 class AlterarRacaDTO(BaseModel):
     """DTO para alteração de raça"""
-    id_raca: int
+    id: int
     nome: str
     id_especie: int
     descricao: str = ""
 
-    _validar_id = field_validator('id_raca')(validar_id_positivo())
+    _validar_id = field_validator('id')(validar_id_positivo())
     _validar_nome = field_validator('nome')(
         validar_string_obrigatoria('Nome', tamanho_minimo=2, tamanho_maximo=100)
     )

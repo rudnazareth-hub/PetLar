@@ -76,7 +76,7 @@ class TestInserir:
     def test_inserir_raca_completa(self, especie_cachorro):
         """Deve inserir raça com todos os campos."""
         raca = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Labrador",
             descricao="Raça dócil e amigável",
@@ -98,7 +98,7 @@ class TestInserir:
     def test_inserir_raca_campos_minimos(self, especie_gato):
         """Deve inserir raça apenas com campos obrigatórios."""
         raca = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_gato,
             nome="Persa",
             descricao=None,
@@ -120,7 +120,7 @@ class TestInserir:
     def test_inserir_gera_id_sequencial(self, especie_cachorro):
         """IDs devem ser gerados sequencialmente."""
         raca1 = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Bulldog",
             descricao=None,
@@ -129,7 +129,7 @@ class TestInserir:
             porte=None
         )
         raca2 = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Poodle",
             descricao=None,
@@ -150,7 +150,7 @@ class TestObterPorId:
     def test_obter_raca_existente_com_especie(self, especie_cachorro):
         """Deve retornar raça com espécie relacionada."""
         raca = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Golden Retriever",
             descricao="Raça inteligente",
@@ -163,7 +163,7 @@ class TestObterPorId:
         raca_bd = raca_repo.obter_por_id(id_inserido)
 
         assert raca_bd is not None
-        assert raca_bd.id_raca == id_inserido
+        assert raca_bd.id == id_inserido
         assert raca_bd.nome == "Golden Retriever"
         assert raca_bd.especie is not None
         assert raca_bd.especie.nome == "Cachorro"
@@ -177,7 +177,7 @@ class TestObterPorId:
     def test_obter_raca_campos_opcionais_none(self, especie_gato):
         """Deve retornar raça com campos opcionais None."""
         raca = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_gato,
             nome="Siamês",
             descricao=None,
@@ -207,7 +207,7 @@ class TestObterTodos:
     def test_obter_todos_lista_racas(self, especie_cachorro, especie_gato):
         """Deve retornar todas as raças com suas espécies."""
         raca1 = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Beagle",
             descricao=None,
@@ -216,7 +216,7 @@ class TestObterTodos:
             porte="Médio"
         )
         raca2 = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_gato,
             nome="Maine Coon",
             descricao=None,
@@ -225,7 +225,7 @@ class TestObterTodos:
             porte="Grande"
         )
         raca3 = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Chihuahua",
             descricao=None,
@@ -253,7 +253,7 @@ class TestObterTodos:
     def test_obter_todos_preserva_relacionamento_especie(self, especie_cachorro):
         """Deve preservar relacionamento com espécie em todas as raças."""
         raca = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Dálmata",
             descricao=None,
@@ -276,7 +276,7 @@ class TestObterPorEspecie:
         """Deve retornar apenas raças da espécie solicitada."""
         # Criar raças de cachorro
         raca1 = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Pastor Alemão",
             descricao=None,
@@ -285,7 +285,7 @@ class TestObterPorEspecie:
             porte="Grande"
         )
         raca2 = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Rottweiler",
             descricao=None,
@@ -296,7 +296,7 @@ class TestObterPorEspecie:
 
         # Criar raça de gato
         raca3 = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_gato,
             nome="Ragdoll",
             descricao=None,
@@ -334,7 +334,7 @@ class TestAtualizar:
     def test_atualizar_raca_existente(self, especie_cachorro):
         """Deve atualizar raça existente."""
         raca = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Boxer",
             descricao="Descrição antiga",
@@ -345,7 +345,7 @@ class TestAtualizar:
         id_inserido = raca_repo.inserir(raca)
 
         raca_atualizada = Raca(
-            id_raca=id_inserido,
+            id=id_inserido,
             id_especie=especie_cachorro,
             nome="Boxer Alemão",
             descricao="Descrição nova",
@@ -366,7 +366,7 @@ class TestAtualizar:
     def test_atualizar_raca_inexistente(self, especie_cachorro):
         """Deve retornar False ao atualizar raça inexistente."""
         raca = Raca(
-            id_raca=99999,
+            id=99999,
             id_especie=especie_cachorro,
             nome="Inexistente",
             descricao=None,
@@ -380,7 +380,7 @@ class TestAtualizar:
     def test_atualizar_campos_para_none(self, especie_gato):
         """Deve permitir atualizar campos opcionais para None."""
         raca = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_gato,
             nome="Angorá",
             descricao="Com descrição",
@@ -391,7 +391,7 @@ class TestAtualizar:
         id_inserido = raca_repo.inserir(raca)
 
         raca_atualizada = Raca(
-            id_raca=id_inserido,
+            id=id_inserido,
             id_especie=especie_gato,
             nome="Angorá Turco",
             descricao=None,
@@ -411,7 +411,7 @@ class TestAtualizar:
     def test_atualizar_mudar_especie(self, especie_cachorro, especie_gato):
         """Deve permitir mudar espécie de uma raça."""
         raca = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Raça Teste",
             descricao=None,
@@ -422,7 +422,7 @@ class TestAtualizar:
         id_inserido = raca_repo.inserir(raca)
 
         raca_atualizada = Raca(
-            id_raca=id_inserido,
+            id=id_inserido,
             id_especie=especie_gato,
             nome="Raça Teste",
             descricao=None,
@@ -444,7 +444,7 @@ class TestExcluir:
     def test_excluir_raca_sem_animais(self, especie_cachorro):
         """Deve excluir raça que não tem animais vinculados."""
         raca = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Akita",
             descricao=None,
@@ -469,7 +469,7 @@ class TestExcluir:
         """Deve lançar exceção ao excluir raça com animais."""
         # Criar raça
         raca = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Husky",
             descricao=None,
@@ -477,7 +477,7 @@ class TestExcluir:
             expectativa_de_vida=None,
             porte=None
         )
-        id_raca = raca_repo.inserir(raca)
+        id = raca_repo.inserir(raca)
 
         # Criar abrigo e animal vinculado
         with get_connection() as conn:
@@ -497,14 +497,14 @@ class TestExcluir:
 
             # Criar animal
             cursor.execute(
-                """INSERT INTO animal (id_raca, id_abrigo, nome, sexo, data_entrada)
+                """INSERT INTO animal (id, id_abrigo, nome, sexo, data_entrada)
                    VALUES (?, ?, ?, ?, ?)""",
-                (id_raca, id_usuario, "Rex", "M", "2024-01-01")
+                (id, id_usuario, "Rex", "M", "2024-01-01")
             )
 
         # Tentar excluir deve lançar exceção
         with pytest.raises(Exception) as exc_info:
-            raca_repo.excluir(id_raca)
+            raca_repo.excluir(id)
 
         assert "Não é possível excluir esta raça" in str(exc_info.value)
         assert "1 animal(is) vinculado(s)" in str(exc_info.value)
@@ -517,7 +517,7 @@ class TestIntegracaoCRUD:
         """Deve executar ciclo completo: criar, ler, atualizar, excluir."""
         # CREATE
         raca = Raca(
-            id_raca=0,
+            id=0,
             id_especie=especie_cachorro,
             nome="Shih Tzu",
             descricao="Raça pequena",
@@ -559,7 +559,7 @@ class TestIntegracaoCRUD:
         portes = ["Pequeno", "Médio", "Grande"]
         for i, porte in enumerate(portes):
             raca = Raca(
-                id_raca=0,
+                id=0,
                 id_especie=especie_cachorro,
                 nome=f"Raça{i}",
                 descricao=None,

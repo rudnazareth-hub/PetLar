@@ -58,7 +58,7 @@ async def post_cadastrar(
 
         # Criar raça
         raca = Raca(
-            id_raca=0,
+            id=0,
             nome=dto.nome,
             id_especie=dto.id_especie,
             descricao=dto.descricao

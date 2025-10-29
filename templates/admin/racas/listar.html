@@ -29,7 +29,7 @@
                         <tbody>
                             {% for raca in racas %}
                             <tr>
-                                <td>{{ raca.id_raca }}</td>
+                                <td>{{ raca.id }}</td>
                                 <td>
                                     <span class="badge bg-secondary">
                                         {{ raca.especie.nome if raca.especie else '-' }}
@@ -39,7 +39,7 @@
                                 <td>{{ raca.descricao or '-' }}</td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
-                                        <a href="/admin/racas/editar/{{ raca.id_raca }}"
+                                        <a href="/admin/racas/editar/{{ raca.id }}"
                                             class="btn btn-outline-primary"
                                             title="Editar"
                                             aria-label="Editar raça {{ raca.nome }}">
@@ -48,7 +48,7 @@
                                         <button type="button" class="btn btn-outline-danger"
                                             title="Excluir"
                                             aria-label="Excluir raça {{ raca.nome }}"
-                                            onclick="excluirRaca({{ raca.id_raca }}, '{{ raca.nome|replace("'", "\\'") }}', '{{ raca.especie.nome if raca.especie else "N/A" }}')">
+                                            onclick="excluirRaca({{ raca.id }}, '{{ raca.nome|replace("'", "\\'") }}', '{{ raca.especie.nome if raca.especie else "N/A" }}')">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
