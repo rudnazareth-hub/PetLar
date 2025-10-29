@@ -26,6 +26,15 @@ admin_especies_limiter = RateLimiter(
     nome="admin_especies"
 )
 
+@router.get("/cadastrar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de cadastro de espécie"""
+    return templates.TemplateResponse(
+        "admin/especies/cadastro.html",
+        {"request": request}
+    )
+
 @router.post("/cadastrar")
 @requer_autenticacao([Perfil.ADMIN.value])
 async def post_cadastrar(
@@ -85,6 +94,28 @@ async def listar(request: Request, usuario_logado: Optional[dict] = None):
     return templates.TemplateResponse(
         "admin/especies/listar.html",
         {"request": request, "especies": especies}
+    )
+
+@router.get("/editar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de alteração de espécie"""
+    especie = especie_repo.obter_por_id(id)
+
+    if not especie:
+        informar_erro(request, "Espécie não encontrada")
+        return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Criar cópia dos dados da espécie
+    dados_especie = especie.__dict__.copy()
+
+    return templates.TemplateResponse(
+        "admin/especies/editar.html",
+        {
+            "request": request,
+            "especie": especie,
+            "dados": dados_especie
+        }
     )
 
 @router.post("/editar/{id}")

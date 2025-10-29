@@ -100,6 +100,33 @@ async def listar(request: Request, usuario_logado: Optional[dict] = None):
         {"request": request, "racas": racas}
     )
 
+@router.get("/editar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de alteração de raça"""
+    raca = raca_repo.obter_por_id(id)
+
+    if not raca:
+        informar_erro(request, "Raça não encontrada")
+        return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Obter todas as espécies para o select
+    especies = especie_repo.obter_todos()
+    especies_dict = {str(e.id): e.nome for e in especies}
+
+    # Criar cópia dos dados da raça
+    dados_raca = raca.__dict__.copy()
+
+    return templates.TemplateResponse(
+        "admin/racas/editar.html",
+        {
+            "request": request,
+            "raca": raca,
+            "dados": dados_raca,
+            "especies": especies_dict
+        }
+    )
+
 @router.get("/cadastrar")
 @requer_autenticacao([Perfil.ADMIN.value])
 async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None):
