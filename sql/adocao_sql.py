@@ -23,12 +23,12 @@ VALUES (?, ?, ?, ?)
 
 OBTER_POR_ABRIGO = """
 SELECT
-    ad.id, ad.id_adotante, ad.id_animal, ad.data_solicitacao,
+    ad.id as id_adocao, ad.id_adotante, ad.id_animal, ad.data_solicitacao,
     ad.data_adocao, ad.status, ad.observacoes, ad.data_atualizacao,
     a.nome as animal_nome,
     u.nome as adotante_nome
 FROM adocao ad
-INNER JOIN animal a ON ad.id_animal = a.id_animal
+INNER JOIN animal a ON ad.id_animal = a.id
 INNER JOIN usuario u ON ad.id_adotante = u.id
 WHERE a.id_abrigo = ?
 ORDER BY ad.data_adocao DESC
@@ -45,7 +45,7 @@ SELECT
     a.nome as animal_nome,
     u.nome as adotante_nome
 FROM adocao ad
-INNER JOIN animal a ON ad.id_animal = a.id_animal
+INNER JOIN animal a ON ad.id_animal = a.id
 INNER JOIN usuario u ON ad.id_adotante = u.id
 ORDER BY ad.data_adocao DESC
 """
@@ -57,7 +57,7 @@ SELECT
     a.nome as animal_nome,
     u.nome as adotante_nome
 FROM adocao ad
-INNER JOIN animal a ON ad.id_animal = a.id_animal
+INNER JOIN animal a ON ad.id_animal = a.id
 INNER JOIN usuario u ON ad.id_adotante = u.id
 WHERE a.nome LIKE ? OR u.nome LIKE ? OR ad.observacoes LIKE ?
 ORDER BY ad.data_adocao DESC

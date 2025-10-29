@@ -48,3 +48,7 @@ class Animal:
     @property
     def id_animal(self) -> int:
         return self.id
+
+    @id_animal.setter
+    def id_animal(self, value: int):
+        self.id = value

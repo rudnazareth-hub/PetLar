@@ -19,10 +19,10 @@ from util.rate_limiter import RateLimiter, obter_identificador_cliente
 router = APIRouter(prefix="/admin/especies")
 templates = criar_templates("templates/admin/especies")
 
-# Rate limiter
+# Rate limiter para operações admin
 admin_especies_limiter = RateLimiter(
-    max_tentativas=10,
-    janela_minutos=1,
+    max_tentativas=20,  # 20 operações
+    janela_minutos=1,   # por minuto
     nome="admin_especies"
 )
 

@@ -26,7 +26,7 @@ def _row_to_animal(row) -> Animal:
         status=status,
         foto=row["foto"],
         raca=Raca(
-            id_raca=row["id_raca"],
+            id=row["id_raca"],
             id_especie=row["id_especie"] if row["id_especie"] else 0,
             nome=row["raca_nome"] if row["raca_nome"] else "",
             descricao=row["raca_descricao"],

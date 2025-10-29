@@ -28,7 +28,7 @@ SELECT s.id, s.id_adotante, s.id_animal, s.data_solicitacao,
        s.status, s.observacoes, s.resposta_abrigo, s.data_atualizacao,
        a.nome as animal_nome, a.foto
 FROM solicitacao s
-INNER JOIN animal a ON s.id_animal = a.id_animal
+INNER JOIN animal a ON s.id_animal = a.id
 WHERE s.id_adotante = ?
 ORDER BY s.data_solicitacao DESC
 """
@@ -40,7 +40,7 @@ SELECT
     a.nome as animal_nome,
     u.nome as adotante_nome, u.email as adotante_email, u.telefone
 FROM solicitacao s
-INNER JOIN animal a ON s.id_animal = a.id_animal
+INNER JOIN animal a ON s.id_animal = a.id
 INNER JOIN adotante ad ON s.id_adotante = ad.id_adotante
 INNER JOIN usuario u ON ad.id_adotante = u.id
 WHERE a.id_abrigo = ?
@@ -54,7 +54,7 @@ SELECT
     a.nome as animal_nome,
     u.nome as adotante_nome, u.email as adotante_email
 FROM solicitacao s
-INNER JOIN animal a ON s.id_animal = a.id_animal
+INNER JOIN animal a ON s.id_animal = a.id
 INNER JOIN adotante ad ON s.id_adotante = ad.id_adotante
 INNER JOIN usuario u ON ad.id_adotante = u.id
 WHERE s.id = ?
@@ -67,7 +67,7 @@ SELECT
     a.nome as animal_nome,
     u.nome as adotante_nome, u.email as adotante_email
 FROM solicitacao s
-INNER JOIN animal a ON s.id_animal = a.id_animal
+INNER JOIN animal a ON s.id_animal = a.id
 INNER JOIN adotante ad ON s.id_adotante = ad.id_adotante
 INNER JOIN usuario u ON ad.id_adotante = u.id
 ORDER BY s.data_solicitacao DESC
@@ -95,7 +95,7 @@ SELECT
     a.nome as animal_nome,
     u.nome as adotante_nome, u.email as adotante_email
 FROM solicitacao s
-INNER JOIN animal a ON s.id_animal = a.id_animal
+INNER JOIN animal a ON s.id_animal = a.id
 INNER JOIN adotante ad ON s.id_adotante = ad.id_adotante
 INNER JOIN usuario u ON ad.id_adotante = u.id
 WHERE a.nome LIKE ? OR u.nome LIKE ? OR u.email LIKE ? OR s.observacoes LIKE ?

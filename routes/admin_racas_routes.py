@@ -18,10 +18,10 @@ from repo import raca_repo, especie_repo
 router = APIRouter(prefix="/admin/racas")
 templates = criar_templates("templates/admin/racas")
 
-# Rate limiter
+# Rate limiter para operações admin
 admin_racas_limiter = RateLimiter(
-    max_tentativas=10,
-    janela_minutos=1,
+    max_tentativas=20,  # 20 operações
+    janela_minutos=1,   # por minuto
     nome="admin_racas"
 )
 
@@ -126,6 +126,79 @@ async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] =
             "especies": especies_dict
         }
     )
+
+@router.post("/editar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_editar(
+    request: Request,
+    id: int,
+    nome: str = Form(...),
+    id_especie: int = Form(...),
+    descricao: str = Form(None),
+    usuario_logado: Optional[dict] = None
+):
+    """Altera dados de uma raça"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_racas_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Verificar se raça existe
+    raca_atual = raca_repo.obter_por_id(id)
+    if not raca_atual:
+        informar_erro(request, "Raça não encontrada")
+        return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Dados do formulário para reexibição em caso de erro
+    dados_formulario = {"id": id, "nome": nome, "id_especie": id_especie, "descricao": descricao}
+
+    try:
+        # Validar com DTO
+        dto = AlterarRacaDTO(id=id, nome=nome, id_especie=id_especie, descricao=descricao)
+
+        # Verificar se espécie existe
+        especie = especie_repo.obter_por_id(dto.id_especie)
+        if not especie:
+            informar_erro(request, "Espécie não encontrada")
+            # Recarregar espécies para o select
+            especies = especie_repo.obter_todos()
+            especies_dict = {str(e.id): e.nome for e in especies}
+            return templates.TemplateResponse(
+                "admin/racas/editar.html",
+                {
+                    "request": request,
+                    "raca": raca_atual,
+                    "dados": dados_formulario,
+                    "especies": especies_dict
+                }
+            )
+
+        # Atualizar raça
+        raca_atual.nome = dto.nome
+        raca_atual.id_especie = dto.id_especie
+        raca_atual.descricao = dto.descricao
+
+        raca_repo.atualizar(raca_atual)
+        logger.info(f"Raça ID {id} alterada por admin {usuario_logado['id']}")
+
+        informar_sucesso(request, "Raça alterada com sucesso!")
+        return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    except ValidationError as e:
+        # Recarregar espécies para o select
+        especies = especie_repo.obter_todos()
+        dados_formulario["especies"] = {str(e.id): e.nome for e in especies}
+        dados_formulario["raca"] = raca_atual
+
+        raise FormValidationError(
+            validation_error=e,
+            template_path="admin/racas/editar.html",
+            dados_formulario=dados_formulario,
+            campo_padrao="nome"
+        )
 
 @router.get("/cadastrar")
 @requer_autenticacao([Perfil.ADMIN.value])
