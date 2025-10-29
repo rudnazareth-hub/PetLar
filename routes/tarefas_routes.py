@@ -14,27 +14,25 @@ from util.exceptions import FormValidationError
 from util.rate_limit_decorator import aplicar_rate_limit
 from util.repository_helpers import obter_ou_404
 from util.permission_helpers import verificar_propriedade
-from util.config import (
-    RATE_LIMIT_TAREFA_CRIAR_MAX,
-    RATE_LIMIT_TAREFA_CRIAR_MINUTOS,
-    RATE_LIMIT_TAREFA_OPERACAO_MAX,
-    RATE_LIMIT_TAREFA_OPERACAO_MINUTOS,
-)
 
 router = APIRouter(prefix="/tarefas")
 templates = criar_templates("templates/tarefas")
 
 # Rate limiters
-from util.rate_limiter import RateLimiter
+from util.rate_limiter import DynamicRateLimiter
 
-tarefa_criar_limiter = RateLimiter(
-    max_tentativas=RATE_LIMIT_TAREFA_CRIAR_MAX,
-    janela_minutos=RATE_LIMIT_TAREFA_CRIAR_MINUTOS,
+tarefa_criar_limiter = DynamicRateLimiter(
+    chave_max="rate_limit_tarefa_criar_max",
+    chave_minutos="rate_limit_tarefa_criar_minutos",
+    padrao_max=20,
+    padrao_minutos=10,
     nome="tarefa_criar",
 )
-tarefa_operacao_limiter = RateLimiter(
-    max_tentativas=RATE_LIMIT_TAREFA_OPERACAO_MAX,
-    janela_minutos=RATE_LIMIT_TAREFA_OPERACAO_MINUTOS,
+tarefa_operacao_limiter = DynamicRateLimiter(
+    chave_max="rate_limit_tarefa_operacao_max",
+    chave_minutos="rate_limit_tarefa_operacao_minutos",
+    padrao_max=30,
+    padrao_minutos=5,
     nome="tarefa_operacao",
 )
 
@@ -58,7 +56,7 @@ async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None)
 @router.post("/cadastrar")
 @aplicar_rate_limit(
     limiter=tarefa_criar_limiter,
-    mensagem_erro=f"Muitas tentativas de criação de tarefas. Aguarde {RATE_LIMIT_TAREFA_CRIAR_MINUTOS} minuto(s).",
+    mensagem_erro="Muitas tentativas de criação de tarefas. Aguarde alguns minutos.",
     redirect_url="/tarefas/listar"
 )
 @requer_autenticacao()
@@ -104,7 +102,7 @@ async def post_cadastrar(
 @router.post("/{id}/concluir")
 @aplicar_rate_limit(
     limiter=tarefa_operacao_limiter,
-    mensagem_erro=f"Muitas operações em tarefas. Aguarde {RATE_LIMIT_TAREFA_OPERACAO_MINUTOS} minuto(s).",
+    mensagem_erro="Muitas operações em tarefas. Aguarde alguns minutos.",
     redirect_url="/tarefas/listar"
 )
 @requer_autenticacao()
@@ -140,7 +138,7 @@ async def concluir(request: Request, id: int, usuario_logado: Optional[dict] = N
 @router.post("/{id}/excluir")
 @aplicar_rate_limit(
     limiter=tarefa_operacao_limiter,
-    mensagem_erro=f"Muitas operações em tarefas. Aguarde {RATE_LIMIT_TAREFA_OPERACAO_MINUTOS} minuto(s).",
+    mensagem_erro="Muitas operações em tarefas. Aguarde alguns minutos.",
     redirect_url="/tarefas/listar"
 )
 @requer_autenticacao()
