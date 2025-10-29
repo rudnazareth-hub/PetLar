@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 import sqlite3
 from model.configuracao_model import Configuracao
 from sql.configuracao_sql import *
@@ -31,6 +31,24 @@ def criar_tabela() -> bool:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
         return True
+
+
+def obter_por_id(id: int) -> Optional[Configuracao]:
+    """
+    Busca uma configuração pelo ID.
+
+    Args:
+        id: ID da configuração
+
+    Returns:
+        Objeto Configuracao ou None se não encontrado
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(OBTER_POR_ID, (id,))
+        row = cursor.fetchone()
+        return _row_to_configuracao(row) if row else None
+
 
 def obter_por_chave(chave: str) -> Optional[Configuracao]:
     with get_connection() as conn:
@@ -108,6 +126,52 @@ def inserir_ou_atualizar(chave: str, valor: str, descricao: str = "") -> bool:
     except Exception as e:
         logger.error(f"Erro ao inserir ou atualizar configuração '{chave}': {e}")
         raise
+
+def excluir(id: int) -> bool:
+    """
+    Exclui uma configuração pelo ID.
+
+    Args:
+        id: ID da configuração a ser excluída
+
+    Returns:
+        True se exclusão foi bem-sucedida, False caso contrário
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(EXCLUIR, (id,))
+        return cursor.rowcount > 0
+
+
+def contar() -> int:
+    """
+    Retorna o total de configurações cadastradas.
+
+    Returns:
+        Número total de configurações
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(CONTAR)
+        return cursor.fetchone()[0]
+
+
+def buscar_por_termo(termo: str) -> List[Configuracao]:
+    """
+    Busca configurações por termo (chave, valor ou descrição).
+
+    Args:
+        termo: Termo de busca
+
+    Returns:
+        Lista de objetos Configuracao que correspondem ao termo
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        termo_like = f"%{termo}%"
+        cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like))
+        return [_row_to_configuracao(row) for row in cursor.fetchall()]
+
 
 def inserir_padrao() -> None:
     """Insere configurações padrão se não existirem"""

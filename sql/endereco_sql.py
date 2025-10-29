@@ -58,3 +58,15 @@ WHERE id_endereco = ?
 EXCLUIR = """
 DELETE FROM endereco WHERE id_endereco = ?
 """
+
+CONTAR = """
+SELECT COUNT(*) FROM endereco
+"""
+
+BUSCAR_POR_TERMO = """
+SELECT id_endereco, id_usuario, titulo, logradouro, numero, complemento,
+       bairro, cidade, uf, cep, data_cadastro, data_atualizacao
+FROM endereco
+WHERE titulo LIKE ? OR logradouro LIKE ? OR bairro LIKE ? OR cidade LIKE ? OR cep LIKE ?
+ORDER BY titulo
+"""

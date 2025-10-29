@@ -9,10 +9,46 @@ CREATE TABLE IF NOT EXISTS configuracao (
 )
 """
 
-INSERIR = "INSERT INTO configuracao (chave, valor, descricao) VALUES (?, ?, ?)"
+INSERIR = """
+INSERT INTO configuracao (chave, valor, descricao)
+VALUES (?, ?, ?)
+"""
 
-OBTER_POR_CHAVE = "SELECT id, chave, valor, descricao, data_cadastro, data_atualizacao FROM configuracao WHERE chave = ?"
+OBTER_POR_ID = """
+SELECT id, chave, valor, descricao, data_cadastro, data_atualizacao
+FROM configuracao
+WHERE id = ?
+"""
 
-OBTER_TODOS = "SELECT id, chave, valor, descricao, data_cadastro, data_atualizacao FROM configuracao ORDER BY chave"
+OBTER_POR_CHAVE = """
+SELECT id, chave, valor, descricao, data_cadastro, data_atualizacao
+FROM configuracao
+WHERE chave = ?
+"""
 
-ATUALIZAR = "UPDATE configuracao SET valor = ?, data_atualizacao = CURRENT_TIMESTAMP WHERE chave = ?"
+OBTER_TODOS = """
+SELECT id, chave, valor, descricao, data_cadastro, data_atualizacao
+FROM configuracao
+ORDER BY chave
+"""
+
+ATUALIZAR = """
+UPDATE configuracao
+SET valor = ?, data_atualizacao = CURRENT_TIMESTAMP
+WHERE chave = ?
+"""
+
+EXCLUIR = """
+DELETE FROM configuracao WHERE id = ?
+"""
+
+CONTAR = """
+SELECT COUNT(*) FROM configuracao
+"""
+
+BUSCAR_POR_TERMO = """
+SELECT id, chave, valor, descricao, data_cadastro, data_atualizacao
+FROM configuracao
+WHERE chave LIKE ? OR valor LIKE ? OR descricao LIKE ?
+ORDER BY chave
+"""
