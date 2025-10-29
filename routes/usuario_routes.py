@@ -19,6 +19,8 @@ from util.config import (
     RATE_LIMIT_UPLOAD_FOTO_MINUTOS,
     RATE_LIMIT_ALTERAR_SENHA_MAX,
     RATE_LIMIT_ALTERAR_SENHA_MINUTOS,
+    RATE_LIMIT_FORM_GET_MAX,
+    RATE_LIMIT_FORM_GET_MINUTOS,
 )
 
 router = APIRouter()
@@ -36,6 +38,11 @@ alterar_senha_limiter = RateLimiter(
     max_tentativas=RATE_LIMIT_ALTERAR_SENHA_MAX,
     janela_minutos=RATE_LIMIT_ALTERAR_SENHA_MINUTOS,
     nome="alterar_senha",
+)
+form_get_limiter = RateLimiter(
+    max_tentativas=RATE_LIMIT_FORM_GET_MAX,
+    janela_minutos=RATE_LIMIT_FORM_GET_MINUTOS,
+    nome="form_get",
 )
 
 
@@ -85,6 +92,12 @@ async def get_visualizar_perfil(request: Request, usuario_logado: Optional[dict]
 @router.get("/usuario/perfil/editar")
 @requer_autenticacao()
 async def get_editar_perfil(request: Request, usuario_logado: Optional[dict] = None):
+    # Rate limiting por IP
+    ip = obter_identificador_cliente(request)
+    if not form_get_limiter.verificar(ip):
+        informar_erro(request, f"Muitas requisições. Aguarde {RATE_LIMIT_FORM_GET_MINUTOS} minuto(s).")
+        logger.warning(f"Rate limit excedido para formulário GET - IP: {ip}")
+        return RedirectResponse("/usuario", status_code=status.HTTP_303_SEE_OTHER)
     """Formulário para editar dados do perfil"""
     assert usuario_logado is not None
     usuario = usuario_repo.obter_por_id(usuario_logado["id"])
@@ -183,6 +196,13 @@ async def post_editar_perfil(
 @requer_autenticacao()
 async def get_alterar_senha(request: Request, usuario_logado: Optional[dict] = None):
     """Formulário para alterar senha"""
+    # Rate limiting por IP
+    ip = obter_identificador_cliente(request)
+    if not form_get_limiter.verificar(ip):
+        informar_erro(request, f"Muitas requisições. Aguarde {RATE_LIMIT_FORM_GET_MINUTOS} minuto(s).")
+        logger.warning(f"Rate limit excedido para formulário GET - IP: {ip}")
+        return RedirectResponse("/usuario", status_code=status.HTTP_303_SEE_OTHER)
+
     assert usuario_logado is not None
     return templates_usuario.TemplateResponse("perfil/alterar-senha.html", {"request": request})
 

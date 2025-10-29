@@ -21,6 +21,10 @@ from util.config import (
     RATE_LIMIT_CHAT_MESSAGE_MINUTOS,
     RATE_LIMIT_CHAT_SALA_MAX,
     RATE_LIMIT_CHAT_SALA_MINUTOS,
+    RATE_LIMIT_BUSCA_USUARIOS_MAX,
+    RATE_LIMIT_BUSCA_USUARIOS_MINUTOS,
+    RATE_LIMIT_CHAT_LISTAGEM_MAX,
+    RATE_LIMIT_CHAT_LISTAGEM_MINUTOS,
 )
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
@@ -37,6 +41,16 @@ chat_sala_limiter = RateLimiter(
     max_tentativas=RATE_LIMIT_CHAT_SALA_MAX,
     janela_minutos=RATE_LIMIT_CHAT_SALA_MINUTOS,
     nome="chat_sala",
+)
+busca_usuarios_limiter = RateLimiter(
+    max_tentativas=RATE_LIMIT_BUSCA_USUARIOS_MAX,
+    janela_minutos=RATE_LIMIT_BUSCA_USUARIOS_MINUTOS,
+    nome="busca_usuarios",
+)
+chat_listagem_limiter = RateLimiter(
+    max_tentativas=RATE_LIMIT_CHAT_LISTAGEM_MAX,
+    janela_minutos=RATE_LIMIT_CHAT_LISTAGEM_MINUTOS,
+    nome="chat_listagem",
 )
 
 
@@ -153,6 +167,15 @@ async def listar_conversas(
     """
     Lista conversas do usuário (salas com última mensagem e contador de não lidas).
     """
+    # Rate limiting por IP
+    ip = obter_identificador_cliente(request)
+    if not chat_listagem_limiter.verificar(ip):
+        logger.warning(f"Rate limit excedido para listagem de conversas - IP: {ip}")
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Muitas requisições de listagem. Aguarde {RATE_LIMIT_CHAT_LISTAGEM_MINUTOS} minuto(s)."
+        )
+
     usuario_id = usuario_logado["id"]
 
     # Obter todas as participações do usuário
@@ -227,6 +250,15 @@ async def listar_mensagens(
     """
     Lista mensagens de uma sala específica com paginação.
     """
+    # Rate limiting por IP
+    ip = obter_identificador_cliente(request)
+    if not chat_listagem_limiter.verificar(ip):
+        logger.warning(f"Rate limit excedido para listagem de mensagens - IP: {ip}")
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Muitas requisições de listagem. Aguarde {RATE_LIMIT_CHAT_LISTAGEM_MINUTOS} minuto(s)."
+        )
+
     usuario_id = usuario_logado["id"]
 
     # Verificar se usuário participa da sala
@@ -390,6 +422,15 @@ async def buscar_usuarios(
     Exclui o próprio usuário e administradores dos resultados.
     Administradores só podem ser contactados via sistema de chamados.
     """
+    # Rate limiting por IP
+    ip = obter_identificador_cliente(request)
+    if not busca_usuarios_limiter.verificar(ip):
+        logger.warning(f"Rate limit excedido para busca de usuários - IP: {ip}")
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Muitas buscas. Aguarde {RATE_LIMIT_BUSCA_USUARIOS_MINUTOS} minuto(s)."
+        )
+
     if len(q) < 2:
         return JSONResponse(
             status_code=status.HTTP_200_OK,
