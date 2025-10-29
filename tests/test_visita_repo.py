@@ -87,7 +87,7 @@ class TestInserir:
         """Deve inserir visita com observações."""
         data_agendada = datetime(2024, 12, 20, 14, 0, 0)
         visita = Visita(
-            id_visita=0,
+            id=0,
             id_adotante=setup_visita["id_adotante"],
             id_abrigo=setup_visita["id_abrigo"],
             data_agendada=data_agendada,
@@ -102,7 +102,7 @@ class TestInserir:
         """Deve inserir visita sem observações."""
         data_agendada = datetime(2024, 12, 25, 10, 0, 0)
         visita = Visita(
-            id_visita=0,
+            id=0,
             id_adotante=setup_visita["id_adotante"],
             id_abrigo=setup_visita["id_abrigo"],
             data_agendada=data_agendada,
@@ -121,7 +121,7 @@ class TestObterPorAdotante:
         """Deve retornar visitas do adotante."""
         data_agendada = datetime(2024, 12, 30, 15, 0, 0)
         visita = Visita(
-            id_visita=0,
+            id=0,
             id_adotante=setup_visita["id_adotante"],
             id_abrigo=setup_visita["id_abrigo"],
             data_agendada=data_agendada,
@@ -148,7 +148,7 @@ class TestObterPorAbrigo:
         """Deve retornar visitas agendadas para o abrigo."""
         data_agendada = datetime(2025, 1, 5, 9, 0, 0)
         visita = Visita(
-            id_visita=0,
+            id=0,
             id_adotante=setup_visita["id_adotante"],
             id_abrigo=setup_visita["id_abrigo"],
             data_agendada=data_agendada,
@@ -171,7 +171,7 @@ class TestObterPorAbrigo:
 
         for data in datas:
             visita = Visita(
-                id_visita=0,
+                id=0,
                 id_adotante=setup_visita["id_adotante"],
                 id_abrigo=setup_visita["id_abrigo"],
                 data_agendada=data,
@@ -191,7 +191,7 @@ class TestAtualizarStatus:
         """Deve atualizar status para Realizada."""
         data_agendada = datetime(2024, 12, 15, 11, 0, 0)
         visita = Visita(
-            id_visita=0,
+            id=0,
             id_adotante=setup_visita["id_adotante"],
             id_abrigo=setup_visita["id_abrigo"],
             data_agendada=data_agendada,
@@ -208,7 +208,7 @@ class TestAtualizarStatus:
         """Deve atualizar status para Cancelada."""
         data_agendada = datetime(2024, 12, 18, 13, 0, 0)
         visita = Visita(
-            id_visita=0,
+            id=0,
             id_adotante=setup_visita["id_adotante"],
             id_abrigo=setup_visita["id_abrigo"],
             data_agendada=data_agendada,
@@ -234,7 +234,7 @@ class TestReagendar:
         """Deve reagendar visita para nova data."""
         data_original = datetime(2025, 2, 1, 10, 0, 0)
         visita = Visita(
-            id_visita=0,
+            id=0,
             id_adotante=setup_visita["id_adotante"],
             id_abrigo=setup_visita["id_abrigo"],
             data_agendada=data_original,
@@ -262,7 +262,7 @@ class TestIntegracao:
         # Criar visita
         data_agendada = datetime(2025, 3, 15, 14, 0, 0)
         visita = Visita(
-            id_visita=0,
+            id=0,
             id_adotante=setup_visita["id_adotante"],
             id_abrigo=setup_visita["id_abrigo"],
             data_agendada=data_agendada,

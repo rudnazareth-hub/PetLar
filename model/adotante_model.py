@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from typing import Optional
+from datetime import datetime
 
 @dataclass
 class Adotante:
@@ -6,3 +8,5 @@ class Adotante:
     renda_media: float
     tem_filhos: bool
     estado_saude: str
+    data_cadastro: Optional[datetime] = None
+    data_atualizacao: Optional[datetime] = None

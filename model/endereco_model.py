@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
+from datetime import datetime
 
 from model.usuario_model import Usuario
 
@@ -21,8 +22,10 @@ class Endereco:
         uf: Estado (UF)
         cep: CEP (formato: 00000-000)
         usuario: Objeto Usuario relacionado (opcional)
+        data_cadastro: Data de cadastro do endereço
+        data_atualizacao: Data da última atualização
     """
-    id_endereco: int
+    id: int
     id_usuario: int
     titulo: str
     logradouro: str
@@ -33,3 +36,10 @@ class Endereco:
     uf: str
     cep: str
     usuario: Optional[Usuario] = None
+    data_cadastro: Optional[datetime] = None
+    data_atualizacao: Optional[datetime] = None
+
+    # Propriedade para manter compatibilidade com código existente
+    @property
+    def id_endereco(self) -> int:
+        return self.id

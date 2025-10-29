@@ -1,0 +1,85 @@
+{% extends "base_privada.html" %}
+{% from "macros/form_fields.html" import field with context %}
+
+{% block titulo %}Cadastrar Adotante{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <h2 class="mb-0"><i class="bi bi-person-plus-fill"></i> Cadastrar Novo Adotante</h2>
+        </div>
+
+        <div class="card shadow-sm">
+            <form method="POST" action="/admin/adotantes/cadastrar">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-12">
+                            {% include "components/alerta_erro.html" %}
+                        </div>
+
+                        <div class="col-12 mb-4">
+                            <h5 class="text-primary border-bottom pb-2">Dados de Acesso</h5>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='nome', label='Nome Completo', type='text', required=true,
+                            maxlength=100, help_text='Nome completo do adotante',
+                            value=dados.nome if dados is defined else '') }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='email', label='Email', type='email', required=true,
+                            maxlength=100, help_text='Email para acesso ao sistema',
+                            value=dados.email if dados is defined else '') }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='senha', label='Senha', type='password', required=true,
+                            minlength=6, help_text='Mínimo 6 caracteres') }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='confirmar_senha', label='Confirmar Senha', type='password', required=true,
+                            minlength=6, help_text='Digite a senha novamente') }}
+                        </div>
+
+                        <div class="col-12 mb-4 mt-3">
+                            <h5 class="text-primary border-bottom pb-2">Informações do Adotante</h5>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='renda_media', label='Renda Média', type='decimal', required=true,
+                            help_text='Em reais (R$)',
+                            value=dados.renda_media if dados is defined else '') }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='tem_filhos', label='Tem Filhos?', type='radio', required=true,
+                            options={'true': 'Sim', 'false': 'Não'},
+                            value=dados.tem_filhos if dados is defined else 'false',
+                            radio_style='buttons', radio_layout='horizontal') }}
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            {{ field(name='estado_saude', label='Estado de Saúde', type='text', required=true,
+                            maxlength=200, help_text='Informações sobre o estado de saúde',
+                            value=dados.estado_saude if dados is defined else '') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer p-4">
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Cadastrar
+                        </button>
+                        <a href="/admin/adotantes/listar" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

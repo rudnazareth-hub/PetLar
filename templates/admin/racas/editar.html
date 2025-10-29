@@ -1,0 +1,71 @@
+{% extends "base_privada.html" %}
+{% from "macros/form_fields.html" import field with context %}
+
+{% block titulo %}Alterar Raça{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <h2 class="mb-0"><i class="bi bi-tag-fill"></i> Alterar Raça</h2>
+        </div>
+
+        <div class="card shadow-sm">
+            <form method="POST" action="/admin/racas/editar/{{ dados.id if dados.id is defined else raca.id }}">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-12">
+                            {% include "components/alerta_erro.html" %}
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            {{ field(name='nome', label='Nome da Raça', type='text', required=true,
+                            maxlength=50, help_text='Mínimo 3 caracteres, máximo 50 caracteres',
+                            value=dados.nome) }}
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            {{ field(name='id_especie', label='Espécie', type='select', required=true,
+                            options=especies, help_text='Selecione a espécie',
+                            value=dados.id_especie) }}
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            {{ field(name='descricao', label='Descrição', type='textarea', required=false,
+                            maxlength=200, rows=4, help_text='Opcional - Máximo 200 caracteres',
+                            value=dados.descricao) }}
+                        </div>
+
+                        {% if raca.data_cadastro or raca.data_atualizacao %}
+                        <div class="col-12">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <small class="text-muted">
+                                        {% if raca.data_cadastro %}
+                                        <i class="bi bi-calendar-plus"></i> Cadastrada em: <strong>{{ raca.data_cadastro|data_hora_br }}</strong>
+                                        {% endif %}
+                                        {% if raca.data_atualizacao and raca.data_atualizacao != raca.data_cadastro %}
+                                        <br><i class="bi bi-calendar-check"></i> Última atualização: <strong>{{ raca.data_atualizacao|data_hora_br }}</strong>
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer p-4">
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Salvar Alterações
+                        </button>
+                        <a href="/admin/racas/listar" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

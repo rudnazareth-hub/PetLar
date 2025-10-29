@@ -8,14 +8,20 @@ from model.animal_model import Animal
 
 @dataclass
 class Solicitacao:
-    id_solicitacao: int
+    id: int
     id_adotante: int
     id_animal: int
     data_solicitacao: datetime
     status: str
     observacoes: Optional[str] = None
     resposta_abrigo: Optional[str] = None
+    data_atualizacao: Optional[datetime] = None
     # Relacionamentos
     adotante: Optional[Adotante] = None
     animal: Optional[Animal] = None
+
+    # Propriedade para manter compatibilidade com código existente
+    @property
+    def id_solicitacao(self) -> int:
+        return self.id
     

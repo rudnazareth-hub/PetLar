@@ -9,8 +9,8 @@ from dtos.validators import (
     validar_status_animal
 )
 
-class CadastrarAnimalDTO(BaseModel):
-    """DTO para cadastro de animal"""
+class CriarAnimalDTO(BaseModel):
+    """DTO para criação de animal"""
     nome: str
     id_raca: int
     id_abrigo: int
@@ -33,9 +33,12 @@ class CadastrarAnimalDTO(BaseModel):
         validar_comprimento(tamanho_maximo=1000)
     )
 
+# Mantém compatibilidade com código existente
+CadastrarAnimalDTO = CriarAnimalDTO
+
 class AlterarAnimalDTO(BaseModel):
     """DTO para alteração de animal"""
-    id_animal: int
+    id: int
     nome: str
     id_raca: int
     id_abrigo: int
@@ -45,13 +48,13 @@ class AlterarAnimalDTO(BaseModel):
     observacoes: Optional[str] = None
     status: str
 
-    _validar_id = field_validator('id_animal')(validar_id_positivo())
+    _validar_id = field_validator('id')(validar_id_positivo())
     # Mesmos validadores do CadastrarAnimalDTO
 
 class AlterarStatusAnimalDTO(BaseModel):
     """DTO para alteração apenas do status do animal"""
-    id_animal: int
+    id: int
     status: str
 
-    _validar_id = field_validator('id_animal')(validar_id_positivo())
+    _validar_id = field_validator('id')(validar_id_positivo())
     _validar_status = field_validator('status')(validar_status_animal())

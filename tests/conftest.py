@@ -45,8 +45,15 @@ def limpar_rate_limiter():
     # Importar após configuração do banco de dados
     from routes.auth_routes import login_limiter, cadastro_limiter, esqueci_senha_limiter
     from routes.admin_usuarios_routes import admin_usuarios_limiter
-    from routes.admin_backups_routes import admin_backups_limiter
+    from routes.admin_backups_routes import admin_backups_limiter, backup_download_limiter
     from routes.admin_configuracoes_routes import admin_config_limiter
+    from routes.chamados_routes import chamado_criar_limiter, chamado_responder_limiter
+    from routes.admin_chamados_routes import admin_chamado_responder_limiter
+    from routes.tarefas_routes import tarefa_criar_limiter, tarefa_operacao_limiter
+    from routes.usuario_routes import upload_foto_limiter, alterar_senha_limiter, form_get_limiter
+    from routes.chat_routes import chat_mensagem_limiter, chat_sala_limiter, busca_usuarios_limiter, chat_listagem_limiter
+    from routes.public_routes import public_limiter
+    from routes.examples_routes import examples_limiter
 
     # Lista de todos os limiters
     limiters = [
@@ -55,7 +62,22 @@ def limpar_rate_limiter():
         esqueci_senha_limiter,
         admin_usuarios_limiter,
         admin_backups_limiter,
+        backup_download_limiter,
         admin_config_limiter,
+        chamado_criar_limiter,
+        chamado_responder_limiter,
+        admin_chamado_responder_limiter,
+        tarefa_criar_limiter,
+        tarefa_operacao_limiter,
+        upload_foto_limiter,
+        alterar_senha_limiter,
+        form_get_limiter,
+        chat_mensagem_limiter,
+        chat_sala_limiter,
+        busca_usuarios_limiter,
+        chat_listagem_limiter,
+        public_limiter,
+        examples_limiter,
     ]
 
     # Limpar antes do teste
@@ -86,31 +108,49 @@ def limpar_banco_dados():
             tabelas_existentes = [row[0] for row in cursor.fetchall()]
 
             # Limpar apenas tabelas que existem (respeitando foreign keys)
-            # Ordem: primeiro as tabelas dependentes, depois as principais
+            # Ordem: primeiro as tabelas mais dependentes, depois as principais
 
-            # Tabelas do PetLar (dependem de outras)
+            # Nível 4: Tabelas que dependem de adocao/visita/solicitacao
             if 'adocao' in tabelas_existentes:
                 cursor.execute("DELETE FROM adocao")
             if 'visita' in tabelas_existentes:
                 cursor.execute("DELETE FROM visita")
             if 'solicitacao' in tabelas_existentes:
                 cursor.execute("DELETE FROM solicitacao")
+
+            # Nível 3: Tabelas que dependem de animal/endereco
             if 'animal' in tabelas_existentes:
                 cursor.execute("DELETE FROM animal")
+
+            # Nível 2: Tabelas que dependem de usuario (mas não são usuario)
             if 'endereco' in tabelas_existentes:
                 cursor.execute("DELETE FROM endereco")
             if 'abrigo' in tabelas_existentes:
                 cursor.execute("DELETE FROM abrigo")
             if 'adotante' in tabelas_existentes:
                 cursor.execute("DELETE FROM adotante")
+            if 'tarefa' in tabelas_existentes:
+                cursor.execute("DELETE FROM tarefa")
+
+            # Chat/Chamado (dependem de usuario)
+            if 'chat_mensagem' in tabelas_existentes:
+                cursor.execute("DELETE FROM chat_mensagem")
+            if 'chat_participante' in tabelas_existentes:
+                cursor.execute("DELETE FROM chat_participante")
+            if 'chat_sala' in tabelas_existentes:
+                cursor.execute("DELETE FROM chat_sala")
+            if 'chamado_interacao' in tabelas_existentes:
+                cursor.execute("DELETE FROM chamado_interacao")
+            if 'chamado' in tabelas_existentes:
+                cursor.execute("DELETE FROM chamado")
+
+            # Nível 1: Tabelas de lookup (não dependem de usuario)
             if 'raca' in tabelas_existentes:
                 cursor.execute("DELETE FROM raca")
             if 'especie' in tabelas_existentes:
                 cursor.execute("DELETE FROM especie")
 
-            # Tabelas base
-            if 'tarefa' in tabelas_existentes:
-                cursor.execute("DELETE FROM tarefa")
+            # Nível 0: Tabelas base
             if 'usuario' in tabelas_existentes:
                 cursor.execute("DELETE FROM usuario")
             if 'configuracao' in tabelas_existentes:

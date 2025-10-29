@@ -88,7 +88,7 @@
                         <tbody>
                             {% for sol in solicitacoes %}
                             <tr>
-                                <td>{{ sol.id_solicitacao }}</td>
+                                <td>{{ sol.id }}</td>
                                 <td>
                                     <strong>{{ sol.adotante_nome }}</strong><br>
                                     <small class="text-muted">{{ sol.adotante_email }}</small>
@@ -108,7 +108,7 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
-                                        <a href="/admin/solicitacoes/visualizar/{{ sol.id_solicitacao }}"
+                                        <a href="/admin/solicitacoes/visualizar/{{ sol.id }}"
                                             class="btn btn-outline-info"
                                             title="Visualizar">
                                             <i class="bi bi-eye"></i>
@@ -116,12 +116,12 @@
                                         {% if sol.status == 'Pendente' %}
                                         <button type="button" class="btn btn-outline-success"
                                             title="Aprovar"
-                                            onclick="aprovarSolicitacao({{ sol.id_solicitacao }}, '{{ sol.adotante_nome }}', '{{ sol.animal_nome }}')">
+                                            onclick="aprovarSolicitacao({{ sol.id }}, '{{ sol.adotante_nome }}', '{{ sol.animal_nome }}')">
                                             <i class="bi bi-check-circle"></i>
                                         </button>
                                         <button type="button" class="btn btn-outline-danger"
                                             title="Rejeitar"
-                                            onclick="rejeitarSolicitacao({{ sol.id_solicitacao }}, '{{ sol.adotante_nome }}', '{{ sol.animal_nome }}')">
+                                            onclick="rejeitarSolicitacao({{ sol.id }}, '{{ sol.adotante_nome }}', '{{ sol.animal_nome }}')">
                                             <i class="bi bi-x-circle"></i>
                                         </button>
                                         {% endif %}

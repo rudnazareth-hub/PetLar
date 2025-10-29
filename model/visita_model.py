@@ -8,12 +8,19 @@ from model.adotante_model import Adotante
 
 @dataclass
 class Visita:
-    id_visita: int
+    id: int
     id_adotante: int
     id_abrigo: int
     data_agendada: datetime
     observacoes: Optional[str] = None
     status: str = "Agendada"
+    data_cadastro: Optional[datetime] = None
+    data_atualizacao: Optional[datetime] = None
 
     adotante: Optional[Adotante] = None
     abrigo: Optional[Abrigo] = None
+
+    # Propriedade para manter compatibilidade com código existente
+    @property
+    def id_visita(self) -> int:
+        return self.id

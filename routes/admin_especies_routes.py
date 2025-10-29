@@ -19,12 +19,21 @@ from util.rate_limiter import RateLimiter, obter_identificador_cliente
 router = APIRouter(prefix="/admin/especies")
 templates = criar_templates("templates/admin/especies")
 
-# Rate limiter
+# Rate limiter para operações admin
 admin_especies_limiter = RateLimiter(
-    max_tentativas=10,
-    janela_minutos=1,
+    max_tentativas=20,  # 20 operações
+    janela_minutos=1,   # por minuto
     nome="admin_especies"
 )
+
+@router.get("/cadastrar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de cadastro de espécie"""
+    return templates.TemplateResponse(
+        "admin/especies/cadastro.html",
+        {"request": request}
+    )
 
 @router.post("/cadastrar")
 @requer_autenticacao([Perfil.ADMIN.value])
@@ -52,7 +61,7 @@ async def post_cadastrar(
 
         # Criar espécie
         especie = Especie(
-            id_especie=0,
+            id=0,
             nome=dto.nome,
             descricao=dto.descricao
         )
@@ -87,6 +96,28 @@ async def listar(request: Request, usuario_logado: Optional[dict] = None):
         {"request": request, "especies": especies}
     )
 
+@router.get("/editar/{id}")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de alteração de espécie"""
+    especie = especie_repo.obter_por_id(id)
+
+    if not especie:
+        informar_erro(request, "Espécie não encontrada")
+        return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Criar cópia dos dados da espécie
+    dados_especie = especie.__dict__.copy()
+
+    return templates.TemplateResponse(
+        "admin/especies/editar.html",
+        {
+            "request": request,
+            "especie": especie,
+            "dados": dados_especie
+        }
+    )
+
 @router.post("/editar/{id}")
 @requer_autenticacao([Perfil.ADMIN.value])
 async def post_editar(
@@ -112,20 +143,20 @@ async def post_editar(
         return RedirectResponse("/admin/especies/listar", status_code=status.HTTP_303_SEE_OTHER)
 
     # Dados do formulário para reexibição em caso de erro
-    dados_formulario = {"id_especie": id, "nome": nome, "descricao": descricao}
+    dados_formulario = {"id": id, "nome": nome, "descricao": descricao}
 
     try:
         # Validar com DTO
-        dto = AlterarEspecieDTO(id_especie=id, nome=nome, descricao=descricao)
+        dto = AlterarEspecieDTO(id=id, nome=nome, descricao=descricao)
 
         # Atualizar espécie
         especie_atualizada = Especie(
-            id_especie=id,
+            id=id,
             nome=dto.nome,
             descricao=dto.descricao
         )
 
-        especie_repo.alterar(especie_atualizada)
+        especie_repo.atualizar(especie_atualizada)
         logger.info(f"Espécie {id} alterada por admin {usuario_logado['id']}")
 
         informar_sucesso(request, "Espécie alterada com sucesso!")

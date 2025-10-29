@@ -12,15 +12,17 @@ from util.db_util import get_connection
 def _row_to_raca(row) -> Raca:
     """Converte uma linha do banco em objeto Raca com Especie."""
     return Raca(
-        id_raca=row["id_raca"],
+        id=row["id"],
         id_especie=row["id_especie"],
         nome=row["nome"],
         descricao=row["descricao"],
         temperamento=row["temperamento"],
         expectativa_de_vida=row["expectativa_de_vida"],
         porte=row["porte"],
+        data_cadastro=row["data_cadastro"],
+        data_atualizacao=row["data_atualizacao"],
         especie=Especie(
-            id_especie=row["especie_id"],
+            id=row["especie_id"],
             nome=row["especie_nome"],
             descricao=row["especie_descricao"]
         ) if row["especie_id"] else None
@@ -35,7 +37,7 @@ def criar_tabela() -> bool:
         return True
 
 
-def inserir(raca: Raca) -> int:
+def inserir(raca: Raca) -> Optional[int]:
     """Insere uma nova raça e retorna o ID gerado."""
     with get_connection() as conn:
         cursor = conn.cursor()
@@ -94,7 +96,7 @@ def atualizar(raca: Raca) -> bool:
             raca.temperamento,
             raca.expectativa_de_vida,
             raca.porte,
-            raca.id_raca
+            raca.id
         ))
         return cursor.rowcount > 0
 
@@ -126,3 +128,33 @@ def excluir(id_raca: int) -> bool:
 
         cursor.execute(EXCLUIR, (id_raca,))
         return cursor.rowcount > 0
+
+
+def contar() -> int:
+    """
+    Retorna o total de raças cadastradas.
+
+    Returns:
+        Número total de raças
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(CONTAR)
+        return cursor.fetchone()[0]
+
+
+def buscar_por_termo(termo: str) -> List[Raca]:
+    """
+    Busca raças por termo (nome da raça, descrição ou espécie).
+
+    Args:
+        termo: Termo de busca
+
+    Returns:
+        Lista de objetos Raca que correspondem ao termo
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        termo_like = f"%{termo}%"
+        cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like))
+        return [_row_to_raca(row) for row in cursor.fetchall()]

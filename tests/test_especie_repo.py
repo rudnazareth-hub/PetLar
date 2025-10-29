@@ -56,7 +56,7 @@ class TestInserir:
     def test_inserir_especie_completa(self):
         """Deve inserir espécie com todos os campos."""
         especie = Especie(
-            id_especie=0,
+            id=0,
             nome="Cachorro",
             descricao="Melhor amigo do homem"
         )
@@ -71,7 +71,7 @@ class TestInserir:
     def test_inserir_especie_sem_descricao(self):
         """Deve inserir espécie sem descrição (campo opcional)."""
         especie = Especie(
-            id_especie=0,
+            id=0,
             nome="Gato",
             descricao=None
         )
@@ -85,8 +85,8 @@ class TestInserir:
 
     def test_inserir_gera_id_sequencial(self):
         """IDs devem ser gerados sequencialmente."""
-        especie1 = Especie(id_especie=0, nome="Cachorro", descricao=None)
-        especie2 = Especie(id_especie=0, nome="Gato", descricao=None)
+        especie1 = Especie(id=0, nome="Cachorro", descricao=None)
+        especie2 = Especie(id=0, nome="Gato", descricao=None)
 
         id1 = especie_repo.inserir(especie1)
         id2 = especie_repo.inserir(especie2)
@@ -99,13 +99,13 @@ class TestObterPorId:
 
     def test_obter_especie_existente(self):
         """Deve retornar espécie existente."""
-        especie = Especie(id_especie=0, nome="Pássaro", descricao="Animal voador")
+        especie = Especie(id=0, nome="Pássaro", descricao="Animal voador")
         id_inserido = especie_repo.inserir(especie)
 
         especie_bd = especie_repo.obter_por_id(id_inserido)
 
         assert especie_bd is not None
-        assert especie_bd.id_especie == id_inserido
+        assert especie_bd.id == id_inserido
         assert especie_bd.nome == "Pássaro"
         assert especie_bd.descricao == "Animal voador"
 
@@ -116,7 +116,7 @@ class TestObterPorId:
 
     def test_obter_especie_sem_descricao(self):
         """Deve retornar espécie com descricao None."""
-        especie = Especie(id_especie=0, nome="Réptil", descricao=None)
+        especie = Especie(id=0, nome="Réptil", descricao=None)
         id_inserido = especie_repo.inserir(especie)
 
         especie_bd = especie_repo.obter_por_id(id_inserido)
@@ -130,7 +130,7 @@ class TestObterPorNome:
 
     def test_obter_especie_por_nome_existente(self):
         """Deve retornar espécie pelo nome."""
-        especie = Especie(id_especie=0, nome="Hamster", descricao="Roedor pequeno")
+        especie = Especie(id=0, nome="Hamster", descricao="Roedor pequeno")
         especie_repo.inserir(especie)
 
         especie_bd = especie_repo.obter_por_nome("Hamster")
@@ -146,7 +146,7 @@ class TestObterPorNome:
 
     def test_obter_especie_nome_case_sensitive(self):
         """Busca por nome deve ser case sensitive."""
-        especie = Especie(id_especie=0, nome="Cachorro", descricao=None)
+        especie = Especie(id=0, nome="Cachorro", descricao=None)
         especie_repo.inserir(especie)
 
         especie_upper = especie_repo.obter_por_nome("CACHORRO")
@@ -163,9 +163,9 @@ class TestObterTodos:
 
     def test_obter_todos_lista_especies(self):
         """Deve retornar todas as espécies cadastradas."""
-        especie1 = Especie(id_especie=0, nome="Cachorro", descricao="Canis lupus")
-        especie2 = Especie(id_especie=0, nome="Gato", descricao="Felis catus")
-        especie3 = Especie(id_especie=0, nome="Pássaro", descricao=None)
+        especie1 = Especie(id=0, nome="Cachorro", descricao="Canis lupus")
+        especie2 = Especie(id=0, nome="Gato", descricao="Felis catus")
+        especie3 = Especie(id=0, nome="Pássaro", descricao=None)
 
         especie_repo.inserir(especie1)
         especie_repo.inserir(especie2)
@@ -181,7 +181,7 @@ class TestObterTodos:
 
     def test_obter_todos_com_campos_opcionais_none(self):
         """Deve retornar espécies com campos opcionais None."""
-        especie = Especie(id_especie=0, nome="Cobra", descricao=None)
+        especie = Especie(id=0, nome="Cobra", descricao=None)
         especie_repo.inserir(especie)
 
         especies = especie_repo.obter_todos()
@@ -196,11 +196,11 @@ class TestAtualizar:
 
     def test_atualizar_especie_existente(self):
         """Deve atualizar espécie existente."""
-        especie = Especie(id_especie=0, nome="Cachorro", descricao="Descrição antiga")
+        especie = Especie(id=0, nome="Cachorro", descricao="Descrição antiga")
         id_inserido = especie_repo.inserir(especie)
 
         especie_atualizada = Especie(
-            id_especie=id_inserido,
+            id=id_inserido,
             nome="Cachorro Doméstico",
             descricao="Descrição nova"
         )
@@ -214,7 +214,7 @@ class TestAtualizar:
     def test_atualizar_especie_inexistente(self):
         """Deve retornar False ao atualizar espécie inexistente."""
         especie = Especie(
-            id_especie=99999,
+            id=99999,
             nome="Inexistente",
             descricao="Teste"
         )
@@ -223,11 +223,11 @@ class TestAtualizar:
 
     def test_atualizar_para_descricao_none(self):
         """Deve permitir atualizar descrição para None."""
-        especie = Especie(id_especie=0, nome="Peixe", descricao="Com descrição")
+        especie = Especie(id=0, nome="Peixe", descricao="Com descrição")
         id_inserido = especie_repo.inserir(especie)
 
         especie_atualizada = Especie(
-            id_especie=id_inserido,
+            id=id_inserido,
             nome="Peixe Ornamental",
             descricao=None
         )
@@ -243,7 +243,7 @@ class TestExcluir:
 
     def test_excluir_especie_sem_racas(self):
         """Deve excluir espécie que não tem raças vinculadas."""
-        especie = Especie(id_especie=0, nome="Tartaruga", descricao=None)
+        especie = Especie(id=0, nome="Tartaruga", descricao=None)
         id_inserido = especie_repo.inserir(especie)
 
         resultado = especie_repo.excluir(id_inserido)
@@ -260,20 +260,20 @@ class TestExcluir:
     def test_excluir_especie_com_racas_vinculadas(self):
         """Deve lançar exceção ao excluir espécie com raças."""
         # Criar espécie
-        especie = Especie(id_especie=0, nome="Cachorro", descricao=None)
-        id_especie = especie_repo.inserir(especie)
+        especie = Especie(id=0, nome="Cachorro", descricao=None)
+        id = especie_repo.inserir(especie)
 
         # Criar raça vinculada
         with get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO raca (id_especie, nome) VALUES (?, ?)",
-                (id_especie, "Labrador")
+                (id, "Labrador")
             )
 
         # Tentar excluir deve lançar exceção
         with pytest.raises(Exception) as exc_info:
-            especie_repo.excluir(id_especie)
+            especie_repo.excluir(id)
 
         assert "Não é possível excluir esta espécie" in str(exc_info.value)
         assert "1 raça(s) vinculada(s)" in str(exc_info.value)
@@ -281,27 +281,27 @@ class TestExcluir:
     def test_excluir_especie_com_multiplas_racas(self):
         """Deve informar quantidade correta de raças vinculadas."""
         # Criar espécie
-        especie = Especie(id_especie=0, nome="Gato", descricao=None)
-        id_especie = especie_repo.inserir(especie)
+        especie = Especie(id=0, nome="Gato", descricao=None)
+        id = especie_repo.inserir(especie)
 
         # Criar múltiplas raças vinculadas
         with get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO raca (id_especie, nome) VALUES (?, ?)",
-                (id_especie, "Persa")
+                (id, "Persa")
             )
             cursor.execute(
                 "INSERT INTO raca (id_especie, nome) VALUES (?, ?)",
-                (id_especie, "Siamês")
+                (id, "Siamês")
             )
             cursor.execute(
                 "INSERT INTO raca (id_especie, nome) VALUES (?, ?)",
-                (id_especie, "Maine Coon")
+                (id, "Maine Coon")
             )
 
         with pytest.raises(Exception) as exc_info:
-            especie_repo.excluir(id_especie)
+            especie_repo.excluir(id)
 
         assert "3 raça(s) vinculada(s)" in str(exc_info.value)
 
@@ -311,7 +311,7 @@ class TestExisteNome:
 
     def test_existe_nome_true(self):
         """Deve retornar True se nome existe."""
-        especie = Especie(id_especie=0, nome="Coelho", descricao=None)
+        especie = Especie(id=0, nome="Coelho", descricao=None)
         especie_repo.inserir(especie)
 
         existe = especie_repo.existe_nome("Coelho")
@@ -324,7 +324,7 @@ class TestExisteNome:
 
     def test_existe_nome_excluindo_proprio_id(self):
         """Deve retornar False ao excluir próprio ID da verificação."""
-        especie = Especie(id_especie=0, nome="Porco", descricao=None)
+        especie = Especie(id=0, nome="Porco", descricao=None)
         id_inserido = especie_repo.inserir(especie)
 
         # Verificar sem excluir ID - deve retornar True
@@ -337,8 +337,8 @@ class TestExisteNome:
 
     def test_existe_nome_excluindo_id_diferente(self):
         """Deve retornar True se nome existe em ID diferente do excluído."""
-        especie1 = Especie(id_especie=0, nome="Vaca", descricao=None)
-        especie2 = Especie(id_especie=0, nome="Cavalo", descricao=None)
+        especie1 = Especie(id=0, nome="Vaca", descricao=None)
+        especie2 = Especie(id=0, nome="Cavalo", descricao=None)
 
         id1 = especie_repo.inserir(especie1)
         id2 = especie_repo.inserir(especie2)
@@ -349,7 +349,7 @@ class TestExisteNome:
 
     def test_existe_nome_case_sensitive(self):
         """Verificação de nome deve ser case sensitive."""
-        especie = Especie(id_especie=0, nome="Ovelha", descricao=None)
+        especie = Especie(id=0, nome="Ovelha", descricao=None)
         especie_repo.inserir(especie)
 
         existe_upper = especie_repo.existe_nome("OVELHA")
@@ -362,7 +362,7 @@ class TestIntegracaoCRUD:
     def test_ciclo_completo_crud(self):
         """Deve executar ciclo completo: criar, ler, atualizar, excluir."""
         # CREATE
-        especie = Especie(id_especie=0, nome="Rato", descricao="Roedor pequeno")
+        especie = Especie(id=0, nome="Rato", descricao="Roedor pequeno")
         id_inserido = especie_repo.inserir(especie)
         assert id_inserido > 0
 
@@ -394,7 +394,7 @@ class TestIntegracaoCRUD:
 
         for i in range(5):
             especie = Especie(
-                id_especie=0,
+                id=0,
                 nome=f"Especie{i}",
                 descricao=f"Descrição {i}"
             )

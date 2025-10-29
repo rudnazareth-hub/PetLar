@@ -117,7 +117,7 @@ async def post_aprovar(
     try:
         # Validar com DTO
         dto = AprovarSolicitacaoDTO(
-            id_solicitacao=id,
+            id=id,
             resposta_abrigo=resposta_abrigo
         )
 
@@ -134,7 +134,7 @@ async def post_aprovar(
         informar_erro(request, "Erro ao aprovar solicitação. Verifique os dados.")
         return RedirectResponse(f"/admin/solicitacoes/visualizar/{id}", status_code=status.HTTP_303_SEE_OTHER)
     
-    @router.post("/rejeitar/{id}")
+@router.post("/rejeitar/{id}")
 @requer_autenticacao([Perfil.ADMIN.value])
 async def post_rejeitar(
     request: Request,
@@ -165,7 +165,7 @@ async def post_rejeitar(
     try:
         # Validar com DTO (motivo é obrigatório)
         dto = RejeitarSolicitacaoDTO(
-            id_solicitacao=id,
+            id=id,
             resposta_abrigo=resposta_abrigo
         )
 

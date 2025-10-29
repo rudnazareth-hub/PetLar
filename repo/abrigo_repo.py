@@ -13,7 +13,9 @@ def _row_to_abrigo(row) -> Abrigo:
         responsavel=row["responsavel"],
         descricao=row["descricao"],
         data_abertura=row["data_abertura"],
-        data_membros=row["data_membros"]
+        data_membros=row["data_membros"],
+        data_cadastro=row["data_cadastro"],
+        data_atualizacao=row["data_atualizacao"]
     )
 
 
@@ -113,3 +115,33 @@ def excluir(id_abrigo: int) -> bool:
         cursor = conn.cursor()
         cursor.execute(EXCLUIR, (id_abrigo,))
         return cursor.rowcount > 0
+
+
+def contar() -> int:
+    """
+    Retorna o total de abrigos cadastrados.
+
+    Returns:
+        Número total de abrigos
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(CONTAR)
+        return cursor.fetchone()[0]
+
+
+def buscar_por_termo(termo: str) -> List[Abrigo]:
+    """
+    Busca abrigos por termo (responsável ou descrição).
+
+    Args:
+        termo: Termo de busca
+
+    Returns:
+        Lista de objetos Abrigo que correspondem ao termo
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        termo_like = f"%{termo}%"
+        cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like))
+        return [_row_to_abrigo(row) for row in cursor.fetchall()]

@@ -1,6 +1,6 @@
 """Repository para adotantes."""
 
-from typing import Optional
+from typing import List, Optional
 from model.adotante_model import Adotante
 from sql.adotante_sql import *
 from util.db_util import get_connection
@@ -12,7 +12,9 @@ def _row_to_adotante(row) -> Adotante:
         id_adotante=row["id_adotante"],
         renda_media=row["renda_media"],
         tem_filhos=bool(row["tem_filhos"]),
-        estado_saude=row["estado_de_saude"]
+        estado_saude=row["estado_de_saude"],
+        data_cadastro=row["data_cadastro"],
+        data_atualizacao=row["data_atualizacao"]
     )
 
 
@@ -97,3 +99,46 @@ def excluir(id_adotante: int) -> bool:
         cursor = conn.cursor()
         cursor.execute(EXCLUIR, (id_adotante,))
         return cursor.rowcount > 0
+
+
+def obter_todos() -> List[Adotante]:
+    """
+    Retorna todos os adotantes cadastrados.
+
+    Returns:
+        Lista de objetos Adotante
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(OBTER_TODOS)
+        return [_row_to_adotante(row) for row in cursor.fetchall()]
+
+
+def contar() -> int:
+    """
+    Retorna o total de adotantes cadastrados.
+
+    Returns:
+        Número total de adotantes
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(CONTAR)
+        return cursor.fetchone()[0]
+
+
+def buscar_por_termo(termo: str) -> List[Adotante]:
+    """
+    Busca adotantes por termo (estado de saúde).
+
+    Args:
+        termo: Termo de busca
+
+    Returns:
+        Lista de objetos Adotante que correspondem ao termo
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        termo_like = f"%{termo}%"
+        cursor.execute(BUSCAR_POR_TERMO, (termo_like,))
+        return [_row_to_adotante(row) for row in cursor.fetchall()]

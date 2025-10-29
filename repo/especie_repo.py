@@ -11,9 +11,11 @@ from util.db_util import get_connection
 def _row_to_especie(row) -> Especie:
     """Converte uma linha do banco em objeto Especie."""
     return Especie(
-        id_especie=row["id_especie"],
+        id=row["id"],
         nome=row["nome"],
-        descricao=row["descricao"]
+        descricao=row["descricao"],
+        data_cadastro=row["data_cadastro"],
+        data_atualizacao=row["data_atualizacao"]
     )
 
 
@@ -25,7 +27,7 @@ def criar_tabela() -> bool:
         return True
 
 
-def inserir(especie: Especie) -> int:
+def inserir(especie: Especie) -> Optional[int]:
     """
     Insere uma nova espécie e retorna o ID gerado.
 
@@ -106,7 +108,7 @@ def atualizar(especie: Especie) -> bool:
         cursor.execute(ATUALIZAR, (
             especie.nome,
             especie.descricao,
-            especie.id_especie
+            especie.id
         ))
         return cursor.rowcount > 0
 
@@ -140,6 +142,36 @@ def excluir(id_especie: int) -> bool:
         return cursor.rowcount > 0
 
 
+def contar() -> int:
+    """
+    Retorna o total de espécies cadastradas.
+
+    Returns:
+        Número total de espécies
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(CONTAR)
+        return cursor.fetchone()[0]
+
+
+def buscar_por_termo(termo: str) -> List[Especie]:
+    """
+    Busca espécies por termo (nome ou descrição).
+
+    Args:
+        termo: Termo de busca
+
+    Returns:
+        Lista de objetos Especie que correspondem ao termo
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        termo_like = f"%{termo}%"
+        cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like))
+        return [_row_to_especie(row) for row in cursor.fetchall()]
+
+
 def existe_nome(nome: str, id_excluir: Optional[int] = None) -> bool:
     """
     Verifica se já existe uma espécie com o nome informado.
@@ -154,6 +186,6 @@ def existe_nome(nome: str, id_excluir: Optional[int] = None) -> bool:
     especie = obter_por_nome(nome)
     if not especie:
         return False
-    if id_excluir and especie.id_especie == id_excluir:
+    if id_excluir and especie.id == id_excluir:
         return False
     return True

@@ -10,11 +10,11 @@ from dtos.validators import (
     validar_id_positivo
 )
 
-class CadastrarRacaDTO(BaseModel):
-    """DTO para cadastro de raça"""
+class CriarRacaDTO(BaseModel):
+    """DTO para criação de raça"""
     nome: str
     id_especie: int
-    descricao: Optional[str] = None
+    descricao: str = ""
 
     _validar_nome = field_validator('nome')(
         validar_string_obrigatoria('Nome', tamanho_minimo=2, tamanho_maximo=100)
@@ -24,14 +24,17 @@ class CadastrarRacaDTO(BaseModel):
         validar_comprimento(tamanho_maximo=200)
     )
 
+# Mantém compatibilidade com código existente
+CadastrarRacaDTO = CriarRacaDTO
+
 class AlterarRacaDTO(BaseModel):
     """DTO para alteração de raça"""
-    id_raca: int
+    id: int
     nome: str
     id_especie: int
-    descricao: Optional[str] = None
+    descricao: str = ""
 
-    _validar_id = field_validator('id_raca')(validar_id_positivo())
+    _validar_id = field_validator('id')(validar_id_positivo())
     _validar_nome = field_validator('nome')(
         validar_string_obrigatoria('Nome', tamanho_minimo=2, tamanho_maximo=100)
     )

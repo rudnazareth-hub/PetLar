@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
+from datetime import datetime
 
 @dataclass
 class Abrigo:
@@ -14,9 +15,13 @@ class Abrigo:
         descricao: Descrição do abrigo
         data_abertura: Data de abertura do abrigo
         data_membros: Data de cadastro dos membros
+        data_cadastro: Data de cadastro do abrigo
+        data_atualizacao: Data da última atualização
     """
     id_abrigo: int
     responsavel: str
     descricao: Optional[str] = None
     data_abertura: Optional[str] = None
     data_membros: Optional[str] = None
+    data_cadastro: Optional[datetime] = None
+    data_atualizacao: Optional[datetime] = None

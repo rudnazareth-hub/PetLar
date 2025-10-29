@@ -85,10 +85,10 @@ def setup_completo():
     abrigo_repo.inserir(abrigo)
 
     # Criar espécie e raça
-    especie = Especie(id_especie=0, nome="Gato", descricao=None)
+    especie = Especie(id=0, nome="Gato", descricao=None)
     id_especie = especie_repo.inserir(especie)
     raca = Raca(
-        id_raca=0, id_especie=id_especie, nome="Persa",
+        id=0, id_especie=id_especie, nome="Persa",
         descricao=None, temperamento=None,
         expectativa_de_vida=None, porte=None
     )
@@ -96,7 +96,7 @@ def setup_completo():
 
     # Criar animal
     animal = Animal(
-        id_animal=0, id_raca=id_raca, id_abrigo=id_abrigo,
+        id=0, id_raca=id_raca, id_abrigo=id_abrigo,
         nome="Mimi", sexo="F", data_nascimento=None,
         data_entrada="2024-01-01", observacoes=None,
         status="Disponível", foto=None
@@ -125,7 +125,7 @@ class TestInserir:
         """Deve inserir adoção com observações."""
         data_solicitacao = datetime.now()
         adocao = Adocao(
-            id_adocao=0,
+            id=0,
             id_adotante=setup_completo["id_adotante"],
             id_animal=setup_completo["id_animal"],
             data_solicitacao=data_solicitacao,
@@ -141,7 +141,7 @@ class TestInserir:
         """Deve inserir adoção sem observações."""
         data_solicitacao = datetime.now()
         adocao = Adocao(
-            id_adocao=0,
+            id=0,
             id_adotante=setup_completo["id_adotante"],
             id_animal=setup_completo["id_animal"],
             data_solicitacao=data_solicitacao,
@@ -161,7 +161,7 @@ class TestObterPorAbrigo:
         """Deve retornar adoções do abrigo."""
         data_solicitacao = datetime.now()
         adocao = Adocao(
-            id_adocao=0,
+            id=0,
             id_adotante=setup_completo["id_adotante"],
             id_animal=setup_completo["id_animal"],
             data_solicitacao=data_solicitacao,
@@ -188,7 +188,7 @@ class TestObterPorAbrigo:
 
         # Criar segundo animal
         animal2 = Animal(
-            id_animal=0,
+            id=0,
             id_raca=animal_existente.id_raca,  # usar mesmo id_raca
             id_abrigo=setup_completo["id_abrigo"],
             nome="Felix",
@@ -205,7 +205,7 @@ class TestObterPorAbrigo:
         for id_animal in [setup_completo["id_animal"], id_animal2]:
             data_solicitacao = datetime.now()
             adocao = Adocao(
-                id_adocao=0,
+                id=0,
                 id_adotante=setup_completo["id_adotante"],
                 id_animal=id_animal,
                 data_solicitacao=data_solicitacao,
@@ -226,7 +226,7 @@ class TestIntegracao:
         """Deve criar adoção com todas as informações."""
         data_solicitacao = datetime.now()
         adocao = Adocao(
-            id_adocao=0,
+            id=0,
             id_adotante=setup_completo["id_adotante"],
             id_animal=setup_completo["id_animal"],
             data_solicitacao=data_solicitacao,

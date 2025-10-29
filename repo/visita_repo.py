@@ -20,12 +20,14 @@ def _converter_data(data_str: Optional[str]) -> Optional[datetime]:
 def _row_to_visita(row) -> Visita:
     """Converte linha do banco em objeto Visita."""
     return Visita(
-        id_visita=row["id_visita"],
+        id=row["id"],
         id_adotante=row["id_adotante"],
         id_abrigo=row["id_abrigo"],
         data_agendada=_converter_data(row["data_agendada"]),
         observacoes=row["observacoes"],
         status=row["status"] if row["status"] else "Agendada",
+        data_cadastro=row["data_cadastro"],
+        data_atualizacao=row["data_atualizacao"],
         adotante=None,
         abrigo=None
     )
@@ -123,4 +125,63 @@ def reagendar(id_visita: int, nova_data: str) -> bool:
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(REAGENDAR, (nova_data, id_visita))
+        return cursor.rowcount > 0
+
+
+def obter_todos() -> List[dict]:
+    """
+    Retorna todas as visitas cadastradas.
+
+    Returns:
+        Lista de dicionários com dados das visitas
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(OBTER_TODOS)
+        return [dict(row) for row in cursor.fetchall()]
+
+
+def contar() -> int:
+    """
+    Retorna o total de visitas cadastradas.
+
+    Returns:
+        Número total de visitas
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(CONTAR)
+        return cursor.fetchone()[0]
+
+
+def buscar_por_termo(termo: str) -> List[dict]:
+    """
+    Busca visitas por termo (nome do adotante, abrigo ou observações).
+
+    Args:
+        termo: Termo de busca
+
+    Returns:
+        Lista de dicionários com dados das visitas que correspondem ao termo
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        termo_like = f"%{termo}%"
+        cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like))
+        return [dict(row) for row in cursor.fetchall()]
+
+
+def excluir(id_visita: int) -> bool:
+    """
+    Exclui uma visita pelo ID.
+
+    Args:
+        id_visita: ID da visita a ser excluída
+
+    Returns:
+        True se exclusão foi bem-sucedida, False caso contrário
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(EXCLUIR, (id_visita,))
         return cursor.rowcount > 0

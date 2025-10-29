@@ -125,3 +125,33 @@ def excluir(id_solicitacao: int) -> bool:
         cursor = conn.cursor()
         cursor.execute(EXCLUIR, (id_solicitacao,))
         return cursor.rowcount > 0
+
+
+def contar() -> int:
+    """
+    Retorna o total de solicitações cadastradas.
+
+    Returns:
+        Número total de solicitações
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(CONTAR)
+        return cursor.fetchone()[0]
+
+
+def buscar_por_termo(termo: str) -> List[dict]:
+    """
+    Busca solicitações por termo (nome do animal, adotante, email ou observações).
+
+    Args:
+        termo: Termo de busca
+
+    Returns:
+        Lista de dicionários com dados das solicitações que correspondem ao termo
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        termo_like = f"%{termo}%"
+        cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like, termo_like))
+        return [dict(row) for row in cursor.fetchall()]

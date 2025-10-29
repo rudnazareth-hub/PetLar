@@ -44,10 +44,10 @@ async def visualizar(request: Request, id: int, usuario_logado: Optional[dict] =
         }
     )
 
-# Rate limiter
+# Rate limiter para operações admin
 admin_adotantes_limiter = RateLimiter(
-    max_tentativas=10,
-    janela_minutos=1,
+    max_tentativas=20,  # 20 operações
+    janela_minutos=1,   # por minuto
     nome="admin_adotantes"
 )
 
@@ -158,6 +158,104 @@ async def listar(request: Request, usuario_logado: Optional[dict] = None):
         "admin/adotantes/listar.html",
         {"request": request, "adotantes": adotantes_completos}
     )
+
+@router.get("/cadastrar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de cadastro de adotante"""
+    return templates.TemplateResponse(
+        "admin/adotantes/cadastro.html",
+        {"request": request}
+    )
+
+@router.post("/cadastrar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def post_cadastrar(
+    request: Request,
+    nome: str = Form(...),
+    email: str = Form(...),
+    senha: str = Form(...),
+    confirmar_senha: str = Form(...),
+    renda_media: float = Form(...),
+    tem_filhos: str = Form(...),
+    estado_saude: str = Form(...),
+    usuario_logado: Optional[dict] = None
+):
+    """Cadastra um novo adotante"""
+    assert usuario_logado is not None
+
+    # Rate limiting
+    ip = obter_identificador_cliente(request)
+    if not admin_adotantes_limiter.verificar(ip):
+        informar_erro(request, "Muitas operações. Aguarde um momento e tente novamente.")
+        return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Dados do formulário para reexibição em caso de erro
+    dados_formulario = {
+        "nome": nome, "email": email, "renda_media": renda_media,
+        "tem_filhos": tem_filhos, "estado_saude": estado_saude
+    }
+
+    try:
+        # Validar senhas
+        if senha != confirmar_senha:
+            informar_erro(request, "As senhas não coincidem")
+            return templates.TemplateResponse(
+                "admin/adotantes/cadastro.html",
+                {"request": request, "dados": dados_formulario}
+            )
+
+        # Validar tamanho da senha
+        if len(senha) < 6:
+            informar_erro(request, "A senha deve ter no mínimo 6 caracteres")
+            return templates.TemplateResponse(
+                "admin/adotantes/cadastro.html",
+                {"request": request, "dados": dados_formulario}
+            )
+
+        # Verificar se email já existe
+        usuario_existente = usuario_repo.obter_por_email(email)
+        if usuario_existente:
+            informar_erro(request, f"Já existe um usuário com o email '{email}'")
+            return templates.TemplateResponse(
+                "admin/adotantes/cadastro.html",
+                {"request": request, "dados": dados_formulario}
+            )
+
+        # Importar Usuario model e hash de senha
+        from model.usuario_model import Usuario
+        from util.security import gerar_hash_senha
+
+        # Criar usuário
+        usuario = Usuario(
+            id=0,
+            nome=nome,
+            email=email,
+            senha=gerar_hash_senha(senha),
+            perfil=Perfil.ADOTANTE.value
+        )
+        id_usuario = usuario_repo.inserir(usuario)
+
+        # Criar adotante
+        adotante = Adotante(
+            id_adotante=id_usuario,
+            renda_media=renda_media,
+            tem_filhos=(tem_filhos.lower() == 'true'),
+            estado_saude=estado_saude
+        )
+        adotante_repo.inserir(adotante)
+
+        logger.info(f"Adotante '{nome}' (ID: {id_usuario}) cadastrado por admin {usuario_logado['id']}")
+        informar_sucesso(request, f"Adotante '{nome}' cadastrado com sucesso!")
+        return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
+
+    except Exception as e:
+        logger.error(f"Erro ao cadastrar adotante: {str(e)}")
+        informar_erro(request, "Erro ao cadastrar adotante. Verifique os dados e tente novamente.")
+        return templates.TemplateResponse(
+            "admin/adotantes/cadastro.html",
+            {"request": request, "dados": dados_formulario}
+        )
 
 @router.get("/editar/{id}")
 @requer_autenticacao([Perfil.ADMIN.value])

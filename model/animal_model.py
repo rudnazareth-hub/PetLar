@@ -24,8 +24,10 @@ class Animal:
         foto: Caminho da foto do animal
         raca: Objeto Raca relacionado (opcional)
         abrigo: Objeto Abrigo relacionado (opcional)
+        data_cadastro: Data de cadastro do animal
+        data_atualizacao: Data da última atualização
     """
-    id_animal: int
+    id: int
     id_raca: int
     id_abrigo: int
     nome: str
@@ -38,3 +40,15 @@ class Animal:
     # Relacionamentos
     raca: Optional[Raca] = None
     abrigo: Optional[Abrigo] = None
+    # Timestamps
+    data_cadastro: Optional[datetime] = None
+    data_atualizacao: Optional[datetime] = None
+
+    # Propriedade para manter compatibilidade com código existente
+    @property
+    def id_animal(self) -> int:
+        return self.id
+
+    @id_animal.setter
+    def id_animal(self, value: int):
+        self.id = value

@@ -1,0 +1,137 @@
+{% extends "base_privada.html" %}
+
+{% block titulo %}Visualizar Adotante{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-person-badge"></i> Detalhes do Adotante</h2>
+            <a href="/admin/adotantes/listar" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        </div>
+
+        <!-- Informações Pessoais -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-person"></i> Informações Pessoais</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <strong>Nome:</strong><br>
+                        {{ usuario.nome }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Email:</strong><br>
+                        {{ usuario.email }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Telefone:</strong><br>
+                        {{ usuario.telefone or 'Não informado' }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Documento:</strong><br>
+                        {{ usuario.numero_documento or 'Não informado' }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Renda Média:</strong><br>
+                        R$ {{ "{:,.2f}".format(adotante.renda_media) if adotante.renda_media else 'Não informado' }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Tem Filhos:</strong><br>
+                        {% if adotante.tem_filhos %}
+                            <span class="badge bg-info">Sim</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Não</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-12 mb-3">
+                        <strong>Estado de Saúde:</strong><br>
+                        {{ adotante.estado_saude or 'Não informado' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solicitações de Adoção -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0"><i class="bi bi-file-text"></i> Solicitações de Adoção</h5>
+            </div>
+            <div class="card-body">
+                {% if solicitacoes %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Animal</th>
+                                <th>Data</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sol in solicitacoes %}
+                            <tr>
+                                <td>{{ sol.id }}</td>
+                                <td>{{ sol.animal_nome }}</td>
+                                <td>{{ sol.data_solicitacao|data_hora_br }}</td>
+                                <td>
+                                    {% set status_map = {
+                                        'Pendente': 'warning',
+                                        'Aprovada': 'success',
+                                        'Rejeitada': 'danger',
+                                        'Cancelada': 'secondary'
+                                    } %}
+                                    <span class="badge bg-{{ status_map.get(sol.status, 'secondary') }}">
+                                        {{ sol.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted mb-0">Nenhuma solicitação registrada.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Adoções Realizadas -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-check-circle"></i> Adoções Realizadas</h5>
+            </div>
+            <div class="card-body">
+                {% if adocoes %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Animal</th>
+                                <th>Data Adoção</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for adocao in adocoes %}
+                            <tr>
+                                <td>{{ adocao.id }}</td>
+                                <td>{{ adocao.animal_nome }}</td>
+                                <td>{{ adocao.data_adocao|data_br }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted mb-0">Nenhuma adoção realizada.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
