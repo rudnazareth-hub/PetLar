@@ -137,3 +137,61 @@ VERSION = "1.0.0"
 # === Configurações de Timezone ===
 TIMEZONE = os.getenv("TIMEZONE", "America/Sao_Paulo")
 APP_TIMEZONE = ZoneInfo(TIMEZONE)
+
+# === Funções Helper para Leitura Híbrida (Database + .env) ===
+def obter_config_str(chave: str, padrao_env: str) -> str:
+    """
+    Obtém configuração com leitura híbrida: database primeiro, .env como fallback
+
+    Args:
+        chave: Chave da configuração no banco (ex: "app_name")
+        padrao_env: Valor do .env ou padrão hardcoded
+
+    Returns:
+        Valor do banco de dados ou do .env
+    """
+    from util.config_cache import config
+    # Tenta buscar do banco primeiro, se não encontrar usa o valor do .env
+    valor_db = config.obter(chave, "")
+    return valor_db if valor_db else padrao_env
+
+
+def obter_config_int(chave: str, padrao_env: int) -> int:
+    """
+    Obtém configuração inteira com leitura híbrida: database primeiro, .env como fallback
+
+    Args:
+        chave: Chave da configuração no banco (ex: "rate_limit_login_max")
+        padrao_env: Valor do .env ou padrão hardcoded
+
+    Returns:
+        Valor do banco de dados ou do .env
+    """
+    from util.config_cache import config
+    # obter_int já retorna o padrão se não encontrar ou der erro
+    # Mas precisamos verificar se existe no banco antes
+    valor_db_str = config.obter(chave, "")
+    if valor_db_str:
+        try:
+            return int(valor_db_str)
+        except ValueError:
+            return padrao_env
+    return padrao_env
+
+
+def obter_config_bool(chave: str, padrao_env: bool) -> bool:
+    """
+    Obtém configuração booleana com leitura híbrida: database primeiro, .env como fallback
+
+    Args:
+        chave: Chave da configuração no banco
+        padrao_env: Valor do .env ou padrão hardcoded
+
+    Returns:
+        Valor do banco de dados ou do .env
+    """
+    from util.config_cache import config
+    valor_db_str = config.obter(chave, "")
+    if valor_db_str:
+        return valor_db_str.lower() in ("true", "1", "yes", "sim", "verdadeiro")
+    return padrao_env
