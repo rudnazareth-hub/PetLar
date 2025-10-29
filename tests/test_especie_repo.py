@@ -267,7 +267,7 @@ class TestExcluir:
         with get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO raca (id, nome) VALUES (?, ?)",
+                "INSERT INTO raca (id_especie, nome) VALUES (?, ?)",
                 (id, "Labrador")
             )
 
@@ -288,15 +288,15 @@ class TestExcluir:
         with get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO raca (id, nome) VALUES (?, ?)",
+                "INSERT INTO raca (id_especie, nome) VALUES (?, ?)",
                 (id, "Persa")
             )
             cursor.execute(
-                "INSERT INTO raca (id, nome) VALUES (?, ?)",
+                "INSERT INTO raca (id_especie, nome) VALUES (?, ?)",
                 (id, "Siamês")
             )
             cursor.execute(
-                "INSERT INTO raca (id, nome) VALUES (?, ?)",
+                "INSERT INTO raca (id_especie, nome) VALUES (?, ?)",
                 (id, "Maine Coon")
             )
 

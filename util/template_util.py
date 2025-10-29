@@ -231,6 +231,7 @@ def criar_templates(pasta: str) -> Jinja2Templates:
     env.globals['VERSION'] = VERSION
 
     # Adicionar configuração dinâmica de toast delay (lê do banco → .env)
+    # O config_cache já tem tratamento de erro para quando a tabela não existe
     env.globals['TOAST_AUTO_HIDE_DELAY_MS'] = config.obter_int(
         'toast_auto_hide_delay_ms',
         TOAST_AUTO_HIDE_DELAY_MS

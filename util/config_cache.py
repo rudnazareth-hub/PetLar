@@ -37,7 +37,11 @@ class ConfigCache:
                 return padrao
 
         except sqlite3.Error as e:
-            logger.error(f"Erro ao buscar configuração '{chave}' do banco: {e}")
+            # Se a tabela ainda não foi criada, isso é normal durante a inicialização
+            if "no such table" in str(e).lower():
+                logger.debug(f"Tabela 'configuracao' ainda não existe, usando padrão para '{chave}'")
+            else:
+                logger.error(f"Erro ao buscar configuração '{chave}' do banco: {e}")
             # Retorna padrão em vez de crashar a aplicação
             return padrao
 

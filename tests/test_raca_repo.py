@@ -497,7 +497,7 @@ class TestExcluir:
 
             # Criar animal
             cursor.execute(
-                """INSERT INTO animal (id, id_abrigo, nome, sexo, data_entrada)
+                """INSERT INTO animal (id_raca, id_abrigo, nome, sexo, data_entrada)
                    VALUES (?, ?, ?, ?, ?)""",
                 (id, id_usuario, "Rex", "M", "2024-01-01")
             )
