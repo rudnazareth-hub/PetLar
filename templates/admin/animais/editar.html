@@ -1,0 +1,106 @@
+{% extends "base_privada.html" %}
+{% from "macros/form_fields.html" import field with context %}
+
+{% block titulo %}Alterar Animal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex align-items-center mb-4">
+            <h2 class="mb-0"><i class="bi bi-heart-fill"></i> Alterar Dados do Animal</h2>
+        </div>
+
+        <div class="card shadow-sm">
+            <form method="POST" action="/admin/animais/editar/{{ dados.id if dados.id is defined else animal.id }}" enctype="multipart/form-data">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-12">
+                            {% include "components/alerta_erro.html" %}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='nome', label='Nome do Animal', type='text', required=true,
+                            value=dados.nome) }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='sexo', label='Sexo', type='radio', required=true,
+                            options=sexo_opcoes, radio_style='buttons', radio_layout='horizontal',
+                            value=dados.sexo) }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='id_raca', label='Raça', type='select', required=true,
+                            options=racas, value=dados.id_raca) }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='id_abrigo', label='Abrigo', type='select', required=true,
+                            options=abrigos, value=dados.id_abrigo) }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='data_nascimento', label='Data de Nascimento', type='date',
+                            value=dados.data_nascimento) }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='data_entrada', label='Data de Entrada no Abrigo', type='date',
+                            value=dados.data_entrada) }}
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            {{ field(name='status', label='Status', type='select', required=true,
+                            options=status_opcoes, value=dados.status) }}
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            {{ field(name='observacoes', label='Observações', type='textarea', rows=4,
+                            help_text='Informações adicionais sobre o animal (saúde, temperamento, etc.)',
+                            value=dados.observacoes) }}
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label for="foto" class="form-label">Foto do Animal</label>
+                            <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
+                            <div class="form-text">Formato: JPG, PNG. Tamanho máximo: 5MB</div>
+                            {% if animal.foto %}
+                            <div class="mt-2">
+                                <small class="text-muted">Foto atual: {{ animal.foto }}</small>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        {% if animal.data_cadastro or animal.data_atualizacao %}
+                        <div class="col-12">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <small class="text-muted">
+                                        {% if animal.data_cadastro %}
+                                        <i class="bi bi-calendar-plus"></i> Cadastrado em: <strong>{{ animal.data_cadastro|data_hora_br }}</strong>
+                                        {% endif %}
+                                        {% if animal.data_atualizacao and animal.data_atualizacao != animal.data_cadastro %}
+                                        <br><i class="bi bi-calendar-check"></i> Última atualização: <strong>{{ animal.data_atualizacao|data_hora_br }}</strong>
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer p-4">
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Salvar Alterações
+                        </button>
+                        <a href="/admin/animais/listar" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
