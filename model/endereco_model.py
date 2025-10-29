@@ -25,7 +25,7 @@ class Endereco:
         data_cadastro: Data de cadastro do endereço
         data_atualizacao: Data da última atualização
     """
-    id_endereco: int
+    id: int
     id_usuario: int
     titulo: str
     logradouro: str
@@ -38,3 +38,8 @@ class Endereco:
     usuario: Optional[Usuario] = None
     data_cadastro: Optional[datetime] = None
     data_atualizacao: Optional[datetime] = None
+
+    # Propriedade para manter compatibilidade com código existente
+    @property
+    def id_endereco(self) -> int:
+        return self.id

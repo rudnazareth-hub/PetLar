@@ -31,7 +31,7 @@
                         <tbody>
                             {% for animal in animais %}
                             <tr>
-                                <td>{{ animal.id_animal }}</td>
+                                <td>{{ animal.id }}</td>
                                 <td>
                                     {% if animal.foto %}
                                     <img src="{{ animal.foto }}" alt="{{ animal.nome }}"
@@ -65,19 +65,19 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
-                                        <a href="/admin/animais/visualizar/{{ animal.id_animal }}"
+                                        <a href="/admin/animais/visualizar/{{ animal.id }}"
                                             class="btn btn-outline-info"
                                             title="Visualizar">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="/admin/animais/editar/{{ animal.id_animal }}"
+                                        <a href="/admin/animais/editar/{{ animal.id }}"
                                             class="btn btn-outline-primary"
                                             title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <button type="button" class="btn btn-outline-danger"
                                             title="Excluir"
-                                            onclick="excluirAnimal({{ animal.id_animal }}, '{{ animal.nome|replace("'", "\\'") }}')">
+                                            onclick="excluirAnimal({{ animal.id }}, '{{ animal.nome|replace("'", "\\'") }}')">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>

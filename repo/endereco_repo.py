@@ -9,7 +9,7 @@ from util.db_util import get_connection
 def _row_to_endereco(row) -> Endereco:
     """Converte linha do banco em objeto Endereco."""
     return Endereco(
-        id_endereco=row["id_endereco"],
+        id=row["id"],
         id_usuario=row["id_usuario"],
         titulo=row["titulo"],
         logradouro=row["logradouro"],
@@ -114,7 +114,7 @@ def atualizar(endereco: Endereco) -> bool:
         cursor.execute(ATUALIZAR, (
             endereco.titulo, endereco.logradouro, endereco.numero,
             endereco.complemento, endereco.bairro, endereco.cidade,
-            endereco.uf, endereco.cep, endereco.id_endereco
+            endereco.uf, endereco.cep, endereco.id
         ))
         return cursor.rowcount > 0
 

@@ -75,7 +75,7 @@
                         <tbody>
                             {% for sol in solicitacoes %}
                             <tr>
-                                <td>{{ sol.id_solicitacao }}</td>
+                                <td>{{ sol.id }}</td>
                                 <td>{{ sol.animal_nome }}</td>
                                 <td>{{ sol.data_solicitacao|data_hora_br }}</td>
                                 <td>
@@ -119,7 +119,7 @@
                         <tbody>
                             {% for adocao in adocoes %}
                             <tr>
-                                <td>{{ adocao.id_adocao }}</td>
+                                <td>{{ adocao.id }}</td>
                                 <td>{{ adocao.animal_nome }}</td>
                                 <td>{{ adocao.data_adocao|data_br }}</td>
                             </tr>

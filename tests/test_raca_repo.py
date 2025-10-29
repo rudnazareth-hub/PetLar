@@ -36,7 +36,7 @@ def limpar_racas():
 @pytest.fixture
 def especie_cachorro():
     """Fixture que cria uma espécie Cachorro."""
-    especie = Especie(id_especie=0, nome="Cachorro", descricao="Canis lupus")
+    especie = Especie(id=0, nome="Cachorro", descricao="Canis lupus")
     id_especie = especie_repo.inserir(especie)
     return id_especie
 
@@ -44,7 +44,7 @@ def especie_cachorro():
 @pytest.fixture
 def especie_gato():
     """Fixture que cria uma espécie Gato."""
-    especie = Especie(id_especie=0, nome="Gato", descricao="Felis catus")
+    especie = Especie(id=0, nome="Gato", descricao="Felis catus")
     id_especie = especie_repo.inserir(especie)
     return id_especie
 

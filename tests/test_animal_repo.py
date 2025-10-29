@@ -64,12 +64,12 @@ def setup_completo():
     abrigo_repo.inserir(abrigo)
 
     # Criar espécie
-    especie = Especie(id_especie=0, nome="Cachorro", descricao=None)
+    especie = Especie(id=0, nome="Cachorro", descricao=None)
     id_especie = especie_repo.inserir(especie)
 
     # Criar raça
     raca = Raca(
-        id_raca=0, id_especie=id_especie, nome="Labrador",
+        id=0, id_especie=id_especie, nome="Labrador",
         descricao=None, temperamento=None,
         expectativa_de_vida=None, porte=None
     )
@@ -92,7 +92,7 @@ class TestInserir:
     def test_inserir_animal_completo(self, setup_completo):
         """Deve inserir animal com todos os campos."""
         animal = Animal(
-            id_animal=0,
+            id=0,
             id_raca=setup_completo["id_raca"],
             id_abrigo=setup_completo["id_abrigo"],
             nome="Rex",
@@ -115,7 +115,7 @@ class TestInserir:
     def test_inserir_animal_campos_minimos(self, setup_completo):
         """Deve inserir animal com campos mínimos."""
         animal = Animal(
-            id_animal=0,
+            id=0,
             id_raca=setup_completo["id_raca"],
             id_abrigo=setup_completo["id_abrigo"],
             nome="Toby",
@@ -140,7 +140,7 @@ class TestObterPorId:
     def test_obter_animal_com_relacionamentos(self, setup_completo):
         """Deve retornar animal com raça e abrigo."""
         animal = Animal(
-            id_animal=0,
+            id=0,
             id_raca=setup_completo["id_raca"],
             id_abrigo=setup_completo["id_abrigo"],
             nome="Buddy",
@@ -172,7 +172,7 @@ class TestObterTodosDisponiveis:
         """Deve listar apenas animais disponíveis."""
         # Criar animal disponível
         animal1 = Animal(
-            id_animal=0,
+            id=0,
             id_raca=setup_completo["id_raca"],
             id_abrigo=setup_completo["id_abrigo"],
             nome="Max",
@@ -198,7 +198,7 @@ class TestObterPorAbrigo:
         # Criar 2 animais no mesmo abrigo
         for i in range(2):
             animal = Animal(
-                id_animal=0,
+                id=0,
                 id_raca=setup_completo["id_raca"],
                 id_abrigo=setup_completo["id_abrigo"],
                 nome=f"Animal{i}",
@@ -221,7 +221,7 @@ class TestAtualizar:
     def test_atualizar_animal(self, setup_completo):
         """Deve atualizar dados do animal."""
         animal = Animal(
-            id_animal=0,
+            id=0,
             id_raca=setup_completo["id_raca"],
             id_abrigo=setup_completo["id_abrigo"],
             nome="Original",
@@ -251,7 +251,7 @@ class TestAtualizarStatus:
     def test_atualizar_status_animal(self, setup_completo):
         """Deve atualizar status do animal."""
         animal = Animal(
-            id_animal=0,
+            id=0,
             id_raca=setup_completo["id_raca"],
             id_abrigo=setup_completo["id_abrigo"],
             nome="Test",
@@ -277,7 +277,7 @@ class TestExcluir:
     def test_excluir_animal(self, setup_completo):
         """Deve excluir animal."""
         animal = Animal(
-            id_animal=0,
+            id=0,
             id_raca=setup_completo["id_raca"],
             id_abrigo=setup_completo["id_abrigo"],
             nome="Delete",

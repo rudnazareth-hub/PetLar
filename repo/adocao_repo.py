@@ -20,7 +20,7 @@ def _converter_data(data_str: Optional[str]) -> Optional[datetime]:
 def _row_to_adocao(row) -> Adocao:
     """Converte linha do banco em objeto Adocao."""
     return Adocao(
-        id_adocao=row["id_adocao"],
+        id=row["id"],
         id_adotante=row["id_adotante"],
         id_animal=row["id_animal"],
         data_solicitacao=_converter_data(row["data_solicitacao"]),

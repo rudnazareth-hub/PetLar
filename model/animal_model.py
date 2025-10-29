@@ -27,7 +27,7 @@ class Animal:
         data_cadastro: Data de cadastro do animal
         data_atualizacao: Data da última atualização
     """
-    id_animal: int
+    id: int
     id_raca: int
     id_abrigo: int
     nome: str
@@ -43,3 +43,8 @@ class Animal:
     # Timestamps
     data_cadastro: Optional[datetime] = None
     data_atualizacao: Optional[datetime] = None
+
+    # Propriedade para manter compatibilidade com código existente
+    @property
+    def id_animal(self) -> int:
+        return self.id

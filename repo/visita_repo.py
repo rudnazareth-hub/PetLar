@@ -20,7 +20,7 @@ def _converter_data(data_str: Optional[str]) -> Optional[datetime]:
 def _row_to_visita(row) -> Visita:
     """Converte linha do banco em objeto Visita."""
     return Visita(
-        id_visita=row["id_visita"],
+        id=row["id"],
         id_adotante=row["id_adotante"],
         id_abrigo=row["id_abrigo"],
         data_agendada=_converter_data(row["data_agendada"]),

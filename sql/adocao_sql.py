@@ -2,7 +2,7 @@
 
 CRIAR_TABELA = """
 CREATE TABLE IF NOT EXISTS adocao (
-    id_adocao INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     id_adotante INTEGER NOT NULL,
     id_animal INTEGER NOT NULL,
     data_solicitacao DATETIME NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS adocao (
     observacoes TEXT,
     data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_adotante) REFERENCES adotante(id_adotante),
-    FOREIGN KEY (id_animal) REFERENCES animal(id_animal),
+    FOREIGN KEY (id_animal) REFERENCES animal(id),
     UNIQUE(id_animal)
 )
 """
@@ -23,7 +23,7 @@ VALUES (?, ?, ?, ?)
 
 OBTER_POR_ABRIGO = """
 SELECT
-    ad.id_adocao, ad.id_adotante, ad.id_animal, ad.data_solicitacao,
+    ad.id, ad.id_adotante, ad.id_animal, ad.data_solicitacao,
     ad.data_adocao, ad.status, ad.observacoes, ad.data_atualizacao,
     a.nome as animal_nome,
     u.nome as adotante_nome
@@ -40,7 +40,7 @@ SELECT COUNT(*) FROM adocao
 
 OBTER_TODOS = """
 SELECT
-    ad.id_adocao, ad.id_adotante, ad.id_animal, ad.data_solicitacao,
+    ad.id, ad.id_adotante, ad.id_animal, ad.data_solicitacao,
     ad.data_adocao, ad.status, ad.observacoes, ad.data_atualizacao,
     a.nome as animal_nome,
     u.nome as adotante_nome
@@ -52,7 +52,7 @@ ORDER BY ad.data_adocao DESC
 
 BUSCAR_POR_TERMO = """
 SELECT
-    ad.id_adocao, ad.id_adotante, ad.id_animal, ad.data_solicitacao,
+    ad.id, ad.id_adotante, ad.id_animal, ad.data_solicitacao,
     ad.data_adocao, ad.status, ad.observacoes, ad.data_atualizacao,
     a.nome as animal_nome,
     u.nome as adotante_nome

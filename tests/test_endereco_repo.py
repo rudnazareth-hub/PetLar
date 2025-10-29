@@ -57,7 +57,7 @@ class TestInserir:
     def test_inserir_endereco_completo(self, usuario_teste):
         """Deve inserir endereço completo."""
         endereco = Endereco(
-            id_endereco=0,
+            id=0,
             id_usuario=usuario_teste,
             titulo="Casa",
             logradouro="Rua das Flores",
@@ -79,7 +79,7 @@ class TestInserir:
     def test_inserir_sem_complemento(self, usuario_teste):
         """Deve inserir endereço sem complemento."""
         endereco = Endereco(
-            id_endereco=0,
+            id=0,
             id_usuario=usuario_teste,
             titulo="Trabalho",
             logradouro="Av. Principal",
@@ -106,7 +106,7 @@ class TestObterPorUsuario:
 
         for titulo in titulos:
             endereco = Endereco(
-                id_endereco=0,
+                id=0,
                 id_usuario=usuario_teste,
                 titulo=titulo,
                 logradouro="Rua X",
@@ -139,7 +139,7 @@ class TestAtualizar:
     def test_atualizar_endereco(self, usuario_teste):
         """Deve atualizar endereço existente."""
         endereco = Endereco(
-            id_endereco=0,
+            id=0,
             id_usuario=usuario_teste,
             titulo="Original",
             logradouro="Rua Antiga",
@@ -153,7 +153,7 @@ class TestAtualizar:
         id_inserido = endereco_repo.inserir(endereco)
 
         endereco_atualizado = Endereco(
-            id_endereco=id_inserido,
+            id=id_inserido,
             id_usuario=usuario_teste,
             titulo="Atualizado",
             logradouro="Rua Nova",
@@ -179,7 +179,7 @@ class TestExcluir:
     def test_excluir_endereco(self, usuario_teste):
         """Deve excluir endereço."""
         endereco = Endereco(
-            id_endereco=0,
+            id=0,
             id_usuario=usuario_teste,
             titulo="Delete",
             logradouro="Rua X",
@@ -203,7 +203,7 @@ class TestExcluir:
         ids = []
         for i in range(3):
             endereco = Endereco(
-                id_endereco=0,
+                id=0,
                 id_usuario=usuario_teste,
                 titulo=f"End{i}",
                 logradouro="Rua",

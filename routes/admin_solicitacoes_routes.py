@@ -117,7 +117,7 @@ async def post_aprovar(
     try:
         # Validar com DTO
         dto = AprovarSolicitacaoDTO(
-            id_solicitacao=id,
+            id=id,
             resposta_abrigo=resposta_abrigo
         )
 
@@ -165,7 +165,7 @@ async def post_rejeitar(
     try:
         # Validar com DTO (motivo é obrigatório)
         dto = RejeitarSolicitacaoDTO(
-            id_solicitacao=id,
+            id=id,
             resposta_abrigo=resposta_abrigo
         )
 

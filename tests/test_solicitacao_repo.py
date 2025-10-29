@@ -84,10 +84,10 @@ def setup_completo():
     abrigo_repo.inserir(abrigo)
 
     # Criar espécie e raça
-    especie = Especie(id_especie=0, nome="Cachorro", descricao=None)
+    especie = Especie(id=0, nome="Cachorro", descricao=None)
     id_especie = especie_repo.inserir(especie)
     raca = Raca(
-        id_raca=0, id_especie=id_especie, nome="Vira-lata",
+        id=0, id_especie=id_especie, nome="Vira-lata",
         descricao=None, temperamento=None,
         expectativa_de_vida=None, porte=None
     )
@@ -95,7 +95,7 @@ def setup_completo():
 
     # Criar animal
     animal = Animal(
-        id_animal=0, id_raca=id_raca, id_abrigo=id_abrigo,
+        id=0, id_raca=id_raca, id_abrigo=id_abrigo,
         nome="Rex", sexo="M", data_nascimento=None,
         data_entrada="2024-01-01", observacoes=None,
         status="Disponível", foto=None
@@ -123,7 +123,7 @@ class TestInserir:
     def test_inserir_solicitacao_com_observacoes(self, setup_completo):
         """Deve inserir solicitação com observações."""
         solicitacao = Solicitacao(
-            id_solicitacao=0,
+            id=0,
             id_adotante=setup_completo["id_adotante"],
             id_animal=setup_completo["id_animal"],
             data_solicitacao=None,
@@ -137,7 +137,7 @@ class TestInserir:
     def test_inserir_solicitacao_sem_observacoes(self, setup_completo):
         """Deve inserir solicitação sem observações."""
         solicitacao = Solicitacao(
-            id_solicitacao=0,
+            id=0,
             id_adotante=setup_completo["id_adotante"],
             id_animal=setup_completo["id_animal"],
             data_solicitacao=None,
@@ -155,7 +155,7 @@ class TestObterPorAdotante:
     def test_obter_solicitacoes_por_adotante(self, setup_completo):
         """Deve retornar solicitações do adotante."""
         solicitacao = Solicitacao(
-            id_solicitacao=0,
+            id=0,
             id_adotante=setup_completo["id_adotante"],
             id_animal=setup_completo["id_animal"],
             data_solicitacao=None,
@@ -185,7 +185,7 @@ class TestObterPorAbrigo:
     def test_obter_solicitacoes_por_abrigo(self, setup_completo):
         """Deve retornar solicitações recebidas pelo abrigo."""
         solicitacao = Solicitacao(
-            id_solicitacao=0,
+            id=0,
             id_adotante=setup_completo["id_adotante"],
             id_animal=setup_completo["id_animal"],
             data_solicitacao=None,
@@ -207,7 +207,7 @@ class TestAtualizarStatus:
     def test_atualizar_status_para_aprovada(self, setup_completo):
         """Deve atualizar status para Aprovada."""
         solicitacao = Solicitacao(
-            id_solicitacao=0,
+            id=0,
             id_adotante=setup_completo["id_adotante"],
             id_animal=setup_completo["id_animal"],
             data_solicitacao=None,
@@ -225,7 +225,7 @@ class TestAtualizarStatus:
     def test_atualizar_status_para_rejeitada(self, setup_completo):
         """Deve atualizar status para Rejeitada."""
         solicitacao = Solicitacao(
-            id_solicitacao=0,
+            id=0,
             id_adotante=setup_completo["id_adotante"],
             id_animal=setup_completo["id_animal"],
             data_solicitacao=None,

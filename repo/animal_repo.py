@@ -15,7 +15,7 @@ def _row_to_animal(row) -> Animal:
     status = row["status"] if row["status"] else "Disponível"
 
     return Animal(
-        id_animal=row["id_animal"],
+        id=row["id"],
         id_raca=row["id_raca"],
         id_abrigo=row["id_abrigo"],
         nome=row["nome"],
@@ -144,7 +144,7 @@ def atualizar(animal: Animal) -> bool:
             animal.data_nascimento,
             animal.observacoes,
             animal.status,
-            animal.id_animal
+            animal.id
         ))
         return cursor.rowcount > 0
 
