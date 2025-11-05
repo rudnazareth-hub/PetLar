@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 
 @dataclass
 class Curtida:
-    id: int
     id_usuario: int
     id_animal: int
-    data_curtida: datetime
-    
+    data_curtida: Optional [datetime] = None
