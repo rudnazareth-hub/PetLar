@@ -35,11 +35,12 @@ SELECT
     a.*,
     r.id as id_raca, r.nome as raca_nome, r.descricao as raca_descricao,
     r.temperamento, r.expectativa_de_vida, r.porte,
-    e.id as id_especie, e.nome as especie_nome,
+    -- REMOVIDO: O aluno deverá criar a tabela especie
+    -- e.id as id_especie, e.nome as especie_nome,
     ab.id_abrigo, ab.responsavel
 FROM animal a
 LEFT JOIN raca r ON a.id_raca = r.id
-LEFT JOIN especie e ON r.id_especie = e.id
+-- LEFT JOIN especie e ON r.id_especie = e.id  -- REMOVIDO: O aluno deverá criar a tabela especie
 LEFT JOIN abrigo ab ON a.id_abrigo = ab.id_abrigo
 WHERE a.status = 'Disponível'
 ORDER BY a.data_entrada DESC
@@ -50,11 +51,12 @@ SELECT
     a.*,
     r.id as id_raca, r.nome as raca_nome, r.descricao as raca_descricao,
     r.temperamento, r.expectativa_de_vida, r.porte,
-    e.id as id_especie, e.nome as especie_nome,
+    -- REMOVIDO: O aluno deverá criar a tabela especie
+    -- e.id as id_especie, e.nome as especie_nome,
     ab.id_abrigo, ab.responsavel
 FROM animal a
 LEFT JOIN raca r ON a.id_raca = r.id
-LEFT JOIN especie e ON r.id_especie = e.id
+-- LEFT JOIN especie e ON r.id_especie = e.id  -- REMOVIDO: O aluno deverá criar a tabela especie
 LEFT JOIN abrigo ab ON a.id_abrigo = ab.id_abrigo
 WHERE a.id = ?
 """
@@ -64,11 +66,12 @@ SELECT
     a.*,
     r.id as id_raca, r.nome as raca_nome, r.descricao as raca_descricao,
     r.temperamento, r.expectativa_de_vida, r.porte,
-    e.id as id_especie, e.nome as especie_nome,
+    -- REMOVIDO: O aluno deverá criar a tabela especie
+    -- e.id as id_especie, e.nome as especie_nome,
     ab.id_abrigo, ab.responsavel
 FROM animal a
 LEFT JOIN raca r ON a.id_raca = r.id
-LEFT JOIN especie e ON r.id_especie = e.id
+-- LEFT JOIN especie e ON r.id_especie = e.id  -- REMOVIDO: O aluno deverá criar a tabela especie
 LEFT JOIN abrigo ab ON a.id_abrigo = ab.id_abrigo
 WHERE a.id_abrigo = ?
 ORDER BY a.data_entrada DESC
@@ -77,11 +80,12 @@ ORDER BY a.data_entrada DESC
 BUSCAR_DISPONIVEIS = """
 SELECT
     a.*,
-    r.nome as raca_nome, r.porte,
-    e.nome as especie_nome
+    r.nome as raca_nome, r.porte
+    -- REMOVIDO: O aluno deverá criar a tabela especie
+    -- e.nome as especie_nome
 FROM animal a
 LEFT JOIN raca r ON a.id_raca = r.id
-LEFT JOIN especie e ON r.id_especie = e.id
+-- LEFT JOIN especie e ON r.id_especie = e.id  -- REMOVIDO: O aluno deverá criar a tabela especie
 WHERE a.status = 'Disponível'
 """
 

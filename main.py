@@ -24,8 +24,9 @@ from util.exceptions import FormValidationError
 # Repositórios
 from repo import usuario_repo, configuracao_repo, tarefa_repo, chamado_repo, chamado_interacao_repo, indices_repo
 from repo import chat_sala_repo, chat_participante_repo, chat_mensagem_repo, categoria_repo
-from repo import especie_repo, raca_repo, abrigo_repo, adotante_repo, animal_repo, endereco_repo
+from repo import raca_repo, abrigo_repo, adotante_repo, animal_repo, endereco_repo
 from repo import solicitacao_repo, adocao_repo, visita_repo
+# from repo import especie_repo  # REMOVIDO: O aluno deverá criar este repositório
 
 # Rotas
 from routes.auth_routes import router as auth_router
@@ -99,8 +100,8 @@ try:
     logger.info("Tabela 'categoria' criada/verificada")
 
     # Tabelas específicas do PetLar
-    especie_repo.criar_tabela()
-    logger.info("Tabela 'especie' criada/verificada")
+    # especie_repo.criar_tabela()  # REMOVIDO: O aluno deverá criar este repositório
+    # logger.info("Tabela 'especie' criada/verificada")
 
     raca_repo.criar_tabela()
     logger.info("Tabela 'raca' criada/verificada")
@@ -218,14 +219,14 @@ if __name__ == "__main__":
         logger.error(f"Erro ao iniciar servidor: {e}")
         raise
 
-from routes.admin_especies_routes import router as admin_especies_router
+# from routes.admin_especies_routes import router as admin_especies_router  # REMOVIDO: O aluno deverá criar este router
 from routes.admin_racas_routes import router as admin_racas_router
 from routes.admin_abrigos_routes import router as admin_abrigos_router
 from routes.admin_animais_routes import router as admin_animais_router
 
 # Incluir routers
-app.include_router(admin_especies_router, tags=["Admin - Espécies"])
-logger.info("Router admin de espécies incluído")
+# app.include_router(admin_especies_router, tags=["Admin - Espécies"])  # REMOVIDO: O aluno deverá criar este router
+# logger.info("Router admin de espécies incluído")
 app.include_router(admin_racas_router, tags=["Admin - Raças"])
 logger.info("Router admin de raças incluído")
 app.include_router(admin_abrigos_router, tags=["Admin - Abrigos"])

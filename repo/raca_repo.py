@@ -4,7 +4,7 @@ Repository para operações com a tabela raca.
 
 from typing import List, Optional
 from model.raca_model import Raca
-from model.especie_model import Especie
+# from model.especie_model import Especie  # REMOVIDO: O aluno deverá criar este modelo
 from sql.raca_sql import *
 from util.db_util import get_connection
 
@@ -21,11 +21,12 @@ def _row_to_raca(row) -> Raca:
         porte=row["porte"],
         data_cadastro=row["data_cadastro"],
         data_atualizacao=row["data_atualizacao"],
-        especie=Especie(
-            id=row["especie_id"],
-            nome=row["especie_nome"],
-            descricao=row["especie_descricao"]
-        ) if row["especie_id"] else None
+        # REMOVIDO: O aluno deverá criar o modelo Especie
+        # especie=Especie(
+        #     id=row["especie_id"],
+        #     nome=row["especie_nome"],
+        #     descricao=row["especie_descricao"]
+        # ) if row["especie_id"] else None
     )
 
 

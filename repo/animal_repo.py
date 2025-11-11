@@ -3,7 +3,7 @@
 from typing import List, Optional
 from model.animal_model import Animal
 from model.raca_model import Raca
-from model.especie_model import Especie
+# from model.especie_model import Especie  # REMOVIDO: O aluno deverá criar este modelo
 from model.abrigo_model import Abrigo
 from sql.animal_sql import *
 from util.db_util import get_connection

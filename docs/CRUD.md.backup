@@ -3,25 +3,24 @@
 ## Índice
 
 1. [Introdução](#introdução)
-2. [Passo 0: Preparação do Ambiente - Restauração de Referências](#passo-0-preparação-do-ambiente---restauração-de-referências)
-3. [Arquitetura do Projeto](#arquitetura-do-projeto)
-4. [Visão Geral do que Vamos Construir](#visão-geral-do-que-vamos-construir)
-5. [Passo 1: Criar as Queries SQL](#passo-1-criar-as-queries-sql)
-6. [Passo 2: Criar o Modelo de Domínio](#passo-2-criar-o-modelo-de-domínio)
-7. [Passo 3: Criar os DTOs de Validação](#passo-3-criar-os-dtos-de-validação)
-8. [Passo 4: Criar o Repository](#passo-4-criar-o-repository)
-9. [Passo 5: Registrar o Repository no Main](#passo-5-registrar-o-repository-no-main)
-10. [Passo 6: Criar as Routes (Controllers)](#passo-6-criar-as-routes-controllers)
-11. [Passo 7: Registrar as Routes no Main](#passo-7-registrar-as-routes-no-main)
-12. [Passo 8: Criar o Template de Listagem](#passo-8-criar-o-template-de-listagem)
-13. [Passo 9: Criar o Template de Cadastro](#passo-9-criar-o-template-de-cadastro)
-14. [Passo 10: Criar o Template de Edição](#passo-10-criar-o-template-de-edição)
-15. [Passo 11: Adicionar Link no Menu](#passo-11-adicionar-link-no-menu)
-16. [Passo 12: Adicionar Card no Dashboard](#passo-12-adicionar-card-no-dashboard)
-17. [Passo 13: Testar o CRUD Completo](#passo-13-testar-o-crud-completo)
-18. [Padrões e Boas Práticas](#padrões-e-boas-práticas)
-19. [Troubleshooting](#troubleshooting)
-20. [Exercícios Propostos](#exercícios-propostos)
+2. [Arquitetura do Projeto](#arquitetura-do-projeto)
+3. [Visão Geral do que Vamos Construir](#visão-geral-do-que-vamos-construir)
+4. [Passo 1: Criar as Queries SQL](#passo-1-criar-as-queries-sql)
+5. [Passo 2: Criar o Modelo de Domínio](#passo-2-criar-o-modelo-de-domínio)
+6. [Passo 3: Criar os DTOs de Validação](#passo-3-criar-os-dtos-de-validação)
+7. [Passo 4: Criar o Repository](#passo-4-criar-o-repository)
+8. [Passo 5: Registrar o Repository no Main](#passo-5-registrar-o-repository-no-main)
+9. [Passo 6: Criar as Routes (Controllers)](#passo-6-criar-as-routes-controllers)
+10. [Passo 7: Registrar as Routes no Main](#passo-7-registrar-as-routes-no-main)
+11. [Passo 8: Criar o Template de Listagem](#passo-8-criar-o-template-de-listagem)
+12. [Passo 9: Criar o Template de Cadastro](#passo-9-criar-o-template-de-cadastro)
+13. [Passo 10: Criar o Template de Edição](#passo-10-criar-o-template-de-edição)
+14. [Passo 11: Adicionar Link no Menu](#passo-11-adicionar-link-no-menu)
+15. [Passo 12: Adicionar Card no Dashboard](#passo-12-adicionar-card-no-dashboard)
+16. [Passo 13: Testar o CRUD Completo](#passo-13-testar-o-crud-completo)
+17. [Padrões e Boas Práticas](#padrões-e-boas-práticas)
+18. [Troubleshooting](#troubleshooting)
+19. [Exercícios Propostos](#exercícios-propostos)
 
 ---
 
@@ -33,146 +32,14 @@
 
 ---
 
-## Passo 0: Preparação do Ambiente - Restauração de Referências
-
-### ⚠️ Contexto Importante
-
-Este tutorial ensina a criar o CRUD completo de **Espécie**. No entanto, para fins didáticos, **o CRUD de espécie foi removido** do projeto para que você possa implementá-lo do zero, seguindo este guia passo a passo.
-
-Como a entidade **Espécie** é fundamental no sistema PetLar (ela se relaciona com Raça e Animal), algumas **referências foram comentadas** em arquivos que dependem dela. Após completar este tutorial, você deverá **descomentar essas referências** para restaurar a funcionalidade completa do sistema.
-
-### 📋 O que Você Vai Aprender
-
-Neste passo inicial, você vai:
-
-1. Entender quais arquivos foram modificados
-2. Identificar as referências comentadas que precisarão ser restauradas
-3. Preparar seu ambiente para começar o desenvolvimento
-
-### 🔍 Arquivos Modificados (Referências Comentadas)
-
-Durante a remoção do CRUD de espécie, os seguintes arquivos foram ajustados para evitar erros de importação. **Você NÃO precisa fazer nada agora** - essas alterações já foram feitas. Apenas tome conhecimento:
-
-#### 1. **`main.py`** - Imports e Inicialização
-
-**Linhas comentadas:**
-```python
-# from repo import especie_repo  # REMOVIDO: O aluno deverá criar este repositório
-# especie_repo.criar_tabela()  # REMOVIDO: O aluno deverá criar este repositório
-# logger.info("Tabela 'especie' criada/verificada")
-# from routes.admin_especies_routes import router as admin_especies_router  # REMOVIDO: O aluno deverá criar este router
-# app.include_router(admin_especies_router, tags=["Admin - Espécies"])  # REMOVIDO: O aluno deverá criar este router
-# logger.info("Router admin de espécies incluído")
-```
-
-**O que você fará depois:** Após completar os Passos 1-10 deste tutorial, você descomentará essas linhas para registrar seu novo repositório e router de espécies.
-
----
-
-#### 2. **`model/raca_model.py`** - Relacionamento Raça-Espécie
-
-**Linhas comentadas:**
-```python
-# from model.especie_model import Especie  # REMOVIDO: O aluno deverá criar este modelo
-# especie: Optional[Especie] = None  # REMOVIDO: O aluno deverá criar o modelo Especie
-```
-
-**O que você fará depois:** Após criar `model/especie_model.py` (Passo 2), você descomentará essas linhas para restaurar o relacionamento entre Raça e Espécie.
-
----
-
-#### 3. **`routes/admin_racas_routes.py`** - Validação e Dropdown de Espécies
-
-**Linhas comentadas:**
-```python
-# from repo import especie_repo  # REMOVIDO: O aluno deverá criar este repositório
-
-# Validação de espécie existe (dentro de post_cadastrar e post_editar):
-# especie = especie_repo.obter_por_id(dto.id_especie)
-# if not especie:
-#     informar_erro(request, "Espécie não encontrada")
-#     return RedirectResponse("/admin/racas/cadastrar", status_code=status.HTTP_303_SEE_OTHER)
-
-# População de dropdown de espécies (em get_cadastrar e get_editar):
-# especies = especie_repo.obter_todos()
-# especies_dict = {str(e.id_especie): e.nome for e in especies}
-```
-
-**Código temporário ativo:**
-```python
-especies_dict = {}  # Temporário até o aluno criar o CRUD de espécie
-```
-
-**O que você fará depois:** Após criar `repo/especie_repo.py` (Passo 4), você descomentará essas linhas para:
-- Validar que a espécie existe antes de criar/editar uma raça
-- Popular o dropdown de espécies nos formulários de raça
-
----
-
-#### 4. **`sql/animal_sql.py`** - JOINs com Tabela Espécie
-
-**Linhas comentadas:**
-```sql
--- REMOVIDO: O aluno deverá criar a tabela especie
--- e.id as id_especie, e.nome as especie_nome,
--- LEFT JOIN especie e ON r.id_especie = e.id  -- REMOVIDO: O aluno deverá criar a tabela especie
-```
-
-**Queries afetadas:**
-- `OBTER_TODOS`
-- `OBTER_POR_ID`
-- `OBTER_POR_ABRIGO`
-- `BUSCAR_DISPONIVEIS`
-
-**O que você fará depois:** Após criar a tabela especie (Passo 1) e popular dados, você descomentará esses JOINs para exibir o nome da espécie junto com os dados do animal.
-
----
-
-#### 5. **`routes/admin_animais_routes.py`** - Exibição Raça + Espécie
-
-**Linhas comentadas:**
-```python
-# REMOVIDO: A exibição da espécie será restaurada quando o aluno criar o CRUD de espécie
-# racas_dict = {str(r.id): f"{r.nome} ({r.especie.nome if r.especie else 'N/A'})" for r in racas}
-```
-
-**Código temporário ativo:**
-```python
-racas_dict = {str(r.id): r.nome for r in racas}  # Temporário: mostra apenas o nome da raça
-```
-
-**O que você fará depois:** Após restaurar o campo `especie` em `raca_model.py` e popular dados, você descomentará para exibir "Raça (Espécie)" nos dropdowns de animais.
-
----
-
-### ✅ Checklist de Preparação
-
-Antes de começar o Passo 1, verifique:
-
-- [ ] Você entendeu que o CRUD de espécie foi removido propositalmente
-- [ ] Você identificou os 5 arquivos que têm código comentado
-- [ ] Você sabe que NÃO deve descomentar nada agora (apenas após completar os passos)
-- [ ] Você está pronto para criar os arquivos do CRUD de espécie do zero
-
----
-
-### 🎯 Próximo Passo
-
-Agora que você entende o contexto, vamos começar a criar o CRUD de espécie!
-
-➡️ Prossiga para o **[Passo 1: Criar as Queries SQL](#passo-1-criar-as-queries-sql)**
-
----
-
-
 ## Arquitetura do Projeto
 
 ```mermaid
 graph TB
-    A[Routes<br/>admin_espécies_routes.py] --> B[DTOs<br/>espécie_dto.py]
-    B --> C[Model<br/>espécie_model.py]
-    C --> D[Repository<br/>espécie_repo.py]
-    D --> E[SQL<br/>espécie_sql.py]
+    A[Routes<br/>admin_categorias_routes.py] --> B[DTOs<br/>categoria_dto.py]
+    B --> C[Model<br/>categoria_model.py]
+    C --> D[Repository<br/>categoria_repo.py]
+    D --> E[SQL<br/>categoria_sql.py]
     E --> F[DB Utility<br/>db_util.py]
     F --> G[(Database<br/>dados.db)]
 
@@ -191,25 +58,25 @@ graph TB
 
 ## Visão Geral do que Vamos Construir
 
-**CRUD de Espécies**: Listar, Cadastrar, Editar, Excluir
+**CRUD de Categorias**: Listar, Cadastrar, Editar, Excluir
 
-**Tabela**: `espécie` (id, nome único 3-50 chars, descricao opcional 200 chars, timestamps)
+**Tabela**: `categoria` (id, nome único 3-50 chars, descricao opcional 200 chars, timestamps)
 
 ### Arquivos que Vamos Criar
 
 ```
 Projeto/
 ├── sql/
-│   └── espécie_sql.py          # Passo 1 (28 linhas)
+│   └── categoria_sql.py          # Passo 1 (28 linhas)
 ├── model/
-│   └── espécie_model.py        # Passo 2 (12 linhas)
+│   └── categoria_model.py        # Passo 2 (12 linhas)
 ├── dtos/
-│   └── espécie_dto.py          # Passo 3 (36 linhas)
+│   └── categoria_dto.py          # Passo 3 (36 linhas)
 ├── repo/
-│   └── espécie_repo.py         # Passo 4 (135 linhas)
+│   └── categoria_repo.py         # Passo 4 (135 linhas)
 ├── routes/
-│   └── admin_espécies_routes.py # Passo 6 (246 linhas)
-└── templates/admin/espécies/
+│   └── admin_categorias_routes.py # Passo 6 (246 linhas)
+└── templates/admin/categorias/
     ├── listar.html               # Passo 8 (109 linhas)
     ├── cadastro.html             # Passo 9 (53 linhas)
     └── editar.html               # Passo 10 (53 linhas)
@@ -232,7 +99,7 @@ Projeto/
 
 ### Objetivo
 
-Criar um arquivo com todas as queries SQL necessárias para o CRUD de espécies.
+Criar um arquivo com todas as queries SQL necessárias para o CRUD de categorias.
 
 ### Por que fazer isso primeiro?
 
@@ -242,16 +109,16 @@ Criar um arquivo com todas as queries SQL necessárias para o CRUD de espécies.
 
 ### Arquivo a Criar
 
-📁 `sql/espécie_sql.py`
+📁 `sql/categoria_sql.py`
 
 ### Código Completo
 
 ```python
-# Queries SQL para operações com espécies
+# Queries SQL para operações com categorias
 
-# Cria a tabela espécie se ela não existir
+# Cria a tabela categoria se ela não existir
 CRIAR_TABELA = """
-    CREATE TABLE IF NOT EXISTS espécie (
+    CREATE TABLE IF NOT EXISTS categoria (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT UNIQUE NOT NULL,
         descricao TEXT,
@@ -260,42 +127,42 @@ CRIAR_TABELA = """
     )
 """
 
-# Insere uma nova espécie
+# Insere uma nova categoria
 INSERIR = """
-    INSERT INTO espécie (nome, descricao)
+    INSERT INTO categoria (nome, descricao)
     VALUES (?, ?)
 """
 
-# Atualiza uma espécie existente
+# Atualiza uma categoria existente
 ALTERAR = """
-    UPDATE espécie
+    UPDATE categoria
     SET nome=?, descricao=?, data_atualizacao=CURRENT_TIMESTAMP
     WHERE id=?
 """
 
-# Exclui uma espécie
+# Exclui uma categoria
 EXCLUIR = """
-    DELETE FROM espécie WHERE id=?
+    DELETE FROM categoria WHERE id=?
 """
 
-# Busca todas as espécies ordenadas por nome
+# Busca todas as categorias ordenadas por nome
 OBTER_TODOS = """
     SELECT id, nome, descricao, data_cadastro, data_atualizacao
-    FROM espécie
+    FROM categoria
     ORDER BY nome
 """
 
-# Busca uma espécie por ID
+# Busca uma categoria por ID
 OBTER_POR_ID = """
     SELECT id, nome, descricao, data_cadastro, data_atualizacao
-    FROM espécie
+    FROM categoria
     WHERE id=?
 """
 
-# Busca uma espécie por nome
+# Busca uma categoria por nome
 OBTER_POR_NOME = """
     SELECT id, nome, descricao, data_cadastro, data_atualizacao
-    FROM espécie
+    FROM categoria
     WHERE nome=?
 """
 ```
@@ -314,12 +181,12 @@ OBTER_POR_NOME = """
 
 Após criar este arquivo:
 
-1. Verifique se o arquivo está em `sql/espécie_sql.py`
+1. Verifique se o arquivo está em `sql/categoria_sql.py`
 2. Certifique-se de que não há erros de sintaxe
 3. Execute o comando para testar importação:
 
 ```bash
-python -c "from sql.espécie_sql import CRIAR_TABELA; print('OK!')"
+python -c "from sql.categoria_sql import CRIAR_TABELA; print('OK!')"
 ```
 
 Se aparecer `OK!`, está tudo certo! 🎉
@@ -330,7 +197,7 @@ Se aparecer `OK!`, está tudo certo! 🎉
 
 ### Objetivo
 
-Criar uma classe Python que representa uma Espécie com todos os seus atributos.
+Criar uma classe Python que representa uma Categoria com todos os seus atributos.
 
 ### Por que precisamos disso?
 
@@ -342,7 +209,7 @@ Usar **classes** em vez de dicionários oferece:
 
 ### Arquivo a Criar
 
-📁 `model/espécie_model.py`
+📁 `model/categoria_model.py`
 
 ### Código Completo
 
@@ -352,14 +219,14 @@ from datetime import datetime
 from typing import Optional
 
 @dataclass
-class Espécie:
+class Categoria:
     """
-    Representa uma espécie de algo do projeto.
+    Representa uma categoria de algo do projeto.
 
     Atributos:
-        id: Identificador único da espécie
-        nome: Nome da espécie (ex: "Tecnologia")
-        descricao: Descrição opcional da espécie
+        id: Identificador único da categoria
+        nome: Nome da categoria (ex: "Tecnologia")
+        descricao: Descrição opcional da categoria
         data_cadastro: Data/hora de criação do registro
         data_atualizacao: Data/hora da última atualização
     """
@@ -376,14 +243,14 @@ class Espécie:
 
 ```python
 @dataclass
-class Espécie:
+class Categoria:
 ```
 
 `@dataclass` é um **decorador** que transforma a classe em uma estrutura de dados eficiente.
 
 Sem `@dataclass` teríamos que escrever:
 ```python
-class Espécie:
+class Categoria:
     def __init__(self, id, nome, descricao, data_cadastro, data_atualizacao):
         self.id = id
         self.nome = nome
@@ -392,7 +259,7 @@ class Espécie:
         self.data_atualizacao = data_atualizacao
 
     def __repr__(self):
-        return f"Espécie(id={self.id}, nome={self.nome}...)"
+        return f"Categoria(id={self.id}, nome={self.nome}...)"
 ```
 
 Com `@dataclass`, tudo isso é gerado automaticamente! 🎉
@@ -404,7 +271,7 @@ id: Optional[int] = None
 ```
 
 - `Optional[int]`: Pode ser um número inteiro OU `None`
-- `= None`: Valor padrão é `None` (útil ao criar nova espécie sem ID, pois ID será gerado pelo BD)
+- `= None`: Valor padrão é `None` (útil ao criar nova categoria sem ID, pois ID será gerado pelo BD)
 
 ```python
 nome: str = ""
@@ -423,19 +290,19 @@ data_cadastro: Optional[datetime] = None
 ### Como Usar
 
 ```python
-# Criar uma nova espécie (antes de salvar no BD)
-nova_espécie = Espécie(
+# Criar uma nova categoria (antes de salvar no BD)
+nova_categoria = Categoria(
     nome="Esportes",
     descricao="Notícias esportivas"
 )
-print(nova_espécie.id)  # None (ainda não tem ID)
-nova_espécie_bd = espécie_repo.inserir(nova_espécie) # Salva no BD e retorna com ID
-print(nova_espécie_bd.id)  # Mostra o ID gerado pelo BD
+print(nova_categoria.id)  # None (ainda não tem ID)
+nova_categoria_bd = categoria_repo.inserir(nova_categoria) # Salva no BD e retorna com ID
+print(nova_categoria_bd.id)  # Mostra o ID gerado pelo BD
 ```
 
 ### ✅ Checkpoint
 
-Arquivo em `model/espécie_model.py`. Teste: `python -c "from model.espécie_model import Espécie; print(Espécie(nome='Teste', descricao='Desc').nome)"`
+Arquivo em `model/categoria_model.py`. Teste: `python -c "from model.categoria_model import Categoria; print(Categoria(nome='Teste', descricao='Desc').nome)"`
 
 ---
 
@@ -458,7 +325,7 @@ Criar classes que validam os dados vindos dos formulários antes de processá-lo
 ### Por que precisamos?
 
 Imagine um usuário mal-intencionado tentando:
-- Cadastrar espécie com nome vazio
+- Cadastrar categoria com nome vazio
 - Nome com 500 caracteres
 - Nome com caracteres especiais perigosos
 
@@ -466,7 +333,7 @@ O DTO **protege** nossa aplicação dessas situações! 🛡️
 
 ### Arquivo a Criar
 
-📁 `dtos/espécie_dto.py`
+📁 `dtos/categoria_dto.py`
 
 ### Código Completo
 
@@ -474,9 +341,9 @@ O DTO **protege** nossa aplicação dessas situações! 🛡️
 from pydantic import BaseModel, field_validator
 from dtos.validators import validar_string_obrigatoria, validar_comprimento
 
-class CriarEspécieDTO(BaseModel):
+class CriarCategoriaDTO(BaseModel):
     """
-    DTO para validar dados ao criar uma nova espécie.
+    DTO para validar dados ao criar uma nova categoria.
 
     Regras:
     - nome: obrigatório, entre 3 e 50 caracteres
@@ -504,11 +371,11 @@ class CriarEspécieDTO(BaseModel):
         str_strip_whitespace = True  # Remove espaços extras no início/fim
 
 
-class AlterarEspécieDTO(BaseModel):
+class AlterarCategoriaDTO(BaseModel):
     """
-    DTO para validar dados ao editar uma espécie existente.
+    DTO para validar dados ao editar uma categoria existente.
 
-    Regras: mesmas do CriarEspécieDTO
+    Regras: mesmas do CriarCategoriaDTO
     """
     nome: str
     descricao: str = ""
@@ -547,7 +414,7 @@ Vantagens:
 #### Campos
 
 ```python
-class CriarEspécieDTO(BaseModel):
+class CriarCategoriaDTO(BaseModel):
     nome: str
     descricao: str = ""
 ```
@@ -597,10 +464,10 @@ class Config:
 #### Exemplo 1: Dados Válidos ✅
 
 ```python
-from dtos.espécie_dto import CriarEspécieDTO
+from dtos.categoria_dto import CriarCategoriaDTO
 
 dados = {"nome": "Tecnologia", "descricao": "Artigos sobre tecnologia"}
-dto = CriarEspécieDTO(**dados)
+dto = CriarCategoriaDTO(**dados)
 print(dto.nome)  # "Tecnologia"
 ```
 
@@ -609,7 +476,7 @@ print(dto.nome)  # "Tecnologia"
 ```python
 dados = {"nome": "TI", "descricao": "Desc"}  # Nome com apenas 2 caracteres
 try:
-    dto = CriarEspécieDTO(**dados)
+    dto = CriarCategoriaDTO(**dados)
 except ValidationError as e:
     print(e)  # Erro: Nome deve ter no mínimo 3 caracteres
 ```
@@ -617,10 +484,10 @@ except ValidationError as e:
 ### Por que Dois DTOs?
 
 ```python
-class CriarEspécieDTO(BaseModel):
+class CriarCategoriaDTO(BaseModel):
     # ...
 
-class AlterarEspécieDTO(BaseModel):
+class AlterarCategoriaDTO(BaseModel):
     # ...
 ```
 
@@ -635,20 +502,20 @@ Neste caso, as validações são iguais, mas em projetos maiores podem ser difer
 
 Após criar este arquivo:
 
-1. Verifique se o arquivo está em `dtos/espécie_dto.py`
+1. Verifique se o arquivo está em `dtos/categoria_dto.py`
 2. Teste a validação:
 
 ```bash
 python -c "
-from dtos.espécie_dto import CriarEspécieDTO
+from dtos.categoria_dto import CriarCategoriaDTO
 
 # Teste 1: Dados válidos
-dto = CriarEspécieDTO(nome='Tecnologia', descricao='Desc')
+dto = CriarCategoriaDTO(nome='Tecnologia', descricao='Desc')
 print(f'✅ Válido: {dto.nome}')
 
 # Teste 2: Nome muito curto (deve dar erro)
 try:
-    dto2 = CriarEspécieDTO(nome='AB', descricao='Desc')
+    dto2 = CriarCategoriaDTO(nome='AB', descricao='Desc')
 except Exception as e:
     print(f'✅ Erro esperado: nome muito curto')
 
@@ -674,19 +541,19 @@ Criar um arquivo com todas as funções que acessam o banco de dados para realiz
 
 ### Arquivo a Criar
 
-📁 `repo/espécie_repo.py`
+📁 `repo/categoria_repo.py`
 
 ### Código Completo
 
 ```python
 from typing import Optional
-from model.espécie_model import Espécie
-from sql.espécie_sql import *
+from model.categoria_model import Categoria
+from sql.categoria_sql import *
 from util.db_util import get_connection
 
 def criar_tabela():
     """
-    Cria a tabela de espécies se ela não existir.
+    Cria a tabela de categorias se ela não existir.
     Deve ser chamada na inicialização do sistema.
     """
     with get_connection() as conn:
@@ -694,43 +561,43 @@ def criar_tabela():
         cursor.execute(CRIAR_TABELA)
 
 
-def inserir(espécie: Espécie) -> Optional[Espécie]:
+def inserir(categoria: Categoria) -> Optional[Categoria]:
     """
-    Insere uma nova espécie no banco de dados.
+    Insere uma nova categoria no banco de dados.
 
     Args:
-        espécie: Objeto Espécie com nome e descrição
+        categoria: Objeto Categoria com nome e descrição
 
     Returns:
-        Espécie com ID preenchido se sucesso, None se erro
+        Categoria com ID preenchido se sucesso, None se erro
 
     Exemplo:
-        nova = Espécie(nome="Esportes", descricao="Notícias esportivas")
+        nova = Categoria(nome="Esportes", descricao="Notícias esportivas")
         resultado = inserir(nova)
         if resultado:
-            print(f"Espécie criada com ID: {resultado.id}")
+            print(f"Categoria criada com ID: {resultado.id}")
     """
     try:
         with get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute(INSERIR, (espécie.nome, espécie.descricao))
+            cursor.execute(INSERIR, (categoria.nome, categoria.descricao))
 
             # Pega o ID gerado automaticamente
             if cursor.lastrowid:
-                espécie.id = cursor.lastrowid
-                return espécie
+                categoria.id = cursor.lastrowid
+                return categoria
             return None
     except Exception as e:
-        print(f"Erro ao inserir espécie: {e}")
+        print(f"Erro ao inserir categoria: {e}")
         return None
 
 
-def alterar(espécie: Espécie) -> bool:
+def alterar(categoria: Categoria) -> bool:
     """
-    Atualiza uma espécie existente.
+    Atualiza uma categoria existente.
 
     Args:
-        espécie: Objeto Espécie com ID, nome e descrição
+        categoria: Objeto Categoria com ID, nome e descrição
 
     Returns:
         True se atualizou, False se erro
@@ -739,36 +606,36 @@ def alterar(espécie: Espécie) -> bool:
         cat = obter_por_id(5)
         cat.nome = "Novo Nome"
         if alterar(cat):
-            print("Espécie atualizada!")
+            print("Categoria atualizada!")
     """
     try:
         with get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(
                 ALTERAR,
-                (espécie.nome, espécie.descricao, espécie.id)
+                (categoria.nome, categoria.descricao, categoria.id)
             )
             return cursor.rowcount > 0
     except Exception as e:
-        print(f"Erro ao alterar espécie: {e}")
+        print(f"Erro ao alterar categoria: {e}")
         return False
 
 
 def excluir(id: int) -> bool:
     """
-    Exclui uma espécie do banco de dados.
+    Exclui uma categoria do banco de dados.
 
     Args:
-        id: ID da espécie a ser excluída
+        id: ID da categoria a ser excluída
 
     Returns:
         True se excluiu, False se erro ou não encontrou
 
     Exemplo:
         if excluir(5):
-            print("Espécie excluída!")
+            print("Categoria excluída!")
         else:
-            print("Espécie não encontrada")
+            print("Categoria não encontrada")
     """
     try:
         with get_connection() as conn:
@@ -776,26 +643,26 @@ def excluir(id: int) -> bool:
             cursor.execute(EXCLUIR, (id,))
             return cursor.rowcount > 0
     except Exception as e:
-        print(f"Erro ao excluir espécie: {e}")
+        print(f"Erro ao excluir categoria: {e}")
         return False
 
 
-def obter_por_id(id: int) -> Optional[Espécie]:
+def obter_por_id(id: int) -> Optional[Categoria]:
     """
-    Busca uma espécie por ID.
+    Busca uma categoria por ID.
 
     Args:
-        id: ID da espécie
+        id: ID da categoria
 
     Returns:
-        Objeto Espécie se encontrou, None se não encontrou
+        Objeto Categoria se encontrou, None se não encontrou
 
     Exemplo:
         cat = obter_por_id(5)
         if cat:
             print(f"Encontrada: {cat.nome}")
         else:
-            print("Espécie não existe")
+            print("Categoria não existe")
     """
     try:
         with get_connection() as conn:
@@ -804,7 +671,7 @@ def obter_por_id(id: int) -> Optional[Espécie]:
             row = cursor.fetchone()
 
             if row:
-                return Espécie(
+                return Categoria(
                     id=row["id"],
                     nome=row["nome"],
                     descricao=row["descricao"],
@@ -813,20 +680,20 @@ def obter_por_id(id: int) -> Optional[Espécie]:
                 )
             return None
     except Exception as e:
-        print(f"Erro ao obter espécie por ID: {e}")
+        print(f"Erro ao obter categoria por ID: {e}")
         return None
 
 
-def obter_todos() -> list[Espécie]:
+def obter_todos() -> list[Categoria]:
     """
-    Retorna todas as espécies do banco de dados.
+    Retorna todas as categorias do banco de dados.
 
     Returns:
-        Lista de objetos Espécie (pode ser vazia)
+        Lista de objetos Categoria (pode ser vazia)
 
     Exemplo:
-        espécies = obter_todos()
-        for cat in espécies:
+        categorias = obter_todos()
+        for cat in categorias:
             print(f"{cat.id} - {cat.nome}")
     """
     try:
@@ -836,7 +703,7 @@ def obter_todos() -> list[Espécie]:
             rows = cursor.fetchall()
 
             return [
-                Espécie(
+                Categoria(
                     id=row["id"],
                     nome=row["nome"],
                     descricao=row["descricao"],
@@ -846,24 +713,24 @@ def obter_todos() -> list[Espécie]:
                 for row in rows
             ]
     except Exception as e:
-        print(f"Erro ao obter todas as espécies: {e}")
+        print(f"Erro ao obter todas as categorias: {e}")
         return []
 
 
-def obter_por_nome(nome: str) -> Optional[Espécie]:
+def obter_por_nome(nome: str) -> Optional[Categoria]:
     """
-    Busca uma espécie pelo nome exato.
-    Útil para verificar se já existe espécie com aquele nome.
+    Busca uma categoria pelo nome exato.
+    Útil para verificar se já existe categoria com aquele nome.
 
     Args:
-        nome: Nome da espécie (case-sensitive)
+        nome: Nome da categoria (case-sensitive)
 
     Returns:
-        Objeto Espécie se encontrou, None se não encontrou
+        Objeto Categoria se encontrou, None se não encontrou
 
     Exemplo:
         if obter_por_nome("Tecnologia"):
-            print("Já existe espécie com este nome")
+            print("Já existe categoria com este nome")
         else:
             print("Nome disponível")
     """
@@ -874,7 +741,7 @@ def obter_por_nome(nome: str) -> Optional[Espécie]:
             row = cursor.fetchone()
 
             if row:
-                return Espécie(
+                return Categoria(
                     id=row["id"],
                     nome=row["nome"],
                     descricao=row["descricao"],
@@ -883,7 +750,7 @@ def obter_por_nome(nome: str) -> Optional[Espécie]:
                 )
             return None
     except Exception as e:
-        print(f"Erro ao obter espécie por nome: {e}")
+        print(f"Erro ao obter categoria por nome: {e}")
         return None
 ```
 
@@ -902,7 +769,7 @@ def obter_por_nome(nome: str) -> Optional[Espécie]:
 
 ### ✅ Checkpoint
 
-Teste: `python -c "from repo import espécie_repo; from model.espécie_model import Espécie; espécie_repo.criar_tabela(); print(espécie_repo.inserir(Espécie(nome='Teste', descricao='Desc')).id)"`
+Teste: `python -c "from repo import categoria_repo; from model.categoria_model import Categoria; categoria_repo.criar_tabela(); print(categoria_repo.inserir(Categoria(nome='Teste', descricao='Desc')).id)"`
 
 ---
 
@@ -910,7 +777,7 @@ Teste: `python -c "from repo import espécie_repo; from model.espécie_model imp
 
 ### Objetivo
 
-Fazer o sistema reconhecer e inicializar o repository de espécies quando a aplicação iniciar.
+Fazer o sistema reconhecer e inicializar o repository de categorias quando a aplicação iniciar.
 
 ### Por que fazer isso?
 
@@ -934,10 +801,10 @@ Procure a seção de imports dos repositories (deve estar perto de `from repo im
 from repo import usuario_repo, comentario_repo
 ```
 
-**Adicione** `espécie_repo`:
+**Adicione** `categoria_repo`:
 
 ```python
-from repo import usuario_repo, comentario_repo, espécie_repo
+from repo import usuario_repo, comentario_repo, categoria_repo
 ```
 
 #### 2. Criar a Tabela (dentro da função que cria tabelas)
@@ -955,7 +822,7 @@ Procure a função que cria as tabelas (na seção "Banco de dados e seeds"):
         indices_repo.criar_indices()
 ```
 
-**Adicione** a criação da tabela de espécies:
+**Adicione** a criação da tabela de categorias:
 
 ```python
     # ------------------------------------------------------------
@@ -966,7 +833,7 @@ Procure a função que cria as tabelas (na seção "Banco de dados e seeds"):
         usuario_repo.criar_tabela()
         ...
         indices_repo.criar_indices()
-        espécie_repo.criar_tabela()  # ← ADICIONE ESTA LINHA
+        categoria_repo.criar_tabela()  # ← ADICIONE ESTA LINHA
 ```
 
 ### Explicação
@@ -974,23 +841,23 @@ Procure a função que cria as tabelas (na seção "Banco de dados e seeds"):
 #### Import do Repository
 
 ```python
-from repo import espécie_repo
+from repo import categoria_repo
 ```
 
-Isso torna todas as funções do `espécie_repo` disponíveis:
-- `espécie_repo.criar_tabela()`
-- `espécie_repo.inserir()`
-- `espécie_repo.obter_todos()`
+Isso torna todas as funções do `categoria_repo` disponíveis:
+- `categoria_repo.criar_tabela()`
+- `categoria_repo.inserir()`
+- `categoria_repo.obter_todos()`
 - etc.
 
 #### Criação da Tabela
 
 ```python
-espécie_repo.criar_tabela()
+categoria_repo.criar_tabela()
 ```
 
 - Chamado quando o sistema inicia
-- Cria a tabela `espécie` se não existir
+- Cria a tabela `categoria` se não existir
 - Se já existir, não faz nada (graças ao `IF NOT EXISTS`)
 
 ### ✅ Checkpoint
@@ -1007,10 +874,10 @@ uvicorn main:app --reload
 3. Acesse o banco de dados para verificar se a tabela foi criada:
 
 ```bash
-sqlite3 dados.db "SELECT name FROM sqlite_master WHERE type='table' AND name='espécie';"
+sqlite3 dados.db "SELECT name FROM sqlite_master WHERE type='table' AND name='categoria';"
 ```
 
-Se retornar `espécie`, a tabela foi criada com sucesso! 🎉
+Se retornar `categoria`, a tabela foi criada com sucesso! 🎉
 
 4. Pare a aplicação (Ctrl+C)
 
@@ -1044,7 +911,7 @@ Não se preocupe! Os templates já incluem o token automaticamente quando você 
 
 ### Arquivo a Criar
 
-📁 `routes/admin_espécies_routes.py`
+📁 `routes/admin_categorias_routes.py`
 
 Este é o arquivo mais longo (246 linhas), mas vamos explicar cada parte.
 
@@ -1057,19 +924,19 @@ from fastapi.responses import RedirectResponse
 # ... outros imports
 
 # Configuração do Router
-router = APIRouter(prefix="/admin/espécies")
+router = APIRouter(prefix="/admin/categorias")
 
 # Rate Limiting (Controle de requisições)
-admin_espécies_limiter = RateLimiter(...)
+admin_categorias_limiter = RateLimiter(...)
 
 # Endpoints (7 funções)
 1. index() - Redireciona para /listar
-2. listar() - Lista todas as espécies
+2. listar() - Lista todas as categorias
 3. get_cadastrar() - Exibe formulário de cadastro
 4. post_cadastrar() - Processa cadastro
 5. get_editar() - Exibe formulário de edição
 6. post_editar() - Processa edição
-7. post_excluir() - Exclui espécie
+7. post_excluir() - Exclui categoria
 ```
 
 ### Código Completo - Parte 1: Imports e Configuração
@@ -1080,9 +947,9 @@ from fastapi import APIRouter, Request, Form, status
 from fastapi.responses import RedirectResponse
 from pydantic import ValidationError
 
-from dtos.espécie_dto import CriarEspécieDTO, AlterarEspécieDTO
-from model.espécie_model import Espécie
-from repo import espécie_repo
+from dtos.categoria_dto import CriarCategoriaDTO, AlterarCategoriaDTO
+from model.categoria_model import Categoria
+from repo import categoria_repo
 from util.auth_decorator import requer_autenticacao
 from util.flash_messages import informar_sucesso, informar_erro
 from util.rate_limiter import RateLimiter, obter_identificador_cliente
@@ -1090,17 +957,17 @@ from util.exceptions import FormValidationError
 from util.perfis import Perfil
 from util.template_util import criar_templates
 
-# Configura o roteador com prefixo /admin/espécies
-router = APIRouter(prefix="/admin/espécies")
+# Configura o roteador com prefixo /admin/categorias
+router = APIRouter(prefix="/admin/categorias")
 
 # Configura os templates HTML com as funções globais necessárias (csrf_input, etc.)
 templates = criar_templates("templates")
 
 # Rate Limiter: máximo 10 operações por minuto
-admin_espécies_limiter = RateLimiter(
+admin_categorias_limiter = RateLimiter(
     max_tentativas=10,
     janela_minutos=1,
-    nome="admin_espécies"
+    nome="admin_categorias"
 )
 ```
 
@@ -1112,7 +979,7 @@ admin_espécies_limiter = RateLimiter(
 async def index(request: Request, usuario_logado: Optional[dict] = None):
     """Redireciona a raiz para /listar"""
     return RedirectResponse(
-        url="/admin/espécies/listar",
+        url="/admin/categorias/listar",
         status_code=status.HTTP_303_SEE_OTHER
     )
 
@@ -1121,19 +988,19 @@ async def index(request: Request, usuario_logado: Optional[dict] = None):
 @requer_autenticacao([Perfil.ADMIN.value])
 async def listar(request: Request, usuario_logado: Optional[dict] = None):
     """
-    Lista todas as espécies.
-    Acessível em: GET /admin/espécies/listar
+    Lista todas as categorias.
+    Acessível em: GET /admin/categorias/listar
     """
-    # Busca todas as espécies do banco
-    espécies = espécie_repo.obter_todos()
+    # Busca todas as categorias do banco
+    categorias = categoria_repo.obter_todos()
 
     # Renderiza o template com os dados
     return templates.TemplateResponse(
-        "admin/espécies/listar.html",
+        "admin/categorias/listar.html",
         {
             "request": request,
             "usuario_logado": usuario_logado,
-            "espécies": espécies
+            "categorias": categorias
         }
     )
 ```
@@ -1146,10 +1013,10 @@ async def listar(request: Request, usuario_logado: Optional[dict] = None):
 async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None):
     """
     Exibe o formulário de cadastro.
-    Acessível em: GET /admin/espécies/cadastrar
+    Acessível em: GET /admin/categorias/cadastrar
     """
     return templates.TemplateResponse(
-        "admin/espécies/cadastro.html",
+        "admin/categorias/cadastro.html",
         {
             "request": request,
             "usuario_logado": usuario_logado
@@ -1166,53 +1033,53 @@ async def post_cadastrar(
     descricao: str = Form("")
 ):
     """
-    Processa o cadastro de uma nova espécie.
-    Acessível em: POST /admin/espécies/cadastrar
+    Processa o cadastro de uma nova categoria.
+    Acessível em: POST /admin/categorias/cadastrar
     """
     # Verifica rate limiting
     ip = obter_identificador_cliente(request)
-    if not admin_espécies_limiter.verificar(ip):
+    if not admin_categorias_limiter.verificar(ip):
         informar_erro(
             request,
             "Muitas operações em pouco tempo. Aguarde um momento e tente novamente."
         )
         return RedirectResponse(
-            url="/admin/espécies/cadastrar",
+            url="/admin/categorias/cadastrar",
             status_code=status.HTTP_303_SEE_OTHER
         )
 
     try:
         # Valida os dados com o DTO
-        dto = CriarEspécieDTO(nome=nome, descricao=descricao)
+        dto = CriarCategoriaDTO(nome=nome, descricao=descricao)
 
-        # Verifica se já existe espécie com este nome
-        espécie_existente = espécie_repo.obter_por_nome(dto.nome)
-        if espécie_existente:
-            informar_erro(request, "Já existe uma espécie com este nome.")
+        # Verifica se já existe categoria com este nome
+        categoria_existente = categoria_repo.obter_por_nome(dto.nome)
+        if categoria_existente:
+            informar_erro(request, "Já existe uma categoria com este nome.")
             return RedirectResponse(
-                url="/admin/espécies/cadastrar",
+                url="/admin/categorias/cadastrar",
                 status_code=status.HTTP_303_SEE_OTHER
             )
 
-        # Cria o objeto Espécie
-        nova_espécie = Espécie(
+        # Cria o objeto Categoria
+        nova_categoria = Categoria(
             nome=dto.nome,
             descricao=dto.descricao
         )
 
         # Insere no banco de dados
-        espécie_inserida = espécie_repo.inserir(nova_espécie)
+        categoria_inserida = categoria_repo.inserir(nova_categoria)
 
-        if espécie_inserida:
-            informar_sucesso(request, "Espécie cadastrada com sucesso!")
+        if categoria_inserida:
+            informar_sucesso(request, "Categoria cadastrada com sucesso!")
             return RedirectResponse(
-                url="/admin/espécies/listar",
+                url="/admin/categorias/listar",
                 status_code=status.HTTP_303_SEE_OTHER
             )
         else:
-            informar_erro(request, "Erro ao cadastrar espécie.")
+            informar_erro(request, "Erro ao cadastrar categoria.")
             return RedirectResponse(
-                url="/admin/espécies/cadastrar",
+                url="/admin/categorias/cadastrar",
                 status_code=status.HTTP_303_SEE_OTHER
             )
 
@@ -1221,7 +1088,7 @@ async def post_cadastrar(
         # que será capturada pelo handler global
         raise FormValidationError(
             validation_error=e,
-            template_path="admin/espécies/cadastro.html",
+            template_path="admin/categorias/cadastro.html",
             dados_formulario={"nome": nome, "descricao": descricao},
             campo_padrao="nome"
         )
@@ -1240,7 +1107,7 @@ O `FormValidationError` é um **padrão fundamental** usado em todo o Projeto. Q
 except ValidationError as e:
     raise FormValidationError(
         validation_error=e,
-        template_path="admin/espécies/cadastro.html",
+        template_path="admin/categorias/cadastro.html",
         dados_formulario={"nome": nome, "descricao": descricao},
         campo_padrao="nome"  # Campo que receberá foco em caso de erro
     )
@@ -1259,26 +1126,26 @@ async def get_editar(
     usuario_logado: Optional[dict] = None
 ):
     """
-    Exibe o formulário de edição de uma espécie.
-    Acessível em: GET /admin/espécies/editar/1
+    Exibe o formulário de edição de uma categoria.
+    Acessível em: GET /admin/categorias/editar/1
     """
-    # Busca a espécie pelo ID
-    espécie = espécie_repo.obter_por_id(id)
+    # Busca a categoria pelo ID
+    categoria = categoria_repo.obter_por_id(id)
 
-    if not espécie:
-        informar_erro(request, "Espécie não encontrada.")
+    if not categoria:
+        informar_erro(request, "Categoria não encontrada.")
         return RedirectResponse(
-            url="/admin/espécies/listar",
+            url="/admin/categorias/listar",
             status_code=status.HTTP_303_SEE_OTHER
         )
 
-    # Renderiza o formulário com os dados da espécie
+    # Renderiza o formulário com os dados da categoria
     return templates.TemplateResponse(
-        "admin/espécies/editar.html",
+        "admin/categorias/editar.html",
         {
             "request": request,
             "usuario_logado": usuario_logado,
-            "espécie": espécie
+            "categoria": categoria
         }
     )
 
@@ -1293,66 +1160,66 @@ async def post_editar(
     descricao: str = Form("")
 ):
     """
-    Processa a edição de uma espécie.
-    Acessível em: POST /admin/espécies/editar/1
+    Processa a edição de uma categoria.
+    Acessível em: POST /admin/categorias/editar/1
     """
     # Verifica rate limiting
     ip = obter_identificador_cliente(request)
-    if not admin_espécies_limiter.verificar(ip):
+    if not admin_categorias_limiter.verificar(ip):
         informar_erro(
             request,
             "Muitas operações em pouco tempo. Aguarde um momento e tente novamente."
         )
         return RedirectResponse(
-            url=f"/admin/espécies/editar/{id}",
+            url=f"/admin/categorias/editar/{id}",
             status_code=status.HTTP_303_SEE_OTHER
         )
 
-    # Busca a espécie atual
-    espécie_atual = espécie_repo.obter_por_id(id)
-    if not espécie_atual:
-        informar_erro(request, "Espécie não encontrada.")
+    # Busca a categoria atual
+    categoria_atual = categoria_repo.obter_por_id(id)
+    if not categoria_atual:
+        informar_erro(request, "Categoria não encontrada.")
         return RedirectResponse(
-            url="/admin/espécies/listar",
+            url="/admin/categorias/listar",
             status_code=status.HTTP_303_SEE_OTHER
         )
 
     try:
         # Valida os dados
-        dto = AlterarEspécieDTO(nome=nome, descricao=descricao)
+        dto = AlterarCategoriaDTO(nome=nome, descricao=descricao)
 
-        # Se o nome mudou, verifica se não existe outra espécie com o novo nome
-        if dto.nome != espécie_atual.nome:
-            espécie_existente = espécie_repo.obter_por_nome(dto.nome)
-            if espécie_existente:
-                informar_erro(request, "Já existe uma espécie com este nome.")
+        # Se o nome mudou, verifica se não existe outra categoria com o novo nome
+        if dto.nome != categoria_atual.nome:
+            categoria_existente = categoria_repo.obter_por_nome(dto.nome)
+            if categoria_existente:
+                informar_erro(request, "Já existe uma categoria com este nome.")
                 return RedirectResponse(
-                    url=f"/admin/espécies/editar/{id}",
+                    url=f"/admin/categorias/editar/{id}",
                     status_code=status.HTTP_303_SEE_OTHER
                 )
 
-        # Atualiza os dados da espécie
-        espécie_atual.nome = dto.nome
-        espécie_atual.descricao = dto.descricao
+        # Atualiza os dados da categoria
+        categoria_atual.nome = dto.nome
+        categoria_atual.descricao = dto.descricao
 
         # Salva no banco
-        if espécie_repo.alterar(espécie_atual):
-            informar_sucesso(request, "Espécie alterada com sucesso!")
+        if categoria_repo.alterar(categoria_atual):
+            informar_sucesso(request, "Categoria alterada com sucesso!")
             return RedirectResponse(
-                url="/admin/espécies/listar",
+                url="/admin/categorias/listar",
                 status_code=status.HTTP_303_SEE_OTHER
             )
         else:
-            informar_erro(request, "Erro ao alterar espécie.")
+            informar_erro(request, "Erro ao alterar categoria.")
             return RedirectResponse(
-                url=f"/admin/espécies/editar/{id}",
+                url=f"/admin/categorias/editar/{id}",
                 status_code=status.HTTP_303_SEE_OTHER
             )
 
     except ValidationError as e:
         raise FormValidationError(
             validation_error=e,
-            template_path="admin/espécies/editar.html",
+            template_path="admin/categorias/editar.html",
             dados_formulario={
                 "nome": nome,
                 "descricao": descricao,
@@ -1373,38 +1240,38 @@ async def post_excluir(
     usuario_logado: Optional[dict] = None
 ):
     """
-    Exclui uma espécie.
-    Acessível em: POST /admin/espécies/excluir/1
+    Exclui uma categoria.
+    Acessível em: POST /admin/categorias/excluir/1
     """
     # Verifica rate limiting
     ip = obter_identificador_cliente(request)
-    if not admin_espécies_limiter.verificar(ip):
+    if not admin_categorias_limiter.verificar(ip):
         informar_erro(
             request,
             "Muitas operações em pouco tempo. Aguarde um momento e tente novamente."
         )
         return RedirectResponse(
-            url="/admin/espécies/listar",
+            url="/admin/categorias/listar",
             status_code=status.HTTP_303_SEE_OTHER
         )
 
-    # Busca a espécie
-    espécie = espécie_repo.obter_por_id(id)
-    if not espécie:
-        informar_erro(request, "Espécie não encontrada.")
+    # Busca a categoria
+    categoria = categoria_repo.obter_por_id(id)
+    if not categoria:
+        informar_erro(request, "Categoria não encontrada.")
         return RedirectResponse(
-            url="/admin/espécies/listar",
+            url="/admin/categorias/listar",
             status_code=status.HTTP_303_SEE_OTHER
         )
 
     # Exclui do banco
-    if espécie_repo.excluir(id):
-        informar_sucesso(request, f"Espécie '{espécie.nome}' excluída com sucesso!")
+    if categoria_repo.excluir(id):
+        informar_sucesso(request, f"Categoria '{categoria.nome}' excluída com sucesso!")
     else:
-        informar_erro(request, "Erro ao excluir espécie.")
+        informar_erro(request, "Erro ao excluir categoria.")
 
     return RedirectResponse(
-        url="/admin/espécies/listar",
+        url="/admin/categorias/listar",
         status_code=status.HTTP_303_SEE_OTHER
     )
 ```
@@ -1419,7 +1286,7 @@ async def post_excluir(
 async def listar(request: Request, usuario_logado: Optional[dict] = None):
 ```
 
-1. `@router.get("/listar")`: Define que esta função responde a `GET /admin/espécies/listar`
+1. `@router.get("/listar")`: Define que esta função responde a `GET /admin/categorias/listar`
 2. `@requer_autenticacao([Perfil.ADMIN.value])`: Só admins podem acessar
 3. `usuario_logado`: Preenchido automaticamente pelo decorator
 
@@ -1441,7 +1308,7 @@ async def post_cadastrar(
 
 ```python
 ip = obter_identificador_cliente(request)
-if not admin_espécies_limiter.verificar(ip):
+if not admin_categorias_limiter.verificar(ip):
     informar_erro(request, "Muitas operações...")
 ```
 
@@ -1452,7 +1319,7 @@ if not admin_espécies_limiter.verificar(ip):
 
 ```python
 try:
-    dto = CriarEspécieDTO(nome=nome, descricao=descricao)
+    dto = CriarCategoriaDTO(nome=nome, descricao=descricao)
 except Exception as e:
     raise FormValidationError(...)
 ```
@@ -1464,19 +1331,19 @@ except Exception as e:
 #### Verificação de Duplicidade
 
 ```python
-espécie_existente = espécie_repo.obter_por_nome(dto.nome)
-if espécie_existente:
-    informar_erro(request, "Já existe uma espécie com este nome.")
+categoria_existente = categoria_repo.obter_por_nome(dto.nome)
+if categoria_existente:
+    informar_erro(request, "Já existe uma categoria com este nome.")
 ```
 
-- Evita espécies duplicadas
+- Evita categorias duplicadas
 - Melhor fazer aqui do que confiar apenas no UNIQUE do BD
 
 #### RedirectResponse
 
 ```python
 return RedirectResponse(
-    url="/admin/espécies/listar",
+    url="/admin/categorias/listar",
     status_code=status.HTTP_303_SEE_OTHER
 )
 ```
@@ -1488,17 +1355,17 @@ return RedirectResponse(
 
 ```python
 return templates.TemplateResponse(
-    "admin/espécies/listar.html",
+    "admin/categorias/listar.html",
     {
         "request": request,
         "usuario_logado": usuario_logado,
-        "espécies": espécies
+        "categorias": categorias
     }
 )
 ```
 
 - Renderiza template HTML
-- Passa variáveis para o template (request, usuario, espécies)
+- Passa variáveis para o template (request, usuario, categorias)
 
 ### Padrão POST-REDIRECT-GET
 
@@ -1517,7 +1384,7 @@ POST /cadastrar → Salva no BD → Redirect para /listar
 
 Após criar este arquivo:
 
-1. Verifique se está em `routes/admin_espécies_routes.py`
+1. Verifique se está em `routes/admin_categorias_routes.py`
 2. Execute a aplicação:
 
 ```bash
@@ -1527,7 +1394,7 @@ uvicorn main:app --reload
 3. Acesse no navegador (deve dar erro 404 de template, mas a rota existe):
 
 ```
-http://localhost:8406/admin/espécies/listar
+http://localhost:8406/admin/categorias/listar
 ```
 
 Se aparecer erro "Template not found", está correto! Vamos criar os templates nos próximos passos.
@@ -1538,7 +1405,7 @@ Se aparecer erro "Template not found", está correto! Vamos criar os templates n
 
 ### Objetivo
 
-Fazer o FastAPI reconhecer e usar as routes de espécies.
+Fazer o FastAPI reconhecer e usar as routes de categorias.
 
 ### Arquivo a Modificar
 
@@ -1551,7 +1418,7 @@ Fazer o FastAPI reconhecer e usar as routes de espécies.
 Procure a seção de imports dos routers e adicione:
 
 ```python
-from routes.admin_espécies_routes import router as admin_espécies_router
+from routes.admin_categorias_routes import router as admin_categorias_router
 ```
 
 #### 2. Registrar o Router
@@ -1566,13 +1433,13 @@ Procure a seção onde os routers são registrados e adicone a linha indicada
         auth_router,
         ...
         examples_router,
-        admin_espécies_router, # ← ADICIONE ESTA LINHA
+        admin_categorias_router, # ← ADICIONE ESTA LINHA
     ]
 ```
 
 ### Explicação
 
-Essa lista de rotas é percorrida e cada router é registrado na aplicação FastAPI. Ao adicionar o `admin_espécies_router`, todas as rotas definidas em `admin_espécies_routes.py` estarão disponíveis na aplicação.
+Essa lista de rotas é percorrida e cada router é registrado na aplicação FastAPI. Ao adicionar o `admin_categorias_router`, todas as rotas definidas em `admin_categorias_routes.py` estarão disponíveis na aplicação.
 
 ### ✅ Checkpoint
 
@@ -1591,16 +1458,16 @@ http://localhost:8406/docs
 
 ### Objetivo
 
-Criar a página HTML que exibe todas as espécies em uma tabela.
+Criar a página HTML que exibe todas as categorias em uma tabela.
 
 ### Arquivo a Criar
 
-📁 `templates/admin/espécies/listar.html`
+📁 `templates/admin/categorias/listar.html`
 
 Primeiro, crie a pasta:
 
 ```bash
-mkdir -p templates/admin/espécies
+mkdir -p templates/admin/categorias
 ```
 
 ### Código Completo
@@ -1610,21 +1477,21 @@ mkdir -p templates/admin/espécies
 {% from 'macros/empty_states.html' import empty_state %}
 {% from 'macros/action_buttons.html' import btn_group_crud %}
 
-{% block titulo %}Gerenciar Espécies{% endblock %}
+{% block titulo %}Gerenciar Categorias{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="bi bi-folder"></i> Gerenciar Espécies</h2>
-            <a href="/admin/espécies/cadastrar" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Nova Espécie
+            <h2><i class="bi bi-folder"></i> Gerenciar Categorias</h2>
+            <a href="/admin/categorias/cadastrar" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Nova Categoria
             </a>
         </div>
 
         <div class="card shadow-sm">
             <div class="card-body">
-                {% if espécies %}
+                {% if categorias %}
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
@@ -1637,21 +1504,21 @@ mkdir -p templates/admin/espécies
                             </tr>
                         </thead>
                         <tbody>
-                            {% for espécie in espécies %}
+                            {% for categoria in categorias %}
                             <tr>
-                                <td>{{ espécie.id }}</td>
-                                <td><strong>{{ espécie.nome }}</strong></td>
-                                <td>{{ espécie.descricao if espécie.descricao else '-' }}</td>
-                                <td>{{ espécie.data_cadastro|data_br if espécie.data_cadastro else '-' }}</td>
+                                <td>{{ categoria.id }}</td>
+                                <td><strong>{{ categoria.nome }}</strong></td>
+                                <td>{{ categoria.descricao if categoria.descricao else '-' }}</td>
+                                <td>{{ categoria.data_cadastro|data_br if categoria.data_cadastro else '-' }}</td>
                                 <td class="text-center">
                                     {{ btn_group_crud(
-                                        espécie.id,
-                                        'espécie ' ~ espécie.nome,
-                                        '/admin/espécies',
-                                        "excluirEspécie(%d, '%s', '%s')" | format(
-                                            espécie.id,
-                                            espécie.nome|replace("'", "\\'"),
-                                            espécie.descricao|replace("'", "\\'") if espécie.descricao else ""
+                                        categoria.id,
+                                        'categoria ' ~ categoria.nome,
+                                        '/admin/categorias',
+                                        "excluirCategoria(%d, '%s', '%s')" | format(
+                                            categoria.id,
+                                            categoria.nome|replace("'", "\\'"),
+                                            categoria.descricao|replace("'", "\\'") if categoria.descricao else ""
                                         )
                                     ) }}
                                 </td>
@@ -1663,15 +1530,15 @@ mkdir -p templates/admin/espécies
 
                 <div class="mt-3">
                     <span class="fs-small text-muted">
-                        Total: {{ espécies|length }} espécie(s)
+                        Total: {{ categorias|length }} categoria(s)
                     </span>
                 </div>
                 {% else %}
                 {{ empty_state(
-                    'Nenhuma espécie cadastrada',
-                    'Comece criando sua primeira espécie para organizar o conteúdo do sistema.',
-                    action_url='/admin/espécies/cadastrar',
-                    action_text='Nova Espécie',
+                    'Nenhuma categoria cadastrada',
+                    'Comece criando sua primeira categoria para organizar o conteúdo do sistema.',
+                    action_url='/admin/categorias/cadastrar',
+                    action_text='Nova Categoria',
                     icon='folder',
                     variant='info'
                 ) }}
@@ -1685,20 +1552,20 @@ mkdir -p templates/admin/espécies
 {% block scripts %}
 <script>
     /**
-     * Função para excluir uma espécie
+     * Função para excluir uma categoria
      */
-    function excluirEspécie(espécieId, espécieNome, espécieDescricao) {
+    function excluirCategoria(categoriaId, categoriaNome, categoriaDescricao) {
         const detalhes = `
         <div class="card bg-light">
             <div class="card-body">
                 <table class="table table-sm table-borderless mb-0">
                     <tr>
                         <th scope="row" width="30%">Nome:</th>
-                        <td><strong>${espécieNome}</strong></td>
+                        <td><strong>${categoriaNome}</strong></td>
                     </tr>
                     <tr>
                         <th scope="row">Descrição:</th>
-                        <td>${espécieDescricao || '-'}</td>
+                        <td>${categoriaDescricao || '-'}</td>
                     </tr>
                 </table>
             </div>
@@ -1706,8 +1573,8 @@ mkdir -p templates/admin/espécies
     `;
 
         abrirModalConfirmacao({
-            url: `/admin/espécies/excluir/${espécieId}`,
-            mensagem: 'Tem certeza que deseja excluir esta espécie?',
+            url: `/admin/categorias/excluir/${categoriaId}`,
+            mensagem: 'Tem certeza que deseja excluir esta categoria?',
             detalhes: detalhes
         });
     }
@@ -1730,7 +1597,7 @@ mkdir -p templates/admin/espécies
 #### Filtro Jinja2 para Datas
 
 ```html
-{{ espécie.data_cadastro|data_br if espécie.data_cadastro else '-' }}
+{{ categoria.data_cadastro|data_br if categoria.data_cadastro else '-' }}
 ```
 
 - `|data_br`: Filtro customizado que formata para DD/MM/YYYY
@@ -1740,7 +1607,7 @@ mkdir -p templates/admin/espécies
 #### Segurança: Escape de Aspas
 
 ```html
-onclick="excluirEspécie(..., '{{ espécie.nome|replace("'", "\\'") }}')"
+onclick="excluirCategoria(..., '{{ categoria.nome|replace("'", "\\'") }}')"
 ```
 
 - `|replace("'", "\\'")`: Escapa aspas simples
@@ -1751,7 +1618,7 @@ onclick="excluirEspécie(..., '{{ espécie.nome|replace("'", "\\'") }}')"
 
 ```html
 <span class="fs-small text-muted">
-    Total: {{ espécies|length }} espécie(s)
+    Total: {{ categorias|length }} categoria(s)
 </span>
 ```
 
@@ -1763,8 +1630,8 @@ onclick="excluirEspécie(..., '{{ espécie.nome|replace("'", "\\'") }}')"
 
 ```javascript
 abrirModalConfirmacao({
-    url: `/admin/espécies/excluir/${espécieId}`,
-    mensagem: 'Tem certeza que deseja excluir esta espécie?',
+    url: `/admin/categorias/excluir/${categoriaId}`,
+    mensagem: 'Tem certeza que deseja excluir esta categoria?',
     detalhes: detalhes
 });
 ```
@@ -1778,10 +1645,10 @@ abrirModalConfirmacao({
 
 ```html
 {{ empty_state(
-    'Nenhuma espécie cadastrada',
-    'Comece criando sua primeira espécie para organizar o conteúdo do sistema.',
-    action_url='/admin/espécies/cadastrar',
-    action_text='Nova Espécie',
+    'Nenhuma categoria cadastrada',
+    'Comece criando sua primeira categoria para organizar o conteúdo do sistema.',
+    action_url='/admin/categorias/cadastrar',
+    action_text='Nova Categoria',
     icon='folder',
     variant='info'
 ) }}
@@ -1815,10 +1682,10 @@ abrirModalConfirmacao({
 
 ```html
 {{ btn_group_crud(
-    espécie.id,
-    'espécie ' ~ espécie.nome,
-    '/admin/espécies',
-    "excluirEspécie(%d, '%s', '%s')" | format(...)
+    categoria.id,
+    'categoria ' ~ categoria.nome,
+    '/admin/categorias',
+    "excluirCategoria(%d, '%s', '%s')" | format(...)
 ) }}
 ```
 
@@ -1830,7 +1697,7 @@ abrirModalConfirmacao({
 **Parâmetros:**
 - `id` (int): ID do registro
 - `entity_name` (str): Nome da entidade (para acessibilidade)
-- `base_url` (str): URL base (ex: `/admin/espécies`)
+- `base_url` (str): URL base (ex: `/admin/categorias`)
 - `delete_onclick` (str): Função JavaScript de exclusão formatada
 
 **Vantagens:**
@@ -1844,14 +1711,14 @@ abrirModalConfirmacao({
 ❌ **Sem macro** (13 linhas):
 ```html
 <div class="btn-group btn-group-sm" role="group">
-    <a href="/admin/espécies/editar/{{ espécie.id }}"
+    <a href="/admin/categorias/editar/{{ categoria.id }}"
         class="btn btn-outline-primary" title="Editar"
-        aria-label="Editar espécie {{ espécie.nome }}">
+        aria-label="Editar categoria {{ categoria.nome }}">
         <i class="bi bi-pencil"></i>
     </a>
     <button type="button" class="btn btn-outline-danger" title="Excluir"
-        aria-label="Excluir espécie {{ espécie.nome }}"
-        onclick="excluirEspécie(...)">
+        aria-label="Excluir categoria {{ categoria.nome }}"
+        onclick="excluirCategoria(...)">
         <i class="bi bi-trash"></i>
     </button>
 </div>
@@ -1860,10 +1727,10 @@ abrirModalConfirmacao({
 ✅ **Com macro** (6 linhas):
 ```html
 {{ btn_group_crud(
-    espécie.id,
-    'espécie ' ~ espécie.nome,
-    '/admin/espécies',
-    "excluirEspécie(...)" | format(...)
+    categoria.id,
+    'categoria ' ~ categoria.nome,
+    '/admin/categorias',
+    "excluirCategoria(...)" | format(...)
 ) }}
 ```
 
@@ -1906,11 +1773,11 @@ uvicorn main:app --reload
 2. Acesse como admin:
 
 ```
-http://localhost:8406/admin/espécies/listar
+http://localhost:8406/admin/categorias/listar
 ```
 
-3. Deve aparecer a mensagem "Nenhuma espécie cadastrada ainda"
-4. Clique em "Nova Espécie" (vai dar erro porque não criamos o template ainda - próximo passo!)
+3. Deve aparecer a mensagem "Nenhuma categoria cadastrada ainda"
+4. Clique em "Nova Categoria" (vai dar erro porque não criamos o template ainda - próximo passo!)
 
 ---
 
@@ -1918,11 +1785,11 @@ http://localhost:8406/admin/espécies/listar
 
 ### Objetivo
 
-Criar o formulário HTML para cadastrar novas espécies.
+Criar o formulário HTML para cadastrar novas categorias.
 
 ### Arquivo a Criar
 
-📁 `templates/admin/espécies/cadastro.html`
+📁 `templates/admin/categorias/cadastro.html`
 
 ### Código Completo
 
@@ -1930,17 +1797,17 @@ Criar o formulário HTML para cadastrar novas espécies.
 {% extends "base_privada.html" %}
 {% from "macros/form_fields.html" import field with context %}
 
-{% block titulo %}Cadastrar Espécie{% endblock %}
+{% block titulo %}Cadastrar Categoria{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="d-flex align-items-center mb-4">
-            <h2 class="mb-0"><i class="bi bi-folder-plus"></i> Cadastrar Nova Espécie</h2>
+            <h2 class="mb-0"><i class="bi bi-folder-plus"></i> Cadastrar Nova Categoria</h2>
         </div>
 
         <div class="card shadow-sm">
-            <form method="POST" action="/admin/espécies/cadastrar">
+            <form method="POST" action="/admin/categorias/cadastrar">
                 {{ csrf_input() }}
                 <div class="card-body p-4">
                     <div class="row">
@@ -1951,11 +1818,11 @@ Criar o formulário HTML para cadastrar novas espécies.
                         <div class="col-12 mb-3">
                             {{ field(
                                 name='nome',
-                                label='Nome da Espécie',
+                                label='Nome da Categoria',
                                 type='text',
                                 required=true,
                                 placeholder='Ex: Tecnologia, Esportes, Política...',
-                                help_text='Nome único para identificar a espécie (3-50 caracteres)'
+                                help_text='Nome único para identificar a categoria (3-50 caracteres)'
                             ) }}
                         </div>
 
@@ -1965,8 +1832,8 @@ Criar o formulário HTML para cadastrar novas espécies.
                                 label='Descrição',
                                 type='textarea',
                                 required=false,
-                                placeholder='Descrição opcional da espécie...',
-                                help_text='Breve descrição sobre o que essa espécie abrange (máx 200 caracteres)',
+                                placeholder='Descrição opcional da categoria...',
+                                help_text='Breve descrição sobre o que essa categoria abrange (máx 200 caracteres)',
                                 rows=3
                             ) }}
                         </div>
@@ -1977,7 +1844,7 @@ Criar o formulário HTML para cadastrar novas espécies.
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-check-circle"></i> Cadastrar
                         </button>
-                        <a href="/admin/espécies/listar" class="btn btn-secondary">
+                        <a href="/admin/categorias/listar" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Cancelar
                         </a>
                     </div>
@@ -2007,7 +1874,7 @@ Criar o formulário HTML para cadastrar novas espécies.
 
 ```html
 <div class="d-flex align-items-center mb-4">
-    <h2 class="mb-0"><i class="bi bi-folder-plus"></i> Cadastrar Nova Espécie</h2>
+    <h2 class="mb-0"><i class="bi bi-folder-plus"></i> Cadastrar Nova Categoria</h2>
 </div>
 ```
 
@@ -2029,7 +1896,7 @@ Criar o formulário HTML para cadastrar novas espécies.
 #### 📋 Formulário Dividido: Body + Footer
 
 ```html
-<form method="POST" action="/admin/espécies/cadastrar">
+<form method="POST" action="/admin/categorias/cadastrar">
     <div class="card-body p-4">
         <!-- Campos do formulário aqui -->
     </div>
@@ -2086,7 +1953,7 @@ O componente `alerta_erro.html` verifica se existe `erros.geral` no contexto e e
 ```html
 {{ field(
     name='nome',
-    label='Nome da Espécie',
+    label='Nome da Categoria',
     type='text',
     required=true,
     placeholder='Ex: Tecnologia...',
@@ -2109,7 +1976,7 @@ A macro gera automaticamente: label + input + validação + help text, economiza
 | Parâmetro | Tipo | Descrição | Exemplo |
 |-----------|------|-----------|---------|
 | `name` | str | Nome do campo (usado no form e no dict de erros) | `'nome'` |
-| `label` | str | Texto do label | `'Nome da Espécie'` |
+| `label` | str | Texto do label | `'Nome da Categoria'` |
 | `type` | str | Tipo do campo: `'text'`, `'textarea'`, `'email'`, etc. | `'text'` |
 | `required` | bool | Se é obrigatório (mostra asterisco) | `true` |
 | `placeholder` | str | Texto de exemplo no campo | `'Ex: Tecnologia...'` |
@@ -2119,11 +1986,11 @@ A macro gera automaticamente: label + input + validação + help text, economiza
 #### Form Action
 
 ```html
-<form method="POST" action="/admin/espécies/cadastrar">
+<form method="POST" action="/admin/categorias/cadastrar">
 ```
 
 - `method="POST"`: Envia dados via POST (seguro)
-- `action="/admin/espécies/cadastrar"`: Endpoint que processará os dados
+- `action="/admin/categorias/cadastrar"`: Endpoint que processará os dados
 
 #### 🔘 Botões de Ação
 
@@ -2133,7 +2000,7 @@ A macro gera automaticamente: label + input + validação + help text, economiza
         <button type="submit" class="btn btn-primary">
             <i class="bi bi-check-circle"></i> Cadastrar
         </button>
-        <a href="/admin/espécies/listar" class="btn btn-secondary">
+        <a href="/admin/categorias/listar" class="btn btn-secondary">
             <i class="bi bi-x-circle"></i> Cancelar
         </a>
     </div>
@@ -2171,7 +2038,7 @@ A macro gera automaticamente: label + input + validação + help text, economiza
 
 ```
 ┌────────────────────────────────────┐
-│ Nome da Espécie *                │
+│ Nome da Categoria *                │
 │ ┌────────────────────────────────┐ │
 │ │ Te                             │ │ ← Valor mantido
 │ └────────────────────────────────┘ │
@@ -2186,7 +2053,7 @@ A macro gera automaticamente: label + input + validação + help text, economiza
 2. Acesse:
 
 ```
-http://localhost:8406/admin/espécies/cadastrar
+http://localhost:8406/admin/categorias/cadastrar
 ```
 
 3. Teste o formulário:
@@ -2200,11 +2067,11 @@ http://localhost:8406/admin/espécies/cadastrar
 
 ### Objetivo
 
-Criar o formulário HTML para editar espécies existentes.
+Criar o formulário HTML para editar categorias existentes.
 
 ### Arquivo a Criar
 
-📁 `templates/admin/espécies/editar.html`
+📁 `templates/admin/categorias/editar.html`
 
 ### Código Completo
 
@@ -2212,17 +2079,17 @@ Criar o formulário HTML para editar espécies existentes.
 {% extends "base_privada.html" %}
 {% from "macros/form_fields.html" import field with context %}
 
-{% block titulo %}Editar Espécie{% endblock %}
+{% block titulo %}Editar Categoria{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="d-flex align-items-center mb-4">
-            <h2 class="mb-0"><i class="bi bi-folder-check"></i> Editar Espécie</h2>
+            <h2 class="mb-0"><i class="bi bi-folder-check"></i> Editar Categoria</h2>
         </div>
 
         <div class="card shadow-sm">
-            <form method="POST" action="/admin/espécies/editar/{{ dados.id if dados is defined and dados.id else espécie.id }}">
+            <form method="POST" action="/admin/categorias/editar/{{ dados.id if dados is defined and dados.id else categoria.id }}">
                 {{ csrf_input() }}
                 <div class="card-body p-4">
                     <div class="row">
@@ -2233,12 +2100,12 @@ Criar o formulário HTML para editar espécies existentes.
                         <div class="col-12 mb-3">
                             {{ field(
                                 name='nome',
-                                label='Nome da Espécie',
+                                label='Nome da Categoria',
                                 type='text',
                                 required=true,
                                 placeholder='Ex: Tecnologia, Esportes, Política...',
-                                help_text='Nome único para identificar a espécie (3-50 caracteres)',
-                                value=dados.nome if dados is defined and dados.nome else espécie.nome
+                                help_text='Nome único para identificar a categoria (3-50 caracteres)',
+                                value=dados.nome if dados is defined and dados.nome else categoria.nome
                             ) }}
                         </div>
 
@@ -2248,10 +2115,10 @@ Criar o formulário HTML para editar espécies existentes.
                                 label='Descrição',
                                 type='textarea',
                                 required=false,
-                                placeholder='Descrição opcional da espécie...',
-                                help_text='Breve descrição sobre o que essa espécie abrange (máx 200 caracteres)',
+                                placeholder='Descrição opcional da categoria...',
+                                help_text='Breve descrição sobre o que essa categoria abrange (máx 200 caracteres)',
                                 rows=3,
-                                value=dados.descricao if dados is defined and dados.descricao else espécie.descricao
+                                value=dados.descricao if dados is defined and dados.descricao else categoria.descricao
                             ) }}
                         </div>
                     </div>
@@ -2261,7 +2128,7 @@ Criar o formulário HTML para editar espécies existentes.
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-check-circle"></i> Salvar Alterações
                         </button>
-                        <a href="/admin/espécies/listar" class="btn btn-secondary">
+                        <a href="/admin/categorias/listar" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Cancelar
                         </a>
                     </div>
@@ -2277,10 +2144,10 @@ Criar o formulário HTML para editar espécies existentes.
 
 **1. Ícone**: `bi-folder-check` (edição) vs `bi-folder-plus` (cadastro)
 
-**2. Form Action com fallback**: `action="/admin/espécies/editar/{{ dados.id if dados is defined and dados.id else espécie.id }}"` - Usa `dados.id` em caso de erro de validação, senão `espécie.id`.
+**2. Form Action com fallback**: `action="/admin/categorias/editar/{{ dados.id if dados is defined and dados.id else categoria.id }}"` - Usa `dados.id` em caso de erro de validação, senão `categoria.id`.
 
-**3. Valores pré-preenchidos**: `value=dados.nome if dados is defined and dados.nome else espécie.nome`
-- GET: usa `espécie.nome` (banco de dados)
+**3. Valores pré-preenchidos**: `value=dados.nome if dados is defined and dados.nome else categoria.nome`
+- GET: usa `categoria.nome` (banco de dados)
 - POST com erro: usa `dados.nome` (mantém o que usuário digitou - melhor UX)
 
 **ATENÇÃO - Sintaxe correta:**
@@ -2293,11 +2160,11 @@ Criar o formulário HTML para editar espécies existentes.
 
 ### ✅ Checkpoint
 
-1. Cadastre uma espécie
+1. Cadastre uma categoria
 2. Na listagem, clique no botão de editar (ícone de lápis)
 3. Verifique:
    - Campos estão pré-preenchidos
-   - URL tem o ID da espécie
+   - URL tem o ID da categoria
    - Ao salvar, volta para listagem com mensagem de sucesso
 
 ---
@@ -2314,7 +2181,7 @@ Criar o formulário HTML para editar espécies existentes.
 | Perfil | `<i class="bi bi-person"></i>` | `<h2><i class="bi bi-person"></i> Nome do Usuário</h2>` | ✅ Consistente |
 | Chamados | `<i class="bi bi-headset"></i>` | `<h2><i class="bi bi-headset"></i> Gerenciar Chamados</h2>` | ✅ Consistente |
 | Usuários | `<i class="bi bi-people"></i>` | `<h2><i class="bi bi-people"></i> Gerenciar Usuários</h2>` | ✅ Consistente |
-| Espécies | `<i class="bi bi-folder"></i>` | `<h2><i class="bi bi-folder"></i> Gerenciar Espécies</h2>` | ✅ Consistente |
+| Categorias | `<i class="bi bi-folder"></i>` | `<h2><i class="bi bi-folder"></i> Gerenciar Categorias</h2>` | ✅ Consistente |
 | Tema | `<i class="bi bi-palette"></i>` | `<h2><i class="bi bi-palette"></i> Personalizar Tema</h2>` | ✅ Consistente |
 | Auditoria | `<i class="bi bi-journal-text"></i>` | `<h2><i class="bi bi-journal-text"></i> Auditoria de Logs</h2>` | ✅ Consistente |
 | Backup | `<i class="bi bi-server"></i>` | `<h2><i class="bi bi-server"></i> Gerenciar Backups</h2>` | ✅ Consistente |
@@ -2325,7 +2192,7 @@ Criar o formulário HTML para editar espécies existentes.
 - **Identidade visual**: Cada módulo tem seu ícone único
 
 **Como aplicar:**
-1. Escolha o ícone principal do módulo (ex: `bi-folder` para Espécies)
+1. Escolha o ícone principal do módulo (ex: `bi-folder` para Categorias)
 2. Use esse ícone no link do menu em `base_privada.html`
 3. Use o MESMO ícone no título da página de listagem
 4. Use variações desse ícone nas outras páginas:
@@ -2373,9 +2240,9 @@ Adicione em `templates/base_privada.html` após o item de Usuários:
 
 ```html
 <li class="nav-item">
-    <a class="nav-link {{ 'active' if '/admin/espécies/' in request.path else '' }}"
-       href="/admin/espécies/listar">
-        <i class="bi bi-folder"></i> Espécies
+    <a class="nav-link {{ 'active' if '/admin/categorias/' in request.path else '' }}"
+       href="/admin/categorias/listar">
+        <i class="bi bi-folder"></i> Categorias
     </a>
 </li>
 ```
@@ -2389,18 +2256,18 @@ Adicione em `templates/base_privada.html` após o item de Usuários:
 Adicione em `templates/dashboard.html` **entre Usuários e Tema**:
 
 ```html
-<!-- Espécies -->
+<!-- Categorias -->
 <div class="col-md-4">
     <div class="card h-100 shadow-sm shadow-hover">
         <div class="card-body text-center">
             <div class="mb-3">
                 <i class="bi bi-folder text-primary display-3"></i>
             </div>
-            <h5 class="card-title">Espécies</h5>
+            <h5 class="card-title">Categorias</h5>
             <p class="card-text text-muted">
-                Organize o conteúdo através de espécies
+                Organize o conteúdo através de categorias
             </p>
-            <a href="/admin/espécies/listar" class="btn btn-primary">
+            <a href="/admin/categorias/listar" class="btn btn-primary">
                 <i class="bi bi-arrow-right-circle"></i> Acessar
             </a>
         </div>
@@ -2420,26 +2287,26 @@ Realizar testes end-to-end (ponta a ponta) para garantir que tudo funciona corre
 
 ### Checklist de Testes
 
-#### ✅ Teste 1: Listar Espécies Vazias
+#### ✅ Teste 1: Listar Categorias Vazias
 
-1. Acesse: `http://localhost:8406/admin/espécies/listar`
-2. **Esperado**: Mensagem "Nenhuma espécie cadastrada ainda"
+1. Acesse: `http://localhost:8406/admin/categorias/listar`
+2. **Esperado**: Mensagem "Nenhuma categoria cadastrada ainda"
 
-#### ✅ Teste 2: Cadastrar Espécie Válida
+#### ✅ Teste 2: Cadastrar Categoria Válida
 
-1. Clique em "Nova Espécie"
+1. Clique em "Nova Categoria"
 2. Preencha:
    - **Nome**: Tecnologia
    - **Descrição**: Artigos sobre tecnologia e inovação
 3. Clique em "Cadastrar"
 4. **Esperado**:
    - Redireciona para listagem
-   - Toast de sucesso: "Espécie cadastrada com sucesso!"
-   - Espécie aparece na tabela
+   - Toast de sucesso: "Categoria cadastrada com sucesso!"
+   - Categoria aparece na tabela
 
 #### ✅ Teste 3: Cadastrar com Nome Muito Curto
 
-1. Clique em "Nova Espécie"
+1. Clique em "Nova Categoria"
 2. Preencha:
    - **Nome**: AB (apenas 2 caracteres)
 3. Clique em "Cadastrar"
@@ -2451,14 +2318,14 @@ Realizar testes end-to-end (ponta a ponta) para garantir que tudo funciona corre
 
 #### ✅ Teste 4: Cadastrar com Nome Duplicado
 
-1. Tente cadastrar outra espécie com nome "Tecnologia"
+1. Tente cadastrar outra categoria com nome "Tecnologia"
 2. **Esperado**:
-   - Toast de erro: "Já existe uma espécie com este nome"
+   - Toast de erro: "Já existe uma categoria com este nome"
    - Volta para formulário
 
-#### ✅ Teste 5: Editar Espécie
+#### ✅ Teste 5: Editar Categoria
 
-1. Na listagem, clique no botão amarelo (editar) da espécie "Tecnologia"
+1. Na listagem, clique no botão amarelo (editar) da categoria "Tecnologia"
 2. **Esperado**: Formulário pré-preenchido com dados atuais
 3. Altere:
    - **Nome**: Tecnologia e Inovação
@@ -2466,27 +2333,27 @@ Realizar testes end-to-end (ponta a ponta) para garantir que tudo funciona corre
 4. Clique em "Salvar Alterações"
 5. **Esperado**:
    - Redireciona para listagem
-   - Toast: "Espécie alterada com sucesso!"
+   - Toast: "Categoria alterada com sucesso!"
    - Nome atualizado na tabela
 
-#### ✅ Teste 6: Excluir Espécie
+#### ✅ Teste 6: Excluir Categoria
 
 1. Na listagem, clique no botão vermelho (excluir)
 2. **Esperado**: Modal de confirmação aparece com:
    - Título: "Confirmar Exclusão"
-   - Detalhes da espécie (ID, nome, descrição)
+   - Detalhes da categoria (ID, nome, descrição)
 3. Clique em "Cancelar" → Modal fecha, nada acontece
 4. Clique novamente no botão de excluir
 5. Clique em "Confirmar Exclusão"
 6. **Esperado**:
    - Modal fecha
    - Redireciona para listagem
-   - Toast: "Espécie 'Tecnologia e Inovação' excluída com sucesso!"
-   - Espécie não aparece mais na tabela
+   - Toast: "Categoria 'Tecnologia e Inovação' excluída com sucesso!"
+   - Categoria não aparece mais na tabela
 
 #### ✅ Teste 7: Rate Limiting
 
-1. Tente cadastrar 11 espécies rapidamente (menos de 1 minuto)
+1. Tente cadastrar 11 categorias rapidamente (menos de 1 minuto)
 2. **Esperado**:
    - Na 11ª tentativa, toast de erro: "Muitas operações em pouco tempo..."
    - Aguarde 1 minuto
@@ -2503,12 +2370,12 @@ Realizar testes end-to-end (ponta a ponta) para garantir que tudo funciona corre
 1. Pare a aplicação (Ctrl+C)
 2. Reinicie: `uvicorn main:app --reload`
 3. Acesse a listagem
-4. **Esperado**: Espécies cadastradas continuam lá (salvas no BD)
+4. **Esperado**: Categorias cadastradas continuam lá (salvas no BD)
 
 #### ✅ Teste 10: Acesso Não Autorizado
 
 1. Faça logout
-2. Tente acessar: `http://localhost:8406/admin/espécies/listar`
+2. Tente acessar: `http://localhost:8406/admin/categorias/listar`
 3. **Esperado**: Redireciona para página de login
 
 ### Teste no Terminal
@@ -2517,15 +2384,15 @@ Você também pode testar via linha de comando:
 
 ```bash
 # Teste 1: Listar (precisa estar logado como admin)
-curl -X GET http://localhost:8406/admin/espécies/listar
+curl -X GET http://localhost:8406/admin/categorias/listar
 
 # Teste 2: Criar (POST)
-curl -X POST http://localhost:8406/admin/espécies/cadastrar \
+curl -X POST http://localhost:8406/admin/categorias/cadastrar \
   -d "nome=Esportes&descricao=Notícias esportivas"
 
 # Teste 3: Ver documentação automática
 # Acesse: http://localhost:8406/docs
-# Procure por "Admin - Espécies"
+# Procure por "Admin - Categorias"
 ```
 
 ### ✅ Checkpoint Final
@@ -2548,11 +2415,11 @@ Você implementou com sucesso um **CRUD completo e funcional** com:
 
 | Tipo | Convenção | Exemplo |
 |------|-----------|---------|
-| **Arquivos** | `snake_case` | `espécie_repo.py`, `admin_espécies_routes.py` |
-| **Classes** | `PascalCase` | `Espécie`, `CriarEspécieDTO` |
+| **Arquivos** | `snake_case` | `categoria_repo.py`, `admin_categorias_routes.py` |
+| **Classes** | `PascalCase` | `Categoria`, `CriarCategoriaDTO` |
 | **Funções** | `snake_case` | `obter_por_id()`, `criar_tabela()` |
 | **Constantes** | `UPPER_SNAKE_CASE` | `CRIAR_TABELA`, `INSERIR` |
-| **Variáveis** | `snake_case` | `espécie_existente`, `nova_espécie` |
+| **Variáveis** | `snake_case` | `categoria_existente`, `nova_categoria` |
 | **Parâmetros** | `snake_case` | `tamanho_minimo`, `campo_padrao` |
 
 ### 2. Estrutura de Pastas
@@ -2570,11 +2437,11 @@ graph LR
     G --> G1[admin/]
     G --> G2[macros/]
 
-    B -.-> |Queries SQL| B1[espécie_sql.py]
-    C -.-> |Entidades| C1[espécie_model.py]
-    D -.-> |Validação| D1[espécie_dto.py]
-    E -.-> |Acesso a dados| E1[espécie_repo.py]
-    F -.-> |Endpoints HTTP| F1[admin_espécies_routes.py]
+    B -.-> |Queries SQL| B1[categoria_sql.py]
+    C -.-> |Entidades| C1[categoria_model.py]
+    D -.-> |Validação| D1[categoria_dto.py]
+    E -.-> |Acesso a dados| E1[categoria_repo.py]
+    F -.-> |Endpoints HTTP| F1[admin_categorias_routes.py]
 
     style B fill:#ffe1e1
     style C fill:#f0e1ff
@@ -2597,16 +2464,16 @@ sequenceDiagram
     participant DB as Database
 
     U->>F: Preenche formulário
-    F->>R: POST /admin/espécies/cadastrar
+    F->>R: POST /admin/categorias/cadastrar
     R->>D: Valida dados
     alt Dados válidos
         D->>R: ✓ Dados aprovados
-        R->>Repo: inserir(espécie)
-        Repo->>DB: INSERT INTO espécie
+        R->>Repo: inserir(categoria)
+        Repo->>DB: INSERT INTO categoria
         DB-->>Repo: ID gerado
-        Repo-->>R: Espécie com ID
+        Repo-->>R: Categoria com ID
         R-->>F: Redirect + Flash success
-        F-->>U: "Espécie cadastrada!"
+        F-->>U: "Categoria cadastrada!"
     else Dados inválidos
         D->>R: ✗ ValidationError
         R-->>F: Re-renderiza + erros
@@ -2684,7 +2551,7 @@ sequenceDiagram
 
 ```python
 # Route usa apenas a interface do repository
-espécies = espécie_repo.obter_todos()
+categorias = categoria_repo.obter_todos()
 ```
 
 **Vantagens**: Simples, testável (mock), desacoplado do banco de dados
@@ -2693,7 +2560,7 @@ espécies = espécie_repo.obter_todos()
 
 ✅ **Com DTO**:
 ```python
-dto = CriarEspécieDTO(nome=nome, descricao=descricao)
+dto = CriarCategoriaDTO(nome=nome, descricao=descricao)
 # Se inválido, lança exception
 # Se válido, dto.nome e dto.descricao estão limpos
 ```
@@ -2708,15 +2575,15 @@ dto = CriarEspécieDTO(nome=nome, descricao=descricao)
 #### Docstrings
 
 ```python
-def obter_por_id(id: int) -> Optional[Espécie]:
+def obter_por_id(id: int) -> Optional[Categoria]:
     """
-    Busca uma espécie por ID.
+    Busca uma categoria por ID.
 
     Args:
-        id: ID da espécie
+        id: ID da categoria
 
     Returns:
-        Objeto Espécie se encontrou, None se não encontrou
+        Objeto Categoria se encontrou, None se não encontrou
 
     Exemplo:
         cat = obter_por_id(5)
@@ -2730,7 +2597,7 @@ def obter_por_id(id: int) -> Optional[Espécie]:
 ```python
 # Pega o ID gerado automaticamente
 if cursor.lastrowid:
-    espécie.id = cursor.lastrowid
+    categoria.id = cursor.lastrowid
 ```
 
 Use comentários para explicar **por que**, não **o que**:
@@ -2874,11 +2741,11 @@ Antes de começar a implementar seu CRUD, verifique se tem tudo pronto:
 
 **Sintoma**:
 ```
-jinja2.exceptions.TemplateNotFound: admin/espécies/listar.html
+jinja2.exceptions.TemplateNotFound: admin/categorias/listar.html
 ```
 
 **Soluções**:
-1. Verifique se a pasta existe: `templates/admin/espécies/`
+1. Verifique se a pasta existe: `templates/admin/categorias/`
 2. Verifique se o arquivo existe: `listar.html`
 3. Verifique o nome exato (case-sensitive)
 4. Verifique se `templates` está configurado corretamente nas rotas:
@@ -2888,19 +2755,19 @@ jinja2.exceptions.TemplateNotFound: admin/espécies/listar.html
    ```
    **IMPORTANTE**: Use `criar_templates()` em vez de `Jinja2Templates()` diretamente para garantir que todas as funções globais necessárias (como `csrf_input()`) estejam disponíveis nos templates.
 
-### Problema 2: Espécie não salva no banco
+### Problema 2: Categoria não salva no banco
 
 **Sintoma**: Após cadastrar, lista continua vazia
 
 **Soluções**:
-1. Verifique se `espécie_repo.criar_tabela()` foi chamado no `main.py`
+1. Verifique se `categoria_repo.criar_tabela()` foi chamado no `main.py`
 2. Verifique se o commit está sendo feito:
    ```python
    with get_connection() as conn:  # ← Context manager faz commit automático
    ```
 3. Verifique o banco de dados:
    ```bash
-   sqlite3 dados.db "SELECT * FROM espécie;"
+   sqlite3 dados.db "SELECT * FROM categoria;"
    ```
 4. Verifique erros no terminal
 
@@ -2908,7 +2775,7 @@ jinja2.exceptions.TemplateNotFound: admin/espécies/listar.html
 
 **Sintoma**:
 ```
-ModuleNotFoundError: No module named 'dtos.espécie_dto'
+ModuleNotFoundError: No module named 'dtos.categoria_dto'
 ```
 
 **Soluções**:
@@ -2919,28 +2786,28 @@ ModuleNotFoundError: No module named 'dtos.espécie_dto'
 
 ### Problema 4: Erro 404 ao acessar rota
 
-**Sintoma**: `http://localhost:8406/admin/espécies/listar` retorna 404
+**Sintoma**: `http://localhost:8406/admin/categorias/listar` retorna 404
 
 **Soluções**:
 1. Verifique se o router foi registrado no `main.py`:
    ```python
-   app.include_router(admin_espécies_router)
+   app.include_router(admin_categorias_router)
    ```
 2. Verifique o prefixo do router:
    ```python
-   router = APIRouter(prefix="/admin/espécies")
+   router = APIRouter(prefix="/admin/categorias")
    ```
 3. Reinicie a aplicação
 4. Acesse `/docs` para ver todas as rotas disponíveis
 
 ### Problema 5: Validação não funciona
 
-**Sintoma**: Consegue cadastrar espécie com nome vazio
+**Sintoma**: Consegue cadastrar categoria com nome vazio
 
 **Soluções**:
 1. Verifique se o DTO está sendo usado:
    ```python
-   dto = CriarEspécieDTO(nome=nome, descricao=descricao)
+   dto = CriarCategoriaDTO(nome=nome, descricao=descricao)
    ```
 2. Verifique se FormValidationError está sendo capturada
 3. Verifique se há `try/except` ao redor da validação
@@ -2957,13 +2824,13 @@ ModuleNotFoundError: No module named 'dtos.espécie_dto'
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
    ```
 3. Verifique o ID do modal: `id="modalConfirmacao"`
-4. Verifique a função `excluirEspécie()` no `{% block scripts %}`
+4. Verifique a função `excluirCategoria()` no `{% block scripts %}`
 
 ### Problema 7: Erro "UNIQUE constraint failed"
 
 **Sintoma**:
 ```
-sqlite3.IntegrityError: UNIQUE constraint failed: espécie.nome
+sqlite3.IntegrityError: UNIQUE constraint failed: categoria.nome
 ```
 
 **Solução**:
@@ -2971,9 +2838,9 @@ Isso é esperado! Significa que a constraint UNIQUE está funcionando.
 
 Mas você deve **tratar esse erro antes** verificando:
 ```python
-espécie_existente = espécie_repo.obter_por_nome(dto.nome)
-if espécie_existente:
-    informar_erro(request, "Já existe uma espécie com este nome.")
+categoria_existente = categoria_repo.obter_por_nome(dto.nome)
+if categoria_existente:
+    informar_erro(request, "Já existe uma categoria com este nome.")
 ```
 
 ### Problema 8: Rate Limiter sempre bloqueia
@@ -3002,7 +2869,7 @@ if espécie_existente:
 
 ### Problema 10: Mensagens (toasts) não aparecem
 
-**Sintoma**: Espécie cadastrada mas não vê toast de sucesso
+**Sintoma**: Categoria cadastrada mas não vê toast de sucesso
 
 **Soluções**:
 1. Verifique se está usando `informar_sucesso()` na route
@@ -3157,7 +3024,7 @@ Corrija o arquivo `templates/components/alerta_erro.html`:
    @router.get("/cadastrar")
    async def get_cadastrar(request: Request):
        return templates.TemplateResponse(
-           "admin/espécies/cadastro.html",
+           "admin/categorias/cadastro.html",
            {"request": request}  # ← 'erros' NÃO está aqui!
        )
    ```
@@ -3166,7 +3033,7 @@ Corrija o arquivo `templates/components/alerta_erro.html`:
    ```python
    except ValidationError as e:
        raise FormValidationError(
-           template="admin/espécies/cadastro.html",
+           template="admin/categorias/cadastro.html",
            context={"request": request},
            erros=erros  # ← 'erros' ESTÁ aqui!
        )
@@ -3183,8 +3050,8 @@ jinja2.exceptions.UndefinedError: 'dados' is undefined
 
 **Erro completo**:
 ```
-File "templates/admin/espécies/editar.html", line 14
-<form method="POST" action="/admin/espécies/editar/{{ dados.id if dados.id is defined else espécie.id }}">
+File "templates/admin/categorias/editar.html", line 14
+<form method="POST" action="/admin/categorias/editar/{{ dados.id if dados.id is defined else categoria.id }}">
 ```
 
 **Causa**: O template está tentando acessar `dados.id` ou `dados.nome` sem verificar se a variável `dados` existe primeiro. Na primeira renderização (GET), `dados` não está no contexto.
@@ -3192,10 +3059,10 @@ File "templates/admin/espécies/editar.html", line 14
 **Problema na sintaxe**:
 ```html
 {# ❌ ERRADO - Tenta acessar dados.id antes de verificar se dados existe #}
-{{ dados.id if dados.id is defined else espécie.id }}
+{{ dados.id if dados.id is defined else categoria.id }}
 
 {# ❌ ERRADO - Mesmo problema #}
-{{ dados.nome if dados.nome is defined else espécie.nome }}
+{{ dados.nome if dados.nome is defined else categoria.nome }}
 ```
 
 **Solução**:
@@ -3204,28 +3071,28 @@ Use `dados is defined` ANTES de acessar qualquer propriedade:
 
 ```html
 {# ✅ CORRETO - Verifica se dados existe primeiro #}
-{{ dados.id if dados is defined and dados.id else espécie.id }}
+{{ dados.id if dados is defined and dados.id else categoria.id }}
 
 {# ✅ CORRETO - Mesmo padrão para campos #}
-{{ dados.nome if dados is defined and dados.nome else espécie.nome }}
+{{ dados.nome if dados is defined and dados.nome else categoria.nome }}
 ```
 
 **Exemplo completo no template de edição**:
 
 ```html
 {# Form action #}
-<form method="POST" action="/admin/espécies/editar/{{ dados.id if dados is defined and dados.id else espécie.id }}">
+<form method="POST" action="/admin/categorias/editar/{{ dados.id if dados is defined and dados.id else categoria.id }}">
 
     {# Campo nome #}
     {{ field(
         name='nome',
-        value=dados.nome if dados is defined and dados.nome else espécie.nome
+        value=dados.nome if dados is defined and dados.nome else categoria.nome
     ) }}
 
     {# Campo descricao #}
     {{ field(
         name='descricao',
-        value=dados.descricao if dados is defined and dados.descricao else espécie.descricao
+        value=dados.descricao if dados is defined and dados.descricao else categoria.descricao
     ) }}
 </form>
 ```
@@ -3235,8 +3102,8 @@ Use `dados is defined` ANTES de acessar qualquer propriedade:
 1. **GET /editar/5** (primeira renderização):
    ```python
    return templates.TemplateResponse(
-       "admin/espécies/editar.html",
-       {"request": request, "espécie": espécie}
+       "admin/categorias/editar.html",
+       {"request": request, "categoria": categoria}
        # ← 'dados' NÃO está aqui!
    )
    ```
@@ -3244,7 +3111,7 @@ Use `dados is defined` ANTES de acessar qualquer propriedade:
 2. **POST /editar/5** (com erro de validação):
    ```python
    raise FormValidationError(
-       template="admin/espécies/editar.html",
+       template="admin/categorias/editar.html",
        context={"request": request},
        erros=erros,
        dados={"id": id, "nome": nome, "descricao": descricao}
