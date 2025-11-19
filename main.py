@@ -22,11 +22,11 @@ from util.exception_handlers import (
 from util.exceptions import FormValidationError
 
 # Repositórios
-from repo import usuario_repo, configuracao_repo, tarefa_repo, chamado_repo, chamado_interacao_repo, indices_repo
+from repo import especie_repo, usuario_repo, configuracao_repo, tarefa_repo, chamado_repo, chamado_interacao_repo, indices_repo
 from repo import chat_sala_repo, chat_participante_repo, chat_mensagem_repo, categoria_repo
 from repo import raca_repo, abrigo_repo, adotante_repo, animal_repo, endereco_repo
 from repo import solicitacao_repo, adocao_repo, visita_repo
-# from repo import especie_repo  # REMOVIDO: O aluno deverá criar este repositório
+from repo import usuario_repo, especie_repo
 
 # Rotas
 from routes.auth_routes import router as auth_router
@@ -108,6 +108,9 @@ try:
 
     abrigo_repo.criar_tabela()
     logger.info("Tabela 'abrigo' criada/verificada")
+
+    especie_repo.criar_tabela()
+    logger.info("Tabela 'especie' criada/verificada")
 
     adotante_repo.criar_tabela()
     logger.info("Tabela 'adotante' criada/verificada")
