@@ -6,7 +6,7 @@ from typing import List, Optional
 from model.raca_model import Raca
 # from model.especie_model import Especie  # REMOVIDO: O aluno deverá criar este modelo
 from sql.raca_sql import *
-from util.db_util import get_connection
+from util.db_util import obter_conexao
 
 
 def _row_to_raca(row) -> Raca:
@@ -32,7 +32,7 @@ def _row_to_raca(row) -> Raca:
 
 def criar_tabela() -> bool:
     """Cria a tabela raca se não existir."""
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
         return True
@@ -40,7 +40,7 @@ def criar_tabela() -> bool:
 
 def inserir(raca: Raca) -> Optional[int]:
     """Insere uma nova raça e retorna o ID gerado."""
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(INSERIR, (
             raca.id_especie,
@@ -55,7 +55,7 @@ def inserir(raca: Raca) -> Optional[int]:
 
 def obter_todos() -> List[Raca]:
     """Retorna todas as raças com suas espécies."""
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_TODOS)
         return [_row_to_raca(row) for row in cursor.fetchall()]
@@ -63,7 +63,7 @@ def obter_todos() -> List[Raca]:
 
 def obter_por_id(id_raca: int) -> Optional[Raca]:
     """Busca uma raça pelo ID com sua espécie."""
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_ID, (id_raca,))
         row = cursor.fetchone()
@@ -72,7 +72,7 @@ def obter_por_id(id_raca: int) -> Optional[Raca]:
 
 def obter_por_especie(id_especie: int) -> List[Raca]:
     """Retorna todas as raças de uma espécie."""
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_ESPECIE, (id_especie,))
         return [_row_to_raca(row) for row in cursor.fetchall()]
@@ -88,7 +88,7 @@ def atualizar(raca: Raca) -> bool:
     Returns:
         True se atualização foi bem-sucedida, False caso contrário
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(ATUALIZAR, (
             raca.id_especie,
@@ -116,7 +116,7 @@ def excluir(id_raca: int) -> bool:
         Exception: Se a raça tiver animais vinculados
     """
     # Verificar se tem animais vinculados
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CONTAR_ANIMAIS, (id_raca,))
         total = cursor.fetchone()["total"]
@@ -138,7 +138,7 @@ def contar() -> int:
     Returns:
         Número total de raças
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CONTAR)
         return cursor.fetchone()[0]
@@ -154,7 +154,7 @@ def buscar_por_termo(termo: str) -> List[Raca]:
     Returns:
         Lista de objetos Raca que correspondem ao termo
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         termo_like = f"%{termo}%"
         cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like))

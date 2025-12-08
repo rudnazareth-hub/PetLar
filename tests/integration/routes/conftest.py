@@ -30,10 +30,10 @@ def criar_chamado_admin(admin_autenticado, admin_teste):
     # Criar um usuario cliente para associar ao chamado
     cliente = Usuario(
         id=0,
-        nome="Cliente Chamado Teste",
-        email="cliente_chamado@example.com",
+        nome="Adotante Chamado Teste",
+        email="adotante_chamado@example.com",
         senha=criar_hash_senha("Senha@123"),
-        perfil=Perfil.CLIENTE.value
+        perfil=Perfil.ADOTANTE.value
     )
     cliente_id = usuario_repo.inserir(cliente)
 

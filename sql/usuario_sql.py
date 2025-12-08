@@ -1,6 +1,6 @@
-# IMPORTANTE: O valor padrão 'cliente' deve corresponder a Perfil.CLIENTE.value
+# IMPORTANTE: O valor padrão corresponde a Perfil.ADOTANTE.value
 # Fonte única da verdade: util.perfis.Perfil
-# Valores válidos: 'admin' (Perfil.ADMIN.value), 'cliente' (Perfil.CLIENTE.value)
+# Valores válidos: 'Administrador' (Perfil.ADMIN.value), 'Adotante' (Perfil.ADOTANTE.value), 'Abrigo' (Perfil.ABRIGO.value)
 CRIAR_TABELA = """
 CREATE TABLE IF NOT EXISTS usuario (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -80,8 +80,8 @@ ORDER BY nome
 
 BUSCAR_POR_TERMO = """
 SELECT id, nome, email, senha, perfil,
-       token_redefinicao, data_token,
-       data_cadastro[timestamp], data_atualizacao[timestamp]
+       data_nascimento, numero_documento, telefone, confirmado,
+       token_redefinicao, data_token, data_cadastro
 FROM usuario
 WHERE (LOWER(nome) LIKE LOWER(?) OR LOWER(email) LIKE LOWER(?))
 LIMIT ?

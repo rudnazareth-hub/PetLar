@@ -4,7 +4,7 @@ from typing import List, Optional
 from datetime import datetime
 from model.visita_model import Visita
 from sql.visita_sql import *
-from util.db_util import get_connection
+from util.db_util import obter_conexao
 
 
 def _converter_data(data_str: Optional[str]) -> Optional[datetime]:
@@ -35,7 +35,7 @@ def _row_to_visita(row) -> Visita:
 
 def criar_tabela() -> bool:
     """Cria a tabela visita se não existir."""
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
         return True
@@ -51,7 +51,7 @@ def inserir(visita: Visita) -> int:
     Returns:
         ID da visita inserida
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(INSERIR, (
             visita.id_adotante,
@@ -72,7 +72,7 @@ def obter_por_adotante(id_adotante: int) -> List[dict]:
     Returns:
         Lista de dicionários com dados das visitas
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_ADOTANTE, (id_adotante,))
         return [dict(row) for row in cursor.fetchall()]
@@ -88,7 +88,7 @@ def obter_por_abrigo(id_abrigo: int) -> List[dict]:
     Returns:
         Lista de dicionários com dados das visitas
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_ABRIGO, (id_abrigo,))
         return [dict(row) for row in cursor.fetchall()]
@@ -105,7 +105,7 @@ def atualizar_status(id_visita: int, status: str) -> bool:
     Returns:
         True se atualização foi bem-sucedida, False caso contrário
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(ATUALIZAR_STATUS, (status, id_visita))
         return cursor.rowcount > 0
@@ -122,7 +122,7 @@ def reagendar(id_visita: int, nova_data: str) -> bool:
     Returns:
         True se reagendamento foi bem-sucedido, False caso contrário
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(REAGENDAR, (nova_data, id_visita))
         return cursor.rowcount > 0
@@ -135,7 +135,7 @@ def obter_todos() -> List[dict]:
     Returns:
         Lista de dicionários com dados das visitas
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_TODOS)
         return [dict(row) for row in cursor.fetchall()]
@@ -148,7 +148,7 @@ def contar() -> int:
     Returns:
         Número total de visitas
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CONTAR)
         return cursor.fetchone()[0]
@@ -164,7 +164,7 @@ def buscar_por_termo(termo: str) -> List[dict]:
     Returns:
         Lista de dicionários com dados das visitas que correspondem ao termo
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         termo_like = f"%{termo}%"
         cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like))
@@ -181,7 +181,7 @@ def excluir(id_visita: int) -> bool:
     Returns:
         True se exclusão foi bem-sucedida, False caso contrário
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(EXCLUIR, (id_visita,))
         return cursor.rowcount > 0

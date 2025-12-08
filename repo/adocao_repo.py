@@ -4,7 +4,7 @@ from typing import List, Optional
 from datetime import datetime
 from model.adocao_model import Adocao
 from sql.adocao_sql import *
-from util.db_util import get_connection
+from util.db_util import obter_conexao
 
 
 def _converter_data(data_str: Optional[str]) -> Optional[datetime]:
@@ -35,7 +35,7 @@ def _row_to_adocao(row) -> Adocao:
 
 def criar_tabela() -> bool:
     """Cria a tabela adocao se não existir."""
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
         return True
@@ -51,7 +51,7 @@ def inserir(adocao: Adocao) -> int:
     Returns:
         ID da adoção inserida
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(INSERIR, (
             adocao.id_adotante,
@@ -72,7 +72,7 @@ def obter_por_abrigo(id_abrigo: int) -> List[dict]:
     Returns:
         Lista de dicionários com dados das adoções
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_ABRIGO, (id_abrigo,))
         return [dict(row) for row in cursor.fetchall()]
@@ -85,7 +85,7 @@ def obter_todos() -> List[dict]:
     Returns:
         Lista de dicionários com dados das adoções
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_TODOS)
         return [dict(row) for row in cursor.fetchall()]
@@ -98,7 +98,7 @@ def contar() -> int:
     Returns:
         Número total de adoções
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CONTAR)
         return cursor.fetchone()[0]
@@ -114,7 +114,7 @@ def buscar_por_termo(termo: str) -> List[dict]:
     Returns:
         Lista de dicionários com dados das adoções que correspondem ao termo
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         termo_like = f"%{termo}%"
         cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like))

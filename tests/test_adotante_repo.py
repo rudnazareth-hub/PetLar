@@ -9,7 +9,7 @@ import pytest
 from model.adotante_model import Adotante
 from model.usuario_model import Usuario
 from repo import adotante_repo, usuario_repo
-from util.db_util import get_connection
+from util.db_util import obter_conexao
 
 
 @pytest.fixture(autouse=True)
@@ -18,14 +18,14 @@ def limpar_adotantes():
     # Criar tabelas se não existirem
     usuario_repo.criar_tabela()
     adotante_repo.criar_tabela()
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM adotante")
         cursor.execute("DELETE FROM usuario")
         cursor.execute("PRAGMA foreign_keys = ON")
     yield
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM adotante")
@@ -72,7 +72,7 @@ class TestCriarTabela:
     def test_tabela_existe_apos_criacao(self):
         """Tabela deve existir após criação."""
         adotante_repo.criar_tabela()
-        with get_connection() as conn:
+        with obter_conexao() as conn:
             cursor = conn.cursor()
             cursor.execute(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name='adotante'"
@@ -140,7 +140,7 @@ class TestInserir:
         adotante_repo.inserir(adotante)
 
         # Verificar que foi armazenado como int no banco
-        with get_connection() as conn:
+        with obter_conexao() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT tem_filhos FROM adotante WHERE id_adotante = ?", (usuario_adotante,))
             row = cursor.fetchone()

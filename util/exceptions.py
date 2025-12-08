@@ -57,3 +57,7 @@ class ErroValidacaoFormulario(Exception):
         super().__init__(
             f"Erro de validação em '{template_path}': {len(validation_error.errors())} erro(s)"
         )
+
+
+# Alias em inglês para compatibilidade
+FormValidationError = ErroValidacaoFormulario

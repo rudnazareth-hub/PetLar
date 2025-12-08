@@ -1,7 +1,7 @@
 from typing import Optional
 from model.categoria_model import Categoria
 from sql.categoria_sql import *
-from util.db_util import get_connection
+from util.db_util import obter_conexao
 
 
 def _row_to_categoria(row) -> Categoria:
@@ -17,7 +17,7 @@ def _row_to_categoria(row) -> Categoria:
 
 def criar_tabela():
     """Cria a tabela de categorias no banco de dados."""
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
 
@@ -32,7 +32,7 @@ def inserir(categoria: Categoria) -> Optional[int]:
     Returns:
         ID da categoria inserida ou None em caso de erro
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(
             INSERIR,
@@ -51,7 +51,7 @@ def obter_todos() -> list[Categoria]:
     Returns:
         Lista de objetos Categoria
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_TODOS)
         rows = cursor.fetchall()
@@ -68,7 +68,7 @@ def obter_por_id(id: int) -> Optional[Categoria]:
     Returns:
         Objeto Categoria ou None se não encontrado
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_ID, (id,))
         row = cursor.fetchone()
@@ -85,7 +85,7 @@ def obter_por_nome(nome: str) -> Optional[Categoria]:
     Returns:
         Objeto Categoria ou None se não encontrado
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_NOME, (nome,))
         row = cursor.fetchone()
@@ -102,7 +102,7 @@ def atualizar(categoria: Categoria) -> bool:
     Returns:
         True se a atualização foi bem-sucedida, False caso contrário
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(
             ATUALIZAR,
@@ -125,7 +125,7 @@ def excluir(id: int) -> bool:
     Returns:
         True se a exclusão foi bem-sucedida, False caso contrário
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(EXCLUIR, (id,))
         return cursor.rowcount > 0
@@ -138,7 +138,7 @@ def contar() -> int:
     Returns:
         Número total de categorias
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CONTAR)
         row = cursor.fetchone()
@@ -155,7 +155,7 @@ def buscar_por_termo(termo: str) -> list[Categoria]:
     Returns:
         Lista de objetos Categoria que correspondem ao termo
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         termo_like = f"%{termo}%"
         cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like))

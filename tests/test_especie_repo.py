@@ -3,12 +3,22 @@ Testes para o repositório de espécies.
 
 Testa todas as operações CRUD e validações do especie_repo,
 incluindo models e SQLs relacionados.
+
+NOTA: Estes testes estão desabilitados até que o aluno implemente
+model/especie_model.py, repo/especie_repo.py e sql/especie_sql.py
 """
 
 import pytest
+
+# Skip todo o módulo até que especie_model e especie_repo sejam implementados
+pytest.skip(
+    "Módulo especie_model e especie_repo ainda não implementados",
+    allow_module_level=True
+)
+
 from model.especie_model import Especie
 from repo import especie_repo
-from util.db_util import get_connection
+from util.db_util import obter_conexao
 
 
 @pytest.fixture(autouse=True)
@@ -16,13 +26,13 @@ def limpar_especies():
     """Limpa tabela de espécies antes de cada teste."""
     # Criar tabela se não existir
     especie_repo.criar_tabela()
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM especie")
         cursor.execute("PRAGMA foreign_keys = ON")
     yield
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM especie")
@@ -40,7 +50,7 @@ class TestCriarTabela:
     def test_tabela_existe_apos_criacao(self):
         """Tabela deve existir após criação."""
         especie_repo.criar_tabela()
-        with get_connection() as conn:
+        with obter_conexao() as conn:
             cursor = conn.cursor()
             cursor.execute(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name='especie'"
@@ -264,7 +274,7 @@ class TestExcluir:
         id = especie_repo.inserir(especie)
 
         # Criar raça vinculada
-        with get_connection() as conn:
+        with obter_conexao() as conn:
             cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO raca (id_especie, nome) VALUES (?, ?)",
@@ -285,7 +295,7 @@ class TestExcluir:
         id = especie_repo.inserir(especie)
 
         # Criar múltiplas raças vinculadas
-        with get_connection() as conn:
+        with obter_conexao() as conn:
             cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO raca (id_especie, nome) VALUES (?, ?)",

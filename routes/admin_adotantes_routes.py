@@ -124,7 +124,7 @@ async def post_editar(
         )
 
 router = APIRouter(prefix="/admin/adotantes")
-templates = criar_templates("templates/admin/adotantes")
+templates = criar_templates()
 
 @router.get("/")
 @requer_autenticacao([Perfil.ADMIN.value])

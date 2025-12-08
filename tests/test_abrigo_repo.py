@@ -9,7 +9,7 @@ import pytest
 from model.abrigo_model import Abrigo
 from repo import abrigo_repo, usuario_repo
 from model.usuario_model import Usuario
-from util.db_util import get_connection
+from util.db_util import obter_conexao
 
 
 @pytest.fixture(autouse=True)
@@ -18,7 +18,7 @@ def limpar_abrigos():
     # Criar tabelas se não existirem
     usuario_repo.criar_tabela()
     abrigo_repo.criar_tabela()
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         # Desabilitar foreign keys temporariamente para limpeza
         cursor.execute("PRAGMA foreign_keys = OFF")
@@ -26,7 +26,7 @@ def limpar_abrigos():
         cursor.execute("DELETE FROM usuario")
         cursor.execute("PRAGMA foreign_keys = ON")
     yield
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM abrigo")
@@ -73,7 +73,7 @@ class TestCriarTabela:
     def test_tabela_existe_apos_criacao(self):
         """Tabela deve existir após criação."""
         abrigo_repo.criar_tabela()
-        with get_connection() as conn:
+        with obter_conexao() as conn:
             cursor = conn.cursor()
             cursor.execute(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name='abrigo'"

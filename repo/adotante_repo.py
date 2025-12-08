@@ -3,7 +3,7 @@
 from typing import List, Optional
 from model.adotante_model import Adotante
 from sql.adotante_sql import *
-from util.db_util import get_connection
+from util.db_util import obter_conexao
 
 
 def _row_to_adotante(row) -> Adotante:
@@ -20,7 +20,7 @@ def _row_to_adotante(row) -> Adotante:
 
 def criar_tabela() -> bool:
     """Cria a tabela adotante se não existir."""
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
         return True
@@ -36,7 +36,7 @@ def inserir(adotante: Adotante) -> int:
     Returns:
         ID do adotante inserido
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(INSERIR, (
             adotante.id_adotante,
@@ -57,7 +57,7 @@ def obter_por_id(id_adotante: int) -> Optional[Adotante]:
     Returns:
         Objeto Adotante ou None se não encontrado
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_ID, (id_adotante,))
         row = cursor.fetchone()
@@ -74,7 +74,7 @@ def atualizar(adotante: Adotante) -> bool:
     Returns:
         True se atualização foi bem-sucedida, False caso contrário
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(ATUALIZAR, (
             adotante.renda_media,
@@ -95,7 +95,7 @@ def excluir(id_adotante: int) -> bool:
     Returns:
         True se exclusão foi bem-sucedida, False caso contrário
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(EXCLUIR, (id_adotante,))
         return cursor.rowcount > 0
@@ -108,7 +108,7 @@ def obter_todos() -> List[Adotante]:
     Returns:
         Lista de objetos Adotante
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_TODOS)
         return [_row_to_adotante(row) for row in cursor.fetchall()]
@@ -121,7 +121,7 @@ def contar() -> int:
     Returns:
         Número total de adotantes
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CONTAR)
         return cursor.fetchone()[0]
@@ -137,7 +137,7 @@ def buscar_por_termo(termo: str) -> List[Adotante]:
     Returns:
         Lista de objetos Adotante que correspondem ao termo
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         termo_like = f"%{termo}%"
         cursor.execute(BUSCAR_POR_TERMO, (termo_like,))

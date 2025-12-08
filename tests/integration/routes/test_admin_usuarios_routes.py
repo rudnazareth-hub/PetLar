@@ -85,12 +85,12 @@ class TestCadastrarUsuario:
         assert usuario is not None
         assert usuario.perfil == Perfil.ADMIN.value
 
-    def test_cadastrar_usuario_com_perfil_vendedor(self, admin_autenticado):
-        """Admin deve poder cadastrar vendedor"""
+    def test_cadastrar_usuario_com_perfil_abrigo(self, admin_autenticado):
+        """Admin deve poder cadastrar abrigo"""
         response = admin_autenticado.post("/admin/usuarios/cadastrar", data={
-            "nome": "Novo Vendedor",
-            "email": "novovendedor@example.com",
-            "senha": "SenhaVendedor@123",
+            "nome": "Novo Abrigo",
+            "email": "novoabrigo@example.com",
+            "senha": "SenhaAbrigo@123",
             "perfil": Perfil.ABRIGO.value
         }, follow_redirects=False)
 
@@ -98,7 +98,7 @@ class TestCadastrarUsuario:
 
         # Verificar perfil
         from repo import usuario_repo
-        usuario = usuario_repo.obter_por_email("novovendedor@example.com")
+        usuario = usuario_repo.obter_por_email("novoabrigo@example.com")
         assert usuario is not None
         assert usuario.perfil == Perfil.ABRIGO.value
 
@@ -315,7 +315,7 @@ class TestAdminUsuariosRateLimiting:
                 "nome": "Teste Rate Limit",
                 "email": "ratelimit@example.com",
                 "senha": "Senha@123",
-                "perfil": Perfil.CLIENTE.value
+                "perfil": Perfil.ADOTANTE.value
             }, follow_redirects=False)
 
             assert_redirects_to(response, "/admin/usuarios/listar")
@@ -331,7 +331,7 @@ class TestAdminUsuariosRateLimiting:
             response = admin_autenticado.post(f"/admin/usuarios/editar/{usuario.id}", data={
                 "nome": "Nome Editado",
                 "email": "editar_rate@example.com",
-                "perfil": Perfil.CLIENTE.value
+                "perfil": Perfil.ADOTANTE.value
             }, follow_redirects=False)
 
             assert_redirects_to(response, "/admin/usuarios/listar")

@@ -17,7 +17,7 @@ from repo import raca_repo
 
 # Configuração do router e templates
 router = APIRouter(prefix="/admin/racas")
-templates = criar_templates("templates/admin/racas")
+templates = criar_templates()
 
 # Rate limiter para operações admin
 admin_racas_limiter = RateLimiter(

@@ -3,12 +3,12 @@
 from typing import List, Optional
 from model.solicitacao_model import Solicitacao
 from sql.solicitacao_sql import *
-from util.db_util import get_connection
+from util.db_util import obter_conexao
 
 
 def criar_tabela() -> bool:
     """Cria a tabela solicitacao se não existir."""
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
         return True
@@ -24,7 +24,7 @@ def inserir(solicitacao: Solicitacao) -> int:
     Returns:
         ID da solicitação criada
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(INSERIR, (
             solicitacao.id_adotante,
@@ -44,7 +44,7 @@ def obter_por_adotante(id_adotante: int) -> List[dict]:
     Returns:
         Lista de dicionários com dados das solicitações
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_ADOTANTE, (id_adotante,))
         return [dict(row) for row in cursor.fetchall()]
@@ -60,7 +60,7 @@ def obter_por_abrigo(id_abrigo: int) -> List[dict]:
     Returns:
         Lista de dicionários com dados das solicitações
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_ABRIGO, (id_abrigo,))
         return [dict(row) for row in cursor.fetchall()]
@@ -78,7 +78,7 @@ def atualizar_status(id_solicitacao: int, status: str, resposta: str) -> bool:
     Returns:
         True se atualização foi bem-sucedida, False caso contrário
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(ATUALIZAR_STATUS, (status, resposta, id_solicitacao))
         return cursor.rowcount > 0
@@ -90,7 +90,7 @@ def obter_todos() -> List[dict]:
     Returns:
         Lista de dicionários com dados das solicitações
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_TODOS)
         return [dict(row) for row in cursor.fetchall()]
@@ -105,7 +105,7 @@ def obter_por_id(id_solicitacao: int) -> Optional[dict]:
     Returns:
         Dicionário com dados da solicitação ou None se não encontrada
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_ID, (id_solicitacao,))
         row = cursor.fetchone()
@@ -121,7 +121,7 @@ def excluir(id_solicitacao: int) -> bool:
     Returns:
         True se exclusão foi bem-sucedida, False caso contrário
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(EXCLUIR, (id_solicitacao,))
         return cursor.rowcount > 0
@@ -134,7 +134,7 @@ def contar() -> int:
     Returns:
         Número total de solicitações
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CONTAR)
         return cursor.fetchone()[0]
@@ -150,7 +150,7 @@ def buscar_por_termo(termo: str) -> List[dict]:
     Returns:
         Lista de dicionários com dados das solicitações que correspondem ao termo
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         termo_like = f"%{termo}%"
         cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like, termo_like))

@@ -3,7 +3,7 @@
 from typing import List, Optional
 from model.abrigo_model import Abrigo
 from sql.abrigo_sql import *
-from util.db_util import get_connection
+from util.db_util import obter_conexao
 
 
 def _row_to_abrigo(row) -> Abrigo:
@@ -21,7 +21,7 @@ def _row_to_abrigo(row) -> Abrigo:
 
 def criar_tabela() -> bool:
     """Cria a tabela abrigo se não existir."""
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
         return True
@@ -37,7 +37,7 @@ def inserir(abrigo: Abrigo) -> int:
     Returns:
         ID do abrigo inserido
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(INSERIR, (
             abrigo.id_abrigo,
@@ -59,7 +59,7 @@ def obter_por_id(id_abrigo: int) -> Optional[Abrigo]:
     Returns:
         Objeto Abrigo ou None se não encontrado
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_POR_ID, (id_abrigo,))
         row = cursor.fetchone()
@@ -73,7 +73,7 @@ def obter_todos() -> List[Abrigo]:
     Returns:
         Lista de objetos Abrigo
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(OBTER_TODOS)
         return [_row_to_abrigo(row) for row in cursor.fetchall()]
@@ -89,7 +89,7 @@ def atualizar(abrigo: Abrigo) -> bool:
     Returns:
         True se atualização foi bem-sucedida, False caso contrário
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(ATUALIZAR, (
             abrigo.responsavel,
@@ -111,7 +111,7 @@ def excluir(id_abrigo: int) -> bool:
     Returns:
         True se exclusão foi bem-sucedida, False caso contrário
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(EXCLUIR, (id_abrigo,))
         return cursor.rowcount > 0
@@ -124,7 +124,7 @@ def contar() -> int:
     Returns:
         Número total de abrigos
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CONTAR)
         return cursor.fetchone()[0]
@@ -140,7 +140,7 @@ def buscar_por_termo(termo: str) -> List[Abrigo]:
     Returns:
         Lista de objetos Abrigo que correspondem ao termo
     """
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         termo_like = f"%{termo}%"
         cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like))

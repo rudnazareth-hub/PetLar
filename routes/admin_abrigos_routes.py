@@ -8,7 +8,7 @@ from util.perfis import Perfil
 from repo import abrigo_repo, usuario_repo
 
 router = APIRouter(prefix="/admin/abrigos")
-templates = criar_templates("templates/admin/abrigos")
+templates = criar_templates()
 
 @router.get("/")
 @requer_autenticacao([Perfil.ADMIN.value])

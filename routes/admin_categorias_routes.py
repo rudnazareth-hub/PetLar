@@ -15,7 +15,7 @@ from util.exceptions import FormValidationError
 from util.rate_limiter import RateLimiter, obter_identificador_cliente
 
 router = APIRouter(prefix="/admin/categorias")
-templates = criar_templates("templates/admin/categorias")
+templates = criar_templates()
 
 # Rate limiter para operações admin
 admin_categorias_limiter = RateLimiter(

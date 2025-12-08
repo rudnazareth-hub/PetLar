@@ -15,7 +15,7 @@ from model.animal_model import Animal
 
 
 router = APIRouter(prefix="/admin/animais")
-templates = criar_templates("templates/admin/animais")
+templates = criar_templates()
 
 @router.get("/cadastrar")
 @requer_autenticacao([Perfil.ADMIN.value])

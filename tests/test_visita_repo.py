@@ -12,7 +12,7 @@ from model.usuario_model import Usuario
 from model.abrigo_model import Abrigo
 from model.adotante_model import Adotante
 from repo import visita_repo, usuario_repo, abrigo_repo, adotante_repo
-from util.db_util import get_connection
+from util.db_util import obter_conexao
 
 
 @pytest.fixture(autouse=True)
@@ -23,7 +23,7 @@ def limpar_dados():
     abrigo_repo.criar_tabela()
     adotante_repo.criar_tabela()
     visita_repo.criar_tabela()
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM visita")
@@ -32,7 +32,7 @@ def limpar_dados():
         cursor.execute("DELETE FROM usuario")
         cursor.execute("PRAGMA foreign_keys = ON")
     yield
-    with get_connection() as conn:
+    with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute("PRAGMA foreign_keys = OFF")
         cursor.execute("DELETE FROM visita")
