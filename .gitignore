@@ -73,6 +73,7 @@ codebase.md
 .aidigestignore
 codebase*
 prompt*
+.mcp.json
 
 # Imagens
 static/img/usuarios/*
@@ -80,3 +81,6 @@ backups/
 
 # Tema
 static/css/bootstrap.min.css
+
+# Documentos
+docs/

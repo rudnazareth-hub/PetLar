@@ -1,8 +1,7 @@
 """DTOs - Data Transfer Objects para validação de dados"""
 
 from .auth_dto import LoginDTO, CadastroDTO, EsqueciSenhaDTO, RedefinirSenhaDTO
-from .usuario_dto import UsuarioCadastroDTO as CriarUsuarioDTO, AlterarUsuarioDTO
-from .tarefa_dto import CriarTarefaDTO, AlterarTarefaDTO
+from .usuario_dto import CriarUsuarioDTO, AlterarUsuarioDTO
 from .perfil_dto import EditarPerfilDTO, AlterarSenhaDTO
 from .categoria_dto import CriarCategoriaDTO, AlterarCategoriaDTO
 
@@ -13,8 +12,6 @@ __all__ = [
     "RedefinirSenhaDTO",
     "CriarUsuarioDTO",
     "AlterarUsuarioDTO",
-    "CriarTarefaDTO",
-    "AlterarTarefaDTO",
     "EditarPerfilDTO",
     "AlterarSenhaDTO",
     "CriarCategoriaDTO",
