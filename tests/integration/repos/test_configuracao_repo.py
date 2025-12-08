@@ -25,9 +25,11 @@ class TestRowToConfiguracao:
             "id": 1,
             "chave": "teste_chave",
             "valor": "teste_valor",
-            "descricao": "Descrição de teste"
+            "descricao": "Descrição de teste",
+            "data_cadastro": "2024-01-01 10:00:00",
+            "data_atualizacao": "2024-01-02 15:30:00"
         }[k]
-        row.keys = lambda: ["id", "chave", "valor", "descricao"]
+        row.keys = lambda: ["id", "chave", "valor", "descricao", "data_cadastro", "data_atualizacao"]
 
         config = configuracao_repo._row_to_configuracao(row)
 
@@ -35,6 +37,8 @@ class TestRowToConfiguracao:
         assert config.chave == "teste_chave"
         assert config.valor == "teste_valor"
         assert config.descricao == "Descrição de teste"
+        assert config.data_cadastro == "2024-01-01 10:00:00"
+        assert config.data_atualizacao == "2024-01-02 15:30:00"
 
     def test_conversao_sem_descricao(self):
         """Deve converter Row sem campo descricao"""
@@ -42,9 +46,11 @@ class TestRowToConfiguracao:
         row.__getitem__ = lambda s, k: {
             "id": 2,
             "chave": "outra_chave",
-            "valor": "outro_valor"
+            "valor": "outro_valor",
+            "data_cadastro": "2024-01-01 10:00:00",
+            "data_atualizacao": "2024-01-02 15:30:00"
         }[k]
-        row.keys = lambda: ["id", "chave", "valor"]
+        row.keys = lambda: ["id", "chave", "valor", "data_cadastro", "data_atualizacao"]
 
         config = configuracao_repo._row_to_configuracao(row)
 
@@ -565,7 +571,9 @@ def configuracao_db(tmp_path):
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     chave TEXT UNIQUE NOT NULL,
                     valor TEXT NOT NULL,
-                    descricao TEXT
+                    descricao TEXT,
+                    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
             conn.commit()
