@@ -34,6 +34,7 @@ from repo import chat_sala_repo, chat_participante_repo, chat_mensagem_repo
 from repo import categoria_repo
 from repo import raca_repo, abrigo_repo, adotante_repo, animal_repo, endereco_repo
 from repo import solicitacao_repo, adocao_repo, visita_repo
+from repo import especie_repo
 
 # Rotas
 from routes.auth_routes import router as auth_router
@@ -50,6 +51,7 @@ from routes.examples_routes import router as examples_router
 from routes.admin_racas_routes import router as admin_racas_router
 from routes.admin_abrigos_routes import router as admin_abrigos_router
 from routes.admin_animais_routes import router as admin_animais_router
+from routes.admin_especies_routes import router as admin_especies_router
 
 # Seeds
 from util.seed_data import inicializar_dados
@@ -100,6 +102,9 @@ try:
 
     categoria_repo.criar_tabela()
     logger.info("Tabela 'categoria' criada/verificada")
+
+    especie_repo.criar_tabela()
+    logger.info("Tabela 'especie' criada/verificada")
 
     # Tabelas específicas do PetLar
     raca_repo.criar_tabela()
@@ -163,6 +168,8 @@ ROUTERS = [
     (admin_racas_router, ["Admin - Raças"], "admin de raças"),
     (admin_abrigos_router, ["Admin - Abrigos"], "admin de abrigos"),
     (admin_animais_router, ["Admin - Animais"], "admin de animais"),
+    (admin_especies_router, ["Admin - Espécies"], "admin de espécies"),
+    (admin_categorias_router, ["Admin - Categorias"], "admin de categorias"),
     (public_router, ["Público"], "público"),
     (examples_router, ["Exemplos"], "exemplos"),
 ]

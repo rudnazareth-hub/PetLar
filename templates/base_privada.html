@@ -65,6 +65,10 @@
                             href="/admin/categorias/listar">Categorias</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {{ 'active' if '/admin/especies/' in request.path else '' }}"
+                            href="/admin/especies/listar">Espécies</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {{ 'active' if '/admin/configuracoes' in request.path else '' }}"
                             href="/admin/configuracoes"
                             {{ 'aria-current=page' if '/admin/configuracoes' in request.path else '' }}>Configurações</a>
