@@ -1,73 +1,112 @@
 {% extends "base_privada.html" %}
+{% from 'macros/action_buttons.html' import btn_icon %}
+{% from 'macros/empty_states.html' import empty_state %}
 
 {% block titulo %}Backups do Sistema{% endblock %}
 
-{% block conteudo %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1>Gerenciamento de Backups</h1>
-                <form method="post" action="/admin/backups/criar">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-download"></i> Criar Novo Backup
-                    </button>
-                </form>
-            </div>
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-cloud-arrow-down"></i> Gerenciamento de Backups</h2>
+            <form method="post" action="/admin/backups/criar">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Criar Novo Backup
+                </button>
+            </form>
+        </div>
 
-            {% if backups %}
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Nome do Arquivo</th>
-                            <th>Data/Hora</th>
-                            <th>Tamanho</th>
-                            <th class="text-end">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for backup in backups %}
-                        <tr>
-                            <td>{{ backup.nome }}</td>
-                            <td>{{ backup.data_criacao }}</td>
-                            <td>{{ backup.tamanho }}</td>
-                            <td class="text-end">
-                                <div class="btn-group" role="group">
-                                    <a href="/admin/backups/download/{{ backup.nome }}"
-                                       class="btn btn-sm btn-info">
-                                        <i class="bi bi-download"></i> Download
-                                    </a>
-                                    <form method="post"
-                                          action="/admin/backups/restaurar/{{ backup.nome }}"
-                                          class="d-inline"
-                                          onsubmit="return confirm('Tem certeza que deseja restaurar este backup? Os dados atuais serão substituídos.');">
-                                        <button type="submit" class="btn btn-sm btn-warning">
-                                            <i class="bi bi-arrow-counterclockwise"></i> Restaurar
-                                        </button>
-                                    </form>
-                                    <form method="post"
-                                          action="/admin/backups/excluir/{{ backup.nome }}"
-                                          class="d-inline"
-                                          onsubmit="return confirm('Tem certeza que deseja excluir este backup?');">
-                                        <button type="submit" class="btn btn-sm btn-danger">
-                                            <i class="bi bi-trash"></i> Excluir
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if backups %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Nome do Arquivo</th>
+                                <th scope="col">Data/Hora</th>
+                                <th scope="col">Tamanho</th>
+                                <th scope="col" class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for backup in backups %}
+                            <tr>
+                                <td>{{ backup.nome }}</td>
+                                <td>{{ backup.data_criacao }}</td>
+                                <td>{{ backup.tamanho }}</td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        {{ btn_icon(
+                                            '/admin/backups/download/' ~ backup.nome,
+                                            'download',
+                                            'info',
+                                            'Download',
+                                            'Download do backup ' ~ backup.nome
+                                        ) }}
+                                        {{ btn_icon(
+                                            '#',
+                                            'arrow-counterclockwise',
+                                            'warning',
+                                            'Restaurar',
+                                            'Restaurar backup ' ~ backup.nome,
+                                            onclick="restaurarBackup('" ~ backup.nome ~ "')"
+                                        ) }}
+                                        {{ btn_icon(
+                                            '#',
+                                            'trash',
+                                            'danger',
+                                            'Excluir',
+                                            'Excluir backup ' ~ backup.nome,
+                                            onclick="excluirBackup('" ~ backup.nome ~ "')"
+                                        ) }}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3">
+                    <small class="text-muted">
+                        Total: {{ backups|length }} backup(s)
+                    </small>
+                </div>
+                {% else %}
+                {{ empty_state(
+                    'Nenhum backup encontrado',
+                    'Clique em "Criar Novo Backup" para fazer o primeiro backup do sistema.',
+                    icon='cloud-arrow-down',
+                    variant='info'
+                ) }}
+                {% endif %}
             </div>
-            {% else %}
-            <div class="alert alert-info">
-                <i class="bi bi-info-circle"></i> Nenhum backup encontrado.
-                Clique em "Criar Novo Backup" para fazer o primeiro backup do sistema.
-            </div>
-            {% endif %}
         </div>
     </div>
 </div>
+
+<!-- Forms ocultos para ações POST -->
+<form id="form-restaurar" method="post" action="" style="display: none;"></form>
+<form id="form-excluir" method="post" action="" style="display: none;"></form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function restaurarBackup(nomeArquivo) {
+        if (confirm('Tem certeza que deseja restaurar este backup? Os dados atuais serão substituídos.')) {
+            const form = document.getElementById('form-restaurar');
+            form.action = '/admin/backups/restaurar/' + encodeURIComponent(nomeArquivo);
+            form.submit();
+        }
+    }
+
+    function excluirBackup(nomeArquivo) {
+        if (confirm('Tem certeza que deseja excluir este backup?')) {
+            const form = document.getElementById('form-excluir');
+            form.action = '/admin/backups/excluir/' + encodeURIComponent(nomeArquivo);
+            form.submit();
+        }
+    }
+</script>
 {% endblock %}
