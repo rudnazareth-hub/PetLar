@@ -43,7 +43,8 @@ async def listar(request: Request, usuario_logado: Optional[dict] = None):
         {
             "request": request,
             "categorias": categorias,
-            "total": total
+            "total": total,
+            "usuario_logado": usuario_logado
         }
     )
 
@@ -54,7 +55,7 @@ async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None)
     """Exibe formulário de cadastro de categoria"""
     return templates.TemplateResponse(
         "admin/categorias/cadastro.html",
-        {"request": request}
+        {"request": request, "usuario_logado": usuario_logado}
     )
 
 
@@ -93,7 +94,8 @@ async def post_cadastrar(
                 "admin/categorias/cadastro.html",
                 {
                     "request": request,
-                    "dados": dados_formulario
+                    "dados": dados_formulario,
+                    "usuario_logado": usuario_logado
                 }
             )
 
@@ -137,7 +139,8 @@ async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] =
         {
             "request": request,
             "categoria": categoria,
-            "dados": dados_categoria
+            "dados": dados_categoria,
+            "usuario_logado": usuario_logado
         }
     )
 
@@ -186,7 +189,8 @@ async def post_editar(
                 {
                     "request": request,
                     "categoria": categoria_atual,
-                    "dados": dados_formulario
+                    "dados": dados_formulario,
+                    "usuario_logado": usuario_logado
                 }
             )
 

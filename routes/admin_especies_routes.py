@@ -43,7 +43,7 @@ async def listar(request: Request, usuario_logado: Optional[dict] = None):
     total = especie_repo.contar()
     return templates.TemplateResponse(
         "admin/especies/listar.html",
-        {"request": request, "especies": especies, "total": total},
+        {"request": request, "especies": especies, "total": total, "usuario_logado": usuario_logado},
     )
 
 
@@ -52,7 +52,7 @@ async def listar(request: Request, usuario_logado: Optional[dict] = None):
 async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None):
     """Exibe formulário de cadastro de espécie"""
     return templates.TemplateResponse(
-        "admin/especies/cadastro.html", {"request": request}
+        "admin/especies/cadastro.html", {"request": request, "usuario_logado": usuario_logado}
     )
 
 
@@ -90,7 +90,7 @@ async def post_cadastrar(
             informar_erro(request, f"Já existe uma espécie com o nome '{dto.nome}'.")
             return templates.TemplateResponse(
                 "admin/especies/cadastro.html",
-                {"request": request, "dados": dados_formulario},
+                {"request": request, "dados": dados_formulario, "usuario_logado": usuario_logado},
             )
 
         # Criar espécie
@@ -132,7 +132,7 @@ async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] =
 
     return templates.TemplateResponse(
         "admin/especies/editar.html",
-        {"request": request, "especie": especie, "dados": dados_especie},
+        {"request": request, "especie": especie, "dados": dados_especie, "usuario_logado": usuario_logado},
     )
 
 
@@ -185,6 +185,7 @@ async def post_editar(
                     "request": request,
                     "especie": especie_atual,
                     "dados": dados_formulario,
+                    "usuario_logado": usuario_logado,
                 },
             )
 
