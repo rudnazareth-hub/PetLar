@@ -1,0 +1,94 @@
+{% extends "base_privada.html" %}
+
+{% block titulo %}Meu Endereco{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Meu Endereco</h2>
+            <a href="/usuario/perfil" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar ao Perfil
+            </a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{{ endereco.titulo }}</h5>
+                    <div class="btn-group btn-group-sm">
+                        <a href="/usuario/endereco/editar" class="btn btn-primary" title="Editar">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <button type="button" class="btn btn-outline-danger" title="Excluir"
+                            onclick="excluirEndereco()">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <strong>Logradouro:</strong><br>
+                        {{ endereco.logradouro }}{% if endereco.numero %}, {{ endereco.numero }}{% else %}, S/N{% endif %}
+                        {% if endereco.complemento %} - {{ endereco.complemento }}{% endif %}
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <strong>CEP:</strong><br>
+                        {{ endereco.cep }}
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <strong>Bairro:</strong><br>
+                        {{ endereco.bairro }}
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <strong>Cidade:</strong><br>
+                        {{ endereco.cidade }}
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <strong>UF:</strong><br>
+                        {{ endereco.uf }}
+                    </div>
+                </div>
+
+                {% if endereco.data_cadastro or endereco.data_atualizacao %}
+                <hr>
+                <small class="text-muted">
+                    {% if endereco.data_cadastro %}
+                    <i class="bi bi-calendar-plus"></i> Cadastrado em: <strong>{{ endereco.data_cadastro|data_hora_br }}</strong>
+                    {% endif %}
+                    {% if endereco.data_atualizacao and endereco.data_atualizacao != endereco.data_cadastro %}
+                    | <i class="bi bi-calendar-check"></i> Atualizado em: <strong>{{ endereco.data_atualizacao|data_hora_br }}</strong>
+                    {% endif %}
+                </small>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function excluirEndereco() {
+        const detalhes = `
+        <div class="card bg-light">
+            <div class="card-body">
+                <p class="mb-0"><strong>Endereco:</strong> {{ endereco.titulo }}</p>
+                <p class="text-warning mt-2 mb-0">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <small>Esta acao nao pode ser desfeita.</small>
+                </p>
+            </div>
+        </div>
+        `;
+
+        abrirModalConfirmacao({
+            url: '/usuario/endereco/excluir',
+            mensagem: 'Tem certeza que deseja excluir seu endereco?',
+            detalhes: detalhes
+        });
+    }
+</script>
+{% endblock %}

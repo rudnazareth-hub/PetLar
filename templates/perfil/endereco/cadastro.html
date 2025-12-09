@@ -1,0 +1,117 @@
+{% extends "base_privada.html" %}
+{% from "macros/form_fields.html" import field with context %}
+
+{% block titulo %}Cadastrar Endereco{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <h2 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Cadastrar Endereco</h2>
+        </div>
+
+        <div class="card shadow-sm">
+            <form method="POST" action="/usuario/endereco/cadastrar">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-12">
+                            {% include "components/alerta_erro.html" %}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='titulo', label='Titulo', type='text', required=true,
+                            help_text='Ex: Casa, Trabalho, etc.') }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='cep', label='CEP', type='text', required=true,
+                            help_text='Formato: 00000-000', maxlength=9, inputmode='numeric') }}
+                        </div>
+
+                        <div class="col-md-8 mb-3">
+                            {{ field(name='logradouro', label='Logradouro', type='text', required=true,
+                            help_text='Rua, Avenida, etc.') }}
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            {{ field(name='numero', label='Numero', type='text',
+                            help_text='Deixe vazio para S/N') }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='complemento', label='Complemento', type='text',
+                            help_text='Apto, Bloco, etc. (opcional)') }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ field(name='bairro', label='Bairro', type='text', required=true) }}
+                        </div>
+
+                        <div class="col-md-8 mb-3">
+                            {{ field(name='cidade', label='Cidade', type='text', required=true) }}
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            {% set uf_opcoes = [
+                                {'value': '', 'label': 'Selecione...'},
+                                {'value': 'AC', 'label': 'AC'},
+                                {'value': 'AL', 'label': 'AL'},
+                                {'value': 'AP', 'label': 'AP'},
+                                {'value': 'AM', 'label': 'AM'},
+                                {'value': 'BA', 'label': 'BA'},
+                                {'value': 'CE', 'label': 'CE'},
+                                {'value': 'DF', 'label': 'DF'},
+                                {'value': 'ES', 'label': 'ES'},
+                                {'value': 'GO', 'label': 'GO'},
+                                {'value': 'MA', 'label': 'MA'},
+                                {'value': 'MT', 'label': 'MT'},
+                                {'value': 'MS', 'label': 'MS'},
+                                {'value': 'MG', 'label': 'MG'},
+                                {'value': 'PA', 'label': 'PA'},
+                                {'value': 'PB', 'label': 'PB'},
+                                {'value': 'PR', 'label': 'PR'},
+                                {'value': 'PE', 'label': 'PE'},
+                                {'value': 'PI', 'label': 'PI'},
+                                {'value': 'RJ', 'label': 'RJ'},
+                                {'value': 'RN', 'label': 'RN'},
+                                {'value': 'RS', 'label': 'RS'},
+                                {'value': 'RO', 'label': 'RO'},
+                                {'value': 'RR', 'label': 'RR'},
+                                {'value': 'SC', 'label': 'SC'},
+                                {'value': 'SP', 'label': 'SP'},
+                                {'value': 'SE', 'label': 'SE'},
+                                {'value': 'TO', 'label': 'TO'}
+                            ] %}
+                            {{ field(name='uf', label='UF', type='select', required=true,
+                            options=uf_opcoes) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer p-4">
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Cadastrar
+                        </button>
+                        <a href="/usuario/perfil" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Mascara para CEP
+    document.getElementById('cep').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 5) {
+            value = value.substring(0, 5) + '-' + value.substring(5, 8);
+        }
+        e.target.value = value;
+    });
+</script>
+{% endblock %}

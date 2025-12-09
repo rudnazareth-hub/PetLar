@@ -43,12 +43,14 @@
                             href="/">Início</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if request.path == '/sobre' else '' }}"
-                            href="/sobre">Sobre</a>
+                        <a class="nav-link {{ 'active' if '/animais' in request.path else '' }}"
+                            href="/animais">
+                            <i class="bi bi-heart-fill text-danger"></i> Animais
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if '/exemplos' in request.path else '' }}"
-                            href="/exemplos">Exemplos</a>
+                        <a class="nav-link {{ 'active' if request.path == '/sobre' else '' }}"
+                            href="/sobre">Sobre</a>
                     </li>
                 </ul>
 

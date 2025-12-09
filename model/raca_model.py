@@ -1,8 +1,9 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
-# from model.especie_model import Especie  # REMOVIDO: O aluno deverá criar este modelo
+if TYPE_CHECKING:
+    from model.especie_model import Especie
 
 
 @dataclass
@@ -17,9 +18,9 @@ class Raca:
     data_cadastro: Optional[datetime] = None
     data_atualizacao: Optional[datetime] = None
     # relacionamentos
-    # especie: Optional[Especie] = None  # REMOVIDO: O aluno deverá criar o modelo Especie
+    especie: Optional["Especie"] = field(default=None, repr=False)
 
     # Propriedade para manter compatibilidade com código existente
     @property
     def id_raca(self) -> int:
-        return self.id  
+        return self.id

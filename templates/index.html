@@ -9,105 +9,141 @@
         <div class="row align-items-center">
             <div class="col-lg-6">
                 <h1 class="display-4 fw-bold mb-4">
-                    Bem-vindo ao {{ APP_NAME }}
+                    <i class="bi bi-heart-fill text-danger"></i> Adote um Amigo
                 </h1>
                 <p class="lead mb-4">
-                    Uma plataforma completa e moderna para gerenciar suas atividades de forma simples e eficiente.
+                    O {{ APP_NAME }} conecta animais abandonados a familias amorosas.
+                    Encontre seu novo companheiro e faca a diferenca na vida de um animal.
                 </p>
                 <div class="d-flex gap-3 flex-column flex-sm-row">
-                    <a href="/cadastrar" class="btn btn-light btn-lg">
-                        <i class="bi bi-person-plus"></i> Criar Conta
+                    <a href="/animais" class="btn btn-light btn-lg">
+                        <i class="bi bi-search-heart"></i> Ver Animais
                     </a>
-                    <a href="/login" class="btn btn-outline-light btn-lg">
-                        <i class="bi bi-box-arrow-in-right"></i> Entrar
+                    <a href="/cadastrar" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-person-plus"></i> Cadastre-se
                     </a>
                 </div>
+                {% if total_disponiveis %}
+                <p class="mt-4 mb-0">
+                    <span class="badge bg-success fs-6">
+                        <i class="bi bi-heart"></i> {{ total_disponiveis }} animais aguardando um lar
+                    </span>
+                </p>
+                {% endif %}
             </div>
             <div class="col-lg-6 text-center mt-4 mt-lg-0">
-                <i class="bi bi-laptop fs-hero opacity-25"></i>
+                <i class="bi bi-heart-pulse-fill fs-hero opacity-25"></i>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Recursos Section -->
-<div class="mb-5" id="recursos">
+<!-- Ultimos Animais Cadastrados -->
+{% if ultimos_animais %}
+<div class="mb-5" id="animais">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold"><i class="bi bi-stars text-warning"></i> Conheca Nossos Animais</h2>
+        <p class="text-muted">Os mais recentes disponíveis para adocao</p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for item in ultimos_animais %}
+        <div class="col">
+            <div class="card h-100 shadow-sm animal-card">
+                {% if item.animal.foto %}
+                <img src="{{ item.animal.foto }}" class="card-img-top" alt="{{ item.animal.nome }}"
+                    style="height: 180px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center"
+                    style="height: 180px;">
+                    <i class="bi bi-image text-white" style="font-size: 3rem;"></i>
+                </div>
+                {% endif %}
+                <div class="card-body p-3">
+                    <h6 class="card-title mb-1">{{ item.animal.nome }}</h6>
+                    <p class="card-text text-muted small mb-1">
+                        {% if item.animal.raca %}
+                        {{ item.animal.raca.nome }}
+                        {% if item.animal.raca.especie %}
+                        ({{ item.animal.raca.especie.nome }})
+                        {% endif %}
+                        {% endif %}
+                    </p>
+                    <p class="card-text small">
+                        <i class="bi bi-geo-alt text-muted"></i>
+                        {% if item.abrigo_cidade and item.abrigo_uf %}
+                        {{ item.abrigo_cidade }}/{{ item.abrigo_uf }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-0 pt-0 p-3">
+                    <a href="/animais/{{ item.animal.id }}" class="btn btn-outline-primary btn-sm w-100">
+                        Ver Detalhes
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="/animais" class="btn btn-primary btn-lg">
+            <i class="bi bi-arrow-right-circle"></i> Ver Todos os Animais
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<!-- Como Funciona -->
+<div class="mb-5" id="como-funciona">
     <div class="text-center mb-5">
-        <h2 class="fw-bold">Recursos Principais</h2>
-        <p class="text-muted">Tudo que você precisa em um só lugar</p>
+        <h2 class="fw-bold">Como Funciona a Adocao</h2>
+        <p class="text-muted">Adotar um animal e muito simples</p>
     </div>
 
     <div class="row g-4">
-        <!-- Recurso 1 -->
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm shadow-hover text-center">
+            <div class="card h-100 shadow-sm shadow-hover text-center border-0">
                 <div class="card-body p-4">
-                    <div class="mb-3">
-                        <i class="bi bi-shield-check text-primary display-3"></i>
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                        style="width: 80px; height: 80px;">
+                        <span class="display-5 fw-bold">1</span>
                     </div>
-                    <h5 class="card-title">Segurança</h5>
+                    <h5 class="card-title">Encontre seu Amigo</h5>
                     <p class="card-text text-muted">
-                        Sistema seguro com autenticação robusta e criptografia de dados
+                        Navegue pelos animais disponíveis e encontre aquele que combina com voce
                     </p>
                 </div>
             </div>
         </div>
 
-        <!-- Recurso 2 -->
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm shadow-hover text-center">
+            <div class="card h-100 shadow-sm shadow-hover text-center border-0">
                 <div class="card-body p-4">
-                    <div class="mb-3">
-                        <i class="bi bi-person-circle text-info display-3"></i>
+                    <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                        style="width: 80px; height: 80px;">
+                        <span class="display-5 fw-bold">2</span>
                     </div>
-                    <h5 class="card-title">Perfil Personalizável</h5>
+                    <h5 class="card-title">Reserve Online</h5>
                     <p class="card-text text-muted">
-                        Personalize seu perfil com foto e informações pessoais
+                        Cadastre-se como adotante e reserve o animal escolhido pelo site
                     </p>
                 </div>
             </div>
         </div>
 
-        <!-- Recurso 4 -->
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm shadow-hover text-center">
+            <div class="card h-100 shadow-sm shadow-hover text-center border-0">
                 <div class="card-body p-4">
-                    <div class="mb-3">
-                        <i class="bi bi-speedometer2 text-warning display-3"></i>
+                    <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                        style="width: 80px; height: 80px;">
+                        <span class="display-5 fw-bold">3</span>
                     </div>
-                    <h5 class="card-title">Rápido e Responsivo</h5>
+                    <h5 class="card-title">Visite o Abrigo</h5>
                     <p class="card-text text-muted">
-                        Interface moderna que funciona em qualquer dispositivo
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recurso 5 -->
-        <div class="col-md-4">
-            <div class="card h-100 shadow-sm shadow-hover text-center">
-                <div class="card-body p-4">
-                    <div class="mb-3">
-                        <i class="bi bi-bell text-danger display-3"></i>
-                    </div>
-                    <h5 class="card-title">Notificações</h5>
-                    <p class="card-text text-muted">
-                        Receba alertas e notificações sobre suas atividades
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recurso 6 -->
-        <div class="col-md-4">
-            <div class="card h-100 shadow-sm shadow-hover text-center">
-                <div class="card-body p-4">
-                    <div class="mb-3">
-                        <i class="bi bi-gear text-secondary display-3"></i>
-                    </div>
-                    <h5 class="card-title">Configurável</h5>
-                    <p class="card-text text-muted">
-                        Ajuste o sistema de acordo com suas preferências
+                        Va ate o abrigo, conheca o animal e finalize a adocao presencialmente
                     </p>
                 </div>
             </div>
@@ -115,31 +151,58 @@
     </div>
 </div>
 
-<!-- CTA Section -->
+<!-- Tipos de Usuario -->
 <div class="mb-5">
-    <div class="card bg-primary text-white shadow-lg shadow-hover">
-        <div class="card-body text-center p-5">
-            <h2 class="fw-bold mb-4">Pronto para começar?</h2>
-            <p class="lead mb-4">
-                Crie sua conta gratuitamente e comece a usar agora mesmo!
-            </p>
-            <div class="d-flex justify-content-center gap-3 flex-column flex-sm-row">
-                <a href="/cadastrar" class="btn btn-light btn-lg">
-                    <i class="bi bi-person-plus"></i> Criar Conta Grátis
-                </a>
-                <a href="/login" class="btn btn-outline-light btn-lg">
-                    <i class="bi bi-box-arrow-in-right"></i> Já tenho conta
-                </a>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-person-heart"></i> Quero Adotar</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        Se voce quer dar um lar para um animal, cadastre-se como <strong>Adotante</strong>:
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success"></i> Veja todos os animais disponíveis</li>
+                        <li><i class="bi bi-check-circle text-success"></i> Reserve o animal escolhido</li>
+                        <li><i class="bi bi-check-circle text-success"></i> Acompanhe suas adocoes</li>
+                    </ul>
+                    <a href="/cadastrar?perfil=adotante" class="btn btn-primary">
+                        <i class="bi bi-person-plus"></i> Cadastrar como Adotante
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-house-heart"></i> Tenho um Abrigo</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        Se voce tem um abrigo e quer divulgar animais, cadastre-se como <strong>Abrigo</strong>:
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success"></i> Cadastre animais para adocao</li>
+                        <li><i class="bi bi-check-circle text-success"></i> Gerencie reservas e adocoes</li>
+                        <li><i class="bi bi-check-circle text-success"></i> Alcance mais adotantes</li>
+                    </ul>
+                    <a href="/cadastrar?perfil=abrigo" class="btn btn-success">
+                        <i class="bi bi-house-add"></i> Cadastrar como Abrigo
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- FAQ Section (Opcional) -->
+<!-- FAQ Section -->
 <div class="mb-5">
     <div class="text-center mb-5">
         <h2 class="fw-bold">Perguntas Frequentes</h2>
-        <p class="text-muted">Tire suas dúvidas sobre o sistema</p>
+        <p class="text-muted">Tire suas duvidas sobre a adocao</p>
     </div>
 
     <div class="row">
@@ -149,13 +212,14 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                            Como criar uma conta?
+                            Como funciona o processo de adocao?
                         </button>
                     </h2>
                     <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Basta clicar em "Criar Conta" no menu superior, preencher seus dados e confirmar.
-                            O processo é rápido e gratuito!
+                            E simples! Cadastre-se como adotante, escolha um animal disponível e clique em "Quero Adotar"
+                            para reserva-lo. Depois, va ate o abrigo responsavel para conhecer o animal pessoalmente e
+                            finalizar a adocao.
                         </div>
                     </div>
                 </div>
@@ -165,13 +229,14 @@
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#faq2">
-                            O sistema é seguro?
+                            A adocao tem algum custo?
                         </button>
                     </h2>
                     <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Sim! Utilizamos criptografia de ponta e as melhores práticas de segurança para
-                            proteger seus dados. Suas senhas são armazenadas de forma segura e nunca são expostas.
+                            O uso da plataforma e gratuito. Alguns abrigos podem solicitar uma taxa simbolica para ajudar
+                            a custear vacinas, castracoes e outros cuidados veterinarios. Consulte diretamente o abrigo
+                            responsavel pelo animal.
                         </div>
                     </div>
                 </div>
@@ -181,13 +246,13 @@
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#faq3">
-                            Posso alterar meus dados depois?
+                            Posso desistir de uma reserva?
                         </button>
                     </h2>
                     <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Claro! Você pode atualizar seus dados pessoais, foto de perfil e senha a qualquer
-                            momento através da seção "Meu Perfil" no seu dashboard.
+                            Se voce mudou de ideia antes de finalizar a adocao, entre em contato com o abrigo.
+                            O abrigo pode cancelar a reserva e o animal voltara a ficar disponível para outros adotantes.
                         </div>
                     </div>
                 </div>
@@ -197,13 +262,13 @@
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#faq4">
-                            Esqueci minha senha, o que fazer?
+                            Como cadastrar um abrigo?
                         </button>
                     </h2>
                     <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Na tela de login, clique em "Esqueci minha senha" e siga as instruções.
-                            Você receberá um e-mail com um link para redefinir sua senha.
+                            Clique em "Cadastrar como Abrigo" e preencha os dados solicitados. Apos o cadastro,
+                            voce podera adicionar animais para adocao, gerenciar reservas e acompanhar as adocoes realizadas.
                         </div>
                     </div>
                 </div>
@@ -211,4 +276,40 @@
         </div>
     </div>
 </div>
+
+<!-- CTA Final -->
+<div class="mb-5">
+    <div class="card bg-primary text-white shadow-lg">
+        <div class="card-body text-center p-5">
+            <h2 class="fw-bold mb-4">
+                <i class="bi bi-heart-fill text-danger"></i> Faca a Diferenca
+            </h2>
+            <p class="lead mb-4">
+                Milhares de animais esperam por um lar amoroso. Adote e mude uma vida hoje!
+            </p>
+            <div class="d-flex justify-content-center gap-3 flex-column flex-sm-row">
+                <a href="/animais" class="btn btn-light btn-lg">
+                    <i class="bi bi-search-heart"></i> Ver Animais Disponíveis
+                </a>
+                {% if not request.session.get('usuario_logado') %}
+                <a href="/cadastrar" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-person-plus"></i> Criar Conta Gratis
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+    .animal-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .animal-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
 {% endblock %}

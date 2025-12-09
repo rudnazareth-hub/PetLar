@@ -12,8 +12,7 @@ from fastapi.responses import RedirectResponse
 from util.auth_decorator import requer_autenticacao
 from util.template_util import criar_templates
 from util.perfis import Perfil
-from repo import raca_repo
-# from repo import especie_repo  # REMOVIDO: O aluno deverá criar este repositório
+from repo import raca_repo, especie_repo
 
 # Configuração do router e templates
 router = APIRouter(prefix="/admin/racas")
@@ -25,6 +24,44 @@ admin_racas_limiter = RateLimiter(
     janela_minutos=1,   # por minuto
     nome="admin_racas"
 )
+
+
+@router.get("/")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def index(request: Request, usuario_logado: Optional[dict] = None):
+    """Redireciona para lista de raças"""
+    return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+
+
+@router.get("/listar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def listar(request: Request, usuario_logado: Optional[dict] = None):
+    """Lista todas as raças cadastradas com suas espécies"""
+    racas = raca_repo.obter_todos_com_especies()
+    total = raca_repo.contar()
+    return templates.TemplateResponse(
+        "admin/racas/listar.html",
+        {"request": request, "racas": racas, "total": total, "usuario_logado": usuario_logado}
+    )
+
+
+@router.get("/cadastrar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None):
+    """Exibe formulário de cadastro de raça"""
+    # Obter todas as espécies para o select
+    especies = especie_repo.obter_todos()
+    especies_dict = {str(e.id): e.nome for e in especies}
+
+    return templates.TemplateResponse(
+        "admin/racas/cadastro.html",
+        {
+            "request": request,
+            "especies": especies_dict,
+            "usuario_logado": usuario_logado
+        }
+    )
+
 
 @router.post("/cadastrar")
 @requer_autenticacao([Perfil.ADMIN.value])
@@ -52,11 +89,16 @@ async def post_cadastrar(
         dto = CadastrarRacaDTO(nome=nome, id_especie=id_especie, descricao=descricao)
 
         # Verificar se espécie existe
-        # REMOVIDO: O aluno deverá criar o repositório especie_repo
-        # especie = especie_repo.obter_por_id(dto.id_especie)
-        # if not especie:
-        #     informar_erro(request, "Espécie não encontrada")
-        #     return RedirectResponse("/admin/racas/cadastrar", status_code=status.HTTP_303_SEE_OTHER)
+        especie = especie_repo.obter_por_id(dto.id_especie)
+        if not especie:
+            informar_erro(request, "Espécie não encontrada")
+            # Recarregar espécies para o select
+            especies = especie_repo.obter_todos()
+            dados_formulario["especies"] = {str(e.id): e.nome for e in especies}
+            return templates.TemplateResponse(
+                "admin/racas/cadastro.html",
+                {"request": request, "dados": dados_formulario, "especies": dados_formulario["especies"], "usuario_logado": usuario_logado}
+            )
 
         # Criar raça
         raca = Raca(
@@ -66,18 +108,16 @@ async def post_cadastrar(
             descricao=dto.descricao
         )
 
-        raca_repo.inserir(raca)
-        logger.info(f"Raça '{dto.nome}' cadastrada por admin {usuario_logado['id']}")
+        raca_id = raca_repo.inserir(raca)
+        logger.info(f"Raça '{dto.nome}' (ID: {raca_id}) cadastrada por admin {usuario_logado['id']}")
 
-        informar_sucesso(request, "Raça cadastrada com sucesso!")
+        informar_sucesso(request, f"Raça '{dto.nome}' cadastrada com sucesso!")
         return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
 
     except ValidationError as e:
         # Recarregar espécies para o select
-        # REMOVIDO: O aluno deverá criar o repositório especie_repo
-        # especies = especie_repo.obter_todos()
-        # dados_formulario["especies"] = {str(e.id_especie): e.nome for e in especies}
-        dados_formulario["especies"] = {}  # Temporário até o aluno criar o CRUD de espécie
+        especies = especie_repo.obter_todos()
+        dados_formulario["especies"] = {str(esp.id): esp.nome for esp in especies}
 
         raise FormValidationError(
             validation_error=e,
@@ -86,23 +126,6 @@ async def post_cadastrar(
             campo_padrao="nome"
         )
 
-
-
-@router.get("/")
-@requer_autenticacao([Perfil.ADMIN.value])
-async def index(request: Request, usuario_logado: Optional[dict] = None):
-    """Redireciona para lista de raças"""
-    return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
-
-@router.get("/listar")
-@requer_autenticacao([Perfil.ADMIN.value])
-async def listar(request: Request, usuario_logado: Optional[dict] = None):
-    """Lista todas as raças cadastradas com suas espécies"""
-    racas = raca_repo.obter_todos_com_especies()
-    return templates.TemplateResponse(
-        "admin/racas/listar.html",
-        {"request": request, "racas": racas}
-    )
 
 @router.get("/editar/{id}")
 @requer_autenticacao([Perfil.ADMIN.value])
@@ -115,10 +138,8 @@ async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] =
         return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
 
     # Obter todas as espécies para o select
-    # REMOVIDO: O aluno deverá criar o repositório especie_repo
-    # especies = especie_repo.obter_todos()
-    # especies_dict = {str(e.id): e.nome for e in especies}
-    especies_dict = {}  # Temporário até o aluno criar o CRUD de espécie
+    especies = especie_repo.obter_todos()
+    especies_dict = {str(e.id): e.nome for e in especies}
 
     # Criar cópia dos dados da raça
     dados_raca = raca.__dict__.copy()
@@ -129,9 +150,11 @@ async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] =
             "request": request,
             "raca": raca,
             "dados": dados_raca,
-            "especies": especies_dict
+            "especies": especies_dict,
+            "usuario_logado": usuario_logado
         }
     )
+
 
 @router.post("/editar/{id}")
 @requer_autenticacao([Perfil.ADMIN.value])
@@ -166,22 +189,22 @@ async def post_editar(
         dto = AlterarRacaDTO(id=id, nome=nome, id_especie=id_especie, descricao=descricao)
 
         # Verificar se espécie existe
-        # REMOVIDO: O aluno deverá criar o repositório especie_repo
-        # especie = especie_repo.obter_por_id(dto.id_especie)
-        # if not especie:
-        #     informar_erro(request, "Espécie não encontrada")
-        #     # Recarregar espécies para o select
-        #     especies = especie_repo.obter_todos()
-        #     especies_dict = {str(e.id): e.nome for e in especies}
-        #     return templates.TemplateResponse(
-        #         "admin/racas/editar.html",
-        #         {
-        #             "request": request,
-        #             "raca": raca_atual,
-        #             "dados": dados_formulario,
-        #             "especies": especies_dict
-        #         }
-        #     )
+        especie = especie_repo.obter_por_id(dto.id_especie)
+        if not especie:
+            informar_erro(request, "Espécie não encontrada")
+            # Recarregar espécies para o select
+            especies = especie_repo.obter_todos()
+            especies_dict = {str(e.id): e.nome for e in especies}
+            return templates.TemplateResponse(
+                "admin/racas/editar.html",
+                {
+                    "request": request,
+                    "raca": raca_atual,
+                    "dados": dados_formulario,
+                    "especies": especies_dict,
+                    "usuario_logado": usuario_logado
+                }
+            )
 
         # Atualizar raça
         raca_atual.nome = dto.nome
@@ -191,15 +214,13 @@ async def post_editar(
         raca_repo.atualizar(raca_atual)
         logger.info(f"Raça ID {id} alterada por admin {usuario_logado['id']}")
 
-        informar_sucesso(request, "Raça alterada com sucesso!")
+        informar_sucesso(request, f"Raça '{dto.nome}' alterada com sucesso!")
         return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
 
     except ValidationError as e:
         # Recarregar espécies para o select
-        # REMOVIDO: O aluno deverá criar o repositório especie_repo
-        # especies = especie_repo.obter_todos()
-        # dados_formulario["especies"] = {str(e.id): e.nome for e in especies}
-        dados_formulario["especies"] = {}  # Temporário até o aluno criar o CRUD de espécie
+        especies = especie_repo.obter_todos()
+        dados_formulario["especies"] = {str(esp.id): esp.nome for esp in especies}
         dados_formulario["raca"] = raca_atual
 
         raise FormValidationError(
@@ -209,25 +230,6 @@ async def post_editar(
             campo_padrao="nome"
         )
 
-@router.get("/cadastrar")
-@requer_autenticacao([Perfil.ADMIN.value])
-async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None):
-    """Exibe formulário de cadastro de raça"""
-    # Obter todas as espécies para o select
-    # REMOVIDO: O aluno deverá criar o repositório especie_repo
-    # especies = especie_repo.obter_todos()
-
-    # Converter para dict para o select
-    # especies_dict = {str(e.id_especie): e.nome for e in especies}
-    especies_dict = {}  # Temporário até o aluno criar o CRUD de espécie
-
-    return templates.TemplateResponse(
-        "admin/racas/cadastro.html",
-        {
-            "request": request,
-            "especies": especies_dict
-        }
-    )
 
 @router.post("/excluir/{id}")
 @requer_autenticacao([Perfil.ADMIN.value])
@@ -247,16 +249,26 @@ async def post_excluir(request: Request, id: int, usuario_logado: Optional[dict]
         informar_erro(request, "Raça não encontrada")
         return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
 
-    # Verificar se existem raças vinculadas
-    racas_vinculadas = raca_repo.obter_por_racas(id)
-    if racas_vinculadas:
+    # Verificar se a raça está em uso (tem animais vinculados)
+    if raca_repo.esta_em_uso(id):
         informar_erro(
             request,
-            f"Não é possível excluir esta raça pois existem {len(racas_vinculadas)} raça(s) vinculada(s) a ela."
+            f"Não é possível excluir a raça '{raca.nome}' pois existem animais vinculados a ela."
         )
         return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
 
-    raca_repo.excluir(id)
-    logger.info(f"Raça {id} ({raca.nome}) excluída por admin {usuario_logado['id']}")
-    informar_sucesso(request, "Raça excluída com sucesso!")
+    # Tentar excluir
+    try:
+        if raca_repo.excluir(id):
+            logger.info(f"Raça '{raca.nome}' (ID: {id}) excluída por admin {usuario_logado['id']}")
+            informar_sucesso(request, f"Raça '{raca.nome}' excluída com sucesso!")
+        else:
+            informar_erro(request, "Não foi possível excluir a raça.")
+    except Exception as e:
+        logger.error(f"Erro ao excluir raça ID {id}: {e}")
+        informar_erro(
+            request,
+            "Não foi possível excluir a raça. Ela pode estar sendo usada em outros registros."
+        )
+
     return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)

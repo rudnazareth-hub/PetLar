@@ -1,0 +1,137 @@
+{% extends "base_privada.html" %}
+
+{% block titulo %}Meus Animais{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-heart"></i> Meus Animais</h2>
+            <div class="d-flex gap-2">
+                <a href="/abrigo/animais/reservados" class="btn btn-outline-warning">
+                    <i class="bi bi-clock-history"></i> Ver Reservados
+                </a>
+                <a href="/abrigo/animais/cadastrar" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Novo Animal
+                </a>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if animais %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Foto</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Raca</th>
+                                <th scope="col">Sexo</th>
+                                <th scope="col">Status</th>
+                                <th scope="col" class="text-center">Acoes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for animal in animais %}
+                            <tr>
+                                <td>
+                                    {% if animal.foto %}
+                                    <img src="{{ animal.foto }}" alt="{{ animal.nome }}"
+                                        class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                    {% else %}
+                                    <div class="bg-secondary rounded d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="bi bi-image text-white"></i>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                                <td><strong>{{ animal.nome }}</strong></td>
+                                <td>
+                                    {{ animal.raca.nome if animal.raca else '-' }}
+                                    <br>
+                                    <small class="text-muted">
+                                        {{ animal.raca.especie.nome if animal.raca and animal.raca.especie else '' }}
+                                    </small>
+                                </td>
+                                <td>{{ animal.sexo }}</td>
+                                <td>
+                                    {% set status_map = {
+                                        'Disponivel': 'success',
+                                        'Reservado': 'warning',
+                                        'Adotado': 'info',
+                                        'Indisponivel': 'secondary'
+                                    } %}
+                                    <span class="badge bg-{{ status_map.get(animal.status, 'secondary') }}">
+                                        {{ animal.status }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="/abrigo/animais/visualizar/{{ animal.id }}"
+                                            class="btn btn-outline-info"
+                                            title="Visualizar">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        {% if animal.status != 'Adotado' %}
+                                        <a href="/abrigo/animais/editar/{{ animal.id }}"
+                                            class="btn btn-outline-primary"
+                                            title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                            title="Excluir"
+                                            onclick="excluirAnimal({{ animal.id }}, '{{ animal.nome|replace("'", "\\'") }}')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3">
+                    <small class="text-muted">
+                        Total: {{ total }} animal(is) cadastrado(s)
+                    </small>
+                </div>
+                {% else %}
+                <div class="alert alert-info text-center mb-0">
+                    <i class="bi bi-info-circle"></i> Nenhum animal cadastrado ainda.
+                    <br>
+                    <a href="/abrigo/animais/cadastrar" class="btn btn-primary mt-3">
+                        <i class="bi bi-plus-circle"></i> Cadastrar Primeiro Animal
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function excluirAnimal(animalId, animalNome) {
+        const detalhes = `
+        <div class="card bg-light">
+            <div class="card-body">
+                <p class="mb-0"><strong>Animal:</strong> ${animalNome}</p>
+                <p class="text-warning mt-2 mb-0">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <small>Esta acao nao pode ser desfeita.</small>
+                </p>
+            </div>
+        </div>
+        `;
+
+        abrirModalConfirmacao({
+            url: `/abrigo/animais/excluir/${animalId}`,
+            mensagem: 'Tem certeza que deseja excluir este animal?',
+            detalhes: detalhes
+        });
+    }
+</script>
+{% endblock %}

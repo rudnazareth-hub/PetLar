@@ -20,8 +20,10 @@ class Animal:
         data_nascimento: Data de nascimento do animal
         data_entrada: Data de entrada no abrigo
         observacoes: Observações sobre o animal
-        status: Status do animal (Disponível/Em Processo/Adotado/Indisponível)
+        status: Status do animal (Disponível/Reservado/Adotado/Indisponível)
         foto: Caminho da foto do animal
+        id_adotante_reserva: ID do adotante que reservou (FK, opcional)
+        data_reserva: Data/hora da reserva (opcional)
         raca: Objeto Raca relacionado (opcional)
         abrigo: Objeto Abrigo relacionado (opcional)
         data_cadastro: Data de cadastro do animal
@@ -37,6 +39,9 @@ class Animal:
     observacoes: Optional[str] = None
     status: str = "Disponível"
     foto: Optional[str] = None
+    # Campos de reserva
+    id_adotante_reserva: Optional[int] = None
+    data_reserva: Optional[datetime] = None
     # Relacionamentos
     raca: Optional[Raca] = None
     abrigo: Optional[Abrigo] = None

@@ -1,0 +1,127 @@
+{% extends "base_privada.html" %}
+
+{% block titulo %}Animais Reservados{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-clock-history"></i> Animais Reservados</h2>
+            <a href="/abrigo/animais/listar" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar para Todos
+            </a>
+        </div>
+
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            Estes animais foram reservados por adotantes e aguardam a conclusao da adocao.
+            Quando o adotante comparecer ao abrigo, conclua a adocao para finalizar o processo.
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if reservados %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Foto</th>
+                                <th scope="col">Animal</th>
+                                <th scope="col">Adotante</th>
+                                <th scope="col">Contato</th>
+                                <th scope="col" class="text-center">Acoes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in reservados %}
+                            <tr>
+                                <td>
+                                    {% if item.animal.foto %}
+                                    <img src="{{ item.animal.foto }}" alt="{{ item.animal.nome }}"
+                                        class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                    {% else %}
+                                    <div class="bg-secondary rounded d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="bi bi-image text-white"></i>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong>{{ item.animal.nome }}</strong>
+                                    <br>
+                                    <small class="text-muted">
+                                        {{ item.animal.raca.nome if item.animal.raca else '' }}
+                                        {% if item.animal.raca and item.animal.raca.especie %}
+                                        ({{ item.animal.raca.especie.nome }})
+                                        {% endif %}
+                                    </small>
+                                </td>
+                                <td>
+                                    <strong>{{ item.adotante_nome or '-' }}</strong>
+                                </td>
+                                <td>
+                                    {% if item.adotante_email %}
+                                    <small><i class="bi bi-envelope"></i> {{ item.adotante_email }}</small><br>
+                                    {% endif %}
+                                    {% if item.adotante_telefone %}
+                                    <small><i class="bi bi-telephone"></i> {{ item.adotante_telefone }}</small>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="/abrigo/animais/{{ item.animal.id }}/concluir-adocao"
+                                            class="btn btn-success"
+                                            title="Concluir Adocao">
+                                            <i class="bi bi-check-circle"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                            title="Cancelar Reserva"
+                                            onclick="cancelarReserva({{ item.animal.id }}, '{{ item.animal.nome|replace("'", "\\'") }}')">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3">
+                    <small class="text-muted">
+                        Total: {{ total }} animal(is) reservado(s)
+                    </small>
+                </div>
+                {% else %}
+                <div class="alert alert-secondary text-center mb-0">
+                    <i class="bi bi-check-circle"></i> Nenhum animal reservado no momento.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function cancelarReserva(animalId, animalNome) {
+        const detalhes = `
+        <div class="card bg-light">
+            <div class="card-body">
+                <p class="mb-0"><strong>Animal:</strong> ${animalNome}</p>
+                <p class="text-warning mt-2 mb-0">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <small>O animal voltara a ficar disponivel para adocao.</small>
+                </p>
+            </div>
+        </div>
+        `;
+
+        abrirModalConfirmacao({
+            url: `/abrigo/animais/${animalId}/cancelar-reserva`,
+            mensagem: 'Tem certeza que deseja cancelar a reserva deste animal?',
+            detalhes: detalhes
+        });
+    }
+</script>
+{% endblock %}

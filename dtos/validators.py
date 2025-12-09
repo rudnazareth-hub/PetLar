@@ -859,7 +859,7 @@ def validar_sexo_animal():
 def validar_status_animal():
     """Valida status do animal"""
     def validator(cls, v: str) -> str:
-        valores_validos = {'Disponível', 'Em Processo', 'Adotado', 'Indisponível'}
+        valores_validos = {'Disponível', 'Reservado', 'Adotado', 'Indisponível'}
         if v not in valores_validos:
             raise ValueError(f"Status inválido: '{v}'")
         return v

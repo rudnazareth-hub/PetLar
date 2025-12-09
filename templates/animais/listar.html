@@ -1,0 +1,133 @@
+{% extends "base_publica.html" %}
+
+{% block titulo %}Animais para Adocao{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-heart-fill text-danger"></i> Animais para Adocao</h2>
+            <span class="badge bg-primary fs-6">{{ total }} animal(is) encontrado(s)</span>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <form method="GET" action="/animais" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="especie" class="form-label">Especie</label>
+                        <select class="form-select" id="especie" name="especie">
+                            <option value="">Todas</option>
+                            {% for esp in especies %}
+                            <option value="{{ esp.id }}" {{ 'selected' if filtros.especie == esp.id else '' }}>
+                                {{ esp.nome }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="raca" class="form-label">Raca</label>
+                        <select class="form-select" id="raca" name="raca">
+                            <option value="">Todas</option>
+                            {% for r in racas %}
+                            <option value="{{ r.id }}" {{ 'selected' if filtros.raca == r.id else '' }}>
+                                {{ r.nome }}{% if r.especie %} ({{ r.especie.nome }}){% endif %}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="uf" class="form-label">UF</label>
+                        <select class="form-select" id="uf" name="uf">
+                            <option value="">Todas</option>
+                            {% for u in ufs %}
+                            <option value="{{ u }}" {{ 'selected' if filtros.uf == u else '' }}>
+                                {{ u }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="cidade" class="form-label">Cidade</label>
+                        <input type="text" class="form-control" id="cidade" name="cidade"
+                            value="{{ filtros.cidade }}" placeholder="Digite...">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Buscar
+                        </button>
+                        <a href="/animais" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de Animais -->
+        {% if animais %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+            {% for item in animais %}
+            <div class="col">
+                <div class="card h-100 shadow-sm animal-card">
+                    {% if item.animal.foto %}
+                    <img src="{{ item.animal.foto }}" class="card-img-top" alt="{{ item.animal.nome }}"
+                        style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center"
+                        style="height: 200px;">
+                        <i class="bi bi-image text-white" style="font-size: 4rem;"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.animal.nome }}</h5>
+                        <p class="card-text text-muted mb-1">
+                            {% if item.animal.raca %}
+                            {{ item.animal.raca.nome }}
+                            {% if item.animal.raca.especie %}
+                            ({{ item.animal.raca.especie.nome }})
+                            {% endif %}
+                            {% endif %}
+                        </p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="bi bi-geo-alt"></i>
+                                {% if item.abrigo_cidade and item.abrigo_uf %}
+                                {{ item.abrigo_cidade }}/{{ item.abrigo_uf }}
+                                {% else %}
+                                Localizacao nao informada
+                                {% endif %}
+                            </small>
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="/animais/{{ item.animal.id }}" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-eye"></i> Ver Detalhes
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            <i class="bi bi-search"></i> Nenhum animal encontrado com os filtros selecionados.
+            <br>
+            <a href="/animais" class="alert-link">Limpar filtros</a> para ver todos os animais disponíveis.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+    .animal-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .animal-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
+{% endblock %}

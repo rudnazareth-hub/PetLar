@@ -4,13 +4,21 @@ Repository para operações com a tabela raca.
 
 from typing import List, Optional
 from model.raca_model import Raca
-# from model.especie_model import Especie  # REMOVIDO: O aluno deverá criar este modelo
+from model.especie_model import Especie
 from sql.raca_sql import *
 from util.db_util import obter_conexao
 
 
 def _row_to_raca(row) -> Raca:
     """Converte uma linha do banco em objeto Raca com Especie."""
+    especie = None
+    if row.get("especie_id"):
+        especie = Especie(
+            id=row["especie_id"],
+            nome=row["especie_nome"],
+            descricao=row.get("especie_descricao")
+        )
+
     return Raca(
         id=row["id"],
         id_especie=row["id_especie"],
@@ -21,12 +29,7 @@ def _row_to_raca(row) -> Raca:
         porte=row["porte"],
         data_cadastro=row["data_cadastro"],
         data_atualizacao=row["data_atualizacao"],
-        # REMOVIDO: O aluno deverá criar o modelo Especie
-        # especie=Especie(
-        #     id=row["especie_id"],
-        #     nome=row["especie_nome"],
-        #     descricao=row["especie_descricao"]
-        # ) if row["especie_id"] else None
+        especie=especie
     )
 
 
@@ -159,3 +162,31 @@ def buscar_por_termo(termo: str) -> List[Raca]:
         termo_like = f"%{termo}%"
         cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like))
         return [_row_to_raca(row) for row in cursor.fetchall()]
+
+
+def obter_todos_com_especies() -> List[Raca]:
+    """
+    Retorna todas as raças com suas espécies.
+    Alias para obter_todos() que já faz JOIN com espécie.
+
+    Returns:
+        Lista de objetos Raca com espécie relacionada
+    """
+    return obter_todos()
+
+
+def esta_em_uso(id_raca: int) -> bool:
+    """
+    Verifica se uma raça está sendo usada em algum animal.
+
+    Args:
+        id_raca: ID da raça
+
+    Returns:
+        True se a raça está em uso, False caso contrário
+    """
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute(CONTAR_ANIMAIS, (id_raca,))
+        row = cursor.fetchone()
+        return row["total"] > 0 if row else False

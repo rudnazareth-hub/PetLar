@@ -35,7 +35,7 @@ async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None)
     sexo_opcoes = {"Macho": "Macho", "Fêmea": "Fêmea"}
     status_opcoes = {
         "Disponível": "Disponível",
-        "Em Processo": "Em Processo",
+        "Reservado": "Reservado",
         "Adotado": "Adotado",
         "Indisponível": "Indisponível"
     }
@@ -108,7 +108,7 @@ async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] =
     sexo_opcoes = {"Macho": "Macho", "Fêmea": "Fêmea"}
     status_opcoes = {
         "Disponível": "Disponível",
-        "Em Processo": "Em Processo",
+        "Reservado": "Reservado",
         "Adotado": "Adotado",
         "Indisponível": "Indisponível"
     }
