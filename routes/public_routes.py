@@ -112,8 +112,8 @@ async def sobre(request: Request):
 @router.get("/animais")
 async def listar_animais(
     request: Request,
-    especie: Optional[int] = Query(None),
-    raca: Optional[int] = Query(None),
+    especie: Optional[str] = Query(None),
+    raca: Optional[str] = Query(None),
     uf: Optional[str] = Query(None),
     cidade: Optional[str] = Query(None),
 ):
@@ -132,12 +132,18 @@ async def listar_animais(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS
         )
 
+    # Converter strings vazias para None e validar inteiros
+    especie_id = int(especie) if especie and especie.strip() else None
+    raca_id = int(raca) if raca and raca.strip() else None
+    uf_valor = uf.strip().upper() if uf and uf.strip() else None
+    cidade_valor = cidade.strip() if cidade and cidade.strip() else None
+
     # Buscar animais com filtros
     animais = animal_repo.buscar_disponiveis_com_filtros(
-        especie_id=especie,
-        raca_id=raca,
-        uf=uf.upper() if uf else None,
-        cidade=cidade
+        especie_id=especie_id,
+        raca_id=raca_id,
+        uf=uf_valor,
+        cidade=cidade_valor
     )
 
     # Obter listas para os filtros
@@ -153,10 +159,10 @@ async def listar_animais(
 
     # Filtros atuais para manter seleção no formulário
     filtros = {
-        "especie": especie,
-        "raca": raca,
-        "uf": uf.upper() if uf else None,
-        "cidade": cidade or ""
+        "especie": especie_id,
+        "raca": raca_id,
+        "uf": uf_valor,
+        "cidade": cidade_valor or ""
     }
 
     return templates_public.TemplateResponse(
