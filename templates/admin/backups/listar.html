@@ -26,6 +26,7 @@
                                 <th scope="col">Nome do Arquivo</th>
                                 <th scope="col">Data/Hora</th>
                                 <th scope="col">Tamanho</th>
+                                <th scope="col">Tipo</th>
                                 <th scope="col" class="text-center">Ações</th>
                             </tr>
                         </thead>
@@ -35,6 +36,13 @@
                                 <td>{{ backup.nome_arquivo }}</td>
                                 <td>{{ backup.data_criacao|formatar_data_hora }}</td>
                                 <td>{{ backup.tamanho_formatado }}</td>
+                                <td>
+                                    {% if backup.tipo == 'automático' %}
+                                    <span class="badge bg-secondary">{{ backup.tipo }}</span>
+                                    {% else %}
+                                    <span class="badge bg-primary">{{ backup.tipo }}</span>
+                                    {% endif %}
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
                                         {{ btn_icon(
