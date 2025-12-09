@@ -125,7 +125,7 @@ async def post_aprovar(
         resposta = dto.resposta_abrigo or "Solicitação aprovada pelo administrador do sistema."
         solicitacao_repo.atualizar_status(id, "Aprovada", resposta)
 
-        logger.info(f"Solicitação {id} aprovada por admin {usuario_logado['id']}")
+        logger.info(f"Solicitação {id} aprovada por admin {usuario_logado.id}")
         informar_sucesso(request, "Solicitação aprovada com sucesso!")
         return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -172,7 +172,7 @@ async def post_rejeitar(
         # Atualizar status
         solicitacao_repo.atualizar_status(id, "Rejeitada", dto.resposta_abrigo)
 
-        logger.info(f"Solicitação {id} rejeitada por admin {usuario_logado['id']}")
+        logger.info(f"Solicitação {id} rejeitada por admin {usuario_logado.id}")
         informar_sucesso(request, "Solicitação rejeitada.")
         return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -202,6 +202,6 @@ async def post_cancelar(request: Request, id: int, usuario_logado: Optional[dict
     # Cancelar
     solicitacao_repo.atualizar_status(id, "Cancelada", "Cancelada pelo administrador do sistema")
 
-    logger.info(f"Solicitação {id} cancelada por admin {usuario_logado['id']}")
+    logger.info(f"Solicitação {id} cancelada por admin {usuario_logado.id}")
     informar_sucesso(request, "Solicitação cancelada com sucesso!")
     return RedirectResponse("/admin/solicitacoes/listar", status_code=status.HTTP_303_SEE_OTHER)

@@ -197,7 +197,7 @@ async def post_editar(
         animal_atual.observacoes = dto.observacoes
 
         animal_repo.atualizar(animal_atual)
-        logger.info(f"Animal ID {id} alterado por admin {usuario_logado['id']}")
+        logger.info(f"Animal ID {id} alterado por admin {usuario_logado.id}")
 
         informar_sucesso(request, "Animal alterado com sucesso!")
         return RedirectResponse("/admin/animais/listar", status_code=status.HTTP_303_SEE_OTHER)

@@ -98,7 +98,7 @@ async def post_cadastrar(
 
         especie_id = especie_repo.inserir(especie)
         logger.info(
-            f"Espécie '{dto.nome}' (ID: {especie_id}) cadastrada por admin {usuario_logado['id']}"
+            f"Espécie '{dto.nome}' (ID: {especie_id}) cadastrada por admin {usuario_logado.id}"
         )
 
         informar_sucesso(request, f"Espécie '{dto.nome}' cadastrada com sucesso!")
@@ -194,7 +194,7 @@ async def post_editar(
         especie_atual.descricao = dto.descricao
 
         especie_repo.atualizar(especie_atual)
-        logger.info(f"Espécie ID {id} alterada por admin {usuario_logado['id']}")
+        logger.info(f"Espécie ID {id} alterada por admin {usuario_logado.id}")
 
         informar_sucesso(request, f"Espécie '{dto.nome}' alterada com sucesso!")
         return RedirectResponse(
@@ -249,7 +249,7 @@ async def excluir(request: Request, id: int, usuario_logado: Optional[dict] = No
     try:
         if especie_repo.excluir(id):
             logger.info(
-                f"Espécie '{especie.nome}' (ID: {id}) excluída por admin {usuario_logado['id']}"
+                f"Espécie '{especie.nome}' (ID: {id}) excluída por admin {usuario_logado.id}"
             )
             informar_sucesso(request, f"Espécie '{especie.nome}' excluída com sucesso!")
         else:

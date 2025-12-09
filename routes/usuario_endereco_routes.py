@@ -39,7 +39,7 @@ async def index(request: Request, usuario_logado: Optional[dict] = None):
     """Redireciona para visualizacao ou cadastro de endereco."""
     assert usuario_logado is not None
 
-    endereco = _obter_endereco_usuario(usuario_logado["id"])
+    endereco = _obter_endereco_usuario(usuario_logado.id)
 
     if endereco:
         return RedirectResponse(
@@ -57,7 +57,7 @@ async def visualizar(request: Request, usuario_logado: Optional[dict] = None):
     """Exibe o endereco do usuario."""
     assert usuario_logado is not None
 
-    endereco = _obter_endereco_usuario(usuario_logado["id"])
+    endereco = _obter_endereco_usuario(usuario_logado.id)
 
     if not endereco:
         informar_erro(request, "Voce ainda nao possui endereco cadastrado.")
@@ -78,7 +78,7 @@ async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None)
     assert usuario_logado is not None
 
     # Verifica se ja possui endereco
-    endereco = _obter_endereco_usuario(usuario_logado["id"])
+    endereco = _obter_endereco_usuario(usuario_logado.id)
     if endereco:
         informar_erro(request, "Voce ja possui um endereco cadastrado. Use a opcao Editar.")
         return RedirectResponse(
@@ -119,7 +119,7 @@ async def post_cadastrar(
         )
 
     # Verifica se ja possui endereco
-    endereco_existente = _obter_endereco_usuario(usuario_logado["id"])
+    endereco_existente = _obter_endereco_usuario(usuario_logado.id)
     if endereco_existente:
         informar_erro(request, "Voce ja possui um endereco cadastrado.")
         return RedirectResponse(
@@ -154,7 +154,7 @@ async def post_cadastrar(
         # Criar endereco
         endereco = Endereco(
             id=0,
-            id_usuario=usuario_logado["id"],
+            id_usuario=usuario_logado.id,
             titulo=dto.titulo,
             logradouro=dto.logradouro,
             numero=dto.numero or 0,
@@ -167,7 +167,7 @@ async def post_cadastrar(
 
         endereco_id = endereco_repo.inserir(endereco)
         logger.info(
-            f"Endereco (ID: {endereco_id}) cadastrado por usuario {usuario_logado['id']}"
+            f"Endereco (ID: {endereco_id}) cadastrado por usuario {usuario_logado.id}"
         )
 
         informar_sucesso(request, "Endereco cadastrado com sucesso!")
@@ -190,7 +190,7 @@ async def get_editar(request: Request, usuario_logado: Optional[dict] = None):
     """Exibe formulario de edicao de endereco."""
     assert usuario_logado is not None
 
-    endereco = _obter_endereco_usuario(usuario_logado["id"])
+    endereco = _obter_endereco_usuario(usuario_logado.id)
 
     if not endereco:
         informar_erro(request, "Voce ainda nao possui endereco cadastrado.")
@@ -235,7 +235,7 @@ async def post_editar(
         )
 
     # Verificar se endereco existe
-    endereco_atual = _obter_endereco_usuario(usuario_logado["id"])
+    endereco_atual = _obter_endereco_usuario(usuario_logado.id)
     if not endereco_atual:
         informar_erro(request, "Endereco nao encontrado.")
         return RedirectResponse(
@@ -280,7 +280,7 @@ async def post_editar(
         endereco_atual.cep = dto.cep
 
         endereco_repo.atualizar(endereco_atual)
-        logger.info(f"Endereco ID {endereco_atual.id} alterado por usuario {usuario_logado['id']}")
+        logger.info(f"Endereco ID {endereco_atual.id} alterado por usuario {usuario_logado.id}")
 
         informar_sucesso(request, "Endereco alterado com sucesso!")
         return RedirectResponse(
@@ -314,7 +314,7 @@ async def excluir(request: Request, usuario_logado: Optional[dict] = None):
         )
 
     # Verificar se endereco existe
-    endereco = _obter_endereco_usuario(usuario_logado["id"])
+    endereco = _obter_endereco_usuario(usuario_logado.id)
     if not endereco:
         informar_erro(request, "Endereco nao encontrado.")
         return RedirectResponse(
@@ -325,7 +325,7 @@ async def excluir(request: Request, usuario_logado: Optional[dict] = None):
     try:
         if endereco_repo.excluir(endereco.id):
             logger.info(
-                f"Endereco (ID: {endereco.id}) excluido por usuario {usuario_logado['id']}"
+                f"Endereco (ID: {endereco.id}) excluido por usuario {usuario_logado.id}"
             )
             informar_sucesso(request, "Endereco excluido com sucesso!")
         else:

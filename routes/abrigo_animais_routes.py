@@ -37,9 +37,9 @@ abrigo_animais_limiter = RateLimiter(
 )
 
 
-def _obter_id_abrigo(usuario_logado: dict) -> Optional[int]:
+def _obter_id_abrigo(usuario_logado) -> Optional[int]:
     """Obtém o ID do abrigo do usuário logado."""
-    abrigo = abrigo_repo.obter_por_usuario(usuario_logado["id"])
+    abrigo = abrigo_repo.obter_por_usuario(usuario_logado.id)
     return abrigo.id_abrigo if abrigo else None
 
 

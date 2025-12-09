@@ -109,7 +109,7 @@ async def post_editar(
         )
 
         adotante_repo.atualizar(adotante_atualizado)
-        logger.info(f"Adotante {id} alterado por admin {usuario_logado['id']}")
+        logger.info(f"Adotante {id} alterado por admin {usuario_logado.id}")
 
         informar_sucesso(request, "Adotante alterado com sucesso!")
         return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
@@ -245,7 +245,7 @@ async def post_cadastrar(
         )
         adotante_repo.inserir(adotante)
 
-        logger.info(f"Adotante '{nome}' (ID: {id_usuario}) cadastrado por admin {usuario_logado['id']}")
+        logger.info(f"Adotante '{nome}' (ID: {id_usuario}) cadastrado por admin {usuario_logado.id}")
         informar_sucesso(request, f"Adotante '{nome}' cadastrado com sucesso!")
         return RedirectResponse("/admin/adotantes/listar", status_code=status.HTTP_303_SEE_OTHER)
 

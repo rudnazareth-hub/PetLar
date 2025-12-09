@@ -258,9 +258,9 @@ async def reservar_animal(
         )
 
     # Reservar animal
-    if animal_repo.reservar_animal(id, usuario_logado["id"]):
+    if animal_repo.reservar_animal(id, usuario_logado.id):
         logger.info(
-            f"Animal ID {id} reservado por adotante {usuario_logado['id']}"
+            f"Animal ID {id} reservado por adotante {usuario_logado.id}"
         )
         informar_sucesso(
             request,

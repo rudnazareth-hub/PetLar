@@ -147,7 +147,7 @@ async def post_editar(
         )
 
         curtida_repo.alterar(item_atualizado)
-        logger.info(f"Curtida {id_animal} alterado por admin {usuario_logado['nome']}")
+        logger.info(f"Curtida {id_animal} alterado por admin {usuario_logado.nome}")
 
         informar_sucesso(request, "Curtida alterado com sucesso!")
         return RedirectResponse("/admin/curtidas/listar", status_code=status.HTTP_303_SEE_OTHER)
@@ -181,7 +181,7 @@ async def post_excluir(request: Request, id_usuario, usuario_logado: Optional[di
 
     try:
         curtida_repo.excluir(id)
-        logger.info(f"curtida excluído por admin {usuario_logado['nome']}")
+        logger.info(f"curtida excluído por admin {usuario_logado.nome}")
         informar_sucesso(request, "curtida excluído com sucesso!")
     except Exception as e:
         # Captura erro de FK constraint (registros vinculados)

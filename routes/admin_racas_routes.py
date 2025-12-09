@@ -109,7 +109,7 @@ async def post_cadastrar(
         )
 
         raca_id = raca_repo.inserir(raca)
-        logger.info(f"Raça '{dto.nome}' (ID: {raca_id}) cadastrada por admin {usuario_logado['id']}")
+        logger.info(f"Raça '{dto.nome}' (ID: {raca_id}) cadastrada por admin {usuario_logado.id}")
 
         informar_sucesso(request, f"Raça '{dto.nome}' cadastrada com sucesso!")
         return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
@@ -212,7 +212,7 @@ async def post_editar(
         raca_atual.descricao = dto.descricao
 
         raca_repo.atualizar(raca_atual)
-        logger.info(f"Raça ID {id} alterada por admin {usuario_logado['id']}")
+        logger.info(f"Raça ID {id} alterada por admin {usuario_logado.id}")
 
         informar_sucesso(request, f"Raça '{dto.nome}' alterada com sucesso!")
         return RedirectResponse("/admin/racas/listar", status_code=status.HTTP_303_SEE_OTHER)
@@ -260,7 +260,7 @@ async def post_excluir(request: Request, id: int, usuario_logado: Optional[dict]
     # Tentar excluir
     try:
         if raca_repo.excluir(id):
-            logger.info(f"Raça '{raca.nome}' (ID: {id}) excluída por admin {usuario_logado['id']}")
+            logger.info(f"Raça '{raca.nome}' (ID: {id}) excluída por admin {usuario_logado.id}")
             informar_sucesso(request, f"Raça '{raca.nome}' excluída com sucesso!")
         else:
             informar_erro(request, "Não foi possível excluir a raça.")
