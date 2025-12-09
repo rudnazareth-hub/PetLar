@@ -32,33 +32,33 @@
                         <tbody>
                             {% for backup in backups %}
                             <tr>
-                                <td>{{ backup.nome }}</td>
-                                <td>{{ backup.data_criacao }}</td>
-                                <td>{{ backup.tamanho }}</td>
+                                <td>{{ backup.nome_arquivo }}</td>
+                                <td>{{ backup.data_criacao|formatar_data_hora }}</td>
+                                <td>{{ backup.tamanho_formatado }}</td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
                                         {{ btn_icon(
-                                            '/admin/backups/download/' ~ backup.nome,
+                                            '/admin/backups/download/' ~ backup.nome_arquivo,
                                             'download',
                                             'info',
                                             'Download',
-                                            'Download do backup ' ~ backup.nome
+                                            'Download do backup ' ~ backup.nome_arquivo
                                         ) }}
                                         {{ btn_icon(
                                             '#',
                                             'arrow-counterclockwise',
                                             'warning',
                                             'Restaurar',
-                                            'Restaurar backup ' ~ backup.nome,
-                                            onclick="restaurarBackup('" ~ backup.nome ~ "')"
+                                            'Restaurar backup ' ~ backup.nome_arquivo,
+                                            onclick="restaurarBackup('" ~ backup.nome_arquivo ~ "')"
                                         ) }}
                                         {{ btn_icon(
                                             '#',
                                             'trash',
                                             'danger',
                                             'Excluir',
-                                            'Excluir backup ' ~ backup.nome,
-                                            onclick="excluirBackup('" ~ backup.nome ~ "')"
+                                            'Excluir backup ' ~ backup.nome_arquivo,
+                                            onclick="excluirBackup('" ~ backup.nome_arquivo ~ "')"
                                         ) }}
                                     </div>
                                 </td>
