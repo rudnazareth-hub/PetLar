@@ -71,13 +71,13 @@ Cada arquivo de teste deve organizar testes em classes temáticas:
 
 ```python
 class TestListarTarefas:
-    """Testes de listagem de categorias"""
+    """Testes de listagem de tarefas"""
 
 class TestCriarTarefa:
-    """Testes de criação de categoria"""
+    """Testes de criação de tarefa"""
 
 class TestExcluirTarefa:
-    """Testes de exclusão de categoria"""
+    """Testes de exclusão de tarefa"""
 ```
 
 **Convenção**: Use o prefixo `Test` nas classes e agrupe testes relacionados.
@@ -432,7 +432,7 @@ def test_usuario_nao_autenticado_nao_acessa_dashboard():
 def test_login():
     pass
 
-def test_categoria():
+def test_usuario():
     pass
 
 def test_erro():
@@ -451,7 +451,7 @@ class TestListarUsuarios:
     """Testes de listagem de usuários"""
 
 class TestCriarTarefa:
-    """Testes de criação de categoria"""
+    """Testes de criação de tarefa"""
 
 class TestAutorizacao:
     """Testes de autorização e controle de acesso"""
@@ -651,7 +651,7 @@ def test_login():
     pass
 
 @pytest.mark.crud
-def test_criar_categoria():
+def test_criar_animal():
     pass
 
 @pytest.mark.slow

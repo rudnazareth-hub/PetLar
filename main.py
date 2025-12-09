@@ -31,7 +31,6 @@ from repo import (
     indices_repo,
 )
 from repo import chat_sala_repo, chat_participante_repo, chat_mensagem_repo
-from repo import categoria_repo
 from repo import raca_repo, abrigo_repo, adotante_repo, animal_repo, endereco_repo
 from repo import solicitacao_repo, adocao_repo, visita_repo
 from repo import especie_repo
@@ -40,7 +39,6 @@ from repo import especie_repo
 from routes.auth_routes import router as auth_router
 from routes.chamados_routes import router as chamados_router
 from routes.admin_usuarios_routes import router as admin_usuarios_router
-from routes.admin_categorias_routes import router as admin_categorias_router
 from routes.admin_configuracoes_routes import router as admin_config_router
 from routes.admin_backups_routes import router as admin_backups_router
 from routes.admin_chamados_routes import router as admin_chamados_router
@@ -101,9 +99,6 @@ try:
     for repo, nome in TABELAS:
         repo.criar_tabela()
         logger.info(f"Tabela '{nome}' criada/verificada")
-
-    categoria_repo.criar_tabela()
-    logger.info("Tabela 'categoria' criada/verificada")
 
     especie_repo.criar_tabela()
     logger.info("Tabela 'especie' criada/verificada")
@@ -171,7 +166,6 @@ ROUTERS = [
     (admin_abrigos_router, ["Admin - Abrigos"], "admin de abrigos"),
     (admin_animais_router, ["Admin - Animais"], "admin de animais"),
     (admin_especies_router, ["Admin - Espécies"], "admin de espécies"),
-    (admin_categorias_router, ["Admin - Categorias"], "admin de categorias"),
     (abrigo_animais_router, ["Abrigo - Animais"], "abrigo animais"),
     (usuario_endereco_router, ["Usuário - Endereço"], "usuário endereço"),
     (public_router, ["Público"], "público"),
