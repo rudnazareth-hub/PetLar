@@ -7,6 +7,8 @@ from sql.especie_sql import (
     CONTAR,
     CRIAR_TABELA,
     EXCLUIR,
+    EXISTE_NOME,
+    EXISTE_NOME_EXCLUINDO_ID,
     INSERIR,
     OBTER_POR_ID,
     OBTER_POR_NOME,
@@ -27,11 +29,17 @@ def _row_to_especie(row) -> Especie:
     )
 
 
-def criar_tabela():
-    """Cria a tabela de espécies no banco de dados."""
+def criar_tabela() -> bool:
+    """
+    Cria a tabela de espécies no banco de dados.
+
+    Returns:
+        True se a tabela foi criada/verificada com sucesso
+    """
     with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(CRIAR_TABELA)
+        return True
 
 
 def inserir(especie: Especie) -> Optional[int]:
@@ -136,9 +144,23 @@ def excluir(id: int) -> bool:
 
     Returns:
         True se a exclusão foi bem-sucedida, False caso contrário
+
+    Raises:
+        Exception: Se a espécie tiver raças vinculadas
     """
+    # Verificar se há raças vinculadas
     with obter_conexao() as conn:
         cursor = conn.cursor()
+        cursor.execute(VERIFICAR_USO_EM_RACAS, (id,))
+        row = cursor.fetchone()
+        total_racas = row["total"] if row else 0
+
+        if total_racas > 0:
+            raise Exception(
+                f"Nao e possivel excluir esta especie. "
+                f"Existem {total_racas} raca(s) vinculada(s)."
+            )
+
         cursor.execute(EXCLUIR, (id,))
         return cursor.rowcount > 0
 
@@ -188,5 +210,26 @@ def esta_em_uso(id: int) -> bool:
     with obter_conexao() as conn:
         cursor = conn.cursor()
         cursor.execute(VERIFICAR_USO_EM_RACAS, (id,))
+        row = cursor.fetchone()
+        return row["total"] > 0 if row else False
+
+
+def existe_nome(nome: str, id_excluir: Optional[int] = None) -> bool:
+    """
+    Verifica se já existe uma espécie com o nome informado.
+
+    Args:
+        nome: Nome a verificar
+        id_excluir: ID a excluir da verificação (útil para edição)
+
+    Returns:
+        True se o nome já existe, False caso contrário
+    """
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        if id_excluir is not None:
+            cursor.execute(EXISTE_NOME_EXCLUINDO_ID, (nome, id_excluir))
+        else:
+            cursor.execute(EXISTE_NOME, (nome,))
         row = cursor.fetchone()
         return row["total"] > 0 if row else False

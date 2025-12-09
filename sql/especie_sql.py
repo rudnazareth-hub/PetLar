@@ -63,3 +63,15 @@ VERIFICAR_USO_EM_RACAS = """
     FROM raca
     WHERE id_especie = ?
 """
+
+EXISTE_NOME = """
+    SELECT COUNT(*) as total
+    FROM especie
+    WHERE nome = ?
+"""
+
+EXISTE_NOME_EXCLUINDO_ID = """
+    SELECT COUNT(*) as total
+    FROM especie
+    WHERE nome = ? AND id != ?
+"""

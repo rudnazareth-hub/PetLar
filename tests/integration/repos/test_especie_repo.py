@@ -2,17 +2,8 @@
 Testes de integracao para o repositorio de especies.
 
 Testa todas as operacoes CRUD e validacoes do especie_repo.
-
-NOTA: Estes testes estao desabilitados ate que o aluno implemente
-model/especie_model.py, repo/especie_repo.py e sql/especie_sql.py
 """
 import pytest
-
-# Skip todo o modulo ate que especie_model e especie_repo sejam implementados
-pytest.skip(
-    "Modulo especie_model e especie_repo ainda nao implementados",
-    allow_module_level=True
-)
 
 from model.especie_model import Especie
 from repo import especie_repo

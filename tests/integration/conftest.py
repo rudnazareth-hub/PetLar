@@ -40,6 +40,8 @@ def criar_tabelas_integracao():
         adotante_repo,
         endereco_repo,
         visita_repo,
+        especie_repo,
+        raca_repo,
     )
 
     # Criar tabelas na ordem correta (respeitando dependencias)
@@ -54,6 +56,8 @@ def criar_tabelas_integracao():
     abrigo_repo.criar_tabela()
     adotante_repo.criar_tabela()
     endereco_repo.criar_tabela()
+    especie_repo.criar_tabela()
+    raca_repo.criar_tabela()
     visita_repo.criar_tabela()
 
     yield

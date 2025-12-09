@@ -78,6 +78,7 @@ def limpar_rate_limiter():
     )
     from routes.public_routes import public_limiter
     from routes.examples_routes import examples_limiter
+    from routes.admin_especies_routes import admin_especies_limiter
 
     # Lista de todos os limiters
     limiters = [
@@ -100,6 +101,7 @@ def limpar_rate_limiter():
         chat_listagem_limiter,
         public_limiter,
         examples_limiter,
+        admin_especies_limiter,
     ]
 
     # Limpar antes do teste
