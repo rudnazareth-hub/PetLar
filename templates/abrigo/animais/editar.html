@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            {{ field(name='id_raca', label='Raca', type='select', required=true,
+                            {{ field(name='id_raca', label='Raça', type='select', required=true,
                             options=racas, value=dados.id_raca) }}
                         </div>
 
@@ -52,7 +52,7 @@
                         <div class="col-12 mb-3">
                             <label for="foto" class="form-label">Foto do Animal</label>
                             <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
-                            <div class="form-text">Formato: JPG, PNG. Tamanho maximo: 5MB</div>
+                            <div class="form-text">Formato: JPG, PNG. Tamanho máximo: 5MB</div>
                             {% if animal.foto %}
                             <div class="mt-2">
                                 <img src="{{ animal.foto }}" alt="{{ animal.nome }}"
@@ -64,7 +64,7 @@
                         </div>
 
                         <div class="col-12 mb-3">
-                            {{ field(name='observacoes', label='Observacoes', type='textarea', rows=4,
+                            {{ field(name='observacoes', label='Observações', type='textarea', rows=4,
                             value=dados.observacoes) }}
                         </div>
 
@@ -77,7 +77,7 @@
                                         <i class="bi bi-calendar-plus"></i> Cadastrado em: <strong>{{ animal.data_cadastro|data_hora_br }}</strong>
                                         {% endif %}
                                         {% if animal.data_atualizacao and animal.data_atualizacao != animal.data_cadastro %}
-                                        <br><i class="bi bi-calendar-check"></i> Ultima atualizacao: <strong>{{ animal.data_atualizacao|data_hora_br }}</strong>
+                                        <br><i class="bi bi-calendar-check"></i> Última atualização: <strong>{{ animal.data_atualizacao|data_hora_br }}</strong>
                                         {% endif %}
                                     </small>
                                 </div>
@@ -89,7 +89,7 @@
                 <div class="card-footer p-4">
                     <div class="d-flex gap-3">
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle"></i> Salvar Alteracoes
+                            <i class="bi bi-check-circle"></i> Salvar Alterações
                         </button>
                         <a href="/abrigo/animais/listar" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Cancelar

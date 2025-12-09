@@ -68,7 +68,7 @@
                         {% endif %}
                         {% set abrigos = usuarios|selectattr('perfil', 'equalto', 'Abrigo')|list %}
                         {% if abrigos %}
-                        | Abrigoes: <strong class="text-warning">{{ abrigos|length }}</strong>
+                        | Abrigos: <strong class="text-warning">{{ abrigos|length }}</strong>
                         {% endif %}
                         {% set adotantes = usuarios|selectattr('perfil', 'equalto', 'Adotante')|list %}
                         {% if adotantes %}

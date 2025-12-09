@@ -1,13 +1,13 @@
 {% extends "base_privada.html" %}
 {% from "macros/form_fields.html" import field with context %}
 
-{% block titulo %}Editar Endereco{% endblock %}
+{% block titulo %}Editar Endereço{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="d-flex align-items-center mb-4">
-            <h2 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Editar Endereco</h2>
+            <h2 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Editar Endereço</h2>
         </div>
 
         <div class="card shadow-sm">
@@ -19,7 +19,7 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            {{ field(name='titulo', label='Titulo', type='text', required=true,
+                            {{ field(name='titulo', label='Título', type='text', required=true,
                             help_text='Ex: Casa, Trabalho, etc.', value=dados.titulo) }}
                         </div>
 
@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            {{ field(name='numero', label='Numero', type='text',
+                            {{ field(name='numero', label='Número', type='text',
                             help_text='Deixe vazio para S/N', value=dados.numero if dados.numero and dados.numero != 0 else '') }}
                         </div>
 
@@ -95,7 +95,7 @@
                                         <i class="bi bi-calendar-plus"></i> Cadastrado em: <strong>{{ endereco.data_cadastro|data_hora_br }}</strong>
                                         {% endif %}
                                         {% if endereco.data_atualizacao and endereco.data_atualizacao != endereco.data_cadastro %}
-                                        <br><i class="bi bi-calendar-check"></i> Ultima atualizacao: <strong>{{ endereco.data_atualizacao|data_hora_br }}</strong>
+                                        <br><i class="bi bi-calendar-check"></i> Última atualização: <strong>{{ endereco.data_atualizacao|data_hora_br }}</strong>
                                         {% endif %}
                                     </small>
                                 </div>
@@ -107,7 +107,7 @@
                 <div class="card-footer p-4">
                     <div class="d-flex gap-3">
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle"></i> Salvar Alteracoes
+                            <i class="bi bi-check-circle"></i> Salvar Alterações
                         </button>
                         <a href="/usuario/endereco/visualizar" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Cancelar

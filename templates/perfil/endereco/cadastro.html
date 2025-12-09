@@ -1,13 +1,13 @@
 {% extends "base_privada.html" %}
 {% from "macros/form_fields.html" import field with context %}
 
-{% block titulo %}Cadastrar Endereco{% endblock %}
+{% block titulo %}Cadastrar Endereço{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="d-flex align-items-center mb-4">
-            <h2 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Cadastrar Endereco</h2>
+            <h2 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Cadastrar Endereço</h2>
         </div>
 
         <div class="card shadow-sm">
@@ -19,7 +19,7 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            {{ field(name='titulo', label='Titulo', type='text', required=true,
+                            {{ field(name='titulo', label='Título', type='text', required=true,
                             help_text='Ex: Casa, Trabalho, etc.') }}
                         </div>
 
@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            {{ field(name='numero', label='Numero', type='text',
+                            {{ field(name='numero', label='Número', type='text',
                             help_text='Deixe vazio para S/N') }}
                         </div>
 

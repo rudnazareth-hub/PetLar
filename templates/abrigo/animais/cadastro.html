@@ -20,7 +20,7 @@
 
                         <div class="col-md-6 mb-3">
                             {{ field(name='nome', label='Nome do Animal', type='text', required=true,
-                            help_text='Nome pelo qual o animal e conhecido') }}
+                            help_text='Nome pelo qual o animal é conhecido') }}
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -29,13 +29,13 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            {{ field(name='id_raca', label='Raca', type='select', required=true,
-                            options=racas, help_text='Selecione a raca do animal') }}
+                            {{ field(name='id_raca', label='Raça', type='select', required=true,
+                            options=racas, help_text='Selecione a raça do animal') }}
                         </div>
 
                         <div class="col-md-6 mb-3">
                             {{ field(name='data_nascimento', label='Data de Nascimento', type='date',
-                            help_text='Aproximada se nao souber exata') }}
+                            help_text='Aproximada se não souber exata') }}
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -45,12 +45,12 @@
                         <div class="col-md-6 mb-3">
                             <label for="foto" class="form-label">Foto do Animal</label>
                             <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
-                            <div class="form-text">Formato: JPG, PNG. Tamanho maximo: 5MB</div>
+                            <div class="form-text">Formato: JPG, PNG. Tamanho máximo: 5MB</div>
                         </div>
 
                         <div class="col-12 mb-3">
-                            {{ field(name='observacoes', label='Observacoes', type='textarea', rows=4,
-                            help_text='Informacoes adicionais sobre o animal (saude, temperamento, historico, etc.)') }}
+                            {{ field(name='observacoes', label='Observações', type='textarea', rows=4,
+                            help_text='Informações adicionais sobre o animal (saúde, temperamento, histórico, etc.)') }}
                         </div>
                     </div>
                 </div>

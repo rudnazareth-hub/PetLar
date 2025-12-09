@@ -57,14 +57,14 @@
                             <i class="bi bi-gear"></i> Admin
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/admin/especies/listar">Especies</a></li>
-                            <li><a class="dropdown-item" href="/admin/racas/listar">Racas</a></li>
+                            <li><a class="dropdown-item" href="/admin/especies/listar">Espécies</a></li>
+                            <li><a class="dropdown-item" href="/admin/racas/listar">Raças</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/admin/usuarios/listar">Usuarios</a></li>
+                            <li><a class="dropdown-item" href="/admin/usuarios/listar">Usuários</a></li>
                             <li><a class="dropdown-item" href="/admin/chamados/listar">Chamados</a></li>
                             <li><a class="dropdown-item" href="/admin/categorias/listar">Categorias</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/admin/configuracoes">Configuracoes</a></li>
+                            <li><a class="dropdown-item" href="/admin/configuracoes">Configurações</a></li>
                             <li><a class="dropdown-item" href="/admin/tema">Tema</a></li>
                             <li><a class="dropdown-item" href="/admin/auditoria">Auditoria</a></li>
                             <li><a class="dropdown-item" href="/admin/backups/listar">Backup</a></li>
@@ -86,11 +86,11 @@
                     <!-- Menu Adotante -->
                     <li class="nav-item">
                         <a class="nav-link {{ 'active' if '/usuario/endereco' in request.path else '' }}"
-                            href="/usuario/endereco/">Meu Endereco</a>
+                            href="/usuario/endereco/">Meu Endereço</a>
                     </li>
 
                     {% else %}
-                    <!-- Menu Padrao -->
+                    <!-- Menu Padrão -->
                     <li class="nav-item">
                         <a class="nav-link {{ 'active' if '/chamados/' in request.path else '' }}"
                             href="/chamados/listar">Chamados</a>
