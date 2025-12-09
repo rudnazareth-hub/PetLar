@@ -36,6 +36,10 @@ def criar_tabelas_integracao():
         chat_sala_repo,
         chat_participante_repo,
         chat_mensagem_repo,
+        abrigo_repo,
+        adotante_repo,
+        endereco_repo,
+        visita_repo,
     )
 
     # Criar tabelas na ordem correta (respeitando dependencias)
@@ -47,5 +51,9 @@ def criar_tabelas_integracao():
     chat_sala_repo.criar_tabela()
     chat_participante_repo.criar_tabela()
     chat_mensagem_repo.criar_tabela()
+    abrigo_repo.criar_tabela()
+    adotante_repo.criar_tabela()
+    endereco_repo.criar_tabela()
+    visita_repo.criar_tabela()
 
     yield

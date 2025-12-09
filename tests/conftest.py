@@ -144,24 +144,52 @@ def limpar_banco_dados():
             # Verificar se tabelas existem antes de limpar
             cursor.execute(
                 "SELECT name FROM sqlite_master WHERE type='table' "
-                "AND name IN ('chamado', 'chamado_interacao', 'usuario', 'configuracao')"
+                "AND name IN ("
+                "'chamado', 'chamado_interacao', 'usuario', 'configuracao', "
+                "'abrigo', 'adotante', 'endereco', 'visita', 'animal', "
+                "'raca', 'especie', 'adocao', 'solicitacao', "
+                "'chat_sala', 'chat_participante', 'chat_mensagem')"
             )
             tabelas_existentes = [row[0] for row in cursor.fetchall()]
 
-            # Limpar apenas tabelas que existem (respeitando foreign keys)
-            # Limpar chamado_interacao antes de chamado (devido à FK)
+            # Limpar tabelas respeitando ordem de dependências (FKs)
+            # Nível 4: Tabelas mais dependentes
+            if 'chat_mensagem' in tabelas_existentes:
+                cursor.execute("DELETE FROM chat_mensagem")
+            if 'chat_participante' in tabelas_existentes:
+                cursor.execute("DELETE FROM chat_participante")
+            if 'adocao' in tabelas_existentes:
+                cursor.execute("DELETE FROM adocao")
+            if 'solicitacao' in tabelas_existentes:
+                cursor.execute("DELETE FROM solicitacao")
+
+            # Nível 3: Tabelas que dependem de animal/abrigo/adotante
+            if 'visita' in tabelas_existentes:
+                cursor.execute("DELETE FROM visita")
+            if 'animal' in tabelas_existentes:
+                cursor.execute("DELETE FROM animal")
+
+            # Nível 2: Tabelas que dependem de usuario ou especie
             if 'chamado_interacao' in tabelas_existentes:
                 cursor.execute("DELETE FROM chamado_interacao")
             if 'chamado' in tabelas_existentes:
                 cursor.execute("DELETE FROM chamado")
-
-            # Nível 1: Tabelas de lookup (não dependem de usuario)
             if 'raca' in tabelas_existentes:
                 cursor.execute("DELETE FROM raca")
-            if 'especie' in tabelas_existentes:
-                cursor.execute("DELETE FROM especie")
+            if 'endereco' in tabelas_existentes:
+                cursor.execute("DELETE FROM endereco")
+            if 'chat_sala' in tabelas_existentes:
+                cursor.execute("DELETE FROM chat_sala")
+
+            # Nível 1: Tabelas que dependem de usuario
+            if 'abrigo' in tabelas_existentes:
+                cursor.execute("DELETE FROM abrigo")
+            if 'adotante' in tabelas_existentes:
+                cursor.execute("DELETE FROM adotante")
 
             # Nível 0: Tabelas base
+            if 'especie' in tabelas_existentes:
+                cursor.execute("DELETE FROM especie")
             if 'usuario' in tabelas_existentes:
                 cursor.execute("DELETE FROM usuario")
             if 'configuracao' in tabelas_existentes:
