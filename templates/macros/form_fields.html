@@ -38,7 +38,9 @@ decimal_places=2,
 show_thousands=true,
 allow_negative=false,
 decimal_prefix='',
-decimal_suffix=''
+decimal_suffix='',
+maxlength=none,
+minlength=none
 ) %}
 
 {# Variáveis internas #}
@@ -57,6 +59,14 @@ decimal_suffix=''
 {% if unmask %}
 {% set _ = extra_attrs.update({'data-unmask': 'true'}) %}
 {% endif %}
+{% endif %}
+
+{# Adicionar maxlength e minlength se fornecidos #}
+{% if maxlength %}
+{% set _ = extra_attrs.update({'maxlength': maxlength|string}) %}
+{% endif %}
+{% if minlength %}
+{% set _ = extra_attrs.update({'minlength': minlength|string}) %}
 {% endif %}
 
 {# Adicionar eventos JavaScript se fornecidos #}
