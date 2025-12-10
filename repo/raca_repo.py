@@ -12,11 +12,11 @@ from util.db_util import obter_conexao
 def _row_to_raca(row) -> Raca:
     """Converte uma linha do banco em objeto Raca com Especie."""
     especie = None
-    if row.get("especie_id"):
+    if row["especie_id"]:
         especie = Especie(
             id=row["especie_id"],
             nome=row["especie_nome"],
-            descricao=row.get("especie_descricao")
+            descricao=row["especie_descricao"]
         )
 
     return Raca(

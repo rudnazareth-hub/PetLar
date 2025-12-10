@@ -11,11 +11,12 @@ from util.db_util import obter_conexao
 
 def _row_to_animal(row) -> Animal:
     """Converte linha em objeto Animal com relacionamentos."""
+    keys = row.keys()
     status = row["status"] if row["status"] else "Disponível"
 
     # Criar objeto Especie se houver dados
     especie = None
-    if row.get("id_especie") and row.get("especie_nome"):
+    if "id_especie" in keys and "especie_nome" in keys and row["id_especie"] and row["especie_nome"]:
         especie = Especie(
             id=row["id_especie"],
             nome=row["especie_nome"],
@@ -24,24 +25,24 @@ def _row_to_animal(row) -> Animal:
 
     # Criar objeto Raca com Especie
     raca = None
-    if row.get("raca_nome"):
+    if "raca_nome" in keys and row["raca_nome"]:
         raca = Raca(
             id=row["id_raca"],
-            id_especie=row["id_especie"] if row.get("id_especie") else 0,
+            id_especie=row["id_especie"] if "id_especie" in keys and row["id_especie"] else 0,
             nome=row["raca_nome"],
-            descricao=row.get("raca_descricao"),
-            temperamento=row.get("temperamento"),
-            expectativa_de_vida=row.get("expectativa_de_vida"),
-            porte=row.get("porte"),
+            descricao=row["raca_descricao"] if "raca_descricao" in keys else None,
+            temperamento=row["temperamento"] if "temperamento" in keys else None,
+            expectativa_de_vida=row["expectativa_de_vida"] if "expectativa_de_vida" in keys else None,
+            porte=row["porte"] if "porte" in keys else None,
             especie=especie
         )
 
     # Criar objeto Abrigo
     abrigo = None
-    if row.get("id_abrigo"):
+    if "id_abrigo" in keys and row["id_abrigo"]:
         abrigo = Abrigo(
             id_abrigo=row["id_abrigo"],
-            responsavel=row.get("responsavel", ""),
+            responsavel=row["responsavel"] if "responsavel" in keys and row["responsavel"] else "",
             data_abertura=None
         )
 
@@ -56,8 +57,8 @@ def _row_to_animal(row) -> Animal:
         observacoes=row["observacoes"],
         status=status,
         foto=row["foto"],
-        id_adotante_reserva=row.get("id_adotante_reserva"),
-        data_reserva=row.get("data_reserva"),
+        id_adotante_reserva=row["id_adotante_reserva"] if "id_adotante_reserva" in keys else None,
+        data_reserva=row["data_reserva"] if "data_reserva" in keys else None,
         raca=raca,
         abrigo=abrigo,
         data_cadastro=row["data_cadastro"],
@@ -67,11 +68,12 @@ def _row_to_animal(row) -> Animal:
 
 def _row_to_animal_com_localizacao(row) -> dict:
     """Converte linha em dict com dados do animal e localização do abrigo."""
+    keys = row.keys()
     animal = _row_to_animal(row)
     return {
         "animal": animal,
-        "abrigo_cidade": row.get("abrigo_cidade"),
-        "abrigo_uf": row.get("abrigo_uf")
+        "abrigo_cidade": row["abrigo_cidade"] if "abrigo_cidade" in keys else None,
+        "abrigo_uf": row["abrigo_uf"] if "abrigo_uf" in keys else None
     }
 
 
@@ -198,13 +200,14 @@ def obter_por_id_com_adotante(id_animal: int) -> Optional[dict]:
         if not row:
             return None
 
+        keys = row.keys()
         animal = _row_to_animal(row)
         return {
             "animal": animal,
-            "adotante_id": row.get("adotante_id"),
-            "adotante_nome": row.get("adotante_nome"),
-            "adotante_email": row.get("adotante_email"),
-            "adotante_telefone": row.get("adotante_telefone")
+            "adotante_id": row["adotante_id"] if "adotante_id" in keys else None,
+            "adotante_nome": row["adotante_nome"] if "adotante_nome" in keys else None,
+            "adotante_email": row["adotante_email"] if "adotante_email" in keys else None,
+            "adotante_telefone": row["adotante_telefone"] if "adotante_telefone" in keys else None
         }
 
 
@@ -239,12 +242,13 @@ def obter_reservados_por_abrigo(id_abrigo: int) -> List[dict]:
         cursor.execute(OBTER_RESERVADOS_POR_ABRIGO, (id_abrigo,))
         result = []
         for row in cursor.fetchall():
+            keys = row.keys()
             animal = _row_to_animal(row)
             result.append({
                 "animal": animal,
-                "adotante_nome": row.get("adotante_nome"),
-                "adotante_email": row.get("adotante_email"),
-                "adotante_telefone": row.get("adotante_telefone")
+                "adotante_nome": row["adotante_nome"] if "adotante_nome" in keys else None,
+                "adotante_email": row["adotante_email"] if "adotante_email" in keys else None,
+                "adotante_telefone": row["adotante_telefone"] if "adotante_telefone" in keys else None
             })
         return result
 

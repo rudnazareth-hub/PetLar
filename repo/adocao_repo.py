@@ -22,22 +22,23 @@ def _converter_data(data_str: Optional[str]) -> Optional[datetime]:
 
 def _row_to_adocao(row) -> Adocao:
     """Converte linha do banco em objeto Adocao."""
+    keys = row.keys()
     return Adocao(
         id=row["id"],
         id_adotante=row["id_adotante"],
         id_animal=row["id_animal"],
-        data_adocao=_converter_data(row.get("data_adocao")),
-        observacoes=row.get("observacoes"),
-        data_cadastro=row.get("data_cadastro"),
-        data_atualizacao=row.get("data_atualizacao"),
-        animal_nome=row.get("animal_nome"),
-        animal_foto=row.get("animal_foto"),
-        animal_sexo=row.get("animal_sexo"),
-        raca_nome=row.get("raca_nome"),
-        especie_nome=row.get("especie_nome"),
-        abrigo_nome=row.get("abrigo_nome"),
-        adotante_nome=row.get("adotante_nome"),
-        adotante_email=row.get("adotante_email")
+        data_adocao=_converter_data(row["data_adocao"] if "data_adocao" in keys else None),
+        observacoes=row["observacoes"] if "observacoes" in keys else None,
+        data_cadastro=row["data_cadastro"] if "data_cadastro" in keys else None,
+        data_atualizacao=row["data_atualizacao"] if "data_atualizacao" in keys else None,
+        animal_nome=row["animal_nome"] if "animal_nome" in keys else None,
+        animal_foto=row["animal_foto"] if "animal_foto" in keys else None,
+        animal_sexo=row["animal_sexo"] if "animal_sexo" in keys else None,
+        raca_nome=row["raca_nome"] if "raca_nome" in keys else None,
+        especie_nome=row["especie_nome"] if "especie_nome" in keys else None,
+        abrigo_nome=row["abrigo_nome"] if "abrigo_nome" in keys else None,
+        adotante_nome=row["adotante_nome"] if "adotante_nome" in keys else None,
+        adotante_email=row["adotante_email"] if "adotante_email" in keys else None
     )
 
 
