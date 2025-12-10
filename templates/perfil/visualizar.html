@@ -34,21 +34,28 @@
         </div>
         <!-- Ações do Perfil -->
         <div class="row g-3 mb-4">
-            <div class="col-md-4">
+            <div class="col-md-{% if usuario.perfil != 'Administrador' %}3{% else %}4{% endif %}">
                 <a href="/usuario/perfil/editar" class="btn btn-primary w-100 btn-lg">
                     <i class="bi bi-pencil-square"></i> Editar Dados
                 </a>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-{% if usuario.perfil != 'Administrador' %}3{% else %}4{% endif %}">
                 <a href="/usuario/perfil/alterar-senha" class="btn btn-warning w-100 btn-lg">
                     <i class="bi bi-key-fill"></i> Alterar Senha
                 </a>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-{% if usuario.perfil != 'Administrador' %}3{% else %}4{% endif %}">
                 <button type="button" class="btn btn-info w-100 btn-lg" id="btn-change-photo">
                     <i class="bi bi-camera-fill"></i> Alterar Foto
                 </button>
             </div>
+            {% if usuario.perfil != 'Administrador' %}
+            <div class="col-md-3">
+                <a href="/usuario/endereco/" class="btn btn-secondary w-100 btn-lg">
+                    <i class="bi bi-geo-alt-fill"></i> Endereço
+                </a>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
