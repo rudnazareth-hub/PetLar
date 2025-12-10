@@ -201,6 +201,7 @@ def criar_templates() -> Jinja2Templates:
 
     # Adicionar filtros customizados
     env.filters['data_br'] = formatar_data_br
+    env.filters['data_hora_br'] = lambda d: formatar_data_br(d, com_hora=True)
     env.filters['foto_usuario'] = foto_usuario
 
     # Filtros de formatação de data/hora (em português)
