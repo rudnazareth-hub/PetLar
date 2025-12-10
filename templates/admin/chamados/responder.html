@@ -10,7 +10,14 @@
         <div class="col-12">
             <!-- Cabeçalho -->
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2><i class="bi bi-reply-fill"></i> Responder Chamado #{{ chamado.id }}</h2>
+                <!-- Header Moderno -->
+        <div class="card card-modern border-0 overflow-hidden mb-4">
+            <div class="bg-gradient-warning text-white p-4">
+                <h2 class="fw-bold mb-0">
+                    <i class="bi bi-chat-left-quote me-2"></i>Responder Chamado
+                </h2>
+            </div>
+        </div>
                 <a href="/admin/chamados/listar" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> Voltar
                 </a>
