@@ -130,6 +130,22 @@ def contar() -> int:
         return cursor.fetchone()[0]
 
 
+def obter_por_usuario(id_usuario: int) -> Optional[Abrigo]:
+    """
+    Busca um abrigo pelo ID do usuário.
+
+    Como o id_abrigo é o mesmo que o id do usuário,
+    esta função é equivalente a obter_por_id.
+
+    Args:
+        id_usuario: ID do usuário
+
+    Returns:
+        Objeto Abrigo ou None se não encontrado
+    """
+    return obter_por_id(id_usuario)
+
+
 def buscar_por_termo(termo: str) -> List[Abrigo]:
     """
     Busca abrigos por termo (responsável ou descrição).
