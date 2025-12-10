@@ -117,7 +117,9 @@ async def listar_animais(
     uf: Optional[str] = Query(None),
     cidade: Optional[str] = Query(None),
     pagina: int = Query(1, ge=1),
+    sexo: str = None
 ):
+
     """
     Página pública de listagem de animais disponíveis para adoção.
     Suporta filtros por espécie, raça, UF e cidade com paginação.
@@ -151,6 +153,10 @@ async def listar_animais(
 
     # Obter listas para os filtros
     especies = especie_repo.obter_todos()
+       # Filtrar por sexo se especificado
+    if sexo and sexo in ['M', 'F']:
+        animais = [a for a in animais if a.sexo == sexo]
+
     racas = raca_repo.obter_todos_com_especies()
 
     # Lista de UFs para o filtro
@@ -179,6 +185,7 @@ async def listar_animais(
             "filtros": filtros,
             "total": resultado["total"],
             "pagina": resultado["pagina"],
+            "sexo_filtro": sexo,
             "total_paginas": resultado["total_paginas"]
         }
     )

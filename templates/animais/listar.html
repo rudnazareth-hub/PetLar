@@ -3,6 +3,35 @@
 {% block titulo %}Animais para Adoção{% endblock %}
 
 {% block content %}
+<!-- Filtro por Sexo -->
+<div class="d-flex justify-content-center mb-4">
+    <div class="btn-group" role="group" aria-label="Filtro por sexo">
+        <a href="/animais"
+           class="btn {% if not sexo_filtro %}btn-primary{% else %}btn-outline-primary{% endif %}">
+            <i class="bi bi-grid-fill me-1"></i>Todos
+        </a>
+        <a href="/animais?sexo=M"
+           class="btn {% if sexo_filtro == 'M' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+            <i class="bi bi-gender-male me-1"></i>Machos
+        </a>
+        <a href="/animais?sexo=F"
+           class="btn {% if sexo_filtro == 'F' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+            <i class="bi bi-gender-female me-1"></i>Fêmeas
+        </a>
+    </div>
+</div>
+
+<!-- Contador de resultados -->
+<p class="text-center text-muted mb-4">
+    {% if sexo_filtro == 'M' %}
+        Mostrando {{ animais|length }} macho(s)
+    {% elif sexo_filtro == 'F' %}
+        Mostrando {{ animais|length }} fêmea(s)
+    {% else %}
+        Mostrando todos os {{ animais|length }} animais
+    {% endif %}
+</p>
+
 <!-- Header da Pagina -->
 <section class="mb-4">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
