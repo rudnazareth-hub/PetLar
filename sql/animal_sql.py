@@ -54,7 +54,7 @@ FROM animal a
 LEFT JOIN raca r ON a.id_raca = r.id
 LEFT JOIN especie e ON r.id_especie = e.id
 LEFT JOIN abrigo ab ON a.id_abrigo = ab.id_abrigo
-WHERE a.status = 'Disponível'
+WHERE a.status = 'Disponivel'
 ORDER BY a.data_entrada DESC
 """
 
@@ -126,7 +126,7 @@ SELECT
 FROM animal a
 LEFT JOIN raca r ON a.id_raca = r.id
 LEFT JOIN especie e ON r.id_especie = e.id
-WHERE a.status = 'Disponível'
+WHERE a.status = 'Disponivel'
 """
 
 # Query para busca publica com filtros
@@ -143,7 +143,7 @@ LEFT JOIN raca r ON a.id_raca = r.id
 LEFT JOIN especie e ON r.id_especie = e.id
 LEFT JOIN abrigo ab ON a.id_abrigo = ab.id_abrigo
 LEFT JOIN endereco en ON ab.id_abrigo = en.id_usuario
-WHERE a.status = 'Disponível'
+WHERE a.status = 'Disponivel'
 """
 
 # Query para obter ultimos animais cadastrados
@@ -160,7 +160,7 @@ LEFT JOIN raca r ON a.id_raca = r.id
 LEFT JOIN especie e ON r.id_especie = e.id
 LEFT JOIN abrigo ab ON a.id_abrigo = ab.id_abrigo
 LEFT JOIN endereco en ON ab.id_abrigo = en.id_usuario
-WHERE a.status = 'Disponível'
+WHERE a.status = 'Disponivel'
 ORDER BY a.data_cadastro DESC
 LIMIT ?
 """
@@ -194,13 +194,13 @@ SET status = 'Reservado',
     id_adotante_reserva = ?,
     data_reserva = CURRENT_TIMESTAMP,
     data_atualizacao = CURRENT_TIMESTAMP
-WHERE id = ? AND status = 'Disponível'
+WHERE id = ? AND status = 'Disponivel'
 """
 
 # Cancelar reserva
 CANCELAR_RESERVA = """
 UPDATE animal
-SET status = 'Disponível',
+SET status = 'Disponivel',
     id_adotante_reserva = NULL,
     data_reserva = NULL,
     data_atualizacao = CURRENT_TIMESTAMP
@@ -228,7 +228,7 @@ SELECT COUNT(*) FROM animal WHERE id_abrigo = ?
 """
 
 CONTAR_DISPONIVEIS = """
-SELECT COUNT(*) FROM animal WHERE status = 'Disponível'
+SELECT COUNT(*) FROM animal WHERE status = 'Disponivel'
 """
 
 BUSCAR_POR_TERMO = """
