@@ -1,0 +1,884 @@
+[
+  {
+    "id": 1,
+    "nome": "Max",
+    "raca": "Siamês",
+    "descricao": "Professional photograph of a Siamês (Gato), fêmea, named Max. Details: Extremamente dócil e gentil.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "001_max.jpg",
+    "filepath": "/static/img/animais/001_max.jpg",
+    "db_path": "/img/animais/001_max.jpg"
+  },
+  {
+    "id": 2,
+    "nome": "Rusty",
+    "raca": "Labrador Retriever",
+    "descricao": "Professional photograph of a Labrador Retriever (Cão), fêmea, named Rusty. Details: Independente mas sociável.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "002_rusty.jpg",
+    "filepath": "/static/img/animais/002_rusty.jpg",
+    "db_path": "/img/animais/002_rusty.jpg"
+  },
+  {
+    "id": 3,
+    "nome": "Luna",
+    "raca": "Pleco",
+    "descricao": "Professional photograph of a Pleco (Peixe), fêmea, named Luna. Details: Muito brincalhão e cheio de energia.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "003_luna.jpg",
+    "filepath": "/static/img/animais/003_luna.jpg",
+    "db_path": "/img/animais/003_luna.jpg"
+  },
+  {
+    "id": 4,
+    "nome": "Fluffy",
+    "raca": "Rex",
+    "descricao": "Professional photograph of a Rex (Coelho), macho, named Fluffy. Details: Carinhoso e apegado, adora atenção.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "004_fluffy.jpg",
+    "filepath": "/static/img/animais/004_fluffy.jpg",
+    "db_path": "/img/animais/004_fluffy.jpg"
+  },
+  {
+    "id": 5,
+    "nome": "Maggie",
+    "raca": "Asa Branca",
+    "descricao": "Professional photograph of a Asa Branca (Pássaro), fêmea, named Maggie. Details: Ativo e aventurero, gosta de brincar.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "005_maggie.jpg",
+    "filepath": "/static/img/animais/005_maggie.jpg",
+    "db_path": "/img/animais/005_maggie.jpg"
+  },
+  {
+    "id": 6,
+    "nome": "Daisy",
+    "raca": "Canário",
+    "descricao": "Professional photograph of a Canário (Pássaro), macho, named Daisy. Details: Muito inteligente e obediente.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "006_daisy.jpg",
+    "filepath": "/static/img/animais/006_daisy.jpg",
+    "db_path": "/img/animais/006_daisy.jpg"
+  },
+  {
+    "id": 7,
+    "nome": "Max",
+    "raca": "Golden Retriever",
+    "descricao": "Professional photograph of a Golden Retriever (Cão), macho, named Max. Details: Brincalhão e cheio de personalidade.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "007_max.jpg",
+    "filepath": "/static/img/animais/007_max.jpg",
+    "db_path": "/img/animais/007_max.jpg"
+  },
+  {
+    "id": 8,
+    "nome": "Cooper",
+    "raca": "Calopsita",
+    "descricao": "Professional photograph of a Calopsita (Pássaro), macho, named Cooper. Details: Independente mas sociável.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "008_cooper.jpg",
+    "filepath": "/static/img/animais/008_cooper.jpg",
+    "db_path": "/img/animais/008_cooper.jpg"
+  },
+  {
+    "id": 9,
+    "nome": "Salem",
+    "raca": "Bengal",
+    "descricao": "Professional photograph of a Bengal (Gato), macho, named Salem. Details: Animal dócil e amigável, ótimo companheiro.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "009_salem.jpg",
+    "filepath": "/static/img/animais/009_salem.jpg",
+    "db_path": "/img/animais/009_salem.jpg"
+  },
+  {
+    "id": 10,
+    "nome": "Luna",
+    "raca": "Asa Branca",
+    "descricao": "Professional photograph of a Asa Branca (Pássaro), fêmea, named Luna. Details: Muito brincalhão e cheio de energia.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "010_luna.jpg",
+    "filepath": "/static/img/animais/010_luna.jpg",
+    "db_path": "/img/animais/010_luna.jpg"
+  },
+  {
+    "id": 11,
+    "nome": "Thistle",
+    "raca": "Belier",
+    "descricao": "Professional photograph of a Belier (Coelho), fêmea, named Thistle. Details: Calmo e tranquilo, perfeito para apartamento.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "011_thistle.jpg",
+    "filepath": "/static/img/animais/011_thistle.jpg",
+    "db_path": "/img/animais/011_thistle.jpg"
+  },
+  {
+    "id": 12,
+    "nome": "Bailey",
+    "raca": "Papagaio Cinzento",
+    "descricao": "Professional photograph of a Papagaio Cinzento (Pássaro), fêmea, named Bailey. Details: Calmo e tranquilo, perfeito para apartamento.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "012_bailey.jpg",
+    "filepath": "/static/img/animais/012_bailey.jpg",
+    "db_path": "/img/animais/012_bailey.jpg"
+  },
+  {
+    "id": 13,
+    "nome": "Nibbles",
+    "raca": "Rex",
+    "descricao": "Professional photograph of a Rex (Coelho), fêmea, named Nibbles. Details: Carinhoso e apegado, adora atenção.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "013_nibbles.jpg",
+    "filepath": "/static/img/animais/013_nibbles.jpg",
+    "db_path": "/img/animais/013_nibbles.jpg"
+  },
+  {
+    "id": 14,
+    "nome": "Daisy",
+    "raca": "Hamster Anão Roborovsky",
+    "descricao": "Professional photograph of a Hamster Anão Roborovsky (Hamster), fêmea, named Daisy. Details: Muito brincalhão e cheio de energia.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "014_daisy.jpg",
+    "filepath": "/static/img/animais/014_daisy.jpg",
+    "db_path": "/img/animais/014_daisy.jpg"
+  },
+  {
+    "id": 15,
+    "nome": "Molly",
+    "raca": "Hamster Sírio",
+    "descricao": "Professional photograph of a Hamster Sírio (Hamster), macho, named Molly. Details: Carinhoso e apegado, adora atenção.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "015_molly.jpg",
+    "filepath": "/static/img/animais/015_molly.jpg",
+    "db_path": "/img/animais/015_molly.jpg"
+  },
+  {
+    "id": 16,
+    "nome": "Ash",
+    "raca": "Sphynx",
+    "descricao": "Professional photograph of a Sphynx (Gato), macho, named Ash. Details: Independente mas sociável.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "016_ash.jpg",
+    "filepath": "/static/img/animais/016_ash.jpg",
+    "db_path": "/img/animais/016_ash.jpg"
+  },
+  {
+    "id": 17,
+    "nome": "Clover",
+    "raca": "Fuzzy Lop",
+    "descricao": "Professional photograph of a Fuzzy Lop (Coelho), fêmea, named Clover. Details: Ativo e aventurero, gosta de brincar.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "017_clover.jpg",
+    "filepath": "/static/img/animais/017_clover.jpg",
+    "db_path": "/img/animais/017_clover.jpg"
+  },
+  {
+    "id": 18,
+    "nome": "Bella",
+    "raca": "Angorá Turco",
+    "descricao": "Professional photograph of a Angorá Turco (Gato), fêmea, named Bella. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "018_bella.jpg",
+    "filepath": "/static/img/animais/018_bella.jpg",
+    "db_path": "/img/animais/018_bella.jpg"
+  },
+  {
+    "id": 19,
+    "nome": "Lucy",
+    "raca": "Canário",
+    "descricao": "Professional photograph of a Canário (Pássaro), macho, named Lucy. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "019_lucy.jpg",
+    "filepath": "/static/img/animais/019_lucy.jpg",
+    "db_path": "/img/animais/019_lucy.jpg"
+  },
+  {
+    "id": 20,
+    "nome": "Ash",
+    "raca": "Sphynx",
+    "descricao": "Professional photograph of a Sphynx (Gato), macho, named Ash. Details: Ativo e aventurero, gosta de brincar.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "020_ash.jpg",
+    "filepath": "/static/img/animais/020_ash.jpg",
+    "db_path": "/img/animais/020_ash.jpg"
+  },
+  {
+    "id": 21,
+    "nome": "Rusty",
+    "raca": "Calopsita",
+    "descricao": "Professional photograph of a Calopsita (Pássaro), fêmea, named Rusty. Details: Carinhoso e apegado, adora atenção.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "021_rusty.jpg",
+    "filepath": "/static/img/animais/021_rusty.jpg",
+    "db_path": "/img/animais/021_rusty.jpg"
+  },
+  {
+    "id": 22,
+    "nome": "Shadow",
+    "raca": "Hamster Sírio",
+    "descricao": "Professional photograph of a Hamster Sírio (Hamster), fêmea, named Shadow. Details: Extremamente dócil e gentil.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "022_shadow.jpg",
+    "filepath": "/static/img/animais/022_shadow.jpg",
+    "db_path": "/img/animais/022_shadow.jpg"
+  },
+  {
+    "id": 23,
+    "nome": "Zoe",
+    "raca": "Corydoras",
+    "descricao": "Professional photograph of a Corydoras (Peixe), macho, named Zoe. Details: Extremamente dócil e gentil.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "023_zoe.jpg",
+    "filepath": "/static/img/animais/023_zoe.jpg",
+    "db_path": "/img/animais/023_zoe.jpg"
+  },
+  {
+    "id": 24,
+    "nome": "Simba",
+    "raca": "Ragdoll",
+    "descricao": "Professional photograph of a Ragdoll (Gato), fêmea, named Simba. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "024_simba.jpg",
+    "filepath": "/static/img/animais/024_simba.jpg",
+    "db_path": "/img/animais/024_simba.jpg"
+  },
+  {
+    "id": 25,
+    "nome": "Mittens",
+    "raca": "Angorá Turco",
+    "descricao": "Professional photograph of a Angorá Turco (Gato), fêmea, named Mittens. Details: Calmo e tranquilo, perfeito para apartamento.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "025_mittens.jpg",
+    "filepath": "/static/img/animais/025_mittens.jpg",
+    "db_path": "/img/animais/025_mittens.jpg"
+  },
+  {
+    "id": 26,
+    "nome": "Sophie",
+    "raca": "Hamster Anão Roborovsky",
+    "descricao": "Professional photograph of a Hamster Anão Roborovsky (Hamster), macho, named Sophie. Details: Muito brincalhão e cheio de energia.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "026_sophie.jpg",
+    "filepath": "/static/img/animais/026_sophie.jpg",
+    "db_path": "/img/animais/026_sophie.jpg"
+  },
+  {
+    "id": 27,
+    "nome": "Bunny",
+    "raca": "Coelho-Rei",
+    "descricao": "Professional photograph of a Coelho-Rei (Coelho), fêmea, named Bunny. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "027_bunny.jpg",
+    "filepath": "/static/img/animais/027_bunny.jpg",
+    "db_path": "/img/animais/027_bunny.jpg"
+  },
+  {
+    "id": 28,
+    "nome": "Luna",
+    "raca": "Hamster Sírio",
+    "descricao": "Professional photograph of a Hamster Sírio (Hamster), fêmea, named Luna. Details: Independente mas sociável.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "028_luna.jpg",
+    "filepath": "/static/img/animais/028_luna.jpg",
+    "db_path": "/img/animais/028_luna.jpg"
+  },
+  {
+    "id": 29,
+    "nome": "Patches",
+    "raca": "Persa",
+    "descricao": "Professional photograph of a Persa (Gato), fêmea, named Patches. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "029_patches.jpg",
+    "filepath": "/static/img/animais/029_patches.jpg",
+    "db_path": "/img/animais/029_patches.jpg"
+  },
+  {
+    "id": 30,
+    "nome": "Jake",
+    "raca": "Guppy",
+    "descricao": "Professional photograph of a Guppy (Peixe), fêmea, named Jake. Details: Ativo e aventurero, gosta de brincar.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "030_jake.jpg",
+    "filepath": "/static/img/animais/030_jake.jpg",
+    "db_path": "/img/animais/030_jake.jpg"
+  },
+  {
+    "id": 31,
+    "nome": "Shadow",
+    "raca": "Hamster Sírio",
+    "descricao": "Professional photograph of a Hamster Sírio (Hamster), fêmea, named Shadow. Details: Muito inteligente e obediente.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "031_shadow.jpg",
+    "filepath": "/static/img/animais/031_shadow.jpg",
+    "db_path": "/img/animais/031_shadow.jpg"
+  },
+  {
+    "id": 32,
+    "nome": "Shadow",
+    "raca": "Corydoras",
+    "descricao": "Professional photograph of a Corydoras (Peixe), fêmea, named Shadow. Details: Muito inteligente e obediente.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "032_shadow.jpg",
+    "filepath": "/static/img/animais/032_shadow.jpg",
+    "db_path": "/img/animais/032_shadow.jpg"
+  },
+  {
+    "id": 33,
+    "nome": "Cooper",
+    "raca": "Pleco",
+    "descricao": "Professional photograph of a Pleco (Peixe), macho, named Cooper. Details: Muito inteligente e obediente.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "033_cooper.jpg",
+    "filepath": "/static/img/animais/033_cooper.jpg",
+    "db_path": "/img/animais/033_cooper.jpg"
+  },
+  {
+    "id": 34,
+    "nome": "Luna",
+    "raca": "Hamster Anão Roborovsky",
+    "descricao": "Professional photograph of a Hamster Anão Roborovsky (Hamster), macho, named Luna. Details: Muito brincalhão e cheio de energia.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "034_luna.jpg",
+    "filepath": "/static/img/animais/034_luna.jpg",
+    "db_path": "/img/animais/034_luna.jpg"
+  },
+  {
+    "id": 35,
+    "nome": "Lola",
+    "raca": "Calopsita",
+    "descricao": "Professional photograph of a Calopsita (Pássaro), macho, named Lola. Details: Animal dócil e amigável, ótimo companheiro.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "035_lola.jpg",
+    "filepath": "/static/img/animais/035_lola.jpg",
+    "db_path": "/img/animais/035_lola.jpg"
+  },
+  {
+    "id": 36,
+    "nome": "Miko",
+    "raca": "Siamês",
+    "descricao": "Professional photograph of a Siamês (Gato), macho, named Miko. Details: Independente mas sociável.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "036_miko.jpg",
+    "filepath": "/static/img/animais/036_miko.jpg",
+    "db_path": "/img/animais/036_miko.jpg"
+  },
+  {
+    "id": 37,
+    "nome": "Max",
+    "raca": "Poodle",
+    "descricao": "Professional photograph of a Poodle (Cão), fêmea, named Max. Details: Muito inteligente e obediente.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "037_max.jpg",
+    "filepath": "/static/img/animais/037_max.jpg",
+    "db_path": "/img/animais/037_max.jpg"
+  },
+  {
+    "id": 38,
+    "nome": "Tucker",
+    "raca": "Hamster Anão Russo",
+    "descricao": "Professional photograph of a Hamster Anão Russo (Hamster), fêmea, named Tucker. Details: Muito inteligente e obediente.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "038_tucker.jpg",
+    "filepath": "/static/img/animais/038_tucker.jpg",
+    "db_path": "/img/animais/038_tucker.jpg"
+  },
+  {
+    "id": 39,
+    "nome": "Buddy",
+    "raca": "Tetra-Neon",
+    "descricao": "Professional photograph of a Tetra-Neon (Peixe), macho, named Buddy. Details: Calmo e tranquilo, perfeito para apartamento.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "039_buddy.jpg",
+    "filepath": "/static/img/animais/039_buddy.jpg",
+    "db_path": "/img/animais/039_buddy.jpg"
+  },
+  {
+    "id": 40,
+    "nome": "Duke",
+    "raca": "Hamster Anão Russo",
+    "descricao": "Professional photograph of a Hamster Anão Russo (Hamster), fêmea, named Duke. Details: Independente mas sociável.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "040_duke.jpg",
+    "filepath": "/static/img/animais/040_duke.jpg",
+    "db_path": "/img/animais/040_duke.jpg"
+  },
+  {
+    "id": 41,
+    "nome": "Daisy",
+    "raca": "Golden Retriever",
+    "descricao": "Professional photograph of a Golden Retriever (Cão), macho, named Daisy. Details: Ativo e aventurero, gosta de brincar.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "041_daisy.jpg",
+    "filepath": "/static/img/animais/041_daisy.jpg",
+    "db_path": "/img/animais/041_daisy.jpg"
+  },
+  {
+    "id": 42,
+    "nome": "Bailey",
+    "raca": "Hamster Chinês",
+    "descricao": "Professional photograph of a Hamster Chinês (Hamster), fêmea, named Bailey. Details: Extremamente dócil e gentil.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "042_bailey.jpg",
+    "filepath": "/static/img/animais/042_bailey.jpg",
+    "db_path": "/img/animais/042_bailey.jpg"
+  },
+  {
+    "id": 43,
+    "nome": "Nibbles",
+    "raca": "Mini Lop",
+    "descricao": "Professional photograph of a Mini Lop (Coelho), macho, named Nibbles. Details: Ativo e aventurero, gosta de brincar.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "043_nibbles.jpg",
+    "filepath": "/static/img/animais/043_nibbles.jpg",
+    "db_path": "/img/animais/043_nibbles.jpg"
+  },
+  {
+    "id": 44,
+    "nome": "Molly",
+    "raca": "Hamster Anão Russo",
+    "descricao": "Professional photograph of a Hamster Anão Russo (Hamster), fêmea, named Molly. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "044_molly.jpg",
+    "filepath": "/static/img/animais/044_molly.jpg",
+    "db_path": "/img/animais/044_molly.jpg"
+  },
+  {
+    "id": 45,
+    "nome": "Maggie",
+    "raca": "Hamster Sírio",
+    "descricao": "Professional photograph of a Hamster Sírio (Hamster), macho, named Maggie. Details: Carinhoso e apegado, adora atenção.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "045_maggie.jpg",
+    "filepath": "/static/img/animais/045_maggie.jpg",
+    "db_path": "/img/animais/045_maggie.jpg"
+  },
+  {
+    "id": 46,
+    "nome": "Cinnamon",
+    "raca": "Holandês",
+    "descricao": "Professional photograph of a Holandês (Coelho), macho, named Cinnamon. Details: Independente mas sociável.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "046_cinnamon.jpg",
+    "filepath": "/static/img/animais/046_cinnamon.jpg",
+    "db_path": "/img/animais/046_cinnamon.jpg"
+  },
+  {
+    "id": 47,
+    "nome": "Luna",
+    "raca": "Hamster Anão Russo",
+    "descricao": "Professional photograph of a Hamster Anão Russo (Hamster), fêmea, named Luna. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "047_luna.jpg",
+    "filepath": "/static/img/animais/047_luna.jpg",
+    "db_path": "/img/animais/047_luna.jpg"
+  },
+  {
+    "id": 48,
+    "nome": "Bailey",
+    "raca": "Papagaio Cinzento",
+    "descricao": "Professional photograph of a Papagaio Cinzento (Pássaro), fêmea, named Bailey. Details: Independente mas sociável.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "048_bailey.jpg",
+    "filepath": "/static/img/animais/048_bailey.jpg",
+    "db_path": "/img/animais/048_bailey.jpg"
+  },
+  {
+    "id": 49,
+    "nome": "Tucker",
+    "raca": "Pug",
+    "descricao": "Professional photograph of a Pug (Cão), macho, named Tucker. Details: Brincalhão e cheio de personalidade.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "049_tucker.jpg",
+    "filepath": "/static/img/animais/049_tucker.jpg",
+    "db_path": "/img/animais/049_tucker.jpg"
+  },
+  {
+    "id": 50,
+    "nome": "Molly",
+    "raca": "Beagle",
+    "descricao": "Professional photograph of a Beagle (Cão), fêmea, named Molly. Details: Brincalhão e cheio de personalidade.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "050_molly.jpg",
+    "filepath": "/static/img/animais/050_molly.jpg",
+    "db_path": "/img/animais/050_molly.jpg"
+  },
+  {
+    "id": 51,
+    "nome": "Mittens",
+    "raca": "Ragdoll",
+    "descricao": "Professional photograph of a Ragdoll (Gato), fêmea, named Mittens. Details: Ativo e aventurero, gosta de brincar.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "051_mittens.jpg",
+    "filepath": "/static/img/animais/051_mittens.jpg",
+    "db_path": "/img/animais/051_mittens.jpg"
+  },
+  {
+    "id": 52,
+    "nome": "Lola",
+    "raca": "Hamster Anão Siberiano",
+    "descricao": "Professional photograph of a Hamster Anão Siberiano (Hamster), macho, named Lola. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "052_lola.jpg",
+    "filepath": "/static/img/animais/052_lola.jpg",
+    "db_path": "/img/animais/052_lola.jpg"
+  },
+  {
+    "id": 53,
+    "nome": "Rusty",
+    "raca": "Pastor Alemão",
+    "descricao": "Professional photograph of a Pastor Alemão (Cão), macho, named Rusty. Details: Muito inteligente e obediente.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "053_rusty.jpg",
+    "filepath": "/static/img/animais/053_rusty.jpg",
+    "db_path": "/img/animais/053_rusty.jpg"
+  },
+  {
+    "id": 54,
+    "nome": "Charlie",
+    "raca": "Pug",
+    "descricao": "Professional photograph of a Pug (Cão), fêmea, named Charlie. Details: Animal dócil e amigável, ótimo companheiro.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "054_charlie.jpg",
+    "filepath": "/static/img/animais/054_charlie.jpg",
+    "db_path": "/img/animais/054_charlie.jpg"
+  },
+  {
+    "id": 55,
+    "nome": "Cinnamon",
+    "raca": "Fuzzy Lop",
+    "descricao": "Professional photograph of a Fuzzy Lop (Coelho), fêmea, named Cinnamon. Details: Muito inteligente e obediente.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "055_cinnamon.jpg",
+    "filepath": "/static/img/animais/055_cinnamon.jpg",
+    "db_path": "/img/animais/055_cinnamon.jpg"
+  },
+  {
+    "id": 56,
+    "nome": "Luna",
+    "raca": "Siamês",
+    "descricao": "Professional photograph of a Siamês (Gato), macho, named Luna. Details: Muito inteligente e obediente.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "056_luna.jpg",
+    "filepath": "/static/img/animais/056_luna.jpg",
+    "db_path": "/img/animais/056_luna.jpg"
+  },
+  {
+    "id": 57,
+    "nome": "Pantera",
+    "raca": "Sphynx",
+    "descricao": "Professional photograph of a Sphynx (Gato), macho, named Pantera. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "057_pantera.jpg",
+    "filepath": "/static/img/animais/057_pantera.jpg",
+    "db_path": "/img/animais/057_pantera.jpg"
+  },
+  {
+    "id": 58,
+    "nome": "Patch",
+    "raca": "Gigante Flamengo",
+    "descricao": "Professional photograph of a Gigante Flamengo (Coelho), fêmea, named Patch. Details: Ativo e aventurero, gosta de brincar.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "058_patch.jpg",
+    "filepath": "/static/img/animais/058_patch.jpg",
+    "db_path": "/img/animais/058_patch.jpg"
+  },
+  {
+    "id": 59,
+    "nome": "Max",
+    "raca": "Hamster Anão Siberiano",
+    "descricao": "Professional photograph of a Hamster Anão Siberiano (Hamster), fêmea, named Max. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "059_max.jpg",
+    "filepath": "/static/img/animais/059_max.jpg",
+    "db_path": "/img/animais/059_max.jpg"
+  },
+  {
+    "id": 60,
+    "nome": "Nibbles",
+    "raca": "Holandês",
+    "descricao": "Professional photograph of a Holandês (Coelho), fêmea, named Nibbles. Details: Extremamente dócil e gentil.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "060_nibbles.jpg",
+    "filepath": "/static/img/animais/060_nibbles.jpg",
+    "db_path": "/img/animais/060_nibbles.jpg"
+  },
+  {
+    "id": 61,
+    "nome": "Bella",
+    "raca": "Hamster Chinês",
+    "descricao": "Professional photograph of a Hamster Chinês (Hamster), macho, named Bella. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "061_bella.jpg",
+    "filepath": "/static/img/animais/061_bella.jpg",
+    "db_path": "/img/animais/061_bella.jpg"
+  },
+  {
+    "id": 62,
+    "nome": "Tucker",
+    "raca": "Molinésia",
+    "descricao": "Professional photograph of a Molinésia (Peixe), fêmea, named Tucker. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "062_tucker.jpg",
+    "filepath": "/static/img/animais/062_tucker.jpg",
+    "db_path": "/img/animais/062_tucker.jpg"
+  },
+  {
+    "id": 63,
+    "nome": "Cotton",
+    "raca": "Belier",
+    "descricao": "Professional photograph of a Belier (Coelho), macho, named Cotton. Details: Independente mas sociável.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "063_cotton.jpg",
+    "filepath": "/static/img/animais/063_cotton.jpg",
+    "db_path": "/img/animais/063_cotton.jpg"
+  },
+  {
+    "id": 64,
+    "nome": "Nibbles",
+    "raca": "Belier",
+    "descricao": "Professional photograph of a Belier (Coelho), macho, named Nibbles. Details: Extremamente dócil e gentil.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "064_nibbles.jpg",
+    "filepath": "/static/img/animais/064_nibbles.jpg",
+    "db_path": "/img/animais/064_nibbles.jpg"
+  },
+  {
+    "id": 65,
+    "nome": "Ginger",
+    "raca": "Calopsita",
+    "descricao": "Professional photograph of a Calopsita (Pássaro), fêmea, named Ginger. Details: Muito inteligente e obediente.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "065_ginger.jpg",
+    "filepath": "/static/img/animais/065_ginger.jpg",
+    "db_path": "/img/animais/065_ginger.jpg"
+  },
+  {
+    "id": 66,
+    "nome": "Milo",
+    "raca": "Goldfish",
+    "descricao": "Professional photograph of a Goldfish (Peixe), fêmea, named Milo. Details: Calmo e tranquilo, perfeito para apartamento.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "066_milo.jpg",
+    "filepath": "/static/img/animais/066_milo.jpg",
+    "db_path": "/img/animais/066_milo.jpg"
+  },
+  {
+    "id": 67,
+    "nome": "Bella",
+    "raca": "Dálmata",
+    "descricao": "Professional photograph of a Dálmata (Cão), macho, named Bella. Details: Independente mas sociável.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "067_bella.jpg",
+    "filepath": "/static/img/animais/067_bella.jpg",
+    "db_path": "/img/animais/067_bella.jpg"
+  },
+  {
+    "id": 68,
+    "nome": "Lucy",
+    "raca": "Asa Branca",
+    "descricao": "Professional photograph of a Asa Branca (Pássaro), macho, named Lucy. Details: Animal dócil e amigável, ótimo companheiro.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "068_lucy.jpg",
+    "filepath": "/static/img/animais/068_lucy.jpg",
+    "db_path": "/img/animais/068_lucy.jpg"
+  },
+  {
+    "id": 69,
+    "nome": "Nala",
+    "raca": "Sphynx",
+    "descricao": "Professional photograph of a Sphynx (Gato), macho, named Nala. Details: Brincalhão e cheio de personalidade.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "069_nala.jpg",
+    "filepath": "/static/img/animais/069_nala.jpg",
+    "db_path": "/img/animais/069_nala.jpg"
+  },
+  {
+    "id": 70,
+    "nome": "Chloe",
+    "raca": "Periquito-Australiano",
+    "descricao": "Professional photograph of a Periquito-Australiano (Pássaro), fêmea, named Chloe. Details: Muito brincalhão e cheio de energia.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "070_chloe.jpg",
+    "filepath": "/static/img/animais/070_chloe.jpg",
+    "db_path": "/img/animais/070_chloe.jpg"
+  },
+  {
+    "id": 71,
+    "nome": "Sadie",
+    "raca": "Papagaio Cinzento",
+    "descricao": "Professional photograph of a Papagaio Cinzento (Pássaro), macho, named Sadie. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "071_sadie.jpg",
+    "filepath": "/static/img/animais/071_sadie.jpg",
+    "db_path": "/img/animais/071_sadie.jpg"
+  },
+  {
+    "id": 72,
+    "nome": "Maggie",
+    "raca": "Canário",
+    "descricao": "Professional photograph of a Canário (Pássaro), fêmea, named Maggie. Details: Muito inteligente e obediente.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "072_maggie.jpg",
+    "filepath": "/static/img/animais/072_maggie.jpg",
+    "db_path": "/img/animais/072_maggie.jpg"
+  },
+  {
+    "id": 73,
+    "nome": "Rusty",
+    "raca": "Bulldog Francês",
+    "descricao": "Professional photograph of a Bulldog Francês (Cão), macho, named Rusty. Details: Calmo e tranquilo, perfeito para apartamento.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "073_rusty.jpg",
+    "filepath": "/static/img/animais/073_rusty.jpg",
+    "db_path": "/img/animais/073_rusty.jpg"
+  },
+  {
+    "id": 74,
+    "nome": "Sophie",
+    "raca": "Tetra-Neon",
+    "descricao": "Professional photograph of a Tetra-Neon (Peixe), fêmea, named Sophie. Details: Ativo e aventurero, gosta de brincar.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "074_sophie.jpg",
+    "filepath": "/static/img/animais/074_sophie.jpg",
+    "db_path": "/img/animais/074_sophie.jpg"
+  },
+  {
+    "id": 75,
+    "nome": "Milo",
+    "raca": "Papagaio Cinzento",
+    "descricao": "Professional photograph of a Papagaio Cinzento (Pássaro), fêmea, named Milo. Details: Brincalhão e cheio de personalidade.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "075_milo.jpg",
+    "filepath": "/static/img/animais/075_milo.jpg",
+    "db_path": "/img/animais/075_milo.jpg"
+  },
+  {
+    "id": 76,
+    "nome": "Hoppy",
+    "raca": "Mini Lop",
+    "descricao": "Professional photograph of a Mini Lop (Coelho), macho, named Hoppy. Details: Carinhoso e apegado, adora atenção.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "076_hoppy.jpg",
+    "filepath": "/static/img/animais/076_hoppy.jpg",
+    "db_path": "/img/animais/076_hoppy.jpg"
+  },
+  {
+    "id": 77,
+    "nome": "Simba",
+    "raca": "Persa",
+    "descricao": "Professional photograph of a Persa (Gato), macho, named Simba. Details: Carinhoso e apegado, adora atenção.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "077_simba.jpg",
+    "filepath": "/static/img/animais/077_simba.jpg",
+    "db_path": "/img/animais/077_simba.jpg"
+  },
+  {
+    "id": 78,
+    "nome": "Tucker",
+    "raca": "Beagle",
+    "descricao": "Professional photograph of a Beagle (Cão), macho, named Tucker. Details: Extremamente dócil e gentil.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "078_tucker.jpg",
+    "filepath": "/static/img/animais/078_tucker.jpg",
+    "db_path": "/img/animais/078_tucker.jpg"
+  },
+  {
+    "id": 79,
+    "nome": "Bailey",
+    "raca": "Hamster Chinês",
+    "descricao": "Professional photograph of a Hamster Chinês (Hamster), fêmea, named Bailey. Details: Calmo e tranquilo, perfeito para apartamento.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "079_bailey.jpg",
+    "filepath": "/static/img/animais/079_bailey.jpg",
+    "db_path": "/img/animais/079_bailey.jpg"
+  },
+  {
+    "id": 80,
+    "nome": "Jake",
+    "raca": "Canário",
+    "descricao": "Professional photograph of a Canário (Pássaro), macho, named Jake. Details: Muito inteligente e obediente.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "080_jake.jpg",
+    "filepath": "/static/img/animais/080_jake.jpg",
+    "db_path": "/img/animais/080_jake.jpg"
+  },
+  {
+    "id": 81,
+    "nome": "Bella",
+    "raca": "Persa",
+    "descricao": "Professional photograph of a Persa (Gato), macho, named Bella. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "081_bella.jpg",
+    "filepath": "/static/img/animais/081_bella.jpg",
+    "db_path": "/img/animais/081_bella.jpg"
+  },
+  {
+    "id": 82,
+    "nome": "Tucker",
+    "raca": "Pastor Alemão",
+    "descricao": "Professional photograph of a Pastor Alemão (Cão), fêmea, named Tucker. Details: Muito inteligente e obediente.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "082_tucker.jpg",
+    "filepath": "/static/img/animais/082_tucker.jpg",
+    "db_path": "/img/animais/082_tucker.jpg"
+  },
+  {
+    "id": 83,
+    "nome": "Clover",
+    "raca": "Gigante Flamengo",
+    "descricao": "Professional photograph of a Gigante Flamengo (Coelho), fêmea, named Clover. Details: Carinhoso e apegado, adora atenção.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "083_clover.jpg",
+    "filepath": "/static/img/animais/083_clover.jpg",
+    "db_path": "/img/animais/083_clover.jpg"
+  },
+  {
+    "id": 84,
+    "nome": "Chloe",
+    "raca": "Hamster Anão Russo",
+    "descricao": "Professional photograph of a Hamster Anão Russo (Hamster), fêmea, named Chloe. Details: Animal dócil e amigável, ótimo companheiro.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "084_chloe.jpg",
+    "filepath": "/static/img/animais/084_chloe.jpg",
+    "db_path": "/img/animais/084_chloe.jpg"
+  },
+  {
+    "id": 85,
+    "nome": "Maggie",
+    "raca": "Asa Branca",
+    "descricao": "Professional photograph of a Asa Branca (Pássaro), macho, named Maggie. Details: Ativo e aventurero, gosta de brincar.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "085_maggie.jpg",
+    "filepath": "/static/img/animais/085_maggie.jpg",
+    "db_path": "/img/animais/085_maggie.jpg"
+  },
+  {
+    "id": 86,
+    "nome": "Zoe",
+    "raca": "Tetra-Neon",
+    "descricao": "Professional photograph of a Tetra-Neon (Peixe), fêmea, named Zoe. Details: Ativo e aventurero, gosta de brincar.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "086_zoe.jpg",
+    "filepath": "/static/img/animais/086_zoe.jpg",
+    "db_path": "/img/animais/086_zoe.jpg"
+  },
+  {
+    "id": 87,
+    "nome": "Toby",
+    "raca": "Hamster Chinês",
+    "descricao": "Professional photograph of a Hamster Chinês (Hamster), macho, named Toby. Details: Brincalhão e cheio de personalidade.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "087_toby.jpg",
+    "filepath": "/static/img/animais/087_toby.jpg",
+    "db_path": "/img/animais/087_toby.jpg"
+  },
+  {
+    "id": 88,
+    "nome": "Tucker",
+    "raca": "Tetra-Neon",
+    "descricao": "Professional photograph of a Tetra-Neon (Peixe), macho, named Tucker. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "088_tucker.jpg",
+    "filepath": "/static/img/animais/088_tucker.jpg",
+    "db_path": "/img/animais/088_tucker.jpg"
+  },
+  {
+    "id": 89,
+    "nome": "Clover",
+    "raca": "Fuzzy Lop",
+    "descricao": "Professional photograph of a Fuzzy Lop (Coelho), macho, named Clover. Details: Independente mas sociável.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "089_clover.jpg",
+    "filepath": "/static/img/animais/089_clover.jpg",
+    "db_path": "/img/animais/089_clover.jpg"
+  },
+  {
+    "id": 90,
+    "nome": "Kitty",
+    "raca": "Angorá Turco",
+    "descricao": "Professional photograph of a Angorá Turco (Gato), macho, named Kitty. Details: Animal dócil e amigável, ótimo companheiro.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "090_kitty.jpg",
+    "filepath": "/static/img/animais/090_kitty.jpg",
+    "db_path": "/img/animais/090_kitty.jpg"
+  },
+  {
+    "id": 91,
+    "nome": "Molly",
+    "raca": "Bulldog Francês",
+    "descricao": "Professional photograph of a Bulldog Francês (Cão), macho, named Molly. Details: Independente mas sociável.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "091_molly.jpg",
+    "filepath": "/static/img/animais/091_molly.jpg",
+    "db_path": "/img/animais/091_molly.jpg"
+  },
+  {
+    "id": 92,
+    "nome": "Cooper",
+    "raca": "Canário",
+    "descricao": "Professional photograph of a Canário (Pássaro), macho, named Cooper. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "092_cooper.jpg",
+    "filepath": "/static/img/animais/092_cooper.jpg",
+    "db_path": "/img/animais/092_cooper.jpg"
+  },
+  {
+    "id": 93,
+    "nome": "Miko",
+    "raca": "Siamês",
+    "descricao": "Professional photograph of a Siamês (Gato), fêmea, named Miko. Details: Independente mas sociável.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "093_miko.jpg",
+    "filepath": "/static/img/animais/093_miko.jpg",
+    "db_path": "/img/animais/093_miko.jpg"
+  },
+  {
+    "id": 94,
+    "nome": "Bailey",
+    "raca": "Hamster Anão Siberiano",
+    "descricao": "Professional photograph of a Hamster Anão Siberiano (Hamster), fêmea, named Bailey. Details: Ativo e aventurero, gosta de brincar.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "094_bailey.jpg",
+    "filepath": "/static/img/animais/094_bailey.jpg",
+    "db_path": "/img/animais/094_bailey.jpg"
+  },
+  {
+    "id": 95,
+    "nome": "Hazel",
+    "raca": "Coelho-Rei",
+    "descricao": "Professional photograph of a Coelho-Rei (Coelho), macho, named Hazel. Details: Ativo e aventurero, gosta de brincar.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "095_hazel.jpg",
+    "filepath": "/static/img/animais/095_hazel.jpg",
+    "db_path": "/img/animais/095_hazel.jpg"
+  },
+  {
+    "id": 96,
+    "nome": "Hoppy",
+    "raca": "Rex",
+    "descricao": "Professional photograph of a Rex (Coelho), macho, named Hoppy. Details: Muito brincalhão e cheio de energia.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "096_hoppy.jpg",
+    "filepath": "/static/img/animais/096_hoppy.jpg",
+    "db_path": "/img/animais/096_hoppy.jpg"
+  },
+  {
+    "id": 97,
+    "nome": "Maggie",
+    "raca": "Poodle",
+    "descricao": "Professional photograph of a Poodle (Cão), fêmea, named Maggie. Details: Extremamente dócil e gentil.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "097_maggie.jpg",
+    "filepath": "/static/img/animais/097_maggie.jpg",
+    "db_path": "/img/animais/097_maggie.jpg"
+  },
+  {
+    "id": 98,
+    "nome": "Sophie",
+    "raca": "Hamster Anão Russo",
+    "descricao": "Professional photograph of a Hamster Anão Russo (Hamster), macho, named Sophie. Details: Tímido no início, mas muito afetuoso depois.. High quality professional pet photograph, 512x512 pixels, well-lit, neutral background, perfect for pet adoption website, realistic, sharp focus, professional photo quality.",
+    "filename": "098_sophie.jpg",
+    "filepath": "/static/img/animais/098_sophie.jpg",
+    "db_path": "/img/animais/098_sophie.jpg"
+  }
+]

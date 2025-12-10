@@ -164,6 +164,59 @@
         </div>
         {% endfor %}
     </div>
+
+    <!-- Paginação -->
+    {% if total_paginas > 1 %}
+    <nav aria-label="Navegação de páginas" class="mt-5">
+        <ul class="pagination justify-content-center">
+            {# Botão Anterior #}
+            <li class="page-item {{ 'disabled' if pagina == 1 else '' }}">
+                <a class="page-link" href="?pagina={{ pagina - 1 }}{% if filtros.especie %}&especie={{ filtros.especie }}{% endif %}{% if filtros.raca %}&raca={{ filtros.raca }}{% endif %}{% if filtros.uf %}&uf={{ filtros.uf }}{% endif %}{% if filtros.cidade %}&cidade={{ filtros.cidade }}{% endif %}" {% if pagina == 1 %}tabindex="-1" aria-disabled="true"{% endif %}>
+                    <i class="bi bi-chevron-left"></i> Anterior
+                </a>
+            </li>
+
+            {# Páginas #}
+            {% set start_page = [1, pagina - 2] | max %}
+            {% set end_page = [total_paginas, pagina + 2] | min %}
+
+            {% if start_page > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="?pagina=1{% if filtros.especie %}&especie={{ filtros.especie }}{% endif %}{% if filtros.raca %}&raca={{ filtros.raca }}{% endif %}{% if filtros.uf %}&uf={{ filtros.uf }}{% endif %}{% if filtros.cidade %}&cidade={{ filtros.cidade }}{% endif %}">1</a>
+            </li>
+            {% if start_page > 2 %}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+            {% endif %}
+
+            {% for p in range(start_page, end_page + 1) %}
+            <li class="page-item {{ 'active' if p == pagina else '' }}">
+                <a class="page-link" href="?pagina={{ p }}{% if filtros.especie %}&especie={{ filtros.especie }}{% endif %}{% if filtros.raca %}&raca={{ filtros.raca }}{% endif %}{% if filtros.uf %}&uf={{ filtros.uf }}{% endif %}{% if filtros.cidade %}&cidade={{ filtros.cidade }}{% endif %}">{{ p }}</a>
+            </li>
+            {% endfor %}
+
+            {% if end_page < total_paginas %}
+            {% if end_page < total_paginas - 1 %}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+            <li class="page-item">
+                <a class="page-link" href="?pagina={{ total_paginas }}{% if filtros.especie %}&especie={{ filtros.especie }}{% endif %}{% if filtros.raca %}&raca={{ filtros.raca }}{% endif %}{% if filtros.uf %}&uf={{ filtros.uf }}{% endif %}{% if filtros.cidade %}&cidade={{ filtros.cidade }}{% endif %}">{{ total_paginas }}</a>
+            </li>
+            {% endif %}
+
+            {# Botão Próximo #}
+            <li class="page-item {{ 'disabled' if pagina == total_paginas else '' }}">
+                <a class="page-link" href="?pagina={{ pagina + 1 }}{% if filtros.especie %}&especie={{ filtros.especie }}{% endif %}{% if filtros.raca %}&raca={{ filtros.raca }}{% endif %}{% if filtros.uf %}&uf={{ filtros.uf }}{% endif %}{% if filtros.cidade %}&cidade={{ filtros.cidade }}{% endif %}" {% if pagina == total_paginas %}tabindex="-1" aria-disabled="true"{% endif %}>
+                    Próximo <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+        <p class="text-center text-muted small mt-2">
+            Página {{ pagina }} de {{ total_paginas }} ({{ total }} animais)
+        </p>
+    </nav>
+    {% endif %}
+
     {% else %}
     <!-- Empty State -->
     <div class="empty-state">

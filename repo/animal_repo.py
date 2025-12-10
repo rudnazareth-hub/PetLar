@@ -273,45 +273,73 @@ def buscar_disponiveis_com_filtros(
     especie_id: Optional[int] = None,
     raca_id: Optional[int] = None,
     uf: Optional[str] = None,
-    cidade: Optional[str] = None
-) -> List[dict]:
+    cidade: Optional[str] = None,
+    pagina: int = 1,
+    por_pagina: int = 12
+) -> dict:
     """
-    Busca animais disponíveis com filtros opcionais.
+    Busca animais disponíveis com filtros opcionais e paginação.
 
     Args:
         especie_id: Filtrar por espécie
         raca_id: Filtrar por raça
         uf: Filtrar por UF do abrigo
         cidade: Filtrar por cidade do abrigo
+        pagina: Número da página (começa em 1)
+        por_pagina: Quantidade de itens por página
 
     Returns:
-        Lista de dicionários com animal e localização do abrigo
+        Dicionário com animais, total, página atual e total de páginas
     """
-    query = BUSCAR_DISPONIVEIS_COM_FILTROS
+    base_query = BUSCAR_DISPONIVEIS_COM_FILTROS
+    count_query = CONTAR_DISPONIVEIS_COM_FILTROS
     params = []
 
     if especie_id:
-        query += " AND e.id = ?"
+        base_query += " AND e.id = ?"
+        count_query += " AND e.id = ?"
         params.append(especie_id)
 
     if raca_id:
-        query += " AND r.id = ?"
+        base_query += " AND r.id = ?"
+        count_query += " AND r.id = ?"
         params.append(raca_id)
 
     if uf:
-        query += " AND en.uf = ?"
+        base_query += " AND en.uf = ?"
+        count_query += " AND en.uf = ?"
         params.append(uf)
 
     if cidade:
-        query += " AND en.cidade LIKE ?"
+        base_query += " AND en.cidade LIKE ?"
+        count_query += " AND en.cidade LIKE ?"
         params.append(f"%{cidade}%")
-
-    query += " ORDER BY a.data_cadastro DESC"
 
     with obter_conexao() as conn:
         cursor = conn.cursor()
+
+        # Contar total de registros
+        cursor.execute(count_query, params)
+        total = cursor.fetchone()[0]
+
+        # Calcular offset e total de páginas
+        offset = (pagina - 1) * por_pagina
+        total_paginas = (total + por_pagina - 1) // por_pagina if total > 0 else 1
+
+        # Buscar animais com paginação
+        query = base_query + " ORDER BY a.data_cadastro DESC LIMIT ? OFFSET ?"
+        params.extend([por_pagina, offset])
+
         cursor.execute(query, params)
-        return [_row_to_animal_com_localizacao(row) for row in cursor.fetchall()]
+        animais = [_row_to_animal_com_localizacao(row) for row in cursor.fetchall()]
+
+        return {
+            "animais": animais,
+            "total": total,
+            "pagina": pagina,
+            "por_pagina": por_pagina,
+            "total_paginas": total_paginas
+        }
 
 
 def atualizar(animal: Animal) -> bool:

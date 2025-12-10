@@ -231,6 +231,17 @@ CONTAR_DISPONIVEIS = """
 SELECT COUNT(*) FROM animal WHERE status = 'Disponivel'
 """
 
+# Contar disponiveis com filtros (para paginacao)
+CONTAR_DISPONIVEIS_COM_FILTROS = """
+SELECT COUNT(*)
+FROM animal a
+LEFT JOIN raca r ON a.id_raca = r.id
+LEFT JOIN especie e ON r.id_especie = e.id
+LEFT JOIN abrigo ab ON a.id_abrigo = ab.id_abrigo
+LEFT JOIN endereco en ON ab.id_abrigo = en.id_usuario
+WHERE a.status = 'Disponivel'
+"""
+
 BUSCAR_POR_TERMO = """
 SELECT
     a.*,

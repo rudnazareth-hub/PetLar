@@ -1,0 +1,16 @@
+
+PRÓXIMOS PASSOS:
+
+1. O arquivo 'animals_to_generate.json' contém todos os dados dos animais
+2. Use o comando abaixo para gerar as imagens com o MCP Runware:
+
+   Para cada animal no JSON, chame o Runware com:
+   - Prompt: o valor de 'descricao'
+   - Width: 512
+   - Height: 512
+   - Salve com o nome: valor de 'filename'
+   - Atualize o banco com: valor de 'db_path'
+
+3. Depois execute este script novamente para atualizar o banco de dados com os paths das imagens.
+
+Dados dos animais salvos em: /home/maroquio/Projects/PetLar/animals_to_generate.json

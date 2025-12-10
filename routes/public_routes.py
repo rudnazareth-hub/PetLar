@@ -116,10 +116,11 @@ async def listar_animais(
     raca: Optional[str] = Query(None),
     uf: Optional[str] = Query(None),
     cidade: Optional[str] = Query(None),
+    pagina: int = Query(1, ge=1),
 ):
     """
     Página pública de listagem de animais disponíveis para adoção.
-    Suporta filtros por espécie, raça, UF e cidade.
+    Suporta filtros por espécie, raça, UF e cidade com paginação.
     """
     # Rate limiting por IP
     ip = obter_identificador_cliente(request)
@@ -138,12 +139,14 @@ async def listar_animais(
     uf_valor = uf.strip().upper() if uf and uf.strip() else None
     cidade_valor = cidade.strip() if cidade and cidade.strip() else None
 
-    # Buscar animais com filtros
-    animais = animal_repo.buscar_disponiveis_com_filtros(
+    # Buscar animais com filtros e paginação
+    resultado = animal_repo.buscar_disponiveis_com_filtros(
         especie_id=especie_id,
         raca_id=raca_id,
         uf=uf_valor,
-        cidade=cidade_valor
+        cidade=cidade_valor,
+        pagina=pagina,
+        por_pagina=12
     )
 
     # Obter listas para os filtros
@@ -169,12 +172,14 @@ async def listar_animais(
         "animais/listar.html",
         {
             "request": request,
-            "animais": animais,
+            "animais": resultado["animais"],
             "especies": especies,
             "racas": racas,
             "ufs": ufs,
             "filtros": filtros,
-            "total": len(animais)
+            "total": resultado["total"],
+            "pagina": resultado["pagina"],
+            "total_paginas": resultado["total_paginas"]
         }
     )
 
