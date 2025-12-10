@@ -1,0 +1,23 @@
+{% macro badge_status(status) %}
+    {% if status == 'Disponivel' %}
+        <span class="badge bg-success">
+            <i class="bi bi-check-circle-fill me-1"></i>Disponível
+        </span>
+    {% elif status == 'Adotado' %}
+        <span class="badge bg-primary">
+            <i class="bi bi-heart-fill me-1"></i>Adotado
+        </span>
+    {% elif status == 'Reservado' %}
+        <span class="badge bg-warning text-dark">
+            <i class="bi bi-clock-fill me-1"></i>Reservado
+        </span>
+    {% elif status == 'Indisponivel' %}
+        <span class="badge bg-danger">
+            <i class="bi bi-x-circle-fill me-1"></i>Indisponível
+        </span>
+    {% else %}
+        <span class="badge bg-secondary">
+            <i class="bi bi-question-circle-fill me-1"></i>{{ status }}
+        </span>
+    {% endif %}
+{% endmacro %}
