@@ -3,176 +3,294 @@
 {% block titulo %}{{ animal.nome }} - Detalhes{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-10">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0"><i class="bi bi-heart-fill text-danger"></i> {{ animal.nome }}</h2>
-            <a href="/animais" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Voltar
-            </a>
+<!-- Header com navegacao -->
+<section class="mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2">
+                    <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="/animais" class="text-decoration-none">Animais</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ animal.nome }}</li>
+                </ol>
+            </nav>
+            <h1 class="display-6 fw-bold mb-0">
+                <i class="bi bi-heart-fill text-danger me-2"></i>{{ animal.nome }}
+            </h1>
         </div>
+        <a href="/animais" class="btn btn-outline-secondary px-4">
+            <i class="bi bi-arrow-left me-2"></i>Voltar
+        </a>
+    </div>
+</section>
 
-        <div class="row">
-            <!-- Foto e Status -->
-            <div class="col-md-5 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-body text-center">
-                        {% if animal.foto %}
-                        <img src="{{ animal.foto }}" alt="{{ animal.nome }}"
-                            class="rounded mb-3" style="max-width: 100%; max-height: 350px; object-fit: cover;">
-                        {% else %}
-                        <div class="bg-secondary rounded d-flex align-items-center justify-content-center mx-auto mb-3"
-                            style="width: 250px; height: 250px;">
-                            <i class="bi bi-image text-white" style="font-size: 5rem;"></i>
-                        </div>
-                        {% endif %}
+<div class="row g-4">
+    <!-- Coluna da Foto e Acoes -->
+    <div class="col-lg-5">
+        <!-- Card da Foto -->
+        <div class="card card-modern mb-4">
+            <div class="card-body p-0">
+                <div class="position-relative">
+                    {% if animal.foto %}
+                    <img src="{{ animal.foto }}" alt="{{ animal.nome }}"
+                        class="w-100 rounded-top-xl" style="max-height: 400px; object-fit: cover;">
+                    {% else %}
+                    <div class="img-placeholder rounded-top-xl d-flex align-items-center justify-content-center"
+                        style="height: 350px;">
+                        <i class="bi bi-image text-muted" style="font-size: 6rem;"></i>
+                    </div>
+                    {% endif %}
 
-                        {% set status_map = {
-                            'Disponível': 'success',
-                            'Reservado': 'warning',
-                            'Adotado': 'info',
-                            'Indisponível': 'secondary'
+                    <!-- Badge de Status -->
+                    <div class="position-absolute top-0 end-0 m-3">
+                        {% set status_config = {
+                            'Disponivel': {'class': 'badge-disponivel', 'icon': 'bi-check-circle'},
+                            'Reservado': {'class': 'badge-reservado', 'icon': 'bi-clock-history'},
+                            'Adotado': {'class': 'badge-adotado', 'icon': 'bi-house-heart'},
+                            'Indisponivel': {'class': 'bg-secondary', 'icon': 'bi-x-circle'}
                         } %}
-                        <span class="badge bg-{{ status_map.get(animal.status, 'secondary') }} fs-5 px-4 py-2">
-                            {{ animal.status }}
+                        {% set config = status_config.get(animal.status, {'class': 'bg-secondary', 'icon': 'bi-question-circle'}) %}
+                        <span class="badge {{ config.class }} badge-pill-modern fs-6 px-3 py-2">
+                            <i class="bi {{ config.icon }} me-1"></i>{{ animal.status }}
                         </span>
-
-                        {% if animal.status == 'Disponível' %}
-                        <div class="mt-4">
-                            {% if request.session.get('usuario_logado') %}
-                                {% if request.session.get('usuario_logado')['perfil'] == 'Adotante' %}
-                                <form method="POST" action="/animais/{{ animal.id }}/reservar">
-                                    <button type="submit" class="btn btn-success btn-lg w-100"
-                                        onclick="return confirm('Deseja reservar {{ animal.nome }} para adoção?');">
-                                        <i class="bi bi-heart"></i> Quero Adotar!
-                                    </button>
-                                </form>
-                                {% else %}
-                                <div class="alert alert-info mb-0">
-                                    <small>Apenas adotantes podem reservar animais.</small>
-                                </div>
-                                {% endif %}
-                            {% else %}
-                            <a href="/login?next=/animais/{{ animal.id }}" class="btn btn-success btn-lg w-100">
-                                <i class="bi bi-heart"></i> Quero Adotar!
-                            </a>
-                            <small class="text-muted d-block mt-2">
-                                Faça login como adotante para reservar este animal.
-                            </small>
-                            {% endif %}
-                        </div>
-                        {% elif animal.status == 'Reservado' %}
-                        <div class="alert alert-warning mt-4 mb-0">
-                            <i class="bi bi-clock-history"></i>
-                            Este animal já foi reservado por outro adotante.
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
-            </div>
 
-            <!-- Informações -->
-            <div class="col-md-7 mb-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informações</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-6 mb-3">
-                                <strong class="text-muted">Nome:</strong><br>
-                                <span class="fs-5">{{ animal.nome }}</span>
-                            </div>
-                            <div class="col-sm-6 mb-3">
-                                <strong class="text-muted">Sexo:</strong><br>
-                                <span class="fs-5">
-                                    {% if animal.sexo == 'Macho' %}
-                                    <i class="bi bi-gender-male text-primary"></i>
-                                    {% else %}
-                                    <i class="bi bi-gender-female text-danger"></i>
-                                    {% endif %}
-                                    {{ animal.sexo }}
-                                </span>
-                            </div>
-                            <div class="col-sm-6 mb-3">
-                                <strong class="text-muted">Raça:</strong><br>
-                                <span class="fs-5">{{ animal.raca.nome if animal.raca else '-' }}</span>
-                            </div>
-                            <div class="col-sm-6 mb-3">
-                                <strong class="text-muted">Espécie:</strong><br>
-                                <span class="fs-5">{{ animal.raca.especie.nome if animal.raca and animal.raca.especie else '-' }}</span>
-                            </div>
-                            {% if animal.raca and animal.raca.porte %}
-                            <div class="col-sm-6 mb-3">
-                                <strong class="text-muted">Porte:</strong><br>
-                                <span class="fs-5">{{ animal.raca.porte }}</span>
+                <!-- Acoes -->
+                <div class="p-4">
+                    {% if animal.status == 'Disponivel' %}
+                        {% if request.session.get('usuario_logado') %}
+                            {% if request.session.get('usuario_logado')['perfil'] == 'Adotante' %}
+                            <form method="POST" action="/animais/{{ animal.id }}/reservar">
+                                <button type="submit" class="btn btn-adopt w-100"
+                                    onclick="return confirm('Deseja reservar {{ animal.nome }} para adocao?');">
+                                    <i class="bi bi-heart-fill me-2"></i>Quero Adotar!
+                                </button>
+                            </form>
+                            <p class="text-muted small text-center mt-3 mb-0">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Ao clicar, voce reservara este animal para adocao
+                            </p>
+                            {% else %}
+                            <div class="alert alert-info mb-0 text-center rounded-xl">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <span>Apenas adotantes podem reservar animais.</span>
                             </div>
                             {% endif %}
-                            {% if animal.data_nascimento %}
-                            <div class="col-sm-6 mb-3">
-                                <strong class="text-muted">Data de Nascimento:</strong><br>
-                                <span class="fs-5">{{ animal.data_nascimento|data_br }}</span>
-                            </div>
-                            {% endif %}
-                            {% if animal.data_entrada %}
-                            <div class="col-sm-6 mb-3">
-                                <strong class="text-muted">No Abrigo desde:</strong><br>
-                                <span class="fs-5">{{ animal.data_entrada|data_br }}</span>
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        {% if animal.observacoes %}
-                        <hr>
-                        <div>
-                            <strong class="text-muted">Sobre {{ animal.nome }}:</strong>
-                            <p class="mb-0 mt-2">{{ animal.observacoes }}</p>
-                        </div>
+                        {% else %}
+                        <a href="/login?next=/animais/{{ animal.id }}" class="btn btn-adopt w-100">
+                            <i class="bi bi-heart-fill me-2"></i>Quero Adotar!
+                        </a>
+                        <p class="text-muted small text-center mt-3 mb-0">
+                            <i class="bi bi-person me-1"></i>
+                            Faca login como adotante para reservar
+                        </p>
                         {% endif %}
-
-                        {% if animal.raca and animal.raca.temperamento %}
-                        <hr>
-                        <div>
-                            <strong class="text-muted">Temperamento da raça:</strong>
-                            <p class="mb-0 mt-2">{{ animal.raca.temperamento }}</p>
+                    {% elif animal.status == 'Reservado' %}
+                    <div class="alert alert-warning mb-0 text-center rounded-xl">
+                        <i class="bi bi-clock-history me-2 fs-4"></i>
+                        <div class="mt-2">
+                            <strong>Animal Reservado</strong>
+                            <p class="mb-0 small">Este animal ja foi reservado por outro adotante.</p>
                         </div>
-                        {% endif %}
                     </div>
+                    {% elif animal.status == 'Adotado' %}
+                    <div class="alert alert-success mb-0 text-center rounded-xl">
+                        <i class="bi bi-house-heart me-2 fs-4"></i>
+                        <div class="mt-2">
+                            <strong>Animal Adotado!</strong>
+                            <p class="mb-0 small">Este animal ja encontrou um lar.</p>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Informações sobre adoção -->
-        <div class="card shadow-sm">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0"><i class="bi bi-question-circle"></i> Como Funciona a Adoção</h5>
+    <!-- Coluna das Informacoes -->
+    <div class="col-lg-7">
+        <!-- Card de Informacoes -->
+        <div class="card card-modern mb-4">
+            <div class="card-header bg-transparent border-0 p-4 pb-0">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-info-circle text-primary me-2"></i>Informacoes do Animal
+                </h5>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4 text-center mb-3">
-                        <div class="display-4 text-primary">1</div>
-                        <h6>Reserve Online</h6>
-                        <p class="text-muted small">
-                            Clique em "Quero Adotar" para reservar o animal. Você precisa estar logado como adotante.
+            <div class="card-body p-4">
+                <div class="row g-4">
+                    <!-- Nome -->
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle-sm bg-subtle-primary text-primary me-3" style="width: 2.5rem; height: 2.5rem;">
+                                <i class="bi bi-tag"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Nome</small>
+                                <span class="fw-semibold fs-5">{{ animal.nome }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sexo -->
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center">
+                            {% if animal.sexo == 'Macho' %}
+                            <div class="icon-circle-sm bg-subtle-primary text-primary me-3" style="width: 2.5rem; height: 2.5rem;">
+                                <i class="bi bi-gender-male"></i>
+                            </div>
+                            {% else %}
+                            <div class="icon-circle-sm bg-subtle-danger text-danger me-3" style="width: 2.5rem; height: 2.5rem;">
+                                <i class="bi bi-gender-female"></i>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <small class="text-muted d-block">Sexo</small>
+                                <span class="fw-semibold fs-5">{{ animal.sexo }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Raca -->
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle-sm bg-subtle-warning text-warning me-3" style="width: 2.5rem; height: 2.5rem;">
+                                <i class="bi bi-award"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Raca</small>
+                                <span class="fw-semibold fs-5">{{ animal.raca.nome if animal.raca else '-' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Especie -->
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle-sm bg-subtle-success text-success me-3" style="width: 2.5rem; height: 2.5rem;">
+                                <i class="bi bi-heart-pulse"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Especie</small>
+                                <span class="fw-semibold fs-5">{{ animal.raca.especie.nome if animal.raca and animal.raca.especie else '-' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Porte (se disponivel) -->
+                    {% if animal.raca and animal.raca.porte %}
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle-sm bg-subtle-info text-info me-3" style="width: 2.5rem; height: 2.5rem;">
+                                <i class="bi bi-rulers"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Porte</small>
+                                <span class="fw-semibold fs-5">{{ animal.raca.porte }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Data de Nascimento -->
+                    {% if animal.data_nascimento %}
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle-sm bg-subtle-danger text-danger me-3" style="width: 2.5rem; height: 2.5rem;">
+                                <i class="bi bi-cake2"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Data de Nascimento</small>
+                                <span class="fw-semibold fs-5">{{ animal.data_nascimento|data_br }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- No Abrigo desde -->
+                    {% if animal.data_entrada %}
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle-sm bg-subtle-secondary text-secondary me-3" style="width: 2.5rem; height: 2.5rem;">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">No Abrigo desde</small>
+                                <span class="fw-semibold fs-5">{{ animal.data_entrada|data_br }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Observacoes -->
+                {% if animal.observacoes %}
+                <hr class="my-4">
+                <div>
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-chat-left-text text-primary me-2"></i>Sobre {{ animal.nome }}
+                    </h6>
+                    <p class="text-muted mb-0 bg-light p-3 rounded-xl">{{ animal.observacoes }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Temperamento da Raca -->
+                {% if animal.raca and animal.raca.temperamento %}
+                <hr class="my-4">
+                <div>
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-emoji-smile text-warning me-2"></i>Temperamento da Raca
+                    </h6>
+                    <p class="text-muted mb-0 bg-light p-3 rounded-xl">{{ animal.raca.temperamento }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Como Funciona a Adocao -->
+<section class="mt-4">
+    <div class="card card-modern overflow-hidden">
+        <div class="card-header bg-gradient-ocean text-white p-4 border-0">
+            <h5 class="mb-0 fw-bold">
+                <i class="bi bi-question-circle me-2"></i>Como Funciona a Adocao
+            </h5>
+        </div>
+        <div class="card-body p-4">
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number bg-gradient-primary text-white mx-auto mb-3">1</div>
+                        <h6 class="fw-bold">Reserve Online</h6>
+                        <p class="text-muted small mb-0">
+                            Clique em "Quero Adotar" para reservar o animal.
+                            Voce precisa estar logado como adotante.
                         </p>
                     </div>
-                    <div class="col-md-4 text-center mb-3">
-                        <div class="display-4 text-primary">2</div>
-                        <h6>Visite o Abrigo</h6>
-                        <p class="text-muted small">
-                            Após a reserva, vá até o abrigo para conhecer o animal pessoalmente e levar os documentos necessários.
+                </div>
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number bg-gradient-forest text-white mx-auto mb-3">2</div>
+                        <h6 class="fw-bold">Visite o Abrigo</h6>
+                        <p class="text-muted small mb-0">
+                            Apos a reserva, va ate o abrigo para conhecer
+                            o animal pessoalmente e levar os documentos.
                         </p>
                     </div>
-                    <div class="col-md-4 text-center mb-3">
-                        <div class="display-4 text-primary">3</div>
-                        <h6>Leve para Casa</h6>
-                        <p class="text-muted small">
-                            Após a aprovação do abrigo, a adoção será concluída e você pode levar seu novo amigo para casa!
+                </div>
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number bg-gradient-sunset text-white mx-auto mb-3">3</div>
+                        <h6 class="fw-bold">Leve para Casa</h6>
+                        <p class="text-muted small mb-0">
+                            Apos a aprovacao do abrigo, a adocao sera concluida
+                            e voce pode levar seu novo amigo para casa!
                         </p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}

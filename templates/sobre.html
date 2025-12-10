@@ -4,151 +4,273 @@
 
 {% block content %}
 <!-- Hero Section -->
-<div class="row mb-4">
-    <div class="col-12">
-        <h1 class="display-4 mb-2">Sobre o Projeto {{ APP_NAME }}</h1>
-        <p class="text-muted">Projeto Acadêmico desenvolvido no Ifes Campus Cachoeiro de Itapemirim</p>
-        <hr>
-    </div>
-</div>
+<section class="mb-5">
+    <div class="hero-gradient text-white rounded-2xl p-4 p-md-5 position-relative overflow-hidden">
+        <!-- Elementos decorativos -->
+        <div class="position-absolute" style="top: 20%; right: 10%; opacity: 0.1;">
+            <i class="bi bi-mortarboard-fill floating" style="font-size: 5rem;"></i>
+        </div>
 
-<!-- Informações do Projeto -->
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="card border-0 shadow-sm shadow-hover">
-            <div class="card-body p-4">
-                <h4 class="card-title text-primary mb-4">
-                    <i class="bi bi-mortarboard-fill me-2"></i>Informações Acadêmicas
-                </h4>
-                <p class="text-muted">
-                    Este projeto foi desenvolvido no <strong>Instituto Federal do Espírito Santo</strong>, Campus
-                    <strong>Cachoeiro de Itapemirim</strong>, como parte da disciplina <strong>Projeto
-                        Integrador</strong> do curso <strong>Técnico em Informática para Internet</strong>. O período de
-                    desenvolvimento compreende os meses de <strong>agosto a dezembro de 2025</strong>.
+        <div class="row align-items-center position-relative" style="z-index: 1;">
+            <div class="col-lg-8">
+                <span class="badge badge-pill-modern bg-white text-primary mb-3 px-3 py-2">
+                    <i class="bi bi-building me-1"></i> Projeto Academico
+                </span>
+                <h1 class="display-4 fw-bold mb-3">Sobre o {{ APP_NAME }}</h1>
+                <p class="lead opacity-90 mb-0">
+                    Uma plataforma de adocao responsavel desenvolvida com amor e dedicacao
+                    por estudantes do Ifes Campus Cachoeiro de Itapemirim.
                 </p>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Stack Tecnológica -->
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="card border-0 shadow-sm shadow-hover">
-            <div class="card-body p-4">
-                <h4 class="card-title text-primary mb-4">
-                    <i class="bi bi-stack me-2"></i>Stack Tecnológica
-                </h4>
-                <div class="d-flex flex-wrap gap-2">
-                    <span class="badge bg-primary fs-6 py-2 px-3">Python 3.10+</span>
-                    <span class="badge bg-success fs-6 py-2 px-3">FastAPI</span>
-                    <span class="badge bg-info fs-6 py-2 px-3">Jinja2</span>
-                    <span class="badge bg-primary fs-6 py-2 px-3">Bootstrap 5.3.8</span>
-                    <span class="badge bg-secondary fs-6 py-2 px-3">SQLite</span>
-                    <span class="badge bg-warning text-dark fs-6 py-2 px-3">Pydantic</span>
-                    <span class="badge bg-danger fs-6 py-2 px-3">Bcrypt</span>
-                    <span class="badge bg-dark fs-6 py-2 px-3">Pillow</span>
-                    <span class="badge bg-info fs-6 py-2 px-3">Resend</span>
-                    <span class="badge bg-success fs-6 py-2 px-3">Pytest</span>
+<!-- Informacoes Academicas -->
+<section class="mb-5">
+    <div class="card card-modern">
+        <div class="card-body p-4 p-md-5">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-circle bg-gradient-primary me-3">
+                            <i class="bi bi-mortarboard-fill"></i>
+                        </div>
+                        <h2 class="fw-bold mb-0">Informacoes Academicas</h2>
+                    </div>
+                    <p class="text-muted fs-5 mb-4">
+                        Este projeto foi desenvolvido no <strong class="text-primary">Instituto Federal do Espirito Santo</strong>,
+                        Campus <strong class="text-primary">Cachoeiro de Itapemirim</strong>, como parte da disciplina
+                        <strong class="text-primary">Projeto Integrador</strong> do curso
+                        <strong class="text-primary">Tecnico em Informatica para Internet</strong>.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <div class="d-flex align-items-center bg-light rounded-pill px-4 py-2">
+                            <i class="bi bi-calendar-check text-primary me-2"></i>
+                            <span>Agosto - Dezembro 2025</span>
+                        </div>
+                        <div class="d-flex align-items-center bg-light rounded-pill px-4 py-2">
+                            <i class="bi bi-geo-alt text-danger me-2"></i>
+                            <span>Cachoeiro de Itapemirim, ES</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center d-none d-lg-block">
+                    <i class="bi bi-award text-primary opacity-25" style="font-size: 10rem;"></i>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Stack Tecnologica -->
+<section class="mb-5">
+    <div class="text-center mb-4 section-header">
+        <span class="badge bg-info badge-pill-modern mb-3">
+            <i class="bi bi-code-slash me-1"></i> Tecnologias
+        </span>
+        <h2 class="display-6 fw-bold">Stack Tecnologica</h2>
+        <p class="text-muted fs-5">Ferramentas e tecnologias utilizadas no projeto</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Backend -->
+        <div class="col-md-6">
+            <div class="feature-card h-100">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="feature-icon bg-subtle-primary text-primary">
+                        <i class="bi bi-server"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0 ms-3">Backend</h5>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-primary badge-pill-modern py-2 px-3">
+                        <i class="bi bi-filetype-py me-1"></i>Python 3.10+
+                    </span>
+                    <span class="badge bg-success badge-pill-modern py-2 px-3">
+                        <i class="bi bi-lightning me-1"></i>FastAPI
+                    </span>
+                    <span class="badge bg-secondary badge-pill-modern py-2 px-3">
+                        <i class="bi bi-database me-1"></i>SQLite
+                    </span>
+                    <span class="badge bg-warning text-dark badge-pill-modern py-2 px-3">
+                        <i class="bi bi-check-circle me-1"></i>Pydantic
+                    </span>
+                    <span class="badge bg-danger badge-pill-modern py-2 px-3">
+                        <i class="bi bi-shield-lock me-1"></i>Bcrypt
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Frontend -->
+        <div class="col-md-6">
+            <div class="feature-card h-100">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="feature-icon bg-subtle-success text-success">
+                        <i class="bi bi-palette"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0 ms-3">Frontend</h5>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-info badge-pill-modern py-2 px-3">
+                        <i class="bi bi-braces me-1"></i>Jinja2
+                    </span>
+                    <span class="badge bg-primary badge-pill-modern py-2 px-3">
+                        <i class="bi bi-bootstrap me-1"></i>Bootstrap 5.3
+                    </span>
+                    <span class="badge bg-dark badge-pill-modern py-2 px-3">
+                        <i class="bi bi-image me-1"></i>Pillow
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Servicos -->
+        <div class="col-md-6">
+            <div class="feature-card h-100">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="feature-icon bg-subtle-warning text-warning">
+                        <i class="bi bi-cloud"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0 ms-3">Servicos</h5>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-info badge-pill-modern py-2 px-3">
+                        <i class="bi bi-envelope me-1"></i>Resend
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testes -->
+        <div class="col-md-6">
+            <div class="feature-card h-100">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="feature-icon bg-subtle-danger text-danger">
+                        <i class="bi bi-bug"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0 ms-3">Testes</h5>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-success badge-pill-modern py-2 px-3">
+                        <i class="bi bi-check2-all me-1"></i>Pytest
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- Equipe -->
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="card border-0 shadow-sm shadow-hover">
-            <div class="card-body p-4">
-                <h4 class="card-title text-primary mb-4">
-                    <i class="bi bi-people-fill me-2"></i>Equipe do Projeto
-                </h4>
+<section class="mb-5">
+    <div class="text-center mb-5 section-header">
+        <span class="badge bg-success badge-pill-modern mb-3">
+            <i class="bi bi-people me-1"></i> Nossa Equipe
+        </span>
+        <h2 class="display-6 fw-bold">Equipe do Projeto</h2>
+        <p class="text-muted fs-5">Conheca os desenvolvedores por tras do {{ APP_NAME }}</p>
+    </div>
 
-                <!-- Alunos -->
-                <div class="row g-4 mb-0 mb-sm-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">
-                    <div class="col">
-                        <div class="card h-100 shadow-sm shadow-hover">
-                            <div class="card-body text-center p-4">
-                                <div class="d-inline-flex align-items-center justify-content-center mb-3">
-                                    <img src="/static/img/site/aluno1Karoliny.jpeg" alt="Aluno 1"
-                                        class="rounded-circle object-fit-cover" width="80" height="80">
-                                </div>
-                                <h4 class="h6 card-title mb-2">Karoliny</h4>
-                                <p class="text-muted small mb-0">
-                                    <i class="bi bi-code-slash me-1"></i>
-                                    Desenvolvedor
-                                </p>
-                            </div>
-                        </div>
+    <!-- Alunos -->
+    <div class="row g-4 justify-content-center mb-5">
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card card-modern h-100 text-center p-4">
+                <div class="mx-auto mb-3 position-relative">
+                    <img src="/static/img/site/aluno1Karoliny.jpeg" alt="Karoliny"
+                        class="rounded-circle object-fit-cover shadow" width="100" height="100">
+                    <div class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-1"
+                        style="width: 28px; height: 28px;">
+                        <i class="bi bi-code-slash" style="font-size: 0.75rem;"></i>
                     </div>
+                </div>
+                <h5 class="fw-bold mb-1">Karoliny</h5>
+                <span class="badge bg-subtle-primary text-primary">Desenvolvedora</span>
+            </div>
+        </div>
 
-                    <div class="col">
-                        <div class="card h-100 shadow-sm shadow-hover">
-                            <div class="card-body text-center p-4">
-                                <div class="d-inline-flex align-items-center justify-content-center mb-3">
-                                    <img src="/static/img/site/aluno2Lavinia.jpeg" alt="Aluno 2"
-                                        class="rounded-circle object-fit-cover" width="80" height="80">
-                                </div>
-                                <h4 class="h6 card-title mb-2">Lavinia</h4>
-                                <p class="text-muted small mb-0">
-                                    <i class="bi bi-code-slash me-1"></i>
-                                    Desenvolvedor
-                                </p>
-                            </div>
-                        </div>
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card card-modern h-100 text-center p-4">
+                <div class="mx-auto mb-3 position-relative">
+                    <img src="/static/img/site/aluno2Lavinia.jpeg" alt="Lavinia"
+                        class="rounded-circle object-fit-cover shadow" width="100" height="100">
+                    <div class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-1"
+                        style="width: 28px; height: 28px;">
+                        <i class="bi bi-code-slash" style="font-size: 0.75rem;"></i>
                     </div>
+                </div>
+                <h5 class="fw-bold mb-1">Lavinia</h5>
+                <span class="badge bg-subtle-primary text-primary">Desenvolvedora</span>
+            </div>
+        </div>
 
-                    <div class="col">
-                        <div class="card h-100 shadow-sm shadow-hover">
-                            <div class="card-body text-center p-4">
-                                <div class="d-inline-flex align-items-center justify-content-center mb-3">
-                                    <img src="/static/img/site/aluno3Marina.jpeg" alt="Aluno 3"
-                                        class="rounded-circle object-fit-cover" width="80" height="80">
-                                </div>
-                                <h4 class="h6 card-title mb-2">Marina</h4>
-                                <p class="text-muted small mb-0">
-                                    <i class="bi bi-code-slash me-1"></i>
-                                    Desenvolvedor
-                                </p>
-                            </div>
-                        </div>
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card card-modern h-100 text-center p-4">
+                <div class="mx-auto mb-3 position-relative">
+                    <img src="/static/img/site/aluno3Marina.jpeg" alt="Marina"
+                        class="rounded-circle object-fit-cover shadow" width="100" height="100">
+                    <div class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-1"
+                        style="width: 28px; height: 28px;">
+                        <i class="bi bi-code-slash" style="font-size: 0.75rem;"></i>
                     </div>
+                </div>
+                <h5 class="fw-bold mb-1">Marina</h5>
+                <span class="badge bg-subtle-primary text-primary">Desenvolvedora</span>
+            </div>
+        </div>
 
-                    <div class="col">
-                        <div class="card h-100 shadow-sm shadow-hover">
-                            <div class="card-body text-center p-4">
-                                <div class="d-inline-flex align-items-center justify-content-center mb-3">
-                                    <img src="/static/img/site/aluno4Rudson.jpeg" alt="Aluno 4"
-                                        class="rounded-circle object-fit-cover" width="80" height="80">
-                                </div>
-                                <h4 class="h6 card-title mb-2">Rudson</h4>
-                                <p class="text-muted small mb-0">
-                                    <i class="bi bi-code-slash me-1"></i>
-                                    Desenvolvedor
-                                </p>
-                            </div>
-                        </div>
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card card-modern h-100 text-center p-4">
+                <div class="mx-auto mb-3 position-relative">
+                    <img src="/static/img/site/aluno4Rudson.jpeg" alt="Rudson"
+                        class="rounded-circle object-fit-cover shadow" width="100" height="100">
+                    <div class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-1"
+                        style="width: 28px; height: 28px;">
+                        <i class="bi bi-code-slash" style="font-size: 0.75rem;"></i>
                     </div>
+                </div>
+                <h5 class="fw-bold mb-1">Rudson</h5>
+                <span class="badge bg-subtle-primary text-primary">Desenvolvedor</span>
+            </div>
+        </div>
+    </div>
 
-                    <div class="col">
-                        <div class="card h-100 shadow-sm shadow-hover mb-0">
-                            <div class="card-body text-center p-4">
-                                <div class="d-inline-flex align-items-center justify-content-center mb-3">
-                                    <img src="/static/img/site/maroquio.jpg" alt="Professor Ricardo Maroquio"
-                                        class="rounded-circle object-fit-cover" width="70" height="70">
-                                </div>
-                                <h4 class="h6 card-title mb-2">Prof. Ricardo Maroquio</h4>
-                                <p class="text-muted small">
-                                    <i class="bi bi-mortarboard me-1"></i>
-                                    Professor Orientador
-                                </p>
-                            </div>
-                        </div>
+    <!-- Professor Orientador -->
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-modern overflow-hidden">
+                <div class="card-header bg-gradient-primary text-white text-center py-3 border-0">
+                    <i class="bi bi-mortarboard me-2"></i>Orientador
+                </div>
+                <div class="card-body text-center p-4">
+                    <div class="mx-auto mb-3">
+                        <img src="/static/img/site/maroquio.jpg" alt="Prof. Ricardo Maroquio"
+                            class="rounded-circle object-fit-cover shadow" width="120" height="120">
                     </div>
+                    <h5 class="fw-bold mb-1">Prof. Ricardo Maroquio</h5>
+                    <span class="badge bg-subtle-success text-success">Professor Orientador</span>
+                    <p class="text-muted small mt-3 mb-0">
+                        Responsavel pela orientacao e supervisao do projeto
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- CTA -->
+<section>
+    <div class="cta-section text-white text-center position-relative">
+        <div class="position-relative" style="z-index: 1;">
+            <i class="bi bi-heart-fill text-danger floating mb-4" style="font-size: 3rem;"></i>
+            <h2 class="display-6 fw-bold mb-3">Quer conhecer o projeto?</h2>
+            <p class="lead mb-4">
+                Explore nossa plataforma e ajude um animal a encontrar um lar!
+            </p>
+            <a href="/animais" class="btn btn-light btn-lg px-5 py-3 fw-bold btn-glow">
+                <i class="bi bi-search-heart me-2"></i>Ver Animais Disponiveis
+            </a>
+        </div>
+    </div>
+</section>
 {% endblock %}
