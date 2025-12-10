@@ -210,8 +210,10 @@ async def post_login(
 async def logout(request: Request):
     """Faz logout do usuário"""
     usuario_email = request.session.get("usuario_logado", {}).get("email", "Usuário")
-    request.session.clear()
     logger.info(f"Usuário {usuario_email} fez logout")
+    # Limpar apenas os dados de autenticação, preservando a sessão para mensagem flash
+    request.session.pop("usuario_logado", None)
+    request.session.pop("_csrf_token", None)
     informar_sucesso(request, "Logout realizado com sucesso!")
     return RedirectResponse("/", status_code=status.HTTP_303_SEE_OTHER)
 
