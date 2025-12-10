@@ -25,7 +25,7 @@
 </section>
 
 <div class="row g-4">
-    <!-- Coluna da Foto e Acoes -->
+    <!-- Coluna da Foto e Ações -->
     <div class="col-lg-5">
         <!-- Card da Foto -->
         <div class="card card-modern mb-4">
@@ -56,20 +56,20 @@
                     </div>
                 </div>
 
-                <!-- Acoes -->
+                <!-- Ações -->
                 <div class="p-4">
                     {% if animal.status == 'Disponivel' %}
                         {% if request.session.get('usuario_logado') %}
                             {% if request.session.get('usuario_logado')['perfil'] == 'Adotante' %}
                             <form method="POST" action="/animais/{{ animal.id }}/reservar">
                                 <button type="submit" class="btn btn-adopt w-100"
-                                    onclick="return confirm('Deseja reservar {{ animal.nome }} para adocao?');">
+                                    onclick="return confirm('Deseja reservar {{ animal.nome }} para adoção?');">
                                     <i class="bi bi-heart-fill me-2"></i>Quero Adotar!
                                 </button>
                             </form>
                             <p class="text-muted small text-center mt-3 mb-0">
                                 <i class="bi bi-info-circle me-1"></i>
-                                Ao clicar, voce reservara este animal para adocao
+                                Ao clicar, você reservara este animal para adoção
                             </p>
                             {% else %}
                             <div class="alert alert-info mb-0 text-center rounded-xl">
@@ -83,7 +83,7 @@
                         </a>
                         <p class="text-muted small text-center mt-3 mb-0">
                             <i class="bi bi-person me-1"></i>
-                            Faca login como adotante para reservar
+                            Faça login como adotante para reservar
                         </p>
                         {% endif %}
                     {% elif animal.status == 'Reservado' %}
@@ -108,13 +108,13 @@
         </div>
     </div>
 
-    <!-- Coluna das Informacoes -->
+    <!-- Coluna das Informações -->
     <div class="col-lg-7">
-        <!-- Card de Informacoes -->
+        <!-- Card de Informações -->
         <div class="card card-modern mb-4">
             <div class="card-header bg-transparent border-0 p-4 pb-0">
                 <h5 class="fw-bold mb-0">
-                    <i class="bi bi-info-circle text-primary me-2"></i>Informacoes do Animal
+                    <i class="bi bi-info-circle text-primary me-2"></i>Informações do Animal
                 </h5>
             </div>
             <div class="card-body p-4">
@@ -151,34 +151,34 @@
                         </div>
                     </div>
 
-                    <!-- Raca -->
+                    <!-- Raça -->
                     <div class="col-sm-6">
                         <div class="d-flex align-items-center">
                             <div class="icon-circle-sm bg-subtle-warning text-warning me-3" style="width: 2.5rem; height: 2.5rem;">
                                 <i class="bi bi-award"></i>
                             </div>
                             <div>
-                                <small class="text-muted d-block">Raca</small>
-                                <span class="fw-semibold fs-5">{{ animal.raca.nome if animal.raca else '-' }}</span>
+                                <small class="text-muted d-block">Raça</small>
+                                <span class="fw-semibold fs-5">{{ animal.raça.nome if animal.raça else '-' }}</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Especie -->
+                    <!-- Espécie -->
                     <div class="col-sm-6">
                         <div class="d-flex align-items-center">
                             <div class="icon-circle-sm bg-subtle-success text-success me-3" style="width: 2.5rem; height: 2.5rem;">
                                 <i class="bi bi-heart-pulse"></i>
                             </div>
                             <div>
-                                <small class="text-muted d-block">Especie</small>
-                                <span class="fw-semibold fs-5">{{ animal.raca.especie.nome if animal.raca and animal.raca.especie else '-' }}</span>
+                                <small class="text-muted d-block">Espécie</small>
+                                <span class="fw-semibold fs-5">{{ animal.raça.espécie.nome if animal.raça and animal.raça.espécie else '-' }}</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Porte (se disponivel) -->
-                    {% if animal.raca and animal.raca.porte %}
+                    {% if animal.raça and animal.raça.porte %}
                     <div class="col-sm-6">
                         <div class="d-flex align-items-center">
                             <div class="icon-circle-sm bg-subtle-info text-info me-3" style="width: 2.5rem; height: 2.5rem;">
@@ -186,7 +186,7 @@
                             </div>
                             <div>
                                 <small class="text-muted d-block">Porte</small>
-                                <span class="fw-semibold fs-5">{{ animal.raca.porte }}</span>
+                                <span class="fw-semibold fs-5">{{ animal.raça.porte }}</span>
                             </div>
                         </div>
                     </div>
@@ -234,14 +234,14 @@
                 </div>
                 {% endif %}
 
-                <!-- Temperamento da Raca -->
-                {% if animal.raca and animal.raca.temperamento %}
+                <!-- Temperamento da Raça -->
+                {% if animal.raça and animal.raça.temperamento %}
                 <hr class="my-4">
                 <div>
                     <h6 class="fw-bold mb-3">
-                        <i class="bi bi-emoji-smile text-warning me-2"></i>Temperamento da Raca
+                        <i class="bi bi-emoji-smile text-warning me-2"></i>Temperamento da Raça
                     </h6>
-                    <p class="text-muted mb-0 bg-light p-3 rounded-xl">{{ animal.raca.temperamento }}</p>
+                    <p class="text-muted mb-0 bg-light p-3 rounded-xl">{{ animal.raça.temperamento }}</p>
                 </div>
                 {% endif %}
             </div>
@@ -249,12 +249,12 @@
     </div>
 </div>
 
-<!-- Como Funciona a Adocao -->
+<!-- Como Funciona a Adoção -->
 <section class="mt-4">
     <div class="card card-modern overflow-hidden">
         <div class="card-header bg-gradient-ocean text-white p-4 border-0">
             <h5 class="mb-0 fw-bold">
-                <i class="bi bi-question-circle me-2"></i>Como Funciona a Adocao
+                <i class="bi bi-question-circle me-2"></i>Como Funciona a Adoção
             </h5>
         </div>
         <div class="card-body p-4">
@@ -265,7 +265,7 @@
                         <h6 class="fw-bold">Reserve Online</h6>
                         <p class="text-muted small mb-0">
                             Clique em "Quero Adotar" para reservar o animal.
-                            Voce precisa estar logado como adotante.
+                            Você precisa estar logado como adotante.
                         </p>
                     </div>
                 </div>
@@ -274,7 +274,7 @@
                         <div class="step-number bg-gradient-forest text-white mx-auto mb-3">2</div>
                         <h6 class="fw-bold">Visite o Abrigo</h6>
                         <p class="text-muted small mb-0">
-                            Apos a reserva, va ate o abrigo para conhecer
+                            Após a reserva, vá até o abrigo para conhecer
                             o animal pessoalmente e levar os documentos.
                         </p>
                     </div>
@@ -284,8 +284,8 @@
                         <div class="step-number bg-gradient-sunset text-white mx-auto mb-3">3</div>
                         <h6 class="fw-bold">Leve para Casa</h6>
                         <p class="text-muted small mb-0">
-                            Apos a aprovacao do abrigo, a adocao sera concluida
-                            e voce pode levar seu novo amigo para casa!
+                            Após a aprovacao do abrigo, a adoção sera concluida
+                            e você pode levar seu novo amigo para casa!
                         </p>
                     </div>
                 </div>

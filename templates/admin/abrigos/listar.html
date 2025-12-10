@@ -30,7 +30,7 @@
                             {% for abrigo in abrigos %}
                             <tr>
                                 <td>{{ abrigo.id_abrigo }}</td>
-                                <td><strong>{{ abrigo.responsavel }}</strong></td>
+                                <td><strong>{{ abrigo.responsável }}</strong></td>
                                 <td>{{ abrigo.usuario.email if abrigo.usuario else '-' }}</td>
                                 <td>{{ abrigo.data_abertura|data_br if abrigo.data_abertura else '-' }}</td>
                                 <td class="text-center">
@@ -38,19 +38,19 @@
                                         <a href="/admin/abrigos/visualizar/{{ abrigo.id_abrigo }}"
                                             class="btn btn-outline-info"
                                             title="Visualizar"
-                                            aria-label="Visualizar abrigo {{ abrigo.responsavel }}">
+                                            aria-label="Visualizar abrigo {{ abrigo.responsável }}">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                         <a href="/admin/abrigos/editar/{{ abrigo.id_abrigo }}"
                                             class="btn btn-outline-primary"
                                             title="Editar"
-                                            aria-label="Editar abrigo {{ abrigo.responsavel }}">
+                                            aria-label="Editar abrigo {{ abrigo.responsável }}">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <button type="button" class="btn btn-outline-danger"
                                             title="Excluir"
-                                            aria-label="Excluir abrigo {{ abrigo.responsavel }}"
-                                            onclick="excluirAbrigo({{ abrigo.id_abrigo }}, '{{ abrigo.responsavel|replace("'", "\\'") }}')">
+                                            aria-label="Excluir abrigo {{ abrigo.responsável }}"
+                                            onclick="excluirAbrigo({{ abrigo.id_abrigo }}, '{{ abrigo.responsável|replace("'", "\\'") }}')">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>

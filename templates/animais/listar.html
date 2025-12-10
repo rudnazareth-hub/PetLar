@@ -1,6 +1,6 @@
 {% extends "base_publica.html" %}
 
-{% block titulo %}Animais para Adocao{% endblock %}
+{% block titulo %}Animais para Adoção{% endblock %}
 
 {% block content %}
 <!-- Header da Pagina -->
@@ -8,7 +8,7 @@
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
         <div>
             <h1 class="display-6 fw-bold mb-1">
-                <i class="bi bi-heart-fill text-danger me-2"></i>Animais para Adocao
+                <i class="bi bi-heart-fill text-danger me-2"></i>Animais para Adoção
             </h1>
             <p class="text-muted mb-0">Encontre seu novo melhor amigo</p>
         </div>
@@ -30,23 +30,23 @@
             </div>
             <form method="GET" action="/animais" class="row g-3">
                 <div class="col-md-3">
-                    <label for="especie" class="form-label small text-muted fw-medium">Especie</label>
-                    <select class="form-select" id="especie" name="especie">
-                        <option value="">Todas as especies</option>
-                        {% for esp in especies %}
-                        <option value="{{ esp.id }}" {{ 'selected' if filtros.especie == esp.id else '' }}>
+                    <label for="espécie" class="form-label small text-muted fw-medium">Espécie</label>
+                    <select class="form-select" id="espécie" name="espécie">
+                        <option value="">Todas as espécies</option>
+                        {% for esp in espécies %}
+                        <option value="{{ esp.id }}" {{ 'selected' if filtros.espécie == esp.id else '' }}>
                             {{ esp.nome }}
                         </option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label for="raca" class="form-label small text-muted fw-medium">Raca</label>
-                    <select class="form-select" id="raca" name="raca">
-                        <option value="">Todas as racas</option>
-                        {% for r in racas %}
-                        <option value="{{ r.id }}" {{ 'selected' if filtros.raca == r.id else '' }}>
-                            {{ r.nome }}{% if r.especie %} ({{ r.especie.nome }}){% endif %}
+                    <label for="raça" class="form-label small text-muted fw-medium">Raça</label>
+                    <select class="form-select" id="raça" name="raça">
+                        <option value="">Todas as raças</option>
+                        {% for r in raças %}
+                        <option value="{{ r.id }}" {{ 'selected' if filtros.raça == r.id else '' }}>
+                            {{ r.nome }}{% if r.espécie %} ({{ r.espécie.nome }}){% endif %}
                         </option>
                         {% endfor %}
                     </select>
@@ -99,7 +99,7 @@
                     {% endif %}
                     <div class="card-img-overlay-gradient"></div>
 
-                    <!-- Badge de Status (se nao for disponivel) -->
+                    <!-- Badge de Status (se não for disponivel) -->
                     {% if item.animal.status != 'Disponivel' %}
                     <div class="position-absolute top-0 end-0 m-2">
                         {% if item.animal.status == 'Reservado' %}
@@ -126,13 +126,13 @@
                             <i class="bi bi-gender-male"></i>
                         </span>
                         {% else %}
-                        <span class="badge bg-danger rounded-pill" title="Femea">
+                        <span class="badge bg-danger rounded-pill" title="Fêmea">
                             <i class="bi bi-gender-female"></i>
                         </span>
                         {% endif %}
                     </div>
 
-                    <!-- Informacoes -->
+                    <!-- Informações -->
                     <div class="mb-3">
                         <p class="card-text text-muted small mb-1">
                             {% if item.animal.raca %}
@@ -148,7 +148,7 @@
                             {% if item.abrigo_cidade and item.abrigo_uf %}
                             <span>{{ item.abrigo_cidade }}/{{ item.abrigo_uf }}</span>
                             {% else %}
-                            <span class="text-muted">Localizacao nao informada</span>
+                            <span class="text-muted">Localização não informada</span>
                             {% endif %}
                         </p>
                     </div>
@@ -170,7 +170,7 @@
         <i class="bi bi-search empty-state-icon text-muted"></i>
         <h4 class="fw-bold mb-2">Nenhum animal encontrado</h4>
         <p class="text-muted mb-4">
-            Nao encontramos animais com os filtros selecionados.
+            Não encontramos animais com os filtros selecionados.
             <br>Tente ajustar sua busca ou limpe os filtros.
         </p>
         <a href="/animais" class="btn btn-gradient px-4 py-2">

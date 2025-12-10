@@ -40,6 +40,43 @@
     <!-- Configurações (apenas para admin) -->
     {% if usuario_logado and usuario_logado.perfil == 'Administrador' %}
     <!-- Usuários -->
+    <!-- Espécies -->
+    <div class="col">
+        <div class="card h-100 shadow-sm shadow-hover">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="bi bi-heptagon text-primary display-3"></i>
+                </div>
+                <h5 class="card-title">Espécies</h5>
+                <p class="card-text text-muted">
+                    Cadastre e gerencie espécies de animais
+                </p>
+                <a href="/admin/espécies/listar" class="btn btn-primary">
+                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Raças -->
+    <div class="col">
+        <div class="card h-100 shadow-sm shadow-hover">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="bi bi-tags text-info display-3"></i>
+                </div>
+                <h5 class="card-title">Raças</h5>
+                <p class="card-text text-muted">
+                    Cadastre e gerencie raças de animais
+                </p>
+                <a href="/admin/raças/listar" class="btn btn-info">
+                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Usuários -->
     <div class="col">
         <div class="card h-100 shadow-sm shadow-hover">
             <div class="card-body text-center">
@@ -57,6 +94,48 @@
         </div>
     </div>
 
+    <!-- Chamados -->
+    <div class="col">
+        <div class="card h-100 shadow-sm shadow-hover">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="bi bi-headset text-warning display-3"></i>
+                </div>
+                <h5 class="card-title">Chamados</h5>
+                <p class="card-text text-muted">
+                    Gerencie chamados de suporte dos usuários
+                </p>
+                {% if chamados_pendentes > 0 %}
+                <div class="mb-3">
+                    <span class="badge bg-danger">{{ chamados_pendentes }} pendente(s)</span>
+                </div>
+                {% endif %}
+                <a href="/admin/chamados/listar" class="btn btn-warning">
+                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configurações -->
+    <div class="col">
+        <div class="card h-100 shadow-sm shadow-hover">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="bi bi-gear text-secondary display-3"></i>
+                </div>
+                <h5 class="card-title">Configurações</h5>
+                <p class="card-text text-muted">
+                    Configure parâmetros e preferências do sistema
+                </p>
+                <a href="/admin/configuracoes" class="btn btn-secondary">
+                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Personalizar Tema -->
     <div class="col">
         <div class="card h-100 shadow-sm shadow-hover">
             <div class="card-body text-center">
@@ -74,56 +153,94 @@
         </div>
     </div>
 
+    <!-- Auditoria de Logs -->
     <div class="col">
         <div class="card h-100 shadow-sm shadow-hover">
             <div class="card-body text-center">
                 <div class="mb-3">
-                    <i class="bi bi-journal-text text-warning display-3"></i>
+                    <i class="bi bi-journal-text text-info display-3"></i>
                 </div>
                 <h5 class="card-title">Auditoria de Logs</h5>
                 <p class="card-text text-muted">
                     Visualize e filtre logs do sistema por data e severidade
                 </p>
-                <a href="/admin/auditoria" class="btn btn-warning">
+                <a href="/admin/auditoria" class="btn btn-info">
                     <i class="bi bi-arrow-right-circle"></i> Acessar
                 </a>
             </div>
         </div>
     </div>
 
+    <!-- Backup do Banco -->
     <div class="col">
         <div class="card h-100 shadow-sm shadow-hover">
             <div class="card-body text-center">
                 <div class="mb-3">
-                    <i class="bi bi-database text-info display-3"></i>
+                    <i class="bi bi-database text-success display-3"></i>
                 </div>
                 <h5 class="card-title">Backup do Banco</h5>
                 <p class="card-text text-muted">
                     Crie, gerencie e restaure backups do banco de dados
                 </p>
-                <a href="/admin/backups/listar" class="btn btn-info">
+                <a href="/admin/backups/listar" class="btn btn-success">
                     <i class="bi bi-arrow-right-circle"></i> Acessar
                 </a>
             </div>
         </div>
     </div>
 
+    {% elif usuario_logado and usuario_logado.perfil == 'Abrigo' %}
+    <!-- Menu Abrigo -->
+    <!-- Meus Animais -->
     <div class="col">
         <div class="card h-100 shadow-sm shadow-hover">
             <div class="card-body text-center">
                 <div class="mb-3">
-                    <i class="bi bi-headset text-danger display-3"></i>
+                    <i class="bi bi-paw text-primary display-3"></i>
                 </div>
-                <h5 class="card-title">Chamados</h5>
+                <h5 class="card-title">Meus Animais</h5>
                 <p class="card-text text-muted">
-                    Gerencie chamados de suporte dos usuários
+                    Cadastre, edite e gerencie os animais do seu abrigo
                 </p>
-                {% if chamados_pendentes > 0 %}
+                <a href="/abrigo/animais/listar" class="btn btn-primary">
+                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Animais Reservados -->
+    <div class="col">
+        <div class="card h-100 shadow-sm shadow-hover">
+            <div class="card-body text-center">
                 <div class="mb-3">
-                    <span class="badge bg-danger">{{ chamados_pendentes }} pendente(s)</span>
+                    <i class="bi bi-bookmark-heart text-success display-3"></i>
                 </div>
-                {% endif %}
-                <a href="/admin/chamados/listar" class="btn btn-danger">
+                <h5 class="card-title">Animais Reservados</h5>
+                <p class="card-text text-muted">
+                    Acompanhe as reservas e finalize as adoções
+                </p>
+                <a href="/abrigo/animais/reservados" class="btn btn-success">
+                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% elif usuario_logado and usuario_logado.perfil == 'Adotante' %}
+    <!-- Menu Adotante -->
+    <!-- Meu Endereço -->
+    <div class="col">
+        <div class="card h-100 shadow-sm shadow-hover">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="bi bi-geo-alt text-primary display-3"></i>
+                </div>
+                <h5 class="card-title">Meu Endereço</h5>
+                <p class="card-text text-muted">
+                    Visualize e gerencie seus endereços cadastrados
+                </p>
+                <a href="/usuario/endereco/" class="btn btn-primary">
                     <i class="bi bi-arrow-right-circle"></i> Acessar
                 </a>
             </div>

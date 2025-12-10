@@ -48,10 +48,10 @@
                                 </td>
                                 <td><strong>{{ animal.nome }}</strong></td>
                                 <td>
-                                    {{ animal.raca.nome if animal.raca else '-' }}
+                                    {{ animal.raça.nome if animal.raça else '-' }}
                                     <br>
                                     <small class="text-muted">
-                                        {{ animal.raca.especie.nome if animal.raca and animal.raca.especie else '' }}
+                                        {{ animal.raça.espécie.nome if animal.raça and animal.raça.espécie else '' }}
                                     </small>
                                 </td>
                                 <td>{{ animal.sexo }}</td>

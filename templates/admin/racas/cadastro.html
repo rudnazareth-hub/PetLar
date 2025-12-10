@@ -11,7 +11,7 @@
         </div>
 
         <div class="card shadow-sm">
-            <form method="POST" action="/admin/racas/cadastrar">
+            <form method="POST" action="/admin/raças/cadastrar">
                 <div class="card-body p-4">
                     <div class="row">
                         <div class="col-12">
@@ -20,7 +20,7 @@
 
                         <div class="col-12 mb-3">
                             {{ field(name='id_especie', label='Espécie', type='select', required=true,
-                            options=especies, help_text='Selecione a espécie desta raça') }}
+                            options=espécies, help_text='Selecione a espécie desta raça') }}
                         </div>
 
                         <div class="col-12 mb-3">
@@ -39,7 +39,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-check-circle"></i> Cadastrar
                         </button>
-                        <a href="/admin/racas/listar" class="btn btn-secondary">
+                        <a href="/admin/raças/listar" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Cancelar
                         </a>
                     </div>

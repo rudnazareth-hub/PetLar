@@ -7,14 +7,14 @@
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2><i class="bi bi-tags"></i> Gerenciar Raças</h2>
-            <a href="/admin/racas/cadastrar" class="btn btn-primary">
+            <a href="/admin/raças/cadastrar" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> Nova Raça
             </a>
         </div>
 
         <div class="card shadow-sm">
             <div class="card-body">
-                {% if racas %}
+                {% if raças %}
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
@@ -27,28 +27,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for raca in racas %}
+                            {% for raça in raças %}
                             <tr>
-                                <td>{{ raca.id }}</td>
+                                <td>{{ raça.id }}</td>
                                 <td>
                                     <span class="badge bg-secondary">
-                                        {{ raca.especie.nome if raca.especie else '-' }}
+                                        {{ raça.espécie.nome if raça.espécie else '-' }}
                                     </span>
                                 </td>
-                                <td><strong>{{ raca.nome }}</strong></td>
-                                <td>{{ raca.descricao or '-' }}</td>
+                                <td><strong>{{ raça.nome }}</strong></td>
+                                <td>{{ raça.descricao or '-' }}</td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
-                                        <a href="/admin/racas/editar/{{ raca.id }}"
+                                        <a href="/admin/raças/editar/{{ raça.id }}"
                                             class="btn btn-outline-primary"
                                             title="Editar"
-                                            aria-label="Editar raça {{ raca.nome }}">
+                                            aria-label="Editar raça {{ raça.nome }}">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <button type="button" class="btn btn-outline-danger"
                                             title="Excluir"
-                                            aria-label="Excluir raça {{ raca.nome }}"
-                                            onclick="excluirRaca({{ raca.id }}, '{{ raca.nome|replace("'", "\\'") }}', '{{ raca.especie.nome if raca.especie else "N/A" }}')">
+                                            aria-label="Excluir raça {{ raça.nome }}"
+                                            onclick="excluirRaca({{ raça.id }}, '{{ raça.nome|replace("'", "\\'") }}', '{{ raça.espécie.nome if raça.espécie else "N/A" }}')">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
@@ -99,7 +99,7 @@
         `;
 
         abrirModalConfirmacao({
-            url: `/admin/racas/excluir/${racaId}`,
+            url: `/admin/raças/excluir/${racaId}`,
             mensagem: 'Tem certeza que deseja excluir esta raça?',
             detalhes: detalhes
         });
