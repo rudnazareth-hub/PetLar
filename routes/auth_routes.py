@@ -15,9 +15,13 @@ from dtos.auth_dto import LoginDTO, CadastroDTO, EsqueciSenhaDTO, RedefinirSenha
 
 # Models
 from model.usuario_model import Usuario
+from model.abrigo_model import Abrigo
+from model.adotante_model import Adotante
 
 # Repositories
 from repo import usuario_repo
+from repo import abrigo_repo
+from repo import adotante_repo
 
 # Utilities
 from util.auth_decorator import criar_sessao
@@ -282,6 +286,24 @@ async def post_cadastrar(
         usuario_id = usuario_repo.inserir(usuario)
 
         if usuario_id:
+            # Criar registro associado conforme o perfil
+            if dto.perfil == "Abrigo":
+                abrigo = Abrigo(
+                    id_abrigo=usuario_id,
+                    responsavel=dto.nome,
+                )
+                abrigo_repo.inserir(abrigo)
+                logger.info(f"Registro de abrigo criado para usuário ID: {usuario_id}")
+            elif dto.perfil == "Adotante":
+                adotante = Adotante(
+                    id_adotante=usuario_id,
+                    renda_media=0.0,
+                    tem_filhos=False,
+                    estado_saude="Não informado",
+                )
+                adotante_repo.inserir(adotante)
+                logger.info(f"Registro de adotante criado para usuário ID: {usuario_id}")
+
             logger.info(f"Novo usuário cadastrado: {usuario.email}")
 
             # Enviar e-mail de boas-vindas

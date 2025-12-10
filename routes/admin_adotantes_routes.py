@@ -1,12 +1,11 @@
 from typing import Optional
-from fastapi import APIRouter, Request, status
+from fastapi import APIRouter, Request, status, Form
 from fastapi.responses import RedirectResponse
 
 from util.auth_decorator import requer_autenticacao
 from util.template_util import criar_templates
 from util.perfis import Perfil
 from repo import adotante_repo, usuario_repo
-from fastapi import Form
 from pydantic import ValidationError
 from dtos.adotante_dto import AlterarAdotanteDTO
 from model.adotante_model import Adotante
@@ -15,6 +14,16 @@ from util.logger_config import logger
 from util.exceptions import FormValidationError
 from util.rate_limiter import RateLimiter, obter_identificador_cliente
 from repo import solicitacao_repo, adocao_repo
+
+router = APIRouter(prefix="/admin/adotantes")
+templates = criar_templates()
+
+# Rate limiter para operações admin
+admin_adotantes_limiter = RateLimiter(
+    max_tentativas=20,  # 20 operações
+    janela_minutos=1,   # por minuto
+    nome="admin_adotantes"
+)
 
 @router.get("/visualizar/{id}")
 @requer_autenticacao([Perfil.ADMIN.value])
@@ -43,13 +52,6 @@ async def visualizar(request: Request, id: int, usuario_logado: Optional[dict] =
             "adocoes": adocoes
         }
     )
-
-# Rate limiter para operações admin
-admin_adotantes_limiter = RateLimiter(
-    max_tentativas=20,  # 20 operações
-    janela_minutos=1,   # por minuto
-    nome="admin_adotantes"
-)
 
 @router.post("/editar/{id}")
 @requer_autenticacao([Perfil.ADMIN.value])
@@ -122,9 +124,6 @@ async def post_editar(
             dados_formulario=dados_formulario,
             campo_padrao="renda_media"
         )
-
-router = APIRouter(prefix="/admin/adotantes")
-templates = criar_templates()
 
 @router.get("/")
 @requer_autenticacao([Perfil.ADMIN.value])

@@ -905,3 +905,34 @@ def validar_status_solicitacao():
             raise ValueError(f"Status inválido: '{v}'")
         return v
     return validator
+
+
+def validar_texto_longo_opcional(
+    tamanho_maximo: int = 500,
+    nome_campo: str = "Texto",
+) -> Callable[[Any, Any], Any]:
+    """
+    Valida texto longo opcional com tamanho máximo.
+
+    Args:
+        tamanho_maximo: Comprimento máximo do texto
+        nome_campo: Nome do campo para mensagens de erro
+
+    Returns:
+        Função validadora para uso com field_validator
+    """
+
+    def validator(cls: Any, v: Any) -> Any:
+        if v is None or (isinstance(v, str) and not v.strip()):
+            return None
+
+        valor = v.strip() if isinstance(v, str) else v
+
+        if len(valor) > tamanho_maximo:
+            raise ValueError(
+                f"{nome_campo} deve ter no máximo {tamanho_maximo} caracteres."
+            )
+
+        return valor
+
+    return validator

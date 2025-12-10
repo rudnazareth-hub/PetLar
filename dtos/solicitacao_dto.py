@@ -1,7 +1,7 @@
 
 from pydantic import BaseModel, field_validator
 from typing import Optional
-from dtos.validators import validar_id_positivo, validar_texto_longo_opcional
+from dtos.validators import validar_id_positivo, validar_texto_longo_opcional, validar_string_obrigatoria
 
 class AprovarSolicitacaoDTO(BaseModel):
     """DTO para aprovação de solicitação"""

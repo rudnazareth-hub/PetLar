@@ -17,6 +17,25 @@ from model.animal_model import Animal
 router = APIRouter(prefix="/admin/animais")
 templates = criar_templates()
 
+
+@router.get("/")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def index(request: Request, usuario_logado: Optional[dict] = None):
+    """Redireciona para lista de animais"""
+    return RedirectResponse("/admin/animais/listar", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+
+
+@router.get("/listar")
+@requer_autenticacao([Perfil.ADMIN.value])
+async def listar(request: Request, usuario_logado: Optional[dict] = None):
+    """Lista todos os animais cadastrados"""
+    animais = animal_repo.obter_todos()
+    return templates.TemplateResponse(
+        "admin/animais/lista.html",
+        {"request": request, "animais": animais}
+    )
+
+
 @router.get("/cadastrar")
 @requer_autenticacao([Perfil.ADMIN.value])
 async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None):

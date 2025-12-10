@@ -9,6 +9,7 @@ Fornece fixtures reutilizáveis e helpers para testes da aplicação.
 # que possa carregar db_util.py (via repos ou outros módulos)
 # ============================================================
 import os
+import sqlite3
 import tempfile
 
 # Criar arquivo temporário para o banco de testes
@@ -20,6 +21,105 @@ _test_db.close()
 os.environ["DATABASE_PATH"] = _TEST_DB_PATH
 os.environ["RESEND_API_KEY"] = ""
 os.environ["LOG_LEVEL"] = "ERROR"
+
+# ============================================================
+# CRÍTICO: Criar tabelas ANTES de importar qualquer módulo
+# que use RateLimiter ou config_cache (que consultam o banco)
+# ============================================================
+
+def _criar_tabelas_teste():
+    """Cria todas as tabelas necessárias no banco de teste."""
+    from sql.usuario_sql import CRIAR_TABELA as CRIAR_USUARIO
+    from sql.configuracao_sql import CRIAR_TABELA as CRIAR_CONFIGURACAO, INSERIR
+    from sql.chamado_sql import CRIAR_TABELA as CRIAR_CHAMADO
+    from sql.chamado_interacao_sql import CRIAR_TABELA as CRIAR_CHAMADO_INTERACAO
+    from sql.chat_sala_sql import CRIAR_TABELA as CRIAR_CHAT_SALA
+    from sql.chat_participante_sql import CRIAR_TABELA as CRIAR_CHAT_PARTICIPANTE
+    from sql.chat_mensagem_sql import CRIAR_TABELA as CRIAR_CHAT_MENSAGEM
+    from sql.especie_sql import CRIAR_TABELA as CRIAR_ESPECIE
+    from sql.raca_sql import CRIAR_TABELA as CRIAR_RACA
+    from sql.abrigo_sql import CRIAR_TABELA as CRIAR_ABRIGO
+    from sql.adotante_sql import CRIAR_TABELA as CRIAR_ADOTANTE
+    from sql.endereco_sql import CRIAR_TABELA as CRIAR_ENDERECO
+    from sql.animal_sql import CRIAR_TABELA as CRIAR_ANIMAL
+    from sql.solicitacao_sql import CRIAR_TABELA as CRIAR_SOLICITACAO
+    from sql.adocao_sql import CRIAR_TABELA as CRIAR_ADOCAO
+    from sql.visita_sql import CRIAR_TABELA as CRIAR_VISITA
+
+    conn = sqlite3.connect(_TEST_DB_PATH)
+    cursor = conn.cursor()
+
+    # Criar todas as tabelas na ordem correta (respeitando foreign keys)
+    cursor.execute(CRIAR_USUARIO)
+    cursor.execute(CRIAR_CONFIGURACAO)
+    cursor.execute(CRIAR_CHAMADO)
+    cursor.execute(CRIAR_CHAMADO_INTERACAO)
+    cursor.execute(CRIAR_CHAT_SALA)
+    cursor.execute(CRIAR_CHAT_PARTICIPANTE)
+    cursor.execute(CRIAR_CHAT_MENSAGEM)
+    cursor.execute(CRIAR_ESPECIE)
+    cursor.execute(CRIAR_RACA)
+    cursor.execute(CRIAR_ABRIGO)
+    cursor.execute(CRIAR_ADOTANTE)
+    cursor.execute(CRIAR_ENDERECO)
+    cursor.execute(CRIAR_ANIMAL)
+    cursor.execute(CRIAR_SOLICITACAO)
+    cursor.execute(CRIAR_ADOCAO)
+    cursor.execute(CRIAR_VISITA)
+
+    # Inserir configurações de rate limit para evitar erros nos testes
+    configs = [
+        ("rate_limit_cadastro_max", "10000", "Rate limit cadastro - maximo"),
+        ("rate_limit_cadastro_minutos", "1", "Rate limit cadastro - janela"),
+        ("rate_limit_login_max", "10000", "Rate limit login - maximo"),
+        ("rate_limit_login_minutos", "1", "Rate limit login - janela"),
+        ("rate_limit_admin_usuarios_max", "10000", "Rate limit admin usuarios"),
+        ("rate_limit_admin_usuarios_minutos", "1", "Rate limit admin usuarios - janela"),
+        ("rate_limit_admin_backups_max", "10000", "Rate limit admin backups"),
+        ("rate_limit_admin_backups_minutos", "1", "Rate limit admin backups - janela"),
+        ("rate_limit_backup_download_max", "10000", "Rate limit backup download"),
+        ("rate_limit_backup_download_minutos", "1", "Rate limit backup download - janela"),
+        ("rate_limit_admin_config_max", "10000", "Rate limit admin config"),
+        ("rate_limit_admin_config_minutos", "1", "Rate limit admin config - janela"),
+        ("rate_limit_chamado_criar_max", "10000", "Rate limit criar chamado"),
+        ("rate_limit_chamado_criar_minutos", "1", "Rate limit criar chamado - janela"),
+        ("rate_limit_chamado_responder_max", "10000", "Rate limit responder chamado"),
+        ("rate_limit_chamado_responder_minutos", "1", "Rate limit responder chamado - janela"),
+        ("rate_limit_admin_chamado_responder_max", "10000", "Rate limit admin responder"),
+        ("rate_limit_admin_chamado_responder_minutos", "1", "Rate limit admin responder - janela"),
+        ("rate_limit_upload_foto_max", "10000", "Rate limit upload foto"),
+        ("rate_limit_upload_foto_minutos", "1", "Rate limit upload foto - janela"),
+        ("rate_limit_alterar_senha_max", "10000", "Rate limit alterar senha"),
+        ("rate_limit_alterar_senha_minutos", "1", "Rate limit alterar senha - janela"),
+        ("rate_limit_form_get_max", "10000", "Rate limit form get"),
+        ("rate_limit_form_get_minutos", "1", "Rate limit form get - janela"),
+        ("rate_limit_chat_message_max", "10000", "Rate limit chat message"),
+        ("rate_limit_chat_message_minutos", "1", "Rate limit chat message - janela"),
+        ("rate_limit_chat_sala_max", "10000", "Rate limit chat sala"),
+        ("rate_limit_chat_sala_minutos", "1", "Rate limit chat sala - janela"),
+        ("rate_limit_busca_usuarios_max", "10000", "Rate limit busca usuarios"),
+        ("rate_limit_busca_usuarios_minutos", "1", "Rate limit busca usuarios - janela"),
+        ("rate_limit_chat_listagem_max", "10000", "Rate limit chat listagem"),
+        ("rate_limit_chat_listagem_minutos", "1", "Rate limit chat listagem - janela"),
+        ("rate_limit_public_max", "10000", "Rate limit public"),
+        ("rate_limit_public_minutos", "1", "Rate limit public - janela"),
+        ("rate_limit_examples_max", "10000", "Rate limit examples"),
+        ("rate_limit_examples_minutos", "1", "Rate limit examples - janela"),
+        ("rate_limit_esqueci_senha_max", "10000", "Rate limit esqueci senha"),
+        ("rate_limit_esqueci_senha_minutos", "1", "Rate limit esqueci senha - janela"),
+        ("rate_limit_admin_especies_max", "10000", "Rate limit admin especies"),
+        ("rate_limit_admin_especies_minutos", "1", "Rate limit admin especies - janela"),
+        ("toast_auto_hide_delay_ms", "5000", "Delay do toast"),
+    ]
+
+    for chave, valor, descricao in configs:
+        cursor.execute(INSERIR, (chave, valor, descricao))
+
+    conn.commit()
+    conn.close()
+
+# Criar tabelas imediatamente
+_criar_tabelas_teste()
 
 # ============================================================
 # Agora sim, importar o resto (db_util já lerá o valor correto)

@@ -52,6 +52,9 @@ from routes.admin_animais_routes import router as admin_animais_router
 from routes.admin_especies_routes import router as admin_especies_router
 from routes.abrigo_animais_routes import router as abrigo_animais_router
 from routes.usuario_endereco_routes import router as usuario_endereco_router
+from routes.admin_solicitacoes_routes import router as admin_solicitacoes_router
+from routes.admin_adotantes_routes import router as admin_adotantes_router
+from routes.admin_curtidas_routes import router as admin_curtidas_router
 
 # Seeds
 from util.seed_data import inicializar_dados
@@ -168,6 +171,9 @@ ROUTERS = [
     (admin_especies_router, ["Admin - Espécies"], "admin de espécies"),
     (abrigo_animais_router, ["Abrigo - Animais"], "abrigo animais"),
     (usuario_endereco_router, ["Usuário - Endereço"], "usuário endereço"),
+    (admin_solicitacoes_router, ["Admin - Solicitações"], "admin de solicitações"),
+    (admin_adotantes_router, ["Admin - Adotantes"], "admin de adotantes"),
+    (admin_curtidas_router, ["Admin - Curtidas"], "admin de curtidas"),
     (public_router, ["Público"], "público"),
     (examples_router, ["Exemplos"], "exemplos"),
 ]

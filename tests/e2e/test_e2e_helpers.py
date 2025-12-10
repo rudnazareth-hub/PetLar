@@ -131,6 +131,7 @@ class LoginPage(BasePage):
         """Aguarda redirecionamento para area do usuario."""
         try:
             self.page.wait_for_url("**/usuario**", timeout=timeout)
+            self.page.wait_for_load_state("domcontentloaded")
             return True
         except Exception:
             return "/usuario" in self.page.url or "/home" in self.page.url
@@ -180,14 +181,17 @@ class EnderecoPage(BasePage):
     def navegar_visualizar(self) -> None:
         """Navega para pagina de visualizacao do endereco."""
         self.page.goto(f"{self.base_url}/usuario/endereco/visualizar")
+        self.page.wait_for_load_state("domcontentloaded")
 
     def navegar_cadastrar(self) -> None:
         """Navega para pagina de cadastro de endereco."""
         self.page.goto(f"{self.base_url}/usuario/endereco/cadastrar")
+        self.page.wait_for_load_state("domcontentloaded")
 
     def navegar_editar(self) -> None:
         """Navega para pagina de edicao do endereco."""
         self.page.goto(f"{self.base_url}/usuario/endereco/editar")
+        self.page.wait_for_load_state("domcontentloaded")
 
     def preencher_formulario(
         self,
@@ -201,6 +205,27 @@ class EnderecoPage(BasePage):
         complemento: str = ""
     ) -> None:
         """Preenche o formulario de endereco."""
+        # Aguarda o campo titulo estar visível antes de preencher
+        # Usa seletor mais generico que funciona tanto em cadastro quanto edicao
+        try:
+            self.page.wait_for_selector(
+                'input[name="titulo"]',
+                timeout=15000
+            )
+        except Exception as e:
+            # Debug: mostrar URL atual e conteúdo completo da página
+            current_url = self.page.url
+            page_content = self.page.content()
+            # Se for página de erro, capturar mais detalhes
+            if "Erro" in page_content or "error" in page_content.lower():
+                raise Exception(
+                    f"Página de erro detectada. URL: {current_url}. "
+                    f"Conteudo completo: {page_content}"
+                ) from e
+            raise Exception(
+                f"Campo titulo nao encontrado. URL atual: {current_url}. "
+                f"Conteudo (primeiros 2000 chars): {page_content[:2000]}"
+            ) from e
         self.page.fill('input[name="titulo"]', titulo)
         self.page.fill('input[name="logradouro"]', logradouro)
         self.page.fill('input[name="numero"]', numero)
@@ -211,8 +236,9 @@ class EnderecoPage(BasePage):
         self.page.fill('input[name="cep"]', cep)
 
     def submeter(self) -> None:
-        """Submete o formulario."""
-        self.page.locator('button[type="submit"]').first.click()
+        """Submete o formulario de endereco."""
+        # Usa seletor mais generico - primeiro botao submit dentro do card-footer
+        self.page.locator('.card-footer button[type="submit"]').first.click()
 
     def cadastrar_endereco(
         self,
