@@ -6,13 +6,18 @@
 {% block content %}
 <div class="row">
     <div class="col-md-8 mx-auto">
-        <!-- Cabeçalho -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="bi bi-key-fill"></i> Alterar Senha</h2>
+        <!-- Cabeçalho Moderno -->
+        <div class="card card-modern border-0 overflow-hidden mb-4">
+            <div class="bg-gradient-forest text-white p-4">
+                <h2 class="fw-bold mb-0">
+                    <i class="bi bi-key-fill me-2"></i>Alterar Senha
+                </h2>
+                <p class="mb-0 small opacity-90">Mantenha sua conta segura</p>
+            </div>
         </div>
 
         <!-- Formulário de Alteração de Senha -->
-        <div class="card shadow-sm">
+        <div class="card card-modern border-0">
             <form action="/usuario/perfil/alterar-senha" method="post" id="formSenha" autocomplete="off">
                 {{ csrf_input() }}
                 <div class="card-body p-4">

@@ -5,24 +5,27 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Meu Endereço</h2>
-            <a href="/usuario/perfil" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Voltar ao Perfil
+        <!-- Header Moderno -->
+        <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
+            <h2 class="mb-0 fw-bold">
+                <i class="bi bi-geo-alt-fill text-primary me-2"></i>Meu Endereço
+            </h2>
+            <a href="/usuario/perfil" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left me-2"></i>Voltar
             </a>
         </div>
 
-        <div class="card shadow-sm">
-            <div class="card-header">
+        <div class="card card-modern border-0 overflow-hidden">
+            <div class="card-header bg-gradient-forest text-white p-4 border-0">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">{{ endereco.titulo }}</h5>
-                    <div class="btn-group btn-group-sm">
-                        <a href="/usuario/endereco/editar" class="btn btn-primary" title="Editar">
-                            <i class="bi bi-pencil"></i> Editar
+                    <h5 class="mb-0 fw-bold">{{ endereco.titulo }}</h5>
+                    <div class="btn-group btn-group-sm gap-2" role="group">
+                        <a href="/usuario/endereco/editar" class="btn btn-light btn-sm fw-semibold" title="Editar">
+                            <i class="bi bi-pencil me-1"></i>Editar
                         </a>
-                        <button type="button" class="btn btn-outline-danger" title="Excluir"
+                        <button type="button" class="btn btn-outline-light btn-sm fw-semibold" title="Excluir"
                             onclick="excluirEndereco()">
-                            <i class="bi bi-trash"></i>
+                            <i class="bi bi-trash me-1"></i>Excluir
                         </button>
                     </div>
                 </div>

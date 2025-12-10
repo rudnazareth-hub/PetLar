@@ -5,48 +5,53 @@
 {% block content %}
 <div class="row">
     <div class="col-md-8 mx-auto">
-        <!-- Cabeçalho do Perfil -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-body text-center py-5">
-                <div class="mb-4">
+        <!-- Cabeçalho do Perfil Moderno -->
+        <div class="card card-modern border-0 overflow-hidden mb-4">
+            <!-- Header com gradiente -->
+            <div class="bg-gradient-primary text-white p-5 text-center position-relative overflow-hidden">
+                <i class="bi bi-heart-pulse-fill floating" style="font-size: 8rem; opacity: 0.1; position: absolute; right: -2rem; bottom: -2rem;"></i>
+                <div class="position-relative">
                     <img src="{{ usuario.id|foto_usuario }}" alt="Foto de Perfil" id="profile-photo"
-                        class="rounded-circle border border-3 border-primary object-fit-cover" width="150" height="150"
-                        title="Clique para alterar a foto">
+                        class="rounded-circle border border-4 border-white object-fit-cover shadow-lg" width="140" height="140"
+                        title="Clique para alterar a foto"
+                        style="cursor: pointer; transition: transform 0.3s ease;">
                 </div>
+            </div>
 
-                <h2 class="mb-2">{{ usuario.nome }}</h2>
-                <p class="text-muted mb-3">
-                    <i class="bi bi-envelope"></i> {{ usuario.email }}
+            <!-- Body do Card -->
+            <div class="card-body p-5 text-center">
+                <h2 class="fw-bold mb-2" style="font-size: 1.8rem;">{{ usuario.nome }}</h2>
+                <p class="text-muted mb-4">
+                    <i class="bi bi-envelope me-1"></i> {{ usuario.email }}
                 </p>
-                <p class="mb-3">
-                    <span
-                        class="badge bg-{% if usuario.perfil == 'Administrador' %}danger{% else %}info{% endif %} px-3 py-2">
-                        <i class="bi bi-person-badge"></i>
-                        {{ usuario.perfil }}
+                <div class="mb-4">
+                    <span class="badge badge-pill-modern fw-semibold px-4 py-2"
+                        style="background: linear-gradient(135deg, {% if usuario.perfil == 'Administrador' %}#ef4444{% elif usuario.perfil == 'Abrigo' %}#10b981{% else %}#0dcaf0{% endif %} 0%, {% if usuario.perfil == 'Administrador' %}#dc2626{% elif usuario.perfil == 'Abrigo' %}#059669{% else %}#0a58ca{% endif %} 100%); color: white;">
+                        <i class="bi bi-person-badge me-2"></i>{{ usuario.perfil }}
                     </span>
-                </p>
+                </div>
                 {% if usuario.data_cadastro %}
-                <p class="text-muted small">
-                    <i class="bi bi-calendar-check"></i> Membro desde {{ usuario.data_cadastro|data_br }}
+                <p class="text-muted small mb-0">
+                    <i class="bi bi-calendar-check me-1"></i> Membro desde {{ usuario.data_cadastro|data_br }}
                 </p>
                 {% endif %}
             </div>
         </div>
         <!-- Ações do Perfil -->
         <div class="row g-3 mb-4">
-            <div class="col-md-{% if usuario.perfil != 'Administrador' %}3{% else %}4{% endif %}">
-                <a href="/usuario/perfil/editar" class="btn btn-primary w-100 btn-lg">
-                    <i class="bi bi-pencil-square"></i> Editar Dados
+            <div class="col-md-{% if usuario.perfil != 'Administrador' %}4{% else %}4{% endif %}">
+                <a href="/usuario/perfil/editar" class="btn btn-gradient w-100 py-2 fw-semibold btn-glow">
+                    <i class="bi bi-pencil-square me-2"></i>Editar Dados
                 </a>
             </div>
-            <div class="col-md-{% if usuario.perfil != 'Administrador' %}3{% else %}4{% endif %}">
-                <a href="/usuario/perfil/alterar-senha" class="btn btn-warning w-100 btn-lg">
-                    <i class="bi bi-key-fill"></i> Alterar Senha
+            <div class="col-md-{% if usuario.perfil != 'Administrador' %}4{% else %}4{% endif %}">
+                <a href="/usuario/perfil/alterar-senha" class="btn btn-outline-primary w-100 py-2 fw-semibold">
+                    <i class="bi bi-key-fill me-2"></i>Alterar Senha
                 </a>
             </div>
-            <div class="col-md-{% if usuario.perfil != 'Administrador' %}3{% else %}4{% endif %}">
-                <button type="button" class="btn btn-info w-100 btn-lg" id="btn-change-photo">
-                    <i class="bi bi-camera-fill"></i> Alterar Foto
+            <div class="col-md-{% if usuario.perfil != 'Administrador' %}4{% else %}4{% endif %}">
+                <button type="button" class="btn btn-outline-primary w-100 py-2 fw-semibold" id="btn-change-photo">
+                    <i class="bi bi-camera-fill me-2"></i>Alterar Foto
                 </button>
             </div>
             {% if usuario.perfil != 'Administrador' %}
