@@ -565,3 +565,23 @@ def buscar_por_termo(termo: str) -> List[Animal]:
         termo_like = f"%{termo}%"
         cursor.execute(BUSCAR_POR_TERMO, (termo_like, termo_like, termo_like, termo_like))
         return [_row_to_animal(row) for row in cursor.fetchall()]
+
+@staticmethod
+def contar_por_especie() -> list:
+        """Retorna a contagem de animais agrupados por espécie."""
+        try:
+            with obter_conexao() as conexao:
+                cursor = conexao.cursor()
+                cursor.execute("""
+                    SELECT e.nome as especie, COUNT(a.id) as total
+                    FROM animal a
+                    INNER JOIN raca r ON a.id_raca = r.id
+                    INNER JOIN especie e ON r.id_especie = e.id
+                    GROUP BY e.id, e.nome
+                    ORDER BY total DESC
+                """)
+                resultados = cursor.fetchall()
+                return [{"especie": row[0], "total": row[1]} for row in resultados]
+        except Exception as e:
+            print(f"Erro ao contar animais por espécie: {e}")
+            return []
