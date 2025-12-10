@@ -4,46 +4,49 @@
 {% block titulo %}Recuperar Senha{% endblock %}
 
 {% block content %}
-<div class="d-flex flex-column flex-fill justify-content-center">
+<div class="d-flex flex-column flex-fill justify-content-center py-5">
     <div class="row align-items-center justify-content-center">
-        <div class="col-12 col-md-6 col-lg-5">
-            <div class="card shadow">
+        <div class="col-12 col-md-5 col-lg-4">
+            <!-- Card moderno com gradiente sutil -->
+            <div class="card card-modern border-0 overflow-hidden">
+                <!-- Header com gradiente -->
+                <div class="bg-gradient-sunset text-white p-4 text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-key" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h2 class="fw-bold mb-0">Recuperar Senha</h2>
+                    <p class="mb-0 small opacity-90 mt-1">Não se preocupe, vamos ajudar!</p>
+                </div>
+
                 <form method="POST" action="/esqueci-senha">
                     {{ csrf_input() }}
                     <div class="card-body p-4">
-                        <h3 class="card-title text-center mb-4">
-                            <i class="bi bi-key"></i> Recuperar Senha
-                        </h3>
+                        <div class="alert alert-info bg-light border border-info border-opacity-50 mb-4">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <small>Informe o e-mail cadastrado e enviaremos um link de redefinição.</small>
+                        </div>
 
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <p class="text-muted text-center mb-0">
-                                    Não se preocupe! Basta informar seu e-mail cadastrado e enviaremos um link para
-                                    redefinição de senha.
-                                </p>
-                            </div>
+                        <div class="mb-4">
+                            {% include "components/alerta_erro.html" %}
+                        </div>
 
-                            <div class="col-12 mb-3">
-                                {% include "components/alerta_erro.html" %}
-                            </div>
-
-                            <div class="col-12">
-                                {{ field(name='email', label='E-mail', type='email', required=true, autofocus=true) }}
-                            </div>
+                        <div class="mb-4">
+                            {{ field(name='email', label='E-mail Cadastrado', type='email', required=true, autofocus=true, attributes={'autocomplete': 'email'}) }}
                         </div>
                     </div>
-                    <div class="card-footer p-4">
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-envelope"></i> Enviar Link de Recuperação
+
+                    <div class="card-footer bg-light border-top p-4">
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-gradient fw-semibold py-2">
+                                <i class="bi bi-envelope me-2"></i>Enviar Link de Recuperação
                             </button>
-
-                            <hr class="my-4">
-
-                            <a href="/login" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left"></i> Voltar ao Login
-                            </a>
                         </div>
+
+                        <p class="text-center mb-0">
+                            <a href="/login" class="text-decoration-none fw-semibold text-primary small">
+                                <i class="bi bi-arrow-left me-1"></i>Voltar ao Login
+                            </a>
+                        </p>
                     </div>
                 </form>
             </div>

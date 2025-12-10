@@ -3,31 +3,65 @@
 {% block titulo %}Página Não Encontrada{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6 text-center">
-        <div class="error-container">
-            <h1 class="error-code text-primary">404</h1>
-            <h2 class="h2 mb-4">Página Não Encontrada</h2>
-            <div class="error-details mb-4">
-                <p class="text-muted">
-                    Desculpe, a página que você está procurando não existe ou foi movida.
-                </p>
-            </div>
-            <div class="error-actions">
-                <a href="/" class="btn btn-primary btn-lg me-2">
-                    <i class="bi bi-house-door"></i> Ir para Página Inicial
-                </a>
-                {% if request.session.get('usuario_logado') %}
-                <a href="/usuario" class="btn btn-outline-primary btn-lg">
-                    <i class="bi bi-speedometer2"></i> Dashboard
-                </a>
-                {% else %}
-                <a href="/login" class="btn btn-outline-primary btn-lg">
-                    <i class="bi bi-box-arrow-in-right"></i> Fazer Login
-                </a>
-                {% endif %}
+<div class="d-flex flex-column flex-fill justify-content-center align-items-center py-5">
+    <div class="text-center mb-5">
+        <!-- Erro 404 com animação -->
+        <div class="mb-4" style="position: relative;">
+            <i class="bi bi-question-circle" style="font-size: 8rem; opacity: 0.15; position: absolute; left: 50%; transform: translateX(-50%) translateY(-10px);"></i>
+            <h1 class="display-2 fw-bold text-gradient" style="margin-bottom: 0;">404</h1>
+        </div>
+
+        <h2 class="display-6 fw-bold mb-3">Página Não Encontrada</h2>
+
+        <p class="text-muted mb-4" style="max-width: 500px; margin-left: auto; margin-right: auto; font-size: 1.1rem;">
+            <i class="bi bi-exclamation-triangle me-2 text-warning"></i>
+            Desculpe, a página que você está procurando não existe ou foi movida. Mas não se preocupe, vamos ajudar você a encontrar o caminho!
+        </p>
+
+        <!-- Sugestões de ação -->
+        <div class="card card-modern mb-4" style="max-width: 500px; margin-left: auto; margin-right: auto;">
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <a href="/" class="btn btn-gradient w-100 btn-glow py-2">
+                            <i class="bi bi-house-heart me-2"></i>Página Inicial
+                        </a>
+                    </div>
+                    <div class="col-sm-6">
+                        <a href="/animais" class="btn btn-outline-primary w-100 py-2">
+                            <i class="bi bi-paw me-2"></i>Nossos Animais
+                        </a>
+                    </div>
+                    {% if request.session.get('usuario_logado') %}
+                    <div class="col-sm-6">
+                        <a href="/usuario" class="btn btn-outline-primary w-100 py-2">
+                            <i class="bi bi-speedometer2 me-2"></i>Meu Dashboard
+                        </a>
+                    </div>
+                    <div class="col-sm-6">
+                        <a href="/usuario/perfil/visualizar" class="btn btn-outline-primary w-100 py-2">
+                            <i class="bi bi-person-circle me-2"></i>Meu Perfil
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="col-sm-6">
+                        <a href="/login" class="btn btn-outline-primary w-100 py-2">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Fazer Login
+                        </a>
+                    </div>
+                    <div class="col-sm-6">
+                        <a href="/cadastrar" class="btn btn-outline-primary w-100 py-2">
+                            <i class="bi bi-person-plus me-2"></i>Cadastrar
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
+
+        <p class="text-muted small">
+            <i class="bi bi-chat-dots me-1"></i>Precisa de ajuda? <a href="/chamados/listar" class="text-primary fw-semibold">Abra um chamado</a>
+        </p>
     </div>
 </div>
 {% endblock %}

@@ -4,58 +4,65 @@
 {% block titulo %}Login{% endblock %}
 
 {% block content %}
-<div class="d-flex flex-column flex-fill justify-content-center">
+<div class="d-flex flex-column flex-fill justify-content-center py-5">
     <div class="row align-items-center justify-content-center">
-        <div class="col-12 col-md-6 col-lg-5 ">
-            <div class="card shadow">
+        <div class="col-12 col-md-5 col-lg-4">
+            <!-- Card moderno com gradiente sutil -->
+            <div class="card card-modern border-0 overflow-hidden">
+                <!-- Header com gradiente -->
+                <div class="bg-gradient-primary text-white p-4 text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-box-arrow-in-right" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h2 class="fw-bold mb-0">Bem-vindo!</h2>
+                    <p class="mb-0 small opacity-90 mt-1">Entre com sua conta</p>
+                </div>
+
                 <form method="POST" action="/login">
                     {{ csrf_input() }}
-                    <!-- Campo hidden para preservar o redirect -->
                     <input type="hidden" name="redirect" value="{{ redirect|default('/usuario') }}">
 
                     <div class="card-body p-4">
-                        <h3 class="card-title text-center mb-4">
-                            <i class="bi bi-box-arrow-in-right"></i> Login
-                        </h3>
+                        <div class="mb-3">
+                            {% include "components/alerta_erro.html" %}
+                        </div>
 
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                {% include "components/alerta_erro.html" %}
-                            </div>
+                        <div class="mb-4">
+                            {{ field(name='email', label='E-mail', type='email', required=true, autofocus=true, attributes={'autocomplete': 'email'}) }}
+                        </div>
 
-                            <div class="col-12 mb-3">
-                                {{ field(name='email', label='E-mail', type='email', required=true, autofocus=true) }}
-                            </div>
+                        <div class="mb-3">
+                            {{ field(name='senha', label='Senha', type='password', required=true, attributes={'autocomplete': 'current-password'}) }}
+                        </div>
 
-                            <div class="col-12 mb-3">
-                                {{ field(name='senha', label='Senha', type='password', required=true) }}
-                            </div>
-
-                            <div class="mb-0">
-                                <a href="/esqueci-senha" class="text-decoration-none small">
-                                    Esqueceu sua senha?
-                                </a>
-                            </div>
+                        <div class="text-end mb-4">
+                            <a href="/esqueci-senha" class="text-decoration-none small fw-500">
+                                <i class="bi bi-key me-1"></i>Esqueceu sua senha?
+                            </a>
                         </div>
                     </div>
-                    <div class="card-footer p-4">
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-box-arrow-in-right"></i> Entrar
+
+                    <div class="card-footer bg-light border-top p-4">
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-gradient fw-semibold py-2">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
                             </button>
                         </div>
 
-                        <hr class="my-4">
-
-                        <p class="text-center mb-0">
+                        <p class="text-center mb-0 small text-muted">
                             Não tem uma conta?
-                            <a href="/cadastrar" class="text-decoration-none">
+                            <a href="/cadastrar" class="fw-semibold text-primary text-decoration-none">
                                 Cadastre-se aqui
                             </a>
                         </p>
                     </div>
                 </form>
             </div>
+
+            <!-- Texto de ajuda abaixo -->
+            <p class="text-center text-muted small mt-4">
+                <i class="bi bi-shield-lock me-1"></i>Seus dados são mantidos em segurança
+            </p>
         </div>
     </div>
 </div>

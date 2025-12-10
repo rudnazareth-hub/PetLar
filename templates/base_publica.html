@@ -23,34 +23,38 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <!-- Navbar Pública -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- Navbar Pública Moderna -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary shadow-sm" style="backdrop-filter: blur(10px); background-color: rgba(102, 126, 234, 0.95) !important;">
         <div class="container">
-            <a class="navbar-brand d-flex align-middle" href="/index">
-                <img src="/static/img/logo.svg" alt="Logo" height="30" class="d-inline-block align-text-top me-2"
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="/index" style="font-size: 1.3rem;">
+                <img src="/static/img/logo.svg" alt="Logo" height="32" class="d-inline-block align-text-top me-2"
                     onerror="this.style.display='none'">
-                {{ APP_NAME }}
+                <span>{{ APP_NAME }}</span>
             </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if request.path == '/' or request.path == '/index' else '' }}"
-                            href="/">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ 'active' if '/animais' in request.path else '' }}"
-                            href="/animais">
-                            <i class="bi bi-heart-fill text-danger"></i> Animais
+                        <a class="nav-link {{ 'active' if request.path == '/' or request.path == '/index' else '' }} fw-500"
+                            href="/" style="transition: all 0.3s ease; border-radius: 0.5rem; padding: 0.5rem 0.75rem;">
+                            <i class="bi bi-house-heart me-1"></i>Início
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if request.path == '/sobre' else '' }}"
-                            href="/sobre">Sobre</a>
+                        <a class="nav-link {{ 'active' if '/animais' in request.path else '' }} fw-500"
+                            href="/animais" style="transition: all 0.3s ease; border-radius: 0.5rem; padding: 0.5rem 0.75rem;">
+                            <i class="bi bi-heart-fill text-danger me-1"></i>Animais
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if request.path == '/sobre' else '' }} fw-500"
+                            href="/sobre" style="transition: all 0.3s ease; border-radius: 0.5rem; padding: 0.5rem 0.75rem;">
+                            <i class="bi bi-info-circle me-1"></i>Sobre
+                        </a>
                     </li>
                 </ul>
 
@@ -61,18 +65,33 @@
                     {% else %}
                     <!-- Botões de Login e Cadastro -->
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if request.path == '/login' else '' }}"
-                            href="/login">Login</a>
+                        <a class="nav-link {{ 'active' if request.path == '/login' else '' }} fw-500"
+                            href="/login" style="transition: all 0.3s ease; border-radius: 0.5rem; padding: 0.5rem 0.75rem;">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Login
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if request.path == '/cadastrar' else '' }}"
-                            href="/cadastrar">Cadastrar</a>
+                        <a class="btn btn-light btn-sm ms-2 fw-semibold"
+                            href="/cadastrar" style="border-radius: 0.5rem; padding: 0.5rem 1rem; transition: all 0.3s ease;">
+                            <i class="bi bi-person-plus me-1"></i>Cadastrar
+                        </a>
                     </li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
+
+    <style>
+        .navbar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+            transform: translateY(-2px);
+        }
+
+        .navbar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.25) !important;
+        }
+    </style>
 
     <!-- Container para Toasts (bottom-right) -->
     <div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-4 mb-5"></div>

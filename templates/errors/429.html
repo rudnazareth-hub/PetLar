@@ -3,35 +3,49 @@
 {% block titulo %}Muitas Requisições{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6 text-center">
-        <div class="error-container">
-            <h1 class="error-code text-warning">429</h1>
-            <h2 class="h2 mb-4">Muitas Requisições</h2>
-            <div class="error-details mb-4">
-                <p class="text-muted">
-                    Você fez muitas requisições em um curto período de tempo.
-                    Por favor, aguarde alguns momentos antes de tentar novamente.
+<div class="d-flex flex-column flex-fill justify-content-center align-items-center py-5">
+    <div class="text-center mb-5">
+        <!-- Erro 429 com animação -->
+        <div class="mb-4" style="position: relative;">
+            <i class="bi bi-hourglass-split" style="font-size: 8rem; opacity: 0.15; position: absolute; left: 50%; transform: translateX(-50%) translateY(-10px); animation: floating 3s ease-in-out infinite;"></i>
+            <h1 class="display-2 fw-bold" style="color: #f59e0b; margin-bottom: 0;">429</h1>
+        </div>
+
+        <h2 class="display-6 fw-bold mb-3">Muitas Requisições</h2>
+
+        <div class="card card-modern border-warning mb-4" style="max-width: 550px; margin-left: auto; margin-right: auto; background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(245, 158, 11, 0.02) 100%);">
+            <div class="card-body p-4 text-center">
+                <i class="bi bi-exclamation-circle-fill text-warning mb-3" style="font-size: 2.5rem;"></i>
+                <p class="text-muted mb-0">
+                    Você fez muitas requisições em um curto período de tempo. Por favor, aguarde alguns momentos antes de tentar novamente.
                 </p>
-                <p class="text-muted">
-                    Esta medida de segurança protege o sistema contra uso excessivo.
+                <hr class="my-3">
+                <p class="small text-muted mb-0">
+                    <i class="bi bi-shield-check me-1"></i>Esta medida de segurança protege nosso sistema
                 </p>
             </div>
-            <div class="error-actions">
-                <a href="/" class="btn btn-warning btn-lg me-2">
-                    <i class="bi bi-house-door"></i> Ir para Página Inicial
+        </div>
+
+        <!-- Botões de ação -->
+        <div class="row g-3" style="max-width: 500px; margin-left: auto; margin-right: auto;">
+            <div class="col-sm-6">
+                <a href="/" class="btn btn-gradient w-100 py-2">
+                    <i class="bi bi-house-heart me-2"></i>Página Inicial
                 </a>
-                {% if request.session.get('usuario_logado') %}
-                <a href="/usuario" class="btn btn-outline-warning btn-lg">
-                    <i class="bi bi-speedometer2"></i> Dashboard
+            </div>
+            <div class="col-sm-6">
+                <a href="/animais" class="btn btn-outline-primary w-100 py-2">
+                    <i class="bi bi-paw me-2"></i>Nossos Animais
                 </a>
-                {% else %}
-                <a href="/login" class="btn btn-outline-warning btn-lg">
-                    <i class="bi bi-box-arrow-in-right"></i> Fazer Login
-                </a>
-                {% endif %}
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    @keyframes floating {
+        0%, 100% { transform: translateX(-50%) translateY(-10px); }
+        50% { transform: translateX(-50%) translateY(-20px); }
+    }
+</style>
 {% endblock %}

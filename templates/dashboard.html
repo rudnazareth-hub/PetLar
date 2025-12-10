@@ -4,55 +4,67 @@
 
 {% block content %}
 
-<!-- Cabeçalho de Boas-Vindas -->
-<div class="row mb-4">
+<!-- Cabeçalho de Boas-Vindas Moderno -->
+<div class="row mb-5">
     <div class="col-12">
-        <div class="bg-primary text-white rounded p-4 shadow-sm">
-            <h1 class="mb-2">
-                <i class="bi bi-house-door"></i>
-                Bem-vindo(a), {{ usuario_logado.nome }}!
-            </h1>
-            <p class="mb-0 lead">Este é o seu painel de controle pessoal.</p>
+        <div class="card card-modern border-0 overflow-hidden bg-gradient-primary text-white shadow-lg">
+            <div class="card-body p-5">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="mb-2 d-inline-block badge badge-pill-modern bg-white bg-opacity-25 px-3 py-2">
+                            <i class="bi bi-hand-thumbs-up me-1"></i>Bem-vindo de volta!
+                        </div>
+                        <h1 class="display-5 fw-bold mb-2">
+                            <i class="bi bi-heart-fill me-2"></i>Olá, {{ usuario_logado.nome }}!
+                        </h1>
+                        <p class="mb-0 lead opacity-90">
+                            Este é o seu painel de controle pessoal. Aqui você pode acessar todas as funcionalidades.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-center d-none d-md-block">
+                        <i class="bi bi-house-heart floating" style="font-size: 5rem; opacity: 0.3;"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Cards de Ação Rápida -->
-<div class="row g-4 mb-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+<div class="row g-4 mb-5 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
     <!-- Meu Perfil -->
     <div class="col">
-        <div class="card h-100 shadow-sm shadow-hover">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-person-circle text-primary display-3"></i>
+        <div class="card card-modern h-100 border-0 overflow-hidden bg-gradient-primary text-white">
+            <div class="card-body text-center d-flex flex-column">
+                <div class="mb-3 display-3">
+                    <i class="bi bi-person-circle"></i>
                 </div>
-                <h5 class="card-title">Meu Perfil</h5>
-                <p class="card-text text-muted">
-                    Visualize e edite suas informações pessoais
+                <h5 class="card-title fw-bold mb-2">Meu Perfil</h5>
+                <p class="card-text small flex-grow-1">
+                    Visualize e edite suas informações
                 </p>
-                <a href="/usuario/perfil/visualizar" class="btn btn-primary">
-                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                <a href="/usuario/perfil/visualizar" class="btn btn-light btn-sm mt-3 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Acessar
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Configurações (apenas para admin) -->
+    <!-- Menu Admin -->
     {% if usuario_logado and usuario_logado.perfil == 'Administrador' %}
-    <!-- Usuários -->
     <!-- Espécies -->
     <div class="col">
-        <div class="card h-100 shadow-sm shadow-hover">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-heptagon text-primary display-3"></i>
+        <div class="card card-modern h-100 border-0 overflow-hidden bg-gradient-ocean text-white">
+            <div class="card-body text-center d-flex flex-column">
+                <div class="mb-3 display-3">
+                    <i class="bi bi-heptagon"></i>
                 </div>
-                <h5 class="card-title">Espécies</h5>
-                <p class="card-text text-muted">
-                    Cadastre e gerencie espécies de animais
+                <h5 class="card-title fw-bold mb-2">Espécies</h5>
+                <p class="card-text small flex-grow-1">
+                    Gerencie espécies de animais
                 </p>
-                <a href="/admin/espécies/listar" class="btn btn-primary">
-                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                <a href="/admin/espécies/listar" class="btn btn-light btn-sm mt-3 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Acessar
                 </a>
             </div>
         </div>
@@ -60,17 +72,17 @@
 
     <!-- Raças -->
     <div class="col">
-        <div class="card h-100 shadow-sm shadow-hover">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-tags text-info display-3"></i>
+        <div class="card card-modern h-100 border-0 overflow-hidden bg-gradient-forest text-white">
+            <div class="card-body text-center d-flex flex-column">
+                <div class="mb-3 display-3">
+                    <i class="bi bi-tags"></i>
                 </div>
-                <h5 class="card-title">Raças</h5>
-                <p class="card-text text-muted">
-                    Cadastre e gerencie raças de animais
+                <h5 class="card-title fw-bold mb-2">Raças</h5>
+                <p class="card-text small flex-grow-1">
+                    Gerencie raças de animais
                 </p>
-                <a href="/admin/raças/listar" class="btn btn-info">
-                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                <a href="/admin/raças/listar" class="btn btn-light btn-sm mt-3 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Acessar
                 </a>
             </div>
         </div>
@@ -78,17 +90,17 @@
 
     <!-- Usuários -->
     <div class="col">
-        <div class="card h-100 shadow-sm shadow-hover">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-people text-success display-3"></i>
+        <div class="card card-modern h-100 border-0 overflow-hidden bg-gradient-sunset text-white">
+            <div class="card-body text-center d-flex flex-column">
+                <div class="mb-3 display-3">
+                    <i class="bi bi-people"></i>
                 </div>
-                <h5 class="card-title">Usuários</h5>
-                <p class="card-text text-muted">
-                    Gerencie os usuários cadastrados no sistema
+                <h5 class="card-title fw-bold mb-2">Usuários</h5>
+                <p class="card-text small flex-grow-1">
+                    Gerencie usuários do sistema
                 </p>
-                <a href="/admin/usuarios/listar" class="btn btn-success">
-                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                <a href="/admin/usuarios/listar" class="btn btn-light btn-sm mt-3 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Acessar
                 </a>
             </div>
         </div>
@@ -96,22 +108,20 @@
 
     <!-- Chamados -->
     <div class="col">
-        <div class="card h-100 shadow-sm shadow-hover">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-headset text-warning display-3"></i>
+        <div class="card card-modern h-100 border-0 overflow-hidden position-relative" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white;">
+            <div class="card-body text-center d-flex flex-column">
+                <div class="mb-3 display-3">
+                    <i class="bi bi-headset"></i>
                 </div>
-                <h5 class="card-title">Chamados</h5>
-                <p class="card-text text-muted">
-                    Gerencie chamados de suporte dos usuários
+                <h5 class="card-title fw-bold mb-2">Chamados</h5>
+                <p class="card-text small flex-grow-1">
+                    Gerencie chamados de suporte
                 </p>
                 {% if chamados_pendentes > 0 %}
-                <div class="mb-3">
-                    <span class="badge bg-danger">{{ chamados_pendentes }} pendente(s)</span>
-                </div>
+                <div class="badge badge-pill-modern bg-danger mb-2">{{ chamados_pendentes }} pendente(s)</div>
                 {% endif %}
-                <a href="/admin/chamados/listar" class="btn btn-warning">
-                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                <a href="/admin/chamados/listar" class="btn btn-light btn-sm mt-3 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Acessar
                 </a>
             </div>
         </div>
@@ -119,17 +129,17 @@
 
     <!-- Configurações -->
     <div class="col">
-        <div class="card h-100 shadow-sm shadow-hover">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-gear text-secondary display-3"></i>
+        <div class="card card-modern h-100 border-0 overflow-hidden" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white;">
+            <div class="card-body text-center d-flex flex-column">
+                <div class="mb-3 display-3">
+                    <i class="bi bi-gear"></i>
                 </div>
-                <h5 class="card-title">Configurações</h5>
-                <p class="card-text text-muted">
-                    Configure parâmetros e preferências do sistema
+                <h5 class="card-title fw-bold mb-2">Configurações</h5>
+                <p class="card-text small flex-grow-1">
+                    Configure o sistema
                 </p>
-                <a href="/admin/configuracoes" class="btn btn-secondary">
-                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                <a href="/admin/configuracoes" class="btn btn-light btn-sm mt-3 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Acessar
                 </a>
             </div>
         </div>
@@ -137,17 +147,17 @@
 
     <!-- Personalizar Tema -->
     <div class="col">
-        <div class="card h-100 shadow-sm shadow-hover">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-palette text-danger display-3"></i>
+        <div class="card card-modern h-100 border-0 overflow-hidden bg-danger text-white">
+            <div class="card-body text-center d-flex flex-column">
+                <div class="mb-3 display-3">
+                    <i class="bi bi-palette"></i>
                 </div>
-                <h5 class="card-title">Personalizar Tema</h5>
-                <p class="card-text text-muted">
-                    Escolha entre diversos temas visuais para personalizar a aplicação
+                <h5 class="card-title fw-bold mb-2">Personalizar Tema</h5>
+                <p class="card-text small flex-grow-1">
+                    Escolha temas visuais
                 </p>
-                <a href="/admin/tema" class="btn btn-danger">
-                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                <a href="/admin/tema" class="btn btn-light btn-sm mt-3 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Acessar
                 </a>
             </div>
         </div>
@@ -155,17 +165,17 @@
 
     <!-- Auditoria de Logs -->
     <div class="col">
-        <div class="card h-100 shadow-sm shadow-hover">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-journal-text text-info display-3"></i>
+        <div class="card card-modern h-100 border-0 overflow-hidden bg-info text-white">
+            <div class="card-body text-center d-flex flex-column">
+                <div class="mb-3 display-3">
+                    <i class="bi bi-journal-text"></i>
                 </div>
-                <h5 class="card-title">Auditoria de Logs</h5>
-                <p class="card-text text-muted">
-                    Visualize e filtre logs do sistema por data e severidade
+                <h5 class="card-title fw-bold mb-2">Auditoria</h5>
+                <p class="card-text small flex-grow-1">
+                    Visualize logs do sistema
                 </p>
-                <a href="/admin/auditoria" class="btn btn-info">
-                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                <a href="/admin/auditoria" class="btn btn-light btn-sm mt-3 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Acessar
                 </a>
             </div>
         </div>
@@ -173,17 +183,17 @@
 
     <!-- Backup do Banco -->
     <div class="col">
-        <div class="card h-100 shadow-sm shadow-hover">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-database text-success display-3"></i>
+        <div class="card card-modern h-100 border-0 overflow-hidden" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
+            <div class="card-body text-center d-flex flex-column">
+                <div class="mb-3 display-3">
+                    <i class="bi bi-database"></i>
                 </div>
-                <h5 class="card-title">Backup do Banco</h5>
-                <p class="card-text text-muted">
-                    Crie, gerencie e restaure backups do banco de dados
+                <h5 class="card-title fw-bold mb-2">Backup</h5>
+                <p class="card-text small flex-grow-1">
+                    Gerencie backups do banco
                 </p>
-                <a href="/admin/backups/listar" class="btn btn-success">
-                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                <a href="/admin/backups/listar" class="btn btn-light btn-sm mt-3 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Acessar
                 </a>
             </div>
         </div>
@@ -193,17 +203,17 @@
     <!-- Menu Abrigo -->
     <!-- Meus Animais -->
     <div class="col">
-        <div class="card h-100 shadow-sm shadow-hover">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-paw text-primary display-3"></i>
+        <div class="card card-modern h-100 border-0 overflow-hidden bg-gradient-primary text-white">
+            <div class="card-body text-center d-flex flex-column">
+                <div class="mb-3 display-3">
+                    <i class="bi bi-paw"></i>
                 </div>
-                <h5 class="card-title">Meus Animais</h5>
-                <p class="card-text text-muted">
-                    Cadastre, edite e gerencie os animais do seu abrigo
+                <h5 class="card-title fw-bold mb-2">Meus Animais</h5>
+                <p class="card-text small flex-grow-1">
+                    Gerencie seus animais
                 </p>
-                <a href="/abrigo/animais/listar" class="btn btn-primary">
-                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                <a href="/abrigo/animais/listar" class="btn btn-light btn-sm mt-3 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Acessar
                 </a>
             </div>
         </div>
@@ -211,17 +221,17 @@
 
     <!-- Animais Reservados -->
     <div class="col">
-        <div class="card h-100 shadow-sm shadow-hover">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-bookmark-heart text-success display-3"></i>
+        <div class="card card-modern h-100 border-0 overflow-hidden bg-gradient-forest text-white">
+            <div class="card-body text-center d-flex flex-column">
+                <div class="mb-3 display-3">
+                    <i class="bi bi-bookmark-heart"></i>
                 </div>
-                <h5 class="card-title">Animais Reservados</h5>
-                <p class="card-text text-muted">
-                    Acompanhe as reservas e finalize as adoções
+                <h5 class="card-title fw-bold mb-2">Reservados</h5>
+                <p class="card-text small flex-grow-1">
+                    Acompanhe reservas
                 </p>
-                <a href="/abrigo/animais/reservados" class="btn btn-success">
-                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                <a href="/abrigo/animais/reservados" class="btn btn-light btn-sm mt-3 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Acessar
                 </a>
             </div>
         </div>
@@ -231,41 +241,40 @@
     <!-- Menu Adotante -->
     <!-- Meu Endereço -->
     <div class="col">
-        <div class="card h-100 shadow-sm shadow-hover">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-geo-alt text-primary display-3"></i>
+        <div class="card card-modern h-100 border-0 overflow-hidden bg-gradient-forest text-white">
+            <div class="card-body text-center d-flex flex-column">
+                <div class="mb-3 display-3">
+                    <i class="bi bi-geo-alt"></i>
                 </div>
-                <h5 class="card-title">Meu Endereço</h5>
-                <p class="card-text text-muted">
-                    Visualize e gerencie seus endereços cadastrados
+                <h5 class="card-title fw-bold mb-2">Meu Endereço</h5>
+                <p class="card-text small flex-grow-1">
+                    Gerencie endereços
                 </p>
-                <a href="/usuario/endereco/" class="btn btn-primary">
-                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                <a href="/usuario/endereco/" class="btn btn-light btn-sm mt-3 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Acessar
                 </a>
             </div>
         </div>
     </div>
 
     {% else %}
-    <!-- Chamados para usuários comuns -->
+    <!-- Menu Padrão -->
+    <!-- Meus Chamados -->
     <div class="col">
-        <div class="card h-100 shadow-sm shadow-hover">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-headset text-danger display-3"></i>
+        <div class="card card-modern h-100 border-0 overflow-hidden bg-danger text-white">
+            <div class="card-body text-center d-flex flex-column">
+                <div class="mb-3 display-3">
+                    <i class="bi bi-headset"></i>
                 </div>
-                <h5 class="card-title">Meus Chamados</h5>
-                <p class="card-text text-muted">
-                    Abra chamados de suporte e acompanhe suas solicitações
+                <h5 class="card-title fw-bold mb-2">Meus Chamados</h5>
+                <p class="card-text small flex-grow-1">
+                    Gerencie chamados
                 </p>
                 {% if chamados_abertos > 0 %}
-                <div class="mb-3">
-                    <span class="badge bg-danger">{{ chamados_abertos }} em aberto</span>
-                </div>
+                <div class="badge badge-pill-modern bg-warning mb-2">{{ chamados_abertos }} em aberto</div>
                 {% endif %}
-                <a href="/chamados/listar" class="btn btn-danger">
-                    <i class="bi bi-arrow-right-circle"></i> Acessar
+                <a href="/chamados/listar" class="btn btn-light btn-sm mt-3 fw-semibold">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Acessar
                 </a>
             </div>
         </div>
@@ -273,15 +282,26 @@
     {% endif %}
 </div>
 
-<!-- Estatísticas ou Informações Adicionais -->
+<!-- Dica do Dia -->
 <div class="row">
     <div class="col-12">
-        <div class="alert alert-info" role="alert">
-            <i class="bi bi-lightbulb"></i>
-            <strong>Dica do Dia:</strong>
-            Mantenha suas informações sempre atualizadas em "Meu Perfil" para garantir uma melhor experiência no
-            sistema.
+        <div class="card card-modern border-0 overflow-hidden" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-start">
+                    <div class="me-3 mt-1">
+                        <i class="bi bi-lightbulb-fill text-success" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-2 text-dark">💡 Dica do Dia</h6>
+                        <p class="mb-0 text-muted">
+                            Mantenha suas informações sempre atualizadas em "Meu Perfil" para garantir uma melhor experiência
+                            no sistema e acelerar o processo de adoção.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 {% endblock %}
