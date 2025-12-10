@@ -125,6 +125,13 @@
             border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 0.75rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1050 !important;
+        }
+
+        /* Garantir que o dropdown pai também tenha z-index */
+        .navbar .dropdown {
+            position: relative;
+            z-index: 1001;
         }
     </style>
 

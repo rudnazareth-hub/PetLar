@@ -91,6 +91,16 @@
         .navbar .nav-link.active {
             background-color: rgba(255, 255, 255, 0.25) !important;
         }
+
+        /* Fix z-index para dropdowns */
+        .navbar .dropdown-menu {
+            z-index: 1050 !important;
+        }
+
+        .navbar .dropdown {
+            position: relative;
+            z-index: 1001;
+        }
     </style>
 
     <!-- Container para Toasts (bottom-right) -->
