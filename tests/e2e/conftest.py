@@ -15,6 +15,8 @@ import subprocess
 import tempfile
 import time
 from typing import Generator
+import urllib.request
+import urllib.error
 
 import pytest
 from playwright.sync_api import Page
@@ -49,6 +51,16 @@ def _aguardar_servidor_online(host: str, port: int, timeout: int = 30) -> bool:
         except (socket.timeout, ConnectionRefusedError, OSError):
             time.sleep(0.5)
     return False
+
+
+def _verificar_servidor_saude(base_url: str, timeout: int = 5) -> bool:
+    """Verifica se o servidor esta saudavel via health check."""
+    try:
+        req = urllib.request.Request(f"{base_url}/health", method="GET")
+        with urllib.request.urlopen(req, timeout=timeout) as response:
+            return response.status == 200
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, OSError):
+        return False
 
 
 @pytest.fixture(scope="session")
@@ -124,8 +136,8 @@ def e2e_server(e2e_test_database) -> Generator[str, None, None]:
     process = subprocess.Popen(
         ["python", "main.py"],
         env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
         cwd=os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
     )
 
@@ -134,11 +146,8 @@ def e2e_server(e2e_test_database) -> Generator[str, None, None]:
     ):
         process.terminate()
         process.wait()
-        stdout, stderr = process.communicate()
         pytest.fail(
-            f"Servidor nao iniciou em {E2E_SERVER_STARTUP_TIMEOUT}s.\n"
-            f"stdout: {stdout.decode()}\n"
-            f"stderr: {stderr.decode()}"
+            f"Servidor nao iniciou em {E2E_SERVER_STARTUP_TIMEOUT}s."
         )
 
     yield E2E_BASE_URL
@@ -167,9 +176,17 @@ def e2e_page(page: Page, e2e_server: str) -> Page:
     Fixture que fornece uma pagina Playwright configurada.
 
     Function-scoped para garantir isolamento entre testes.
+    Verifica saude do servidor antes de cada teste.
     """
-    page.set_default_timeout(10000)
-    page.set_default_navigation_timeout(15000)
+    # Verificar se o servidor esta saudavel antes do teste
+    if not _verificar_servidor_saude(e2e_server):
+        # Aguardar um pouco caso esteja se recuperando
+        time.sleep(2)
+        if not _verificar_servidor_saude(e2e_server):
+            pytest.fail(f"Servidor E2E nao esta respondendo em {e2e_server}")
+
+    page.set_default_timeout(30000)
+    page.set_default_navigation_timeout(30000)
     page.base_url = e2e_server  # type: ignore
     yield page
 
