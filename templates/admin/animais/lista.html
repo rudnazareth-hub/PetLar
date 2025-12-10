@@ -45,13 +45,13 @@
                                 </td>
                                 <td><strong>{{ animal.nome }}</strong></td>
                                 <td>
-                                    {{ animal.raça.nome if animal.raça else '-' }}
+                                    {{ animal.raca.nome if animal.raca else '-' }}
                                     <br>
                                     <small class="text-muted">
-                                        {{ animal.raça.espécie.nome if animal.raça and animal.raça.espécie else '' }}
+                                        {{ animal.raca.especie.nome if animal.raca and animal.raca.especie else '' }}
                                     </small>
                                 </td>
-                                <td>{{ animal.abrigo.responsável if animal.abrigo else '-' }}</td>
+                                <td>{{ animal.abrigo.responsavel if animal.abrigo else '-' }}</td>
                                 <td>
                                     {% set status_map = {
                                         'Disponível': 'success',

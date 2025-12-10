@@ -159,7 +159,7 @@
                             </div>
                             <div>
                                 <small class="text-muted d-block">Raça</small>
-                                <span class="fw-semibold fs-5">{{ animal.raça.nome if animal.raça else '-' }}</span>
+                                <span class="fw-semibold fs-5">{{ animal.raca.nome if animal.raca else '-' }}</span>
                             </div>
                         </div>
                     </div>
@@ -172,13 +172,13 @@
                             </div>
                             <div>
                                 <small class="text-muted d-block">Espécie</small>
-                                <span class="fw-semibold fs-5">{{ animal.raça.espécie.nome if animal.raça and animal.raça.espécie else '-' }}</span>
+                                <span class="fw-semibold fs-5">{{ animal.raca.especie.nome if animal.raca and animal.raca.especie else '-' }}</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Porte (se disponivel) -->
-                    {% if animal.raça and animal.raça.porte %}
+                    {% if animal.raca and animal.raca.porte %}
                     <div class="col-sm-6">
                         <div class="d-flex align-items-center">
                             <div class="icon-circle-sm bg-subtle-info text-info me-3" style="width: 2.5rem; height: 2.5rem;">
@@ -186,7 +186,7 @@
                             </div>
                             <div>
                                 <small class="text-muted d-block">Porte</small>
-                                <span class="fw-semibold fs-5">{{ animal.raça.porte }}</span>
+                                <span class="fw-semibold fs-5">{{ animal.raca.porte }}</span>
                             </div>
                         </div>
                     </div>
@@ -235,13 +235,13 @@
                 {% endif %}
 
                 <!-- Temperamento da Raça -->
-                {% if animal.raça and animal.raça.temperamento %}
+                {% if animal.raca and animal.raca.temperamento %}
                 <hr class="my-4">
                 <div>
                     <h6 class="fw-bold mb-3">
                         <i class="bi bi-emoji-smile text-warning me-2"></i>Temperamento da Raça
                     </h6>
-                    <p class="text-muted mb-0 bg-light p-3 rounded-xl">{{ animal.raça.temperamento }}</p>
+                    <p class="text-muted mb-0 bg-light p-3 rounded-xl">{{ animal.raca.temperamento }}</p>
                 </div>
                 {% endif %}
             </div>

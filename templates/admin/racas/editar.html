@@ -18,7 +18,7 @@
         </div>
 
         <div class="card shadow-sm">
-            <form method="POST" action="/admin/raças/editar/{{ dados.id if dados.id is defined else raça.id }}">
+            <form method="POST" action="/admin/racas/editar/{{ dados.id if dados.id is defined else raca.id }}">
                 <div class="card-body p-4">
                     <div class="row">
                         <div class="col-12">
@@ -33,7 +33,7 @@
 
                         <div class="col-12 mb-3">
                             {{ field(name='id_especie', label='Espécie', type='select', required=true,
-                            options=espécies, help_text='Selecione a espécie',
+                            options=especies, help_text='Selecione a espécie',
                             value=dados.id_especie) }}
                         </div>
 
@@ -43,16 +43,16 @@
                             value=dados.descricao) }}
                         </div>
 
-                        {% if raça.data_cadastro or raça.data_atualizacao %}
+                        {% if raca.data_cadastro or raca.data_atualizacao %}
                         <div class="col-12">
                             <div class="card bg-light">
                                 <div class="card-body">
                                     <small class="text-muted">
-                                        {% if raça.data_cadastro %}
-                                        <i class="bi bi-calendar-plus"></i> Cadastrada em: <strong>{{ raça.data_cadastro|data_hora_br }}</strong>
+                                        {% if raca.data_cadastro %}
+                                        <i class="bi bi-calendar-plus"></i> Cadastrada em: <strong>{{ raca.data_cadastro|data_hora_br }}</strong>
                                         {% endif %}
-                                        {% if raça.data_atualizacao and raça.data_atualizacao != raça.data_cadastro %}
-                                        <br><i class="bi bi-calendar-check"></i> Última atualização: <strong>{{ raça.data_atualizacao|data_hora_br }}</strong>
+                                        {% if raca.data_atualizacao and raca.data_atualizacao != raca.data_cadastro %}
+                                        <br><i class="bi bi-calendar-check"></i> Última atualização: <strong>{{ raca.data_atualizacao|data_hora_br }}</strong>
                                         {% endif %}
                                     </small>
                                 </div>
@@ -66,7 +66,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-check-circle"></i> Salvar Alterações
                         </button>
-                        <a href="/admin/raças/listar" class="btn btn-secondary">
+                        <a href="/admin/racas/listar" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Cancelar
                         </a>
                     </div>

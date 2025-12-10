@@ -30,23 +30,23 @@
             </div>
             <form method="GET" action="/animais" class="row g-3">
                 <div class="col-md-3">
-                    <label for="espécie" class="form-label small text-muted fw-medium">Espécie</label>
-                    <select class="form-select" id="espécie" name="espécie">
+                    <label for="especie" class="form-label small text-muted fw-medium">Espécie</label>
+                    <select class="form-select" id="especie" name="especie">
                         <option value="">Todas as espécies</option>
-                        {% for esp in espécies %}
-                        <option value="{{ esp.id }}" {{ 'selected' if filtros.espécie == esp.id else '' }}>
+                        {% for esp in especies %}
+                        <option value="{{ esp.id }}" {{ 'selected' if filtros.especie == esp.id else '' }}>
                             {{ esp.nome }}
                         </option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label for="raça" class="form-label small text-muted fw-medium">Raça</label>
-                    <select class="form-select" id="raça" name="raça">
+                    <label for="raca" class="form-label small text-muted fw-medium">Raça</label>
+                    <select class="form-select" id="raca" name="raca">
                         <option value="">Todas as raças</option>
-                        {% for r in raças %}
-                        <option value="{{ r.id }}" {{ 'selected' if filtros.raça == r.id else '' }}>
-                            {{ r.nome }}{% if r.espécie %} ({{ r.espécie.nome }}){% endif %}
+                        {% for r in racas %}
+                        <option value="{{ r.id }}" {{ 'selected' if filtros.raca == r.id else '' }}>
+                            {{ r.nome }}{% if r.especie %} ({{ r.especie.nome }}){% endif %}
                         </option>
                         {% endfor %}
                     </select>

@@ -18,7 +18,7 @@
         </div>
 
         <div class="card shadow-sm">
-            <form method="POST" action="/admin/espécies/editar/{{ dados.id if dados.id is defined else espécie.id }}">
+            <form method="POST" action="/admin/especies/editar/{{ dados.id if dados.id is defined else especie.id }}">
                 <div class="card-body p-4">
                     <div class="row">
                         <div class="col-12">
@@ -37,16 +37,16 @@
                             value=dados.descricao) }}
                         </div>
 
-                        {% if espécie.data_cadastro or espécie.data_atualizacao %}
+                        {% if especie.data_cadastro or especie.data_atualizacao %}
                         <div class="col-12">
                             <div class="card bg-light">
                                 <div class="card-body">
                                     <small class="text-muted">
-                                        {% if espécie.data_cadastro %}
-                                        <i class="bi bi-calendar-plus"></i> Cadastrada em: <strong>{{ espécie.data_cadastro|data_hora_br }}</strong>
+                                        {% if especie.data_cadastro %}
+                                        <i class="bi bi-calendar-plus"></i> Cadastrada em: <strong>{{ especie.data_cadastro|data_hora_br }}</strong>
                                         {% endif %}
-                                        {% if espécie.data_atualizacao and espécie.data_atualizacao != espécie.data_cadastro %}
-                                        <br><i class="bi bi-calendar-check"></i> Última atualização: <strong>{{ espécie.data_atualizacao|data_hora_br }}</strong>
+                                        {% if especie.data_atualizacao and especie.data_atualizacao != especie.data_cadastro %}
+                                        <br><i class="bi bi-calendar-check"></i> Última atualização: <strong>{{ especie.data_atualizacao|data_hora_br }}</strong>
                                         {% endif %}
                                     </small>
                                 </div>
@@ -60,7 +60,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-check-circle"></i> Salvar Alterações
                         </button>
-                        <a href="/admin/espécies/listar" class="btn btn-secondary">
+                        <a href="/admin/especies/listar" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Cancelar
                         </a>
                     </div>
