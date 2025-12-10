@@ -26,9 +26,7 @@ async def get_cadastrar(request: Request, usuario_logado: Optional[dict] = None)
     abrigos = abrigo_repo.obter_todos()
 
     # Converter para dict para os selects
-    # REMOVIDO: A exibição da espécie será restaurada quando o aluno criar o CRUD de espécie
-    # racas_dict = {str(r.id): f"{r.nome} ({r.especie.nome if r.especie else 'N/A'})" for r in racas}
-    racas_dict = {str(r.id): r.nome for r in racas}  # Temporário: mostra apenas o nome da raça
+    racas_dict = {str(r.id): f"{r.nome} ({r.especie.nome if r.especie else 'N/A'})" for r in racas}
     abrigos_dict = {str(a.id_abrigo): a.responsavel for a in abrigos}
 
     # Opções de sexo e status
@@ -99,9 +97,7 @@ async def get_editar(request: Request, id: int, usuario_logado: Optional[dict] =
     abrigos = abrigo_repo.obter_todos()
 
     # Converter para dict para os selects
-    # REMOVIDO: A exibição da espécie será restaurada quando o aluno criar o CRUD de espécie
-    # racas_dict = {str(r.id): f"{r.nome} ({r.especie.nome if r.especie else 'N/A'})" for r in racas}
-    racas_dict = {str(r.id): r.nome for r in racas}  # Temporário: mostra apenas o nome da raça
+    racas_dict = {str(r.id): f"{r.nome} ({r.especie.nome if r.especie else 'N/A'})" for r in racas}
     abrigos_dict = {str(a.id_abrigo): a.responsavel for a in abrigos}
 
     # Opções de sexo e status
@@ -206,9 +202,7 @@ async def post_editar(
         # Recarregar dados para os selects
         racas = raca_repo.obter_todos_com_especies()
         abrigos = abrigo_repo.obter_todos()
-        # REMOVIDO: A exibição da espécie será restaurada quando o aluno criar o CRUD de espécie
-        # dados_formulario["racas"] = {str(r.id): f"{r.nome} ({r.especie.nome if r.especie else 'N/A'})" for r in racas}
-        dados_formulario["racas"] = {str(r.id): r.nome for r in racas}  # Temporário: mostra apenas o nome da raça
+        dados_formulario["racas"] = {str(r.id): f"{r.nome} ({r.especie.nome if r.especie else 'N/A'})" for r in racas}
         dados_formulario["abrigos"] = {str(a.id_abrigo): a.responsavel for a in abrigos}
         dados_formulario["animal"] = animal_atual
         dados_formulario["sexo_opcoes"] = {"Macho": "Macho", "Fêmea": "Fêmea"}
