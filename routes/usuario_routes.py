@@ -30,7 +30,7 @@ from util.repository_helpers import obter_ou_404
 from util.security import criar_hash_senha, verificar_senha
 from util.template_util import criar_templates
 from util.validation_helpers import verificar_email_disponivel
-from repo.animal_repo import AnimalRepo
+from repo.animal_repo import contar_por_especie
 
 # =============================================================================
 # Configuração do Router
@@ -76,7 +76,7 @@ async def dashboard(request: Request, usuario_logado: Optional[UsuarioLogado] = 
     if not usuario_logado:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
     
-    animais_por_especie = AnimalRepo.contar_por_especie()
+    animais_por_especie = contar_por_especie()
 
     # Preparar dados do contexto
     context = {
